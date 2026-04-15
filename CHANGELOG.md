@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-15
+
+### Added
+- Resizable info panel with drag handle (width persists in localStorage)
+- Previous/Next component navigation at bottom of info panel
+- Mobile view toggle (Definition ↔ Live Preview tabs)
+- Custom styled mobile dropdowns for Category and Component selection
+- Favicons for all platforms (16, 32, 180, 192, 512px + mstile)
+- Open Graph and Twitter Card social meta tags with branded OG image
+- Web app manifest (PWA-ready) and browserconfig.xml
+- ESLint flat config for ESLint 9
+
+### Changed
+- Bumped all font sizes significantly for desktop readability (titles, body, labels, buttons)
+- Responsive typography: large on desktop (lg/xl), compact on mobile (sm/base)
+- Info panel width now percentage-based (40%) instead of fixed pixels
+- Mobile buttons use smaller padding for better touch targets
+- Improved page title and meta description for SEO
+
 ## [0.2.0] - 2026-04-15
 
 ### Added
@@ -57,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/rayvillalobos/vibe-glossary/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/rayvillalobos/vibe-glossary/compare/v0.1.0...v0.2.0
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rayvillalobos/vibe-glossary/releases/tag/v0.1.0

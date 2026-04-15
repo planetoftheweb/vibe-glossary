@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { MessageSquare, ArrowRight, BookOpen, PanelLeftClose } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { MessageSquare, ArrowRight, BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import PromptBuilder from './components/ui/PromptBuilder';
@@ -15,11 +15,47 @@ export default function App() {
   });
   const [activeItem, setActiveItem]       = useState('modal');
   const [infoOpen, setInfoOpen]           = useState(true);
+  const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const [darkMode, setDarkMode]           = useState(true);
   const [toasts, setToasts]               = useState([]);
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
   const explore = useExploreMode();
+  const [panelWidth, setPanelWidth] = useState(() => {
+    const saved = localStorage.getItem('vg-panel-width');
+    return saved ? Number(saved) : 40; // percent
+  });
+  const isResizing = useRef(false);
+  const containerRef = useRef(null);
+
+  const handleResizeStart = useCallback((e) => {
+    e.preventDefault();
+    isResizing.current = true;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    const handleMove = (ev) => {
+      if (!isResizing.current || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = (ev.clientX || ev.touches?.[0]?.clientX) - rect.left;
+      const pct = Math.min(60, Math.max(25, (x / rect.width) * 100));
+      setPanelWidth(pct);
+    };
+    const handleUp = () => {
+      isResizing.current = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      setPanelWidth(prev => { localStorage.setItem('vg-panel-width', prev); return prev; });
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleUp);
+    };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchmove', handleMove);
+    window.addEventListener('touchend', handleUp);
+  }, []);
 
   // Apply dark mode class
   useEffect(() => {
@@ -70,6 +106,15 @@ export default function App() {
   const currentData  = GLOSSARY_DATA[activeItem] || GLOSSARY_DATA['modal'];
   const DemoComponent = currentData.demo;
 
+  // Flat list of all component IDs for prev/next navigation
+  const allItems = useMemo(() => CATEGORIES.flatMap(c => c.items.map(i => i.id)), []);
+  const currentIndex = allItems.indexOf(activeItem);
+  const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
+  const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
+
+  const prevData = prevItem ? GLOSSARY_DATA[prevItem] : null;
+  const nextData = nextItem ? GLOSSARY_DATA[nextItem] : null;
+
   const activeCat = useMemo(() => {
     const cat = CATEGORIES.find(c => c.items.some(i => i.id === activeItem));
     return cat ? CATEGORY_COLORS[cat.id] : CATEGORY_COLORS.overlays;
@@ -101,14 +146,14 @@ export default function App() {
       {/* Global Toast Container */}
       <div className="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
         {toasts.map(t => (
-          <div key={t.id} className="bg-zinc-900 text-white px-4 py-2.5 rounded-lg shadow-lg animate-slide-in-right text-sm font-medium">
+          <div key={t.id} className="bg-zinc-900 text-white px-5 py-3 rounded-lg shadow-lg animate-slide-in-right text-base font-medium">
             {t.message}
           </div>
         ))}
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex flex-col pt-14 md:pt-14 overflow-hidden">
+      <div className="flex-1 flex flex-col pt-[4.5rem] overflow-hidden">
 
         {/* Explore Bar */}
         {!showWelcome && (
@@ -121,34 +166,60 @@ export default function App() {
         )}
 
         {/* Main content row */}
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
 
-          {/* Info & Prompt Panel */}
+          {/* Mobile view toggle */}
+          <div className="lg:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+            <button
+              onClick={() => setMobileView('info')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+                mobileView === 'info'
+                  ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
+                  : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
+              }`}
+            >
+              <FileText size={18} />
+              Definition
+            </button>
+            <button
+              onClick={() => setMobileView('preview')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+                mobileView === 'preview'
+                  ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
+                  : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
+              }`}
+            >
+              <Eye size={18} />
+              Live Preview
+            </button>
+          </div>
+
+          {/* Info & Prompt Panel — always visible on desktop, toggled on mobile */}
           {infoOpen && (
-            <div className="border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex flex-col lg:w-[420px] shrink-0">
-              <div className="p-6 lg:p-8 flex flex-col min-h-full">
+            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(window.innerWidth >= 1024 ? { width: `${panelWidth}%` } : {}) }}>
+              <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
 
                 {/* Definition Header */}
-                <div className="flex items-start justify-between mb-5">
+                <div className="flex items-start justify-between mb-4 lg:mb-8">
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className={`w-2.5 h-2.5 rounded-full ${activeCat.dot}`} />
-                      <span className={`text-xs font-bold uppercase tracking-wider ${activeCat.accent}`}>Definition</span>
+                    <div className="flex items-center gap-2 lg:gap-2.5 mb-2 lg:mb-3">
+                      <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${activeCat.dot}`} />
+                      <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>Definition</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+                    <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                       {currentData.title}
                     </h1>
                   </div>
                   <button
                     onClick={() => setInfoOpen(false)}
-                    className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                    className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                     title="Close panel"
                   >
                     <PanelLeftClose size={18} />
                   </button>
                 </div>
 
-                <p className="text-base text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-8">
+                <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-6 lg:mb-10">
                   {currentData.definition}
                 </p>
 
@@ -164,37 +235,76 @@ export default function App() {
                 </div>
 
                 <div className="space-y-5 mt-auto">
-                  <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-4 border border-zinc-100 dark:border-zinc-800">
-                    <div className="flex items-center gap-2 mb-2 text-zinc-500 dark:text-zinc-400">
-                      <MessageSquare size={14} />
-                      <span className="text-xs font-bold uppercase tracking-wide">Pro Tip</span>
+                  <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-zinc-100 dark:border-zinc-800">
+                    <div className="flex items-center gap-2 lg:gap-2.5 mb-2 lg:mb-3 text-zinc-500 dark:text-zinc-400">
+                      <MessageSquare size={18} />
+                      <span className="text-sm lg:text-base font-bold uppercase tracking-wide">Pro Tip</span>
                     </div>
-                    <p className="text-sm text-zinc-700 dark:text-zinc-300 italic leading-relaxed">
+                    <p className="text-sm lg:text-lg text-zinc-700 dark:text-zinc-300 italic leading-relaxed">
                       "{currentData.vibeTip}"
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <ArrowRight size={12} /> Distinction
+                    <h3 className="text-sm lg:text-base font-bold text-zinc-400 uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-1.5 lg:gap-2">
+                      <ArrowRight size={16} /> Distinction
                     </h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    <p className="text-sm lg:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed">
                       {currentData.comparison}
                     </p>
+                  </div>
+
+                  {/* Prev / Next navigation */}
+                  <div className="flex items-stretch gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                    {prevItem ? (
+                      <button
+                        onClick={() => setActiveItem(prevItem)}
+                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors text-left group"
+                      >
+                        <ChevronLeft size={18} className="text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-zinc-400 block">Previous</span>
+                          <span className="text-sm lg:text-base font-semibold text-zinc-700 dark:text-zinc-200 truncate block">{prevData?.title}</span>
+                        </div>
+                      </button>
+                    ) : <div className="flex-1" />}
+                    {nextItem ? (
+                      <button
+                        onClick={() => setActiveItem(nextItem)}
+                        className="flex-1 flex items-center justify-end gap-3 px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors text-right group"
+                      >
+                        <div className="min-w-0">
+                          <span className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-zinc-400 block">Next</span>
+                          <span className="text-sm lg:text-base font-semibold text-zinc-700 dark:text-zinc-200 truncate block">{nextData?.title}</span>
+                        </div>
+                        <ChevronRight size={18} className="text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 shrink-0" />
+                      </button>
+                    ) : <div className="flex-1" />}
                   </div>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Resize handle — desktop only */}
+          {infoOpen && (
+            <div
+              onMouseDown={handleResizeStart}
+              onTouchStart={handleResizeStart}
+              className="hidden lg:flex w-2 hover:w-3 items-center justify-center cursor-col-resize bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 border-x border-zinc-200 dark:border-zinc-800 transition-all group/resize shrink-0 z-20"
+            >
+              <GripVertical size={14} className="text-zinc-300 dark:text-zinc-600 group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
+            </div>
+          )}
+
           {/* Main Content — Live Preview */}
-          <main className="flex-1 relative overflow-hidden flex flex-col bg-zinc-100 dark:bg-black">
+          <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-100 dark:bg-black`}>
             {/* Subtle color glow */}
             <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
             <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
 
-            {/* Floating controls */}
-            <div className="absolute top-4 left-4 z-30 flex gap-2">
+            {/* Floating controls — desktop only */}
+            <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
               {!infoOpen && (
                 <button
                   onClick={() => setInfoOpen(true)}
@@ -207,13 +317,13 @@ export default function App() {
             </div>
 
             {/* Live Preview badge */}
-            <div className={`absolute top-4 right-4 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm z-20 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wide pointer-events-none ${activeCat.bg} ${activeCat.border} border ${activeCat.text}`}>
-              <div className={`w-1.5 h-1.5 rounded-full ${activeCat.dot} animate-pulse`}></div>
+            <div className={`absolute top-4 right-4 backdrop-blur-md px-4 py-2 rounded-full shadow-sm z-20 flex items-center space-x-2 text-sm font-semibold uppercase tracking-wide pointer-events-none ${activeCat.bg} ${activeCat.border} border ${activeCat.text}`}>
+              <div className={`w-2 h-2 rounded-full ${activeCat.dot} animate-pulse`}></div>
               <span>Live Preview</span>
             </div>
 
             {/* Demo area */}
-            <div className="w-full h-full relative z-10 flex flex-col p-6 lg:p-10">
+            <div className="w-full h-full relative z-10 flex flex-col p-4 lg:p-10">
               <DemoComponent activeOptions={activeOptions} />
             </div>
           </main>

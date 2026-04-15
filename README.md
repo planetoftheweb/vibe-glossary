@@ -1,15 +1,19 @@
 # VibeGlossary
 
-An interactive UI component glossary designed for vibe coding with AI tools. Browse 20+ live component demos, toggle configuration options, and generate ready-to-use AI prompts.
+An interactive UI component glossary designed for vibe coding with AI tools. Browse 44 live component demos, toggle configuration options, and generate ready-to-use AI prompts.
 
 ## Features
 
-- **20+ interactive demos** across Overlays, Inputs, Layouts, Navigation, and Feedback
+- **44 interactive demos** across 9 categories: Overlays, Inputs, Data Display, Forms, Layouts, Navigation, Interactions, Feedback, Marketing
 - **Spec Generator** — toggle options to build component specs and copy AI prompts
 - **Live preview** — every component is interactive, not just static screenshots
+- **Explore Mode** — Component of the Day, Surprise Me, and progress tracking
+- **Resizable panels** — drag to resize the info/preview split
+- **Previous/Next navigation** — step through all components sequentially
 - **Dark/light mode** with class-based Tailwind theming
-- **Keyboard shortcut** Cmd+K to focus search
-- **Filter tabs** — All, Components, Patterns, Showcase
+- **Keyboard shortcut** ⌘K to search components
+- **Responsive** — mobile view toggle, custom dropdowns, adaptive typography
+- **Social sharing** — Open Graph and Twitter Card meta tags
 
 ## Tech Stack
 
@@ -17,6 +21,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 - [Vite 5](https://vitejs.dev/)
 - [Tailwind CSS 3](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/)
+- [Firebase Hosting](https://firebase.google.com/products/hosting)
 
 ## Getting Started
 
@@ -39,17 +44,24 @@ npm run preview
 ```
 src/
 ├── components/
-│   ├── layout/       # TopNav, Sidebar
-│   ├── ui/           # ConfigToggle, PromptBuilder
-│   └── demos/        # One file per component demo
+│   ├── layout/         # TopNav
+│   ├── ui/             # ExploreBar, PromptBuilder, ConfigToggle
+│   ├── WelcomeScreen.jsx
+│   └── demos/          # One file per component demo
 │       ├── overlays/
 │       ├── inputs/
+│       ├── data/
+│       ├── forms/
 │       ├── layout/
 │       ├── navigation/
-│       └── feedback/
+│       ├── interactions/
+│       ├── feedback/
+│       └── marketing/
 ├── data/
-│   ├── categories.jsx  # Sidebar nav structure
+│   ├── categories.jsx  # Category structure + color system
 │   └── glossary.js     # Component metadata + demo imports
+├── hooks/
+│   └── useExploreMode.js
 ├── styles/
 │   └── animations.css
 ├── App.jsx
@@ -58,10 +70,12 @@ src/
 
 ## Deployment
 
-This project is deployed on [Render](https://render.com/) as a static site.
+Deployed on [Firebase Hosting](https://vibe-glossary.web.app).
 
-**Build command:** `npm run build`  
-**Publish directory:** `dist`
+```bash
+npm run build
+firebase deploy --only hosting --project vibe-glossary
+```
 
 ## Versioning
 

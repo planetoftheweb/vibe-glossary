@@ -1,4 +1,16 @@
-import { Layers, MousePointer, Layout, Grip, MessageSquare } from 'lucide-react';
+import { Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput, MousePointerClick, Megaphone } from 'lucide-react';
+
+export const CATEGORY_COLORS = {
+  overlays:     { text: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/30', active: 'bg-violet-600 text-white', hover: 'hover:bg-violet-500/10', dot: 'bg-violet-500', accent: 'text-violet-500', gradient: 'from-violet-600 to-purple-700' },
+  inputs:       { text: 'text-cyan-400',   bg: 'bg-cyan-500/10',   border: 'border-cyan-500/30',   active: 'bg-cyan-600 text-white',   hover: 'hover:bg-cyan-500/10',   dot: 'bg-cyan-500',   accent: 'text-cyan-500',   gradient: 'from-cyan-500 to-sky-600' },
+  layout:       { text: 'text-emerald-400',bg: 'bg-emerald-500/10',border: 'border-emerald-500/30',active: 'bg-emerald-600 text-white',hover: 'hover:bg-emerald-500/10',dot: 'bg-emerald-500',accent: 'text-emerald-500',gradient: 'from-emerald-500 to-teal-600' },
+  navigation:   { text: 'text-amber-400',  bg: 'bg-amber-500/10',  border: 'border-amber-500/30',  active: 'bg-amber-600 text-white',  hover: 'hover:bg-amber-500/10',  dot: 'bg-amber-500',  accent: 'text-amber-500',  gradient: 'from-amber-500 to-orange-600' },
+  feedback:     { text: 'text-rose-400',   bg: 'bg-rose-500/10',   border: 'border-rose-500/30',   active: 'bg-rose-600 text-white',   hover: 'hover:bg-rose-500/10',   dot: 'bg-rose-500',   accent: 'text-rose-500',   gradient: 'from-rose-500 to-pink-600' },
+  data:         { text: 'text-blue-400',   bg: 'bg-blue-500/10',   border: 'border-blue-500/30',   active: 'bg-blue-600 text-white',   hover: 'hover:bg-blue-500/10',   dot: 'bg-blue-500',   accent: 'text-blue-500',   gradient: 'from-blue-500 to-indigo-600' },
+  forms:        { text: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30', active: 'bg-purple-600 text-white', hover: 'hover:bg-purple-500/10', dot: 'bg-purple-500', accent: 'text-purple-500', gradient: 'from-purple-500 to-fuchsia-600' },
+  interactions: { text: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30', active: 'bg-orange-600 text-white', hover: 'hover:bg-orange-500/10', dot: 'bg-orange-500', accent: 'text-orange-500', gradient: 'from-orange-500 to-red-600' },
+  marketing:    { text: 'text-pink-400',   bg: 'bg-pink-500/10',   border: 'border-pink-500/30',   active: 'bg-pink-600 text-white',   hover: 'hover:bg-pink-500/10',   dot: 'bg-pink-500',   accent: 'text-pink-500',   gradient: 'from-pink-500 to-rose-600' },
+};
 
 export const CATEGORIES = [
   {
@@ -29,6 +41,34 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'data',
+    name: 'Data Display',
+    type: 'Components',
+    icon: <BarChart3 size={14} />,
+    items: [
+      { id: 'table',    name: 'Table / Data Grid' },
+      { id: 'list',     name: 'List / Feed' },
+      { id: 'carousel', name: 'Carousel' },
+      { id: 'tree',     name: 'Tree View' },
+      { id: 'calendar', name: 'Calendar' },
+      { id: 'statcard', name: 'Stat Card / KPI' },
+    ],
+  },
+  {
+    id: 'forms',
+    name: 'Forms',
+    type: 'Patterns',
+    icon: <FormInput size={14} />,
+    items: [
+      { id: 'datepicker', name: 'Date Picker' },
+      { id: 'command',    name: 'Command Palette' },
+      { id: 'taginput',   name: 'Tag Input' },
+      { id: 'richtext',   name: 'Rich Text Editor' },
+      { id: 'rating',     name: 'Rating' },
+      { id: 'stepper',    name: 'Stepper / Wizard' },
+    ],
+  },
+  {
     id: 'layout',
     name: 'Layouts',
     type: 'Patterns',
@@ -51,6 +91,18 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'interactions',
+    name: 'Interactions',
+    type: 'Patterns',
+    icon: <MousePointerClick size={14} />,
+    items: [
+      { id: 'contextmenu',   name: 'Context Menu' },
+      { id: 'dragdrop',      name: 'Drag & Drop' },
+      { id: 'lightbox',      name: 'Lightbox' },
+      { id: 'infinitescroll', name: 'Infinite Scroll' },
+    ],
+  },
+  {
     id: 'feedback',
     name: 'Feedback',
     type: 'Showcase',
@@ -63,6 +115,18 @@ export const CATEGORIES = [
       { id: 'timeline', name: 'Timeline' },
       { id: 'skeleton', name: 'Skeleton' },
       { id: 'progress', name: 'Progress Bar' },
+    ],
+  },
+  {
+    id: 'marketing',
+    name: 'Marketing',
+    type: 'Showcase',
+    icon: <Megaphone size={14} />,
+    items: [
+      { id: 'hero',        name: 'Hero Section' },
+      { id: 'pricing',     name: 'Pricing Table' },
+      { id: 'testimonial', name: 'Testimonial' },
+      { id: 'faq',         name: 'FAQ' },
     ],
   },
 ];

@@ -1,5 +1,5 @@
-import { useRef } from 'react';
 import { Search, SidebarClose } from 'lucide-react';
+import { CATEGORY_COLORS } from '../../data/categories';
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, mobileMenuOpen, setMobileMenuOpen, activeItem, setActiveItem, searchTerm, setSearchTerm, filteredCategories, searchInputRef }) {
   return (
@@ -38,33 +38,37 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, mobileMenuOpen, s
       </div>
 
       <nav className="flex-1 overflow-y-auto p-3 space-y-6">
-        {filteredCategories.map(cat => (
-          <div key={cat.id}>
-            <div className="flex items-center space-x-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-2">
-              {cat.icon}
-              <span>{cat.name}</span>
+        {filteredCategories.map(cat => {
+          const colors = CATEGORY_COLORS[cat.id] || CATEGORY_COLORS.overlays;
+          return (
+            <div key={cat.id}>
+              <div className={`flex items-center space-x-2 text-[10px] font-bold uppercase tracking-wider mb-2 px-2 ${colors.text}`}>
+                <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                {cat.icon}
+                <span>{cat.name}</span>
+              </div>
+              <ul className="space-y-0.5">
+                {cat.items.map(item => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => {
+                        setActiveItem(item.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                        activeItem === item.id
+                          ? `${colors.active} shadow-sm`
+                          : `text-zinc-600 dark:text-zinc-400 ${colors.hover} hover:text-zinc-900 dark:hover:text-zinc-200`
+                      }`}
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="space-y-1">
-              {cat.items.map(item => (
-                <li key={item.id}>
-                  <button
-                    onClick={() => {
-                      setActiveItem(item.id);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      activeItem === item.id
-                        ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm'
-                        : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200'
-                    }`}
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          );
+        })}
         {filteredCategories.length === 0 && (
           <div className="p-4 text-center text-xs text-zinc-400">No components found.</div>
         )}

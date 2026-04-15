@@ -196,7 +196,7 @@ export default function App() {
 
           {/* Info & Prompt Panel — always visible on desktop, toggled on mobile */}
           {infoOpen && (
-            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(window.innerWidth >= 1024 ? { width: `${panelWidth}%` } : {}) }}>
+            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(typeof window !== 'undefined' && window.innerWidth >= 1024 ? { width: `${panelWidth}%` } : {}) }}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
 
                 {/* Definition Header */}
@@ -291,7 +291,7 @@ export default function App() {
             <div
               onMouseDown={handleResizeStart}
               onTouchStart={handleResizeStart}
-              className="hidden lg:flex w-2 hover:w-3 items-center justify-center cursor-col-resize bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 border-x border-zinc-200 dark:border-zinc-800 transition-all group/resize shrink-0 z-20"
+              className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-zinc-200/50 dark:bg-zinc-800/50 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-all group/resize shrink-0 z-20"
             >
               <GripVertical size={14} className="text-zinc-300 dark:text-zinc-600 group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
             </div>
@@ -316,15 +316,11 @@ export default function App() {
               )}
             </div>
 
-            {/* Live Preview badge */}
-            <div className={`absolute top-4 right-4 backdrop-blur-md px-4 py-2 rounded-full shadow-sm z-20 flex items-center space-x-2 text-sm font-semibold uppercase tracking-wide pointer-events-none ${activeCat.bg} ${activeCat.border} border ${activeCat.text}`}>
-              <div className={`w-2 h-2 rounded-full ${activeCat.dot} animate-pulse`}></div>
-              <span>Live Preview</span>
-            </div>
-
-            {/* Demo area */}
-            <div className="w-full h-full relative z-10 flex flex-col p-4 lg:p-10">
-              <DemoComponent activeOptions={activeOptions} />
+            {/* Demo area — fills available space, centers content */}
+            <div className="w-full h-full relative z-10 flex flex-col items-center justify-center p-4 lg:p-8">
+              <div className="w-full max-w-4xl flex-1 flex flex-col justify-center">
+                <DemoComponent activeOptions={activeOptions} />
+              </div>
             </div>
           </main>
         </div>

@@ -29,5 +29,8 @@ lerna-debug.log*
 .env.local
 .env.*.local
 
+# Firebase
+.firebase/
+
 # Vite
 *.local

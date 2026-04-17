@@ -22,6 +22,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 - [Vite 5](https://vitejs.dev/)
 - [Tailwind CSS 3](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/)
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (541 tests)
 - [Firebase Hosting](https://firebase.google.com/products/hosting)
 
 ## Getting Started
@@ -38,6 +39,9 @@ npm run build
 
 # Preview production build
 npm run preview
+
+# Run tests
+npm test
 ```
 
 ## Project Structure
@@ -63,6 +67,7 @@ src/
 │   └── glossary.js     # Component metadata + demo imports
 ├── hooks/
 │   └── useExploreMode.js
+├── test/              # Vitest test suite (541 tests)
 ├── styles/
 │   └── animations.css
 ├── App.jsx

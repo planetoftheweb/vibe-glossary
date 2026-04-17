@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-04-17
+
+### Added
+- Vitest test suite with 541 tests across 7 source files (`npm test`)
+  - `useExploreMode` hook — state machine logic, localStorage persistence, `surpriseMe`, `progress`, `resetProgress`
+  - `CATEGORIES` data integrity — shape, 9 categories, 44 unique item IDs, `CATEGORY_COLORS` completeness
+  - `GLOSSARY_DATA` data integrity — all 44 entries validated for required fields, prompt structure, and scaffold content
+  - `PromptBuilder` — prompt text assembly (base, options, requirements, scaffold), option toggle callbacks, framework picker
+  - `ExploreBar` — `findCategory` resolution, progress display, Surprise Me, expand/collapse panel, item pill clicks, Reset
+  - `ConfigToggle` — option rendering, active state class, `onChange` callback
+  - `App` — dark-mode class on `documentElement`, WelcomeScreen show/hide via localStorage, panel clamp formula
+
 ## [0.4.0] - 2026-04-16
 
 ### Added
@@ -90,7 +102,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.1.0...v0.2.0

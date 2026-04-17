@@ -1,6 +1,6 @@
 {
   "name": "vibe-glossary",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Interactive UI component glossary for vibe coding with AI tools",
   "private": true,
   "type": "module",

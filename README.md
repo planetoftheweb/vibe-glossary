@@ -11,7 +11,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 - **Resizable panels** — drag to resize the info/preview split
 - **Previous/Next navigation** — step through all components sequentially
 - **Dark/light mode** with class-based Tailwind theming
-- **Keyboard shortcut** ⌘K to search components
+- **Keyboard shortcuts** — ⌘K to search, ⌘/ to open the cheat sheet (jump to any category)
 - **Responsive** — mobile view toggle, custom dropdowns, adaptive typography
 - **Social sharing** — Open Graph and Twitter Card meta tags
 - **Footer** — version, component count, and links to the repo and changelog
@@ -51,6 +51,7 @@ src/
 ├── components/
 │   ├── layout/         # TopNav, Footer
 │   ├── ui/             # ExploreBar, PromptBuilder, ConfigToggle
+│   ├── CheatSheet.jsx
 │   ├── WelcomeScreen.jsx
 │   └── demos/          # One file per component demo
 │       ├── overlays/

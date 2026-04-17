@@ -6,6 +6,7 @@ import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
 import ExploreBar    from './components/ui/ExploreBar';
 import WelcomeScreen from './components/WelcomeScreen';
+import CheatSheet    from './components/CheatSheet';
 import useExploreMode from './hooks/useExploreMode';
 import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
 import { GLOSSARY_DATA } from './data/glossary';
@@ -14,6 +15,7 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState(() => {
     return !localStorage.getItem('vg-visited');
   });
+  const [showCheatSheet, setShowCheatSheet] = useState(false);
   const [activeItem, setActiveItem]       = useState('modal');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
@@ -63,6 +65,18 @@ export default function App() {
     if (darkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   }, [darkMode]);
+
+  // Cmd+/ to toggle cheat sheet
+  useEffect(() => {
+    const handleKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === '/') {
+        e.preventDefault();
+        setShowCheatSheet(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
 
   // Reset options when switching components & track visit
   useEffect(() => {
@@ -129,6 +143,12 @@ export default function App() {
           onSelectCategory={handleSelectCategory}
         />
       )}
+
+      <CheatSheet
+        isOpen={showCheatSheet && !showWelcome}
+        onClose={() => setShowCheatSheet(false)}
+        onSelectCategory={setActiveItem}
+      />
 
       {/* Top Navigation */}
       {!showWelcome && (

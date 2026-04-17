@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-17
+
+### Added
+- Cheat sheet overlay triggered by `Cmd+/` (or `Ctrl+/`)
+  - 9 category cards in a responsive grid — click to jump to that category's first component
+  - Keyboard shortcuts reference panel (`⌘K`, `⌘/`, `Esc`)
+  - Backdrop click and `Esc` both dismiss the overlay
+
 ## [0.4.1] - 2026-04-17
 
 ### Added
@@ -102,7 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.2.0...v0.3.0

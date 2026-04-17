@@ -454,7 +454,7 @@ toast({
   <span>{on ? "On" : "Off"}</span>
 </Switch>`,
         html: `<label>
-  <input type="checkbox" role="switch" aria-checked="${on}" />
+  <input type="checkbox" role="switch" aria-checked="\${on}" />
   Airplane Mode
 </label>`,
       },

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-16
+
+### Added
+- Footer with app version, component count, and links to the GitHub repo and CHANGELOG
+- Scaffold toggle in the Spec Generator — inserts a runnable code stub for the selected framework
+- Requirements toggle in the Spec Generator — appends accessibility and behavior requirements
+- Framework picker (shadcn/ui, Headless UI, Radix, Plain HTML) when the Scaffold toggle is on
+- Scaffolds and requirements data for all 44 glossary entries
+
+### Changed
+- Prompt output now uses Markdown-style sections (`## Component Spec`, `## Requirements`, `## Scaffold`) and preserves whitespace
+- Clipboard copy prefers `navigator.clipboard.writeText` with a legacy `execCommand` fallback
+- Demo preview area centers content and no longer shows the "Live Preview" badge or border
+
 ## [0.3.0] - 2026-04-15
 
 ### Added
@@ -76,7 +90,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rayvillalobos/vibe-glossary/releases/tag/v0.1.0

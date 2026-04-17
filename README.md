@@ -5,7 +5,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 ## Features
 
 - **44 interactive demos** across 9 categories: Overlays, Inputs, Data Display, Forms, Layouts, Navigation, Interactions, Feedback, Marketing
-- **Spec Generator** — toggle options to build component specs and copy AI prompts
+- **Spec Generator** — toggle options, add Requirements and Scaffold code (shadcn/ui, Headless UI, Radix, or Plain HTML), and copy the assembled prompt
 - **Live preview** — every component is interactive, not just static screenshots
 - **Explore Mode** — Component of the Day, Surprise Me, and progress tracking
 - **Resizable panels** — drag to resize the info/preview split
@@ -14,6 +14,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 - **Keyboard shortcut** ⌘K to search components
 - **Responsive** — mobile view toggle, custom dropdowns, adaptive typography
 - **Social sharing** — Open Graph and Twitter Card meta tags
+- **Footer** — version, component count, and links to the repo and changelog
 
 ## Tech Stack
 
@@ -44,7 +45,7 @@ npm run preview
 ```
 src/
 ├── components/
-│   ├── layout/         # TopNav
+│   ├── layout/         # TopNav, Footer
 │   ├── ui/             # ExploreBar, PromptBuilder, ConfigToggle
 │   ├── WelcomeScreen.jsx
 │   └── demos/          # One file per component demo

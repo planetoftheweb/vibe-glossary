@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { MessageSquare, ArrowRight, BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
+import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
 import ExploreBar    from './components/ui/ExploreBar';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -324,6 +325,8 @@ export default function App() {
             </div>
           </main>
         </div>
+
+        {!showWelcome && <Footer />}
       </div>
     </div>
   );

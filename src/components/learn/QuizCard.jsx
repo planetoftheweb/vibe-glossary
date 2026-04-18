@@ -11,25 +11,33 @@ function shuffle(arr) {
 }
 
 function pickDistractors(pool, correctId, count = 3) {
-  const candidates = pool.filter(p => p.id !== correctId);
+  const seen = new Set();
+  const candidates = pool.filter(p => {
+    if (p.id === correctId) return false;
+    if (!p.definition) return false;
+    if (seen.has(p.definition)) return false;
+    seen.add(p.definition);
+    return true;
+  });
   return shuffle(candidates).slice(0, count);
 }
 
 export default function QuizCard({
   correctId,
   correctTitle,
+  correctDefinition,
   correctComparison,
-  allOptions,
+  distractorPool,
   onCorrect,
   categoryColors,
 }) {
   const options = useMemo(() => {
-    const distractors = pickDistractors(allOptions, correctId, 3);
+    const distractors = pickDistractors(distractorPool, correctId, 3);
     return shuffle([
-      { id: correctId, label: correctTitle, correct: true },
-      ...distractors.map(d => ({ id: d.id, label: d.name, correct: false })),
+      { id: correctId, label: correctDefinition, correct: true },
+      ...distractors.map(d => ({ id: d.id, label: d.definition, correct: false })),
     ]);
-  }, [correctId, correctTitle, allOptions]);
+  }, [correctId, correctDefinition, distractorPool]);
 
   const [picked, setPicked] = useState(null);
   const [wrongIds, setWrongIds] = useState(new Set());
@@ -64,13 +72,15 @@ export default function QuizCard({
           </h3>
         </div>
 
-        <p className="text-lg lg:text-2xl font-bold text-zinc-900 dark:text-white mb-4 lg:mb-5">
-          What is this component called?
+        <p className="text-lg lg:text-2xl font-bold text-zinc-900 dark:text-white mb-1 lg:mb-2">
+          What does a <span className={cc.accent || 'text-indigo-500'}>{correctTitle}</span> do?
+        </p>
+        <p className="text-sm lg:text-base text-zinc-500 dark:text-zinc-400 mb-4 lg:mb-5">
+          Look at the live demo on the right and pick the description that matches.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3">
+        <div className="grid grid-cols-1 gap-2.5 lg:gap-3">
           {options.map(opt => {
-            const isPicked = picked?.id === opt.id;
             const isWrong = wrongIds.has(opt.id);
             const isCorrectPicked = picked?.correct && picked.id === opt.id;
 
@@ -91,10 +101,10 @@ export default function QuizCard({
                 key={opt.id}
                 onClick={() => handlePick(opt)}
                 disabled={picked?.correct || isWrong}
-                className={`w-full flex items-center gap-3 px-4 py-3 lg:px-5 lg:py-4 rounded-lg lg:rounded-xl border-2 text-left text-base lg:text-lg font-semibold transition-all duration-200 disabled:cursor-not-allowed ${stateClasses}`}
+                className={`w-full flex items-start gap-3 px-4 py-3 lg:px-5 lg:py-4 rounded-lg lg:rounded-xl border-2 text-left text-base lg:text-lg font-medium leading-snug transition-all duration-200 disabled:cursor-not-allowed ${stateClasses}`}
               >
-                {icon}
-                <span className="flex-1 min-w-0 truncate">{opt.label}</span>
+                {icon && <span className="mt-0.5">{icon}</span>}
+                <span className="flex-1 min-w-0">{opt.label}</span>
               </button>
             );
           })}

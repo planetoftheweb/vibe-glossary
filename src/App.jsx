@@ -166,9 +166,21 @@ export default function App() {
   }, [activeCategory, activeItem]);
 
   const quizPool = useMemo(() => {
-    const inCat = activeCategory?.items || [];
+    const mapItem = (item) => {
+      const data = GLOSSARY_DATA[item.id];
+      return {
+        id: item.id,
+        name: item.name,
+        title: data?.title || item.name,
+        definition: data?.definition || '',
+      };
+    };
+    const inCat = (activeCategory?.items || []).map(mapItem);
     if (inCat.length >= 4) return inCat;
-    const others = CATEGORIES.filter(c => c.id !== activeCategory?.id).flatMap(c => c.items);
+    const others = CATEGORIES
+      .filter(c => c.id !== activeCategory?.id)
+      .flatMap(c => c.items)
+      .map(mapItem);
     return [...inCat, ...others];
   }, [activeCategory]);
 
@@ -310,8 +322,8 @@ export default function App() {
                         {showQuiz ? 'Learn Mode' : 'Definition'}
                       </span>
                     </div>
-                    <h1 className={`text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight ${showQuiz ? 'text-zinc-300 dark:text-zinc-700 select-none' : 'text-zinc-900 dark:text-white'}`}>
-                      {showQuiz ? '? ? ? ?' : currentData.title}
+                    <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+                      {currentData.title}
                     </h1>
                   </div>
                   <div className="flex items-center gap-2">
@@ -330,8 +342,9 @@ export default function App() {
                   <QuizCard
                     correctId={activeItem}
                     correctTitle={currentData.title}
+                    correctDefinition={currentData.definition}
                     correctComparison={currentData.comparison}
-                    allOptions={quizPool}
+                    distractorPool={quizPool}
                     categoryColors={activeCat}
                     onCorrect={handleQuizCorrect}
                   />

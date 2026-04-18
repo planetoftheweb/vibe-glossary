@@ -81,6 +81,7 @@ function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width,
 function MainMenu({
   isOpen, onClose,
   darkMode, setDarkMode,
+  learnMode, toggleLearnMode,
   explore, categories, onSelectItem,
   onGetStarted, onOpenCheatSheet, onOpenGlossaryIndex,
   activeCatColors,
@@ -133,6 +134,21 @@ function MainMenu({
       {/* LEARN section */}
       <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
       <div className="pb-1.5">
+        <button
+          onClick={toggleLearnMode}
+          className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+        >
+          <GraduationCap size={18} />
+          <div className="flex flex-col items-start min-w-0 text-left">
+            <span className="font-medium">Learn Mode</span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
+              Quiz me on each component
+            </span>
+          </div>
+          <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
+          </span>
+        </button>
         <MenuItem icon={<Calendar size={18} />} onClick={handleToday}>
           <div className="flex flex-col items-start min-w-0">
             <span className="text-xs text-zinc-400 leading-none">Today's Pick</span>
@@ -156,21 +172,35 @@ function MainMenu({
         >
           <Trophy size={14} />
           <span className="text-xs font-bold uppercase tracking-wider">Your Progress</span>
-          <span className="ml-auto text-xs text-zinc-400 font-semibold">{progress.visited}/{progress.total}</span>
+          <span className="ml-auto text-xs text-zinc-400 font-semibold">
+            {progress.visited}/{progress.total}
+            {progress.mastered > 0 && (
+              <span className="text-emerald-500 ml-1.5">· {progress.mastered} ✓</span>
+            )}
+          </span>
           <ChevronRight size={16} className={`transition-transform ${statsOpen ? 'rotate-90' : ''}`} />
         </button>
 
         {statsOpen && (
           <div className="animate-fade-in">
-            {/* Progress header */}
+            {/* Progress header — dual ring: outer = mastered, inner = visited */}
             <div className="px-4 pb-3 flex items-center gap-3">
-              <div className="relative w-12 h-12 shrink-0">
-                <svg className="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="3" />
-                  <circle
-                    cx="18" cy="18" r="15" fill="none" stroke="currentColor"
-                    className={activeCatColors.accent} strokeWidth="3"
-                    strokeDasharray={`${progress.percent * 0.94} 100`}
+              <div className="relative w-14 h-14 shrink-0">
+                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+                  {/* Outer ring — mastered (emerald) */}
+                  <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
+                    className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
+                  <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
+                    className="text-emerald-500" strokeWidth="1.5"
+                    strokeDasharray={`${progress.masteredPercent * 1.0367} 200`}
+                    strokeLinecap="round"
+                  />
+                  {/* Inner ring — visited (category accent) */}
+                  <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
+                    className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
+                  <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
+                    className={activeCatColors.accent} strokeWidth="2.5"
+                    strokeDasharray={`${progress.percent * 0.7854} 200`}
                     strokeLinecap="round"
                   />
                 </svg>
@@ -185,6 +215,11 @@ function MainMenu({
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight mt-0.5">
                   {progress.visited}/{progress.total} explored · {progress.copied} copied
                 </p>
+                {progress.mastered > 0 && (
+                  <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                    {progress.mastered} mastered ✓
+                  </p>
+                )}
               </div>
             </div>
 
@@ -281,6 +316,7 @@ function MenuItem({ icon, onClick, children }) {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function TopNav({
   darkMode, setDarkMode,
+  learnMode, toggleLearnMode,
   activeItem, setActiveItem,
   categories, activeCatColors,
   onGetStarted, searchInputRef,
@@ -517,6 +553,8 @@ export default function TopNav({
                   onGetStarted={onGetStarted}
                   onOpenCheatSheet={onOpenCheatSheet}
                   onOpenGlossaryIndex={onOpenGlossaryIndex}
+                  learnMode={learnMode}
+                  toggleLearnMode={toggleLearnMode}
                   activeCatColors={activeCatColors}
                 />
               </Popover>

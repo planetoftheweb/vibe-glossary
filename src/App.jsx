@@ -8,6 +8,7 @@ import WelcomeScreen from './components/WelcomeScreen';
 import CheatSheet    from './components/CheatSheet';
 import CompareView   from './components/learn/CompareView';
 import GlossaryIndex from './components/learn/GlossaryIndex';
+import QuizCard      from './components/learn/QuizCard';
 import useExploreMode from './hooks/useExploreMode';
 import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
 import { GLOSSARY_DATA } from './data/glossary';
@@ -23,6 +24,10 @@ export default function App() {
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const [darkMode, setDarkMode]           = useState(true);
+  const [learnMode, setLearnMode]         = useState(() => {
+    try { return localStorage.getItem('vg-learn-mode') === 'true'; }
+    catch { return false; }
+  });
   const [toasts, setToasts]               = useState([]);
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
@@ -121,6 +126,18 @@ export default function App() {
     explore.markCopied(activeItem);
   };
 
+  const toggleLearnMode = () => {
+    setLearnMode(prev => {
+      const next = !prev;
+      try { localStorage.setItem('vg-learn-mode', String(next)); } catch {}
+      return next;
+    });
+  };
+
+  const handleQuizCorrect = () => {
+    explore.markMastered(activeItem);
+  };
+
   const currentData  = GLOSSARY_DATA[activeItem] || GLOSSARY_DATA['modal'];
   const DemoComponent = currentData.demo;
 
@@ -147,6 +164,47 @@ export default function App() {
     if (!activeCategory) return [];
     return activeCategory.items.filter(i => i.id !== activeItem).slice(0, 3);
   }, [activeCategory, activeItem]);
+
+  const quizPool = useMemo(() => {
+    const inCat = activeCategory?.items || [];
+    if (inCat.length >= 4) return inCat;
+    const others = CATEGORIES.filter(c => c.id !== activeCategory?.id).flatMap(c => c.items);
+    return [...inCat, ...others];
+  }, [activeCategory]);
+
+  const isMastered = explore.mastered.has(activeItem);
+  const showQuiz = learnMode && !isMastered;
+
+  const carouselArrows = (
+    <div className="flex items-center gap-1.5">
+      {prevItem && (
+        <button
+          onClick={() => setActiveItem(prevItem)}
+          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          aria-label={`Previous: ${prevData?.title}`}
+        >
+          <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
+            <span className="block text-lg font-semibold text-white">{prevData?.title}</span>
+          </span>
+        </button>
+      )}
+      {nextItem && (
+        <button
+          onClick={() => setActiveItem(nextItem)}
+          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          aria-label={`Next: ${nextData?.title}`}
+        >
+          <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-left opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
+            <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
+          </span>
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <div className={`flex flex-col h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
@@ -183,6 +241,8 @@ export default function App() {
         <TopNav
           darkMode={darkMode}
           setDarkMode={setDarkMode}
+          learnMode={learnMode}
+          toggleLearnMode={toggleLearnMode}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           categories={CATEGORIES}
@@ -246,54 +306,72 @@ export default function App() {
                   <div>
                     <div className="flex items-center gap-2 lg:gap-2.5 mb-2 lg:mb-3">
                       <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${activeCat.dot}`} />
-                      <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>Definition</span>
+                      <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>
+                        {showQuiz ? 'Learn Mode' : 'Definition'}
+                      </span>
                     </div>
-                    <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                      {currentData.title}
+                    <h1 className={`text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight ${showQuiz ? 'text-zinc-300 dark:text-zinc-700 select-none' : 'text-zinc-900 dark:text-white'}`}>
+                      {showQuiz ? '? ? ? ?' : currentData.title}
                     </h1>
                   </div>
-                  <button
-                    onClick={() => setInfoOpen(false)}
-                    className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                    title="Close panel"
-                  >
-                    <PanelLeftClose size={18} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {showQuiz && carouselArrows}
+                    <button
+                      onClick={() => setInfoOpen(false)}
+                      className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      title="Close panel"
+                    >
+                      <PanelLeftClose size={18} />
+                    </button>
+                  </div>
                 </div>
 
-                <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
-                  {currentData.definition}
-                </p>
+                {showQuiz ? (
+                  <QuizCard
+                    correctId={activeItem}
+                    correctTitle={currentData.title}
+                    correctComparison={currentData.comparison}
+                    allOptions={quizPool}
+                    categoryColors={activeCat}
+                    onCorrect={handleQuizCorrect}
+                  />
+                ) : (
+                  <>
+                    <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
+                      {currentData.definition}
+                    </p>
 
-                {/* Compact teaching row: sibling comparisons + vibeTip */}
-                {(siblings.length > 0 || currentData.vibeTip) && (
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 mb-6 lg:mb-10 text-sm lg:text-base">
-                    {siblings.length > 0 && (
-                      <div className="flex flex-wrap items-center gap-x-1 gap-y-1 text-zinc-500 dark:text-zinc-400">
-                        {siblings.map((sib, i) => (
-                          <span key={sib.id} className="flex items-center gap-1">
-                            {i > 0 && <span className="mx-1 text-zinc-300 dark:text-zinc-700">·</span>}
-                            <button
-                              onClick={() => setCompareWith(sib.id)}
-                              className={`hover:underline font-medium ${activeCat.text}`}
-                            >
-                              vs {sib.name}
-                            </button>
-                          </span>
-                        ))}
+                    {/* Compact teaching row: sibling comparisons + vibeTip */}
+                    {(siblings.length > 0 || currentData.vibeTip) && (
+                      <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 mb-6 lg:mb-10 text-sm lg:text-base">
+                        {siblings.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-x-1 gap-y-1 text-zinc-500 dark:text-zinc-400">
+                            {siblings.map((sib, i) => (
+                              <span key={sib.id} className="flex items-center gap-1">
+                                {i > 0 && <span className="mx-1 text-zinc-300 dark:text-zinc-700">·</span>}
+                                <button
+                                  onClick={() => setCompareWith(sib.id)}
+                                  className={`hover:underline font-medium ${activeCat.text}`}
+                                >
+                                  vs {sib.name}
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {currentData.vibeTip && (
+                          <div className="flex items-start gap-1.5 text-zinc-500 dark:text-zinc-400 italic lg:ml-auto">
+                            <Lightbulb size={16} className="shrink-0 mt-0.5" />
+                            <span>{currentData.vibeTip}</span>
+                          </div>
+                        )}
                       </div>
                     )}
-                    {currentData.vibeTip && (
-                      <div className="flex items-start gap-1.5 text-zinc-500 dark:text-zinc-400 italic lg:ml-auto">
-                        <Lightbulb size={16} className="shrink-0 mt-0.5" />
-                        <span>{currentData.vibeTip}</span>
-                      </div>
-                    )}
-                  </div>
+                  </>
                 )}
 
-                {/* Prompt Builder with carousel arrows in the top-right */}
-                <div className="mb-8 relative">
+                {/* Prompt Builder with carousel arrows in the top-right — hidden during an active quiz so it doesn't reveal the answer */}
+                <div className={`mb-8 relative ${showQuiz ? 'hidden' : ''}`}>
                   <PromptBuilder
                     data={currentData}
                     activeOptions={activeOptions}
@@ -301,33 +379,8 @@ export default function App() {
                     categoryColors={activeCat}
                     onCopy={handleCopyPrompt}
                   />
-                  <div className="absolute top-3 lg:top-4 right-3 lg:right-4 flex items-center gap-1.5 z-20">
-                    {prevItem && (
-                      <button
-                        onClick={() => setActiveItem(prevItem)}
-                        className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
-                        aria-label={`Previous: ${prevData?.title}`}
-                      >
-                        <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
-                        <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-                          <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
-                          <span className="block text-lg font-semibold text-white">{prevData?.title}</span>
-                        </span>
-                      </button>
-                    )}
-                    {nextItem && (
-                      <button
-                        onClick={() => setActiveItem(nextItem)}
-                        className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
-                        aria-label={`Next: ${nextData?.title}`}
-                      >
-                        <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
-                        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-left opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-                          <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
-                          <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
-                        </span>
-                      </button>
-                    )}
+                  <div className="absolute top-3 lg:top-4 right-3 lg:right-4 z-20">
+                    {carouselArrows}
                   </div>
                 </div>
               </div>

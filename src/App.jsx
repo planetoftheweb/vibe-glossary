@@ -40,8 +40,18 @@ export default function App() {
     const saved = localStorage.getItem('vg-panel-width');
     return saved ? Number(saved) : 40; // percent
   });
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth >= 1024
+  );
   const isResizing = useRef(false);
   const containerRef = useRef(null);
+
+  // Keep isDesktop reactive so inline panel width is removed below lg breakpoint.
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleResizeStart = useCallback((e) => {
     e.preventDefault();
@@ -331,7 +341,7 @@ export default function App() {
 
           {/* Info & Prompt Panel — always visible on desktop, toggled on mobile */}
           {infoOpen && (
-            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(typeof window !== 'undefined' && window.innerWidth >= 1024 ? { width: `${panelWidth}%` } : {}) }}>
+            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
 
                 {/* Definition Header */}

@@ -1,4 +1,5 @@
 import { GLOSSARY_DATA } from '../data/glossary';
+import { DEMO_REGISTRY } from '../data/demoRegistry';
 import { CATEGORIES } from '../data/categories';
 
 // Collect all item IDs declared in CATEGORIES
@@ -13,16 +14,16 @@ describe('GLOSSARY_DATA', () => {
     expect(keys).toHaveLength(44);
   });
 
-  // 2–8. Per-entry shape tests
+  // 2–7. Per-entry shape tests
   describe.each(entries)('entry: %s', (key, entry) => {
-    // 2. Required top-level fields exist
-    it('has title, definition, vibeTip, comparison, prompt, and demo', () => {
+    // 2. Required top-level fields exist (no demo — that lives in DEMO_REGISTRY)
+    it('has title, definition, vibeTip, comparison, and prompt', () => {
       expect(entry).toHaveProperty('title');
       expect(entry).toHaveProperty('definition');
       expect(entry).toHaveProperty('vibeTip');
       expect(entry).toHaveProperty('comparison');
       expect(entry).toHaveProperty('prompt');
-      expect(entry).toHaveProperty('demo');
+      expect(entry).not.toHaveProperty('demo');
     });
 
     // 3. String fields are non-empty strings
@@ -82,19 +83,30 @@ describe('GLOSSARY_DATA', () => {
         expect(scaffolds[scaffoldKey].trim().length).toBeGreaterThan(0);
       }
     });
-
-    // 8. demo is a function (React component)
-    it('demo is a function', () => {
-      expect(typeof entry.demo).toBe('function');
-    });
   });
 
-  // 9. All 44 GLOSSARY_DATA keys exist as item IDs in CATEGORIES
+  // 8. All 44 GLOSSARY_DATA keys exist as item IDs in CATEGORIES
   describe('CATEGORIES coverage', () => {
     it('every GLOSSARY_DATA key appears as an item ID in CATEGORIES', () => {
       for (const key of keys) {
         expect(allCategoryItemIds).toContain(key);
       }
     });
+  });
+});
+
+describe('DEMO_REGISTRY', () => {
+  it('has an entry for every GLOSSARY_DATA key', () => {
+    for (const key of keys) {
+      expect(DEMO_REGISTRY).toHaveProperty(key);
+    }
+  });
+
+  it('every entry is an object (lazy React component)', () => {
+    for (const key of keys) {
+      // React.lazy returns an object with $$typeof set to REACT_LAZY_TYPE
+      expect(typeof DEMO_REGISTRY[key]).toBe('object');
+      expect(DEMO_REGISTRY[key]).not.toBeNull();
+    }
   });
 });

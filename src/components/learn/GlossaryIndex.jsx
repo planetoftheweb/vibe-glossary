@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { X, Search, BookOpen } from 'lucide-react';
 import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
-import { GLOSSARY_DATA } from '../../data/glossary';
+import { useGlossary } from '../../hooks/useGlossary';
 
 function truncate(str, max = 90) {
   if (!str) return '';
@@ -9,6 +9,7 @@ function truncate(str, max = 90) {
 }
 
 export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
+  const glossary = useGlossary();
   const [query, setQuery] = useState('');
   const [activeCatId, setActiveCatId] = useState('all');
   const inputRef = useRef(null);
@@ -24,7 +25,7 @@ export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
   const allEntries = useMemo(() => {
     return CATEGORIES.flatMap(cat =>
       cat.items.map(item => {
-        const data = GLOSSARY_DATA[item.id];
+        const data = glossary[item.id];
         return {
           id: item.id,
           name: item.name,
@@ -35,7 +36,7 @@ export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
         };
       })
     );
-  }, []);
+  }, [glossary]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from 'react';
 import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, Lightbulb, GraduationCap } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
@@ -12,8 +12,9 @@ import QuizCard       from './components/learn/QuizCard';
 import PathsLauncher  from './components/learn/PathsLauncher';
 import PathView       from './components/learn/PathView';
 import useExploreMode from './hooks/useExploreMode';
+import { useGlossary } from './hooks/useGlossary';
 import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
-import { GLOSSARY_DATA } from './data/glossary';
+import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(() => {
@@ -36,6 +37,7 @@ export default function App() {
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
   const explore = useExploreMode();
+  const glossary = useGlossary();
   const [panelWidth, setPanelWidth] = useState(() => {
     const saved = localStorage.getItem('vg-panel-width');
     return saved ? Number(saved) : 40; // percent
@@ -152,8 +154,8 @@ export default function App() {
     explore.markMastered(activeItem);
   };
 
-  const currentData  = GLOSSARY_DATA[activeItem] || GLOSSARY_DATA['modal'];
-  const DemoComponent = currentData.demo;
+  const currentData  = glossary[activeItem] || glossary['modal'];
+  const DemoComponent = DEMO_REGISTRY[activeItem] || DEMO_REGISTRY['modal'];
 
   // Flat list of all component IDs for prev/next navigation
   const allItems = useMemo(() => CATEGORIES.flatMap(c => c.items.map(i => i.id)), []);
@@ -161,8 +163,8 @@ export default function App() {
   const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
   const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
 
-  const prevData = prevItem ? GLOSSARY_DATA[prevItem] : null;
-  const nextData = nextItem ? GLOSSARY_DATA[nextItem] : null;
+  const prevData = prevItem ? glossary[prevItem] : null;
+  const nextData = nextItem ? glossary[nextItem] : null;
 
   const activeCategory = useMemo(() =>
     CATEGORIES.find(c => c.items.some(i => i.id === activeItem)),
@@ -181,7 +183,7 @@ export default function App() {
 
   const quizPool = useMemo(() => {
     const mapItem = (item) => {
-      const data = GLOSSARY_DATA[item.id];
+      const data = glossary[item.id];
       return {
         id: item.id,
         name: item.name,
@@ -477,7 +479,13 @@ export default function App() {
 
             {/* Demo area — fills available space */}
             <div className="w-full h-full relative z-10 flex flex-col">
-              <DemoComponent activeOptions={activeOptions} />
+              <Suspense fallback={
+                <div className="flex-1 flex items-center justify-center text-zinc-400 dark:text-zinc-600 text-base">
+                  Loading…
+                </div>
+              }>
+                <DemoComponent activeOptions={activeOptions} />
+              </Suspense>
             </div>
           </main>
         </div>

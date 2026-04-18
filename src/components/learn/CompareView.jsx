@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { X, ArrowLeftRight } from 'lucide-react';
-import { GLOSSARY_DATA } from '../../data/glossary';
+import { useGlossary } from '../../hooks/useGlossary';
+import { DEMO_REGISTRY } from '../../data/demoRegistry';
 import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
 
 function categoryFor(itemId) {
@@ -8,9 +9,10 @@ function categoryFor(itemId) {
 }
 
 function ComponentColumn({ itemId, colors }) {
-  const data = GLOSSARY_DATA[itemId];
+  const glossary = useGlossary();
+  const data = glossary[itemId];
   if (!data) return null;
-  const DemoComponent = data.demo;
+  const DemoComponent = DEMO_REGISTRY[itemId];
 
   return (
     <div className="flex-1 min-w-0 flex flex-col bg-zinc-50 dark:bg-zinc-900/60 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
@@ -34,13 +36,21 @@ function ComponentColumn({ itemId, colors }) {
         )}
       </div>
       <div className="flex-1 min-h-[260px] lg:min-h-[340px] relative bg-white dark:bg-zinc-950 flex items-stretch">
-        {DemoComponent ? <DemoComponent activeOptions={new Set()} /> : null}
+        {DemoComponent ? (
+          <Suspense fallback={
+            <div className="flex-1 flex items-center justify-center text-zinc-400 text-sm">Loading…</div>
+          }>
+            <DemoComponent activeOptions={new Set()} />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );
 }
 
 export default function CompareView({ leftId, rightId, onClose, onSelectItem }) {
+  const glossary = useGlossary();
+
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
@@ -48,8 +58,8 @@ export default function CompareView({ leftId, rightId, onClose, onSelectItem }) 
   }, [onClose]);
 
   if (!leftId || !rightId) return null;
-  const left = GLOSSARY_DATA[leftId];
-  const right = GLOSSARY_DATA[rightId];
+  const left = glossary[leftId];
+  const right = glossary[rightId];
   if (!left || !right) return null;
 
   const leftCat = categoryFor(leftId);

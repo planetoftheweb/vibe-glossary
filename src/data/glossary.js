@@ -1,57 +1,3 @@
-// Overlays
-import ModalDemo       from '../components/demos/overlays/ModalDemo';
-import DrawerDemo      from '../components/demos/overlays/DrawerDemo';
-import PopoverDemo     from '../components/demos/overlays/PopoverDemo';
-import TooltipDemo     from '../components/demos/overlays/TooltipDemo';
-import ToastDemo       from '../components/demos/overlays/ToastDemo';
-// Inputs
-import SelectDemo      from '../components/demos/inputs/SelectDemo';
-import OtpDemo         from '../components/demos/inputs/OtpDemo';
-import SwitchDemo      from '../components/demos/inputs/SwitchDemo';
-import DropzoneDemo    from '../components/demos/inputs/DropzoneDemo';
-import RadioDemo       from '../components/demos/inputs/RadioDemo';
-import SliderDemo      from '../components/demos/inputs/SliderDemo';
-// Data Display
-import TableDemo       from '../components/demos/data/TableDemo';
-import ListDemo        from '../components/demos/data/ListDemo';
-import CarouselDemo    from '../components/demos/data/CarouselDemo';
-import TreeDemo        from '../components/demos/data/TreeDemo';
-import CalendarDemo    from '../components/demos/data/CalendarDemo';
-import StatCardDemo    from '../components/demos/data/StatCardDemo';
-// Forms
-import DatePickerDemo      from '../components/demos/forms/DatePickerDemo';
-import CommandPaletteDemo  from '../components/demos/forms/CommandPaletteDemo';
-import TagInputDemo        from '../components/demos/forms/TagInputDemo';
-import RichTextDemo        from '../components/demos/forms/RichTextDemo';
-import RatingDemo          from '../components/demos/forms/RatingDemo';
-import StepperDemo         from '../components/demos/forms/StepperDemo';
-// Layout
-import SidebarDemo     from '../components/demos/layout/SidebarDemo';
-import CardDemo        from '../components/demos/layout/CardDemo';
-import MasonryDemo     from '../components/demos/layout/MasonryDemo';
-// Navigation
-import TabsDemo        from '../components/demos/navigation/TabsDemo';
-import BreadcrumbsDemo from '../components/demos/navigation/BreadcrumbsDemo';
-import AccordionDemo   from '../components/demos/navigation/AccordionDemo';
-// Interactions
-import ContextMenuDemo     from '../components/demos/interactions/ContextMenuDemo';
-import DragDropDemo        from '../components/demos/interactions/DragDropDemo';
-import LightboxDemo        from '../components/demos/interactions/LightboxDemo';
-import InfiniteScrollDemo  from '../components/demos/interactions/InfiniteScrollDemo';
-// Feedback
-import AlertDemo       from '../components/demos/feedback/AlertDemo';
-import EmptyStateDemo  from '../components/demos/feedback/EmptyStateDemo';
-import BadgeDemo       from '../components/demos/feedback/BadgeDemo';
-import AvatarsDemo     from '../components/demos/feedback/AvatarsDemo';
-import TimelineDemo    from '../components/demos/feedback/TimelineDemo';
-import SkeletonDemo    from '../components/demos/feedback/SkeletonDemo';
-import ProgressDemo    from '../components/demos/feedback/ProgressDemo';
-// Marketing
-import HeroDemo        from '../components/demos/marketing/HeroDemo';
-import PricingDemo     from '../components/demos/marketing/PricingDemo';
-import TestimonialDemo from '../components/demos/marketing/TestimonialDemo';
-import FaqDemo         from '../components/demos/marketing/FaqDemo';
-
 export const GLOSSARY_DATA = {
   // ─── Overlays ───
   modal: {
@@ -117,7 +63,6 @@ export const GLOSSARY_DATA = {
 </dialog>`,
       },
     },
-    demo: ModalDemo,
   },
   drawer: {
     title: 'Drawer (Sheet)',
@@ -171,7 +116,6 @@ export const GLOSSARY_DATA = {
 </dialog>`,
       },
     },
-    demo: DrawerDemo,
   },
   popover: {
     title: 'Popover',
@@ -225,7 +169,6 @@ export const GLOSSARY_DATA = {
 </div>`,
       },
     },
-    demo: PopoverDemo,
   },
   tooltip: {
     title: 'Tooltip',
@@ -272,7 +215,6 @@ export const GLOSSARY_DATA = {
 </div>`,
       },
     },
-    demo: TooltipDemo,
   },
   toast: {
     title: 'Toast',
@@ -320,7 +262,6 @@ toast({
 </output>`,
       },
     },
-    demo: ToastDemo,
   },
 
   // ─── Inputs ───
@@ -378,7 +319,6 @@ toast({
 </select>`,
       },
     },
-    demo: SelectDemo,
   },
   otp: {
     title: 'OTP Input',
@@ -423,7 +363,6 @@ toast({
 </fieldset>`,
       },
     },
-    demo: OtpDemo,
   },
   switch: {
     title: 'Switch',
@@ -459,7 +398,6 @@ toast({
 </label>`,
       },
     },
-    demo: SwitchDemo,
   },
   dropzone: {
     title: 'Dropzone',
@@ -495,7 +433,6 @@ toast({
 <ul id="file-list"></ul>`,
       },
     },
-    demo: DropzoneDemo,
   },
   radio: {
     title: 'Radio Group',
@@ -547,7 +484,6 @@ toast({
 </fieldset>`,
       },
     },
-    demo: RadioDemo,
   },
   slider: {
     title: 'Slider',
@@ -585,7 +521,6 @@ toast({
 <output id="output">50</output>`,
       },
     },
-    demo: SliderDemo,
   },
 
   // ─── Data Display ───
@@ -637,7 +572,6 @@ toast({
 </table>`,
       },
     },
-    demo: TableDemo,
   },
   list: {
     title: 'List / Feed',
@@ -677,7 +611,6 @@ toast({
 </ul>`,
       },
     },
-    demo: ListDemo,
   },
   carousel: {
     title: 'Carousel',
@@ -721,7 +654,6 @@ toast({
 </div>`,
       },
     },
-    demo: CarouselDemo,
   },
   tree: {
     title: 'Tree View',
@@ -764,7 +696,6 @@ toast({
 </ul>`,
       },
     },
-    demo: TreeDemo,
   },
   calendar: {
     title: 'Calendar',
@@ -804,7 +735,6 @@ toast({
 </table>`,
       },
     },
-    demo: CalendarDemo,
   },
   statcard: {
     title: 'Stat Card / KPI',
@@ -844,7 +774,6 @@ toast({
 </div>`,
       },
     },
-    demo: StatCardDemo,
   },
 
   // ─── Forms ───
@@ -886,7 +815,6 @@ toast({
 </div>`,
       },
     },
-    demo: DatePickerDemo,
   },
   command: {
     title: 'Command Palette',
@@ -928,7 +856,6 @@ toast({
 </dialog>`,
       },
     },
-    demo: CommandPaletteDemo,
   },
   taginput: {
     title: 'Tag Input',
@@ -974,7 +901,6 @@ toast({
 </div>`,
       },
     },
-    demo: TagInputDemo,
   },
   richtext: {
     title: 'Rich Text Editor',
@@ -1016,7 +942,6 @@ toast({
 </div>`,
       },
     },
-    demo: RichTextDemo,
   },
   rating: {
     title: 'Rating',
@@ -1064,7 +989,6 @@ toast({
 </fieldset>`,
       },
     },
-    demo: RatingDemo,
   },
   stepper: {
     title: 'Stepper / Wizard',
@@ -1113,7 +1037,6 @@ toast({
 </nav>`,
       },
     },
-    demo: StepperDemo,
   },
 
   // ─── Layouts ───
@@ -1161,7 +1084,6 @@ toast({
 </nav>`,
       },
     },
-    demo: SidebarDemo,
   },
   card: {
     title: 'Card',
@@ -1208,7 +1130,6 @@ toast({
 </article>`,
       },
     },
-    demo: CardDemo,
   },
   masonry: {
     title: 'Masonry',
@@ -1248,7 +1169,6 @@ toast({
 </div>`,
       },
     },
-    demo: MasonryDemo,
   },
 
   // ─── Navigation ───
@@ -1306,7 +1226,6 @@ toast({
 <div role="tabpanel" id="panel2" aria-labelledby="tab2" hidden>Password settings...</div>`,
       },
     },
-    demo: TabsDemo,
   },
   breadcrumbs: {
     title: 'Breadcrumbs',
@@ -1352,7 +1271,6 @@ toast({
 </nav>`,
       },
     },
-    demo: BreadcrumbsDemo,
   },
   accordion: {
     title: 'Accordion',
@@ -1406,7 +1324,6 @@ toast({
 </div>`,
       },
     },
-    demo: AccordionDemo,
   },
 
   // ─── Interactions ───
@@ -1459,7 +1376,6 @@ toast({
 </div>`,
       },
     },
-    demo: ContextMenuDemo,
   },
   dragdrop: {
     title: 'Drag & Drop',
@@ -1504,7 +1420,6 @@ toast({
 </ul>`,
       },
     },
-    demo: DragDropDemo,
   },
   lightbox: {
     title: 'Lightbox',
@@ -1549,7 +1464,6 @@ toast({
 </dialog>`,
       },
     },
-    demo: LightboxDemo,
   },
   infinitescroll: {
     title: 'Infinite Scroll',
@@ -1598,7 +1512,6 @@ return (
 </div>`,
       },
     },
-    demo: InfiniteScrollDemo,
   },
 
   // ─── Feedback ───
@@ -1641,7 +1554,6 @@ return (
 </div>`,
       },
     },
-    demo: AlertDemo,
   },
   empty: {
     title: 'Empty State',
@@ -1675,7 +1587,6 @@ return (
 </div>`,
       },
     },
-    demo: EmptyStateDemo,
   },
   badge: {
     title: 'Badge',
@@ -1704,7 +1615,6 @@ return (
 <span class="badge badge-warning">Pending</span>`,
       },
     },
-    demo: BadgeDemo,
   },
   avatars: {
     title: 'Avatar Group',
@@ -1744,7 +1654,6 @@ return (
 </div>`,
       },
     },
-    demo: AvatarsDemo,
   },
   timeline: {
     title: 'Timeline',
@@ -1791,7 +1700,6 @@ return (
 </ol>`,
       },
     },
-    demo: TimelineDemo,
   },
   skeleton: {
     title: 'Skeleton',
@@ -1823,7 +1731,6 @@ return (
 </div>`,
       },
     },
-    demo: SkeletonDemo,
   },
   progress: {
     title: 'Progress',
@@ -1853,7 +1760,6 @@ return (
 </div>`,
       },
     },
-    demo: ProgressDemo,
   },
 
   // ─── Marketing ───
@@ -1899,7 +1805,6 @@ return (
 </section>`,
       },
     },
-    demo: HeroDemo,
   },
   pricing: {
     title: 'Pricing Table',
@@ -1958,7 +1863,6 @@ return (
 </section>`,
       },
     },
-    demo: PricingDemo,
   },
   testimonial: {
     title: 'Testimonial',
@@ -2008,7 +1912,6 @@ return (
 </figure>`,
       },
     },
-    demo: TestimonialDemo,
   },
   faq: {
     title: 'FAQ',
@@ -2067,6 +1970,5 @@ return (
 </section>`,
       },
     },
-    demo: FaqDemo,
   },
 };

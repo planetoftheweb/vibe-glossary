@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // components collection is public read-only
+    match /components/{componentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

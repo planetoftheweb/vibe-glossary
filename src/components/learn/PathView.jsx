@@ -119,7 +119,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
       onClick={handleBackdrop}
       className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 lg:p-8 animate-fade-in"
     >
-      <div className="w-full max-w-5xl max-h-[94vh] bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden">
+      <div className="w-full max-w-6xl h-full max-h-[94vh] bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden">
         {/* Header */}
         <PathHeader
           path={path}
@@ -143,7 +143,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
         />
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
           {phase === 'intro' && (
             <IntroScreen
               path={path}
@@ -263,7 +263,7 @@ function PathProgress({ phase, colors, stepIndex, totalSteps, quizIndex, totalQu
 
 function IntroScreen({ path, colors, onStart, onJump }) {
   return (
-    <div className="p-6 lg:p-10">
+    <div className="flex-1 p-6 lg:p-10">
       <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-sm lg:text-base font-semibold mb-4`}>
         <Sparkles size={14} />
         Learning path · {path.items.length} components
@@ -319,9 +319,9 @@ function StepScreen({ itemId, data, colors, stepIndex, totalSteps }) {
   const DemoComponent = data.demo;
   const cat = categoryFor(itemId);
   return (
-    <div className="flex flex-col lg:flex-row gap-0">
+    <div className="flex-1 flex flex-col lg:flex-row gap-0 min-h-0">
       {/* Left: description */}
-      <div className="flex-1 p-5 lg:p-8 min-w-0">
+      <div className="flex-1 p-5 lg:p-8 min-w-0 lg:overflow-y-auto">
         <div className="flex items-center gap-2 mb-3">
           <div className={`w-2.5 h-2.5 rounded-full ${colors.dot}`} />
           <span className={`text-xs lg:text-sm font-bold uppercase tracking-wider ${colors.accent}`}>
@@ -347,7 +347,7 @@ function StepScreen({ itemId, data, colors, stepIndex, totalSteps }) {
         )}
       </div>
       {/* Right: live demo */}
-      <div className="lg:w-96 shrink-0 bg-zinc-50 dark:bg-zinc-900/60 min-h-[280px] lg:min-h-full flex items-stretch border-t lg:border-t-0 lg:border-l border-zinc-200 dark:border-zinc-800">
+      <div className="lg:w-[28rem] xl:w-[32rem] shrink-0 bg-zinc-50 dark:bg-zinc-900/60 min-h-[320px] lg:min-h-0 flex items-stretch border-t lg:border-t-0 lg:border-l border-zinc-200 dark:border-zinc-800">
         {DemoComponent ? <DemoComponent activeOptions={new Set()} /> : null}
       </div>
     </div>
@@ -360,7 +360,7 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
   const isCorrect = pickedId === question.answerId;
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="flex-1 p-6 lg:p-10 flex flex-col">
       <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-sm lg:text-base font-semibold mb-4`}>
         <Trophy size={14} />
         Quiz · {quizIndex + 1} / {totalQuiz}
@@ -424,7 +424,7 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
   const passed = correct / totalQuiz >= PASS_THRESHOLD;
 
   return (
-    <div className="p-6 lg:p-10 text-center">
+    <div className="flex-1 p-6 lg:p-10 text-center flex flex-col">
       {passed ? (
         <>
           <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br ${colors.gradient} mb-5 shadow-lg`}>

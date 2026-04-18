@@ -632,7 +632,8 @@ export default function TopNav({
                   </svg>
                 </div>
               }
-              label={`${explore.progress.visited}/${explore.progress.total}`}
+              iconOnly
+              ariaLabel={`Progress: ${explore.progress.visited} of ${explore.progress.total}`}
               isOpen={openDropdown === 'progress'}
               onToggle={() => setOpenDropdown(openDropdown === 'progress' ? null : 'progress')}
               onClose={() => setOpenDropdown(null)}

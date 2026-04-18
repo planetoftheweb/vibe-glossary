@@ -308,7 +308,7 @@ export default function App() {
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex flex-col pt-20 overflow-hidden">
+      <div className="flex-1 flex flex-col pt-36 md:pt-20 overflow-hidden">
 
         {/* Main content row */}
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">

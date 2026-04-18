@@ -354,27 +354,28 @@ export default function App() {
                       {currentData.definition}
                     </p>
 
-                    {/* Compact teaching row: sibling comparisons + vibeTip */}
+                    {/* Teaching row: sibling compare pills + vibeTip */}
                     {(siblings.length > 0 || currentData.vibeTip) && (
-                      <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 mb-6 lg:mb-10 text-sm lg:text-base">
+                      <div className="flex flex-col gap-3 lg:gap-4 mb-6 lg:mb-10">
                         {siblings.length > 0 && (
-                          <div className="flex flex-wrap items-center gap-x-1 gap-y-1 text-zinc-500 dark:text-zinc-400">
-                            {siblings.map((sib, i) => (
-                              <span key={sib.id} className="flex items-center gap-1">
-                                {i > 0 && <span className="mx-1 text-zinc-300 dark:text-zinc-700">·</span>}
-                                <button
-                                  onClick={() => setCompareWith(sib.id)}
-                                  className={`hover:underline font-medium ${activeCat.text}`}
-                                >
-                                  vs {sib.name}
-                                </button>
-                              </span>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+                              Compare
+                            </span>
+                            {siblings.map(sib => (
+                              <button
+                                key={sib.id}
+                                onClick={() => setCompareWith(sib.id)}
+                                className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${activeCat.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
+                              >
+                                vs {sib.name}
+                              </button>
                             ))}
                           </div>
                         )}
                         {currentData.vibeTip && (
-                          <div className="flex items-start gap-1.5 text-zinc-500 dark:text-zinc-400 italic lg:ml-auto">
-                            <Lightbulb size={16} className="shrink-0 mt-0.5" />
+                          <div className="flex items-start gap-2 text-sm lg:text-base text-zinc-500 dark:text-zinc-400 italic">
+                            <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
                             <span>{currentData.vibeTip}</span>
                           </div>
                         )}

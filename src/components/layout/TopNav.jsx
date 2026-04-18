@@ -134,7 +134,10 @@ function MainMenu({
   };
 
   return (
-    <div className="w-[340px] text-zinc-700 dark:text-zinc-200">
+    <div className="w-[340px] text-zinc-700 dark:text-zinc-200 relative overflow-hidden">
+      <div className={`absolute inset-0 bg-gradient-to-br ${activeCatColors.gradient} opacity-[0.08] dark:opacity-[0.12] pointer-events-none`} />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/60 dark:to-zinc-900/60 pointer-events-none" />
+      <div className="relative">
       {/* LEARN section — hidden on lg+ where the Learning pill covers it */}
       <div className="lg:hidden">
         <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
@@ -293,6 +296,7 @@ function MainMenu({
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-1'}`} />
           </span>
         </button>
+      </div>
       </div>
     </div>
   );

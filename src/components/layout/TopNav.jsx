@@ -134,10 +134,7 @@ function MainMenu({
   };
 
   return (
-    <div className="w-[340px] text-zinc-700 dark:text-zinc-200 relative overflow-hidden">
-      <div className={`absolute inset-0 bg-gradient-to-br ${activeCatColors.gradient} opacity-[0.08] dark:opacity-[0.12] pointer-events-none`} />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/60 dark:to-zinc-900/60 pointer-events-none" />
-      <div className="relative">
+    <div className="w-[340px] text-zinc-700 dark:text-zinc-200">
       {/* LEARN section — hidden on lg+ where the Learning pill covers it */}
       <div className="lg:hidden">
         <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
@@ -297,7 +294,6 @@ function MainMenu({
           </span>
         </button>
       </div>
-      </div>
     </div>
   );
 }
@@ -386,8 +382,9 @@ export default function TopNav({
   }, [searchInputRef]);
 
   return (
-    <header className="bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50 fixed top-0 left-0 right-0">
-      <div className="flex items-center justify-between px-4 md:px-6 h-20">
+    <header className="relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50 fixed top-0 left-0 right-0 overflow-hidden">
+      <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.08] dark:opacity-[0.14] pointer-events-none transition-opacity duration-500`} />
+      <div className="relative flex items-center justify-between px-4 md:px-6 h-20">
         {/* Left: Logo + pill dropdowns */}
         <div className="flex items-center gap-2 md:gap-4 min-w-0">
           <button

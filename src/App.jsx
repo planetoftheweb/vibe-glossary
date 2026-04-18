@@ -6,9 +6,11 @@ import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
 import WelcomeScreen from './components/WelcomeScreen';
 import CheatSheet    from './components/CheatSheet';
-import CompareView   from './components/learn/CompareView';
-import GlossaryIndex from './components/learn/GlossaryIndex';
-import QuizCard      from './components/learn/QuizCard';
+import CompareView    from './components/learn/CompareView';
+import GlossaryIndex  from './components/learn/GlossaryIndex';
+import QuizCard       from './components/learn/QuizCard';
+import PathsLauncher  from './components/learn/PathsLauncher';
+import PathView       from './components/learn/PathView';
 import useExploreMode from './hooks/useExploreMode';
 import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
 import { GLOSSARY_DATA } from './data/glossary';
@@ -20,6 +22,8 @@ export default function App() {
   const [showCheatSheet, setShowCheatSheet] = useState(false);
   const [compareWith, setCompareWith]     = useState(null);
   const [showGlossaryIndex, setShowGlossaryIndex] = useState(false);
+  const [showPaths, setShowPaths] = useState(false);
+  const [activePath, setActivePath] = useState(null);
   const [activeItem, setActiveItem]       = useState('modal');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
@@ -248,6 +252,22 @@ export default function App() {
         onSelectItem={setActiveItem}
       />
 
+      <PathsLauncher
+        isOpen={showPaths && !showWelcome && !activePath}
+        onClose={() => setShowPaths(false)}
+        onSelectPath={(path) => { setActivePath(path); setShowPaths(false); }}
+        mastered={explore.mastered}
+        badges={explore.badges}
+      />
+
+      <PathView
+        path={activePath}
+        isOpen={!!activePath && !showWelcome}
+        onClose={() => setActivePath(null)}
+        onAwardBadge={(pathId) => explore.awardBadge(pathId)}
+        onSelectItem={setActiveItem}
+      />
+
       {/* Top Navigation */}
       {!showWelcome && (
         <TopNav
@@ -264,6 +284,7 @@ export default function App() {
           explore={explore}
           onOpenCheatSheet={() => setShowCheatSheet(true)}
           onOpenGlossaryIndex={() => setShowGlossaryIndex(true)}
+          onOpenPaths={() => setShowPaths(true)}
         />
       )}
 

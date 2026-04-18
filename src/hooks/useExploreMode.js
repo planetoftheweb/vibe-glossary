@@ -4,6 +4,7 @@ import { CATEGORIES } from '../data/categories';
 const STORAGE_KEY = 'vg-explored';
 const COPIED_KEY = 'vg-copied';
 const MASTERED_KEY = 'vg-mastered';
+const BADGES_KEY = 'vg-badges';
 
 // All component IDs flattened
 const ALL_IDS = CATEGORIES.flatMap(cat => cat.items.map(i => i.id));
@@ -33,6 +34,7 @@ export default function useExploreMode() {
   const [visited, setVisited] = useState(() => loadSet(STORAGE_KEY));
   const [copied, setCopied] = useState(() => loadSet(COPIED_KEY));
   const [mastered, setMastered] = useState(() => loadSet(MASTERED_KEY));
+  const [badges, setBadges] = useState(() => loadSet(BADGES_KEY));
 
   const componentOfTheDay = useMemo(() => getComponentOfTheDay(), []);
 
@@ -66,6 +68,16 @@ export default function useExploreMode() {
     });
   }, []);
 
+  const awardBadge = useCallback((pathId) => {
+    setBadges(prev => {
+      if (prev.has(pathId)) return prev;
+      const next = new Set(prev);
+      next.add(pathId);
+      saveSet(BADGES_KEY, next);
+      return next;
+    });
+  }, []);
+
   const surpriseMe = useCallback(() => {
     const unvisited = ALL_IDS.filter(id => !visited.has(id));
     const pool = unvisited.length > 0 ? unvisited : ALL_IDS;
@@ -76,6 +88,7 @@ export default function useExploreMode() {
     visited: visited.size,
     copied: copied.size,
     mastered: mastered.size,
+    badges: badges.size,
     total: TOTAL,
     percent: Math.round((visited.size / TOTAL) * 100),
     masteredPercent: Math.round((mastered.size / TOTAL) * 100),
@@ -85,19 +98,23 @@ export default function useExploreMode() {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(COPIED_KEY);
     localStorage.removeItem(MASTERED_KEY);
+    localStorage.removeItem(BADGES_KEY);
     setVisited(new Set());
     setCopied(new Set());
     setMastered(new Set());
+    setBadges(new Set());
   }, []);
 
   return {
     visited,
     copied,
     mastered,
+    badges,
     componentOfTheDay,
     markVisited,
     markCopied,
     markMastered,
+    awardBadge,
     surpriseMe,
     progress,
     resetProgress,

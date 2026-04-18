@@ -13,7 +13,8 @@ import PathsLauncher  from './components/learn/PathsLauncher';
 import PathView       from './components/learn/PathView';
 import useExploreMode from './hooks/useExploreMode';
 import { useGlossary } from './hooks/useGlossary';
-import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
+import { useCategories } from './hooks/useCategories';
+import { CATEGORY_COLORS } from './data/categories';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
@@ -36,7 +37,8 @@ export default function App() {
   const [toasts, setToasts]               = useState([]);
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
-  const explore = useExploreMode();
+  const categories = useCategories();
+  const explore = useExploreMode(categories);
   const glossary = useGlossary();
   const [panelWidth, setPanelWidth] = useState(() => {
     const saved = localStorage.getItem('vg-panel-width');
@@ -158,7 +160,7 @@ export default function App() {
   const DemoComponent = DEMO_REGISTRY[activeItem] || DEMO_REGISTRY['modal'];
 
   // Flat list of all component IDs for prev/next navigation
-  const allItems = useMemo(() => CATEGORIES.flatMap(c => c.items.map(i => i.id)), []);
+  const allItems = useMemo(() => categories.flatMap(c => c.items.map(i => i.id)), []);
   const currentIndex = allItems.indexOf(activeItem);
   const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
   const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
@@ -167,7 +169,7 @@ export default function App() {
   const nextData = nextItem ? glossary[nextItem] : null;
 
   const activeCategory = useMemo(() =>
-    CATEGORIES.find(c => c.items.some(i => i.id === activeItem)),
+    categories.find(c => c.items.some(i => i.id === activeItem)),
     [activeItem]
   );
 
@@ -193,7 +195,7 @@ export default function App() {
     };
     const inCat = (activeCategory?.items || []).map(mapItem);
     if (inCat.length >= 4) return inCat;
-    const others = CATEGORIES
+    const others = categories
       .filter(c => c.id !== activeCategory?.id)
       .flatMap(c => c.items)
       .map(mapItem);
@@ -289,7 +291,7 @@ export default function App() {
           toggleLearnMode={toggleLearnMode}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          categories={CATEGORIES}
+          categories={categories}
           activeCatColors={activeCat}
           onGetStarted={handleShowWelcome}
           searchInputRef={searchInputRef}

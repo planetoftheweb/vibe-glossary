@@ -22,35 +22,35 @@ export default function ListDemo({ activeOptions }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4 overflow-y-auto">
-      <div className="w-full max-w-lg space-y-3">
+    <div className="flex flex-col items-center justify-start h-full w-full p-8 overflow-y-auto">
+      <div className="w-full max-w-2xl space-y-4">
         {isVirtual && (
-          <div className="text-center text-xs text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-lg py-2 font-mono">
+          <div className="text-center text-sm text-zinc-400 bg-zinc-100 dark:bg-zinc-700 rounded-lg py-2.5 font-mono">
             Virtualized: rendering 4 of 10,000 items
           </div>
         )}
         {ITEMS.map(item => (
-          <div key={item.id} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold shrink-0">{item.avatar}</div>
+          <div key={item.id} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">{item.avatar}</div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-zinc-900 dark:text-white">{item.author}</span>
-                    <span className="text-xs text-zinc-400">{item.time}</span>
+                    <span className="font-semibold text-base text-zinc-900 dark:text-white">{item.author}</span>
+                    <span className="text-sm text-zinc-400">{item.time}</span>
                   </div>
-                  <button className="text-zinc-400 hover:text-zinc-600"><MoreHorizontal size={16} /></button>
+                  <button className="text-zinc-400 hover:text-zinc-600"><MoreHorizontal size={20} /></button>
                 </div>
-                <p className="text-sm text-zinc-700 dark:text-zinc-300 mt-1.5 leading-relaxed">{item.text}</p>
-                <div className="flex items-center gap-4 mt-3">
-                  <button onClick={() => toggleLike(item.id)} className={`flex items-center gap-1 text-xs transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
-                    <Heart size={14} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
+                <p className="text-base text-zinc-700 dark:text-zinc-300 mt-2 leading-relaxed">{item.text}</p>
+                <div className="flex items-center gap-5 mt-4">
+                  <button onClick={() => toggleLike(item.id)} className={`flex items-center gap-1.5 text-sm transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
+                    <Heart size={18} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
                   </button>
-                  <button className="flex items-center gap-1 text-xs text-zinc-400 hover:text-indigo-500 transition-colors">
-                    <MessageCircle size={14} /> {item.comments}
+                  <button className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
+                    <MessageCircle size={18} /> {item.comments}
                   </button>
-                  <button className="flex items-center gap-1 text-xs text-zinc-400 hover:text-emerald-500 transition-colors">
-                    <Share2 size={14} />
+                  <button className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-emerald-500 transition-colors">
+                    <Share2 size={18} />
                   </button>
                 </div>
               </div>
@@ -58,8 +58,8 @@ export default function ListDemo({ activeOptions }) {
           </div>
         ))}
         {isInfinite && (
-          <button className="w-full py-3 text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-center gap-2 transition-colors">
-            <ArrowDown size={14} /> Load more
+          <button className="w-full py-4 text-base font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-center gap-2 transition-colors">
+            <ArrowDown size={18} /> Load more
           </button>
         )}
       </div>

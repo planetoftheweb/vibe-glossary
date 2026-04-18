@@ -1,5 +1,17 @@
 import { Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput, MousePointerClick, Megaphone } from 'lucide-react';
 
+export const CATEGORY_ICON_REGISTRY = {
+  overlays:     Layers,
+  inputs:       MousePointer,
+  data:         BarChart3,
+  forms:        FormInput,
+  layout:       Layout,
+  navigation:   Grip,
+  interactions: MousePointerClick,
+  feedback:     MessageSquare,
+  marketing:    Megaphone,
+};
+
 export const CATEGORY_COLORS = {
   overlays:     { text: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/30', active: 'bg-violet-600 text-white', hover: 'hover:bg-violet-500/10', dot: 'bg-violet-500', accent: 'text-violet-500', gradient: 'from-violet-600 to-purple-700' },
   inputs:       { text: 'text-cyan-400',   bg: 'bg-cyan-500/10',   border: 'border-cyan-500/30',   active: 'bg-cyan-600 text-white',   hover: 'hover:bg-cyan-500/10',   dot: 'bg-cyan-500',   accent: 'text-cyan-500',   gradient: 'from-cyan-500 to-sky-600' },

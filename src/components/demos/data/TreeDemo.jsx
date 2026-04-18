@@ -35,16 +35,16 @@ function TreeNode({ node, depth = 0, hasIcons, hasLines }) {
     <div>
       <button
         onClick={() => isFolder && setOpen(!open)}
-        className={`w-full flex items-center gap-1.5 py-1 px-2 rounded-md text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors group ${isFolder ? 'cursor-pointer' : 'cursor-default'}`}
-        style={{ paddingLeft: `${depth * 16 + 8}px` }}
+        className={`w-full flex items-center gap-2 py-2 px-3 rounded-lg text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors group ${isFolder ? 'cursor-pointer' : 'cursor-default'}`}
+        style={{ paddingLeft: `${depth * 20 + 12}px` }}
       >
-        {isFolder && <ChevronRight size={14} className={`text-zinc-400 transition-transform ${open ? 'rotate-90' : ''}`} />}
-        {!isFolder && <span className="w-3.5" />}
-        {hasIcons && <Icon size={15} className={iconColor} />}
+        {isFolder && <ChevronRight size={18} className={`text-zinc-400 transition-transform ${open ? 'rotate-90' : ''}`} />}
+        {!isFolder && <span className="w-4" />}
+        {hasIcons && <Icon size={20} className={iconColor} />}
         <span className={`${isFolder ? 'font-medium text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-400'}`}>{node.name}</span>
       </button>
       {isFolder && open && (
-        <div className={hasLines ? 'border-l border-zinc-200 dark:border-zinc-700 ml-4' : ''}>
+        <div className={hasLines ? 'border-l border-zinc-200 dark:border-zinc-700 ml-5' : ''}>
           {node.children?.map(child => (
             <TreeNode key={child.id} node={child} depth={depth + 1} hasIcons={hasIcons} hasLines={hasLines} />
           ))}
@@ -59,9 +59,9 @@ export default function TreeDemo({ activeOptions }) {
   const hasLines = activeOptions.has('lines');
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3 shadow-sm">
-        <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider px-2 pb-2 mb-1 border-b border-zinc-100 dark:border-zinc-800">Explorer</div>
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 shadow-md">
+        <div className="text-sm font-semibold text-zinc-400 uppercase tracking-wider px-3 pb-3 mb-2 border-b border-zinc-100 dark:border-zinc-700">Explorer</div>
         {TREE.map(node => (
           <TreeNode key={node.id} node={node} hasIcons={hasIcons} hasLines={hasLines} />
         ))}

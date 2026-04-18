@@ -29,24 +29,35 @@ const serviceAccount = JSON.parse(readFileSync(credPath, 'utf8'));
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
-// Dynamically import glossary data (ESM)
+// Dynamically import data (ESM)
 const { GLOSSARY_DATA } = await import('../src/data/glossary.js');
+const { CATEGORIES } = await import('../src/data/categories.jsx');
 
-async function seed() {
-  const entries = Object.entries(GLOSSARY_DATA);
-  const BATCH_SIZE = 500; // Firestore batch limit
-
+async function seedBatch(collectionName, entries) {
+  const BATCH_SIZE = 500;
   for (let i = 0; i < entries.length; i += BATCH_SIZE) {
     const batch = db.batch();
     const chunk = entries.slice(i, i + BATCH_SIZE);
     for (const [id, data] of chunk) {
-      batch.set(db.collection('components').doc(id), data);
+      batch.set(db.collection(collectionName).doc(id), data);
     }
     await batch.commit();
-    console.log(`Seeded ${i + chunk.length}/${entries.length} documents.`);
+    console.log(`[${collectionName}] Seeded ${i + chunk.length}/${entries.length}`);
   }
+}
 
+async function seed() {
+  // Seed components
+  await seedBatch('components', Object.entries(GLOSSARY_DATA));
   console.log('Done. Firestore collection "components" is ready.');
+
+  // Seed categories — strip the React icon component, store iconId string instead
+  const catEntries = CATEGORIES.map((cat, order) => {
+    const { icon: _icon, ...rest } = cat;
+    return [cat.id, { ...rest, iconId: cat.id, order }];
+  });
+  await seedBatch('categories', catEntries);
+  console.log('Done. Firestore collection "categories" is ready.');
 }
 
 seed().catch(err => {

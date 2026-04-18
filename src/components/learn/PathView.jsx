@@ -3,8 +3,9 @@ import {
   X, ChevronLeft, ChevronRight, Check, Lightbulb,
   Trophy, Sparkles, RotateCcw, GraduationCap,
 } from 'lucide-react';
-import { GLOSSARY_DATA } from '../../data/glossary';
-import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
+import { useGlossary } from '../../hooks/useGlossary';
+import { useCategories } from '../../hooks/useCategories';
+import { CATEGORY_COLORS } from '../../data/categories';
 
 const PASS_THRESHOLD = 0.8; // 80% correct to earn badge
 
@@ -17,16 +18,15 @@ function shuffle(arr) {
   return a;
 }
 
-function categoryFor(itemId) {
-  return CATEGORIES.find(c => c.items.some(i => i.id === itemId));
-}
-
-function pathColors(path) {
-  const first = categoryFor(path.items[0]);
-  return first ? CATEGORY_COLORS[first.id] : CATEGORY_COLORS.overlays;
-}
-
 export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelectItem }) {
+  const glossary = useGlossary();
+  const categories = useCategories();
+
+  const categoryFor = (itemId) => categories.find(c => c.items.some(i => i.id === itemId));
+  const pathColors = (p) => {
+    const first = categoryFor(p.items[0]);
+    return first ? CATEGORY_COLORS[first.id] : CATEGORY_COLORS.overlays;
+  };
   const [phase, setPhase] = useState('intro'); // intro | steps | quiz | result
   const [stepIndex, setStepIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -51,7 +51,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
-  const colors = useMemo(() => (path ? pathColors(path) : CATEGORY_COLORS.overlays), [path]);
+  const colors = useMemo(() => (path ? pathColors(path) : CATEGORY_COLORS.overlays), [path, categories]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Shuffled quiz questions (fixed for this run)
   const quiz = useMemo(() => {
@@ -60,7 +60,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
       ...q,
       shuffled: shuffle(q.optionIds).map(id => ({
         id,
-        title: GLOSSARY_DATA[id]?.title || id,
+        title: glossary[id]?.title || id,
       })),
     }));
   }, [path]);
@@ -71,7 +71,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
 
   const totalSteps = path.items.length;
   const currentId = path.items[stepIndex];
-  const currentData = GLOSSARY_DATA[currentId];
+  const currentData = glossary[currentId];
 
   const handleStartPath = () => { setPhase('steps'); setStepIndex(0); };
   const handleNextStep = () => {
@@ -281,7 +281,7 @@ function IntroScreen({ path, colors, onStart, onJump }) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {path.items.map((id, i) => {
-            const data = GLOSSARY_DATA[id];
+            const data = glossary[id];
             return (
               <button
                 key={id}
@@ -483,7 +483,7 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
           <div className="space-y-2">
             {quizAnswers.map((a, i) => {
               if (a.correct) return null;
-              const data = GLOSSARY_DATA[a.answerId];
+              const data = glossary[a.answerId];
               return (
                 <button
                   key={i}

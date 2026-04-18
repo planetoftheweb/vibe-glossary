@@ -25,36 +25,36 @@ export default function CarouselDemo({ activeOptions }) {
   const next = () => setCurrent(c => (c + 1) % SLIDES.length);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-xl relative">
-        <div className="relative overflow-hidden rounded-2xl shadow-lg aspect-[16/9]">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-3xl relative">
+        <div className="relative overflow-hidden rounded-2xl shadow-2xl aspect-[16/9]">
           {SLIDES.map((slide, i) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 bg-gradient-to-br ${slide.bg} flex flex-col items-center justify-center text-white p-8 transition-all duration-500 ${
+              className={`absolute inset-0 bg-gradient-to-br ${slide.bg} flex flex-col items-center justify-center text-white p-10 transition-all duration-500 ${
                 isFade
                   ? (i === current ? 'opacity-100' : 'opacity-0')
                   : ''
               }`}
               style={!isFade ? { transform: `translateX(${(i - current) * 100}%)`, transition: 'transform 0.5s ease' } : undefined}
             >
-              <h3 className="text-2xl md:text-3xl font-bold mb-2">{slide.title}</h3>
-              <p className="text-white/80 text-sm md:text-base">{slide.subtitle}</p>
+              <h3 className="text-3xl md:text-5xl font-bold mb-4">{slide.title}</h3>
+              <p className="text-white/80 text-lg md:text-xl">{slide.subtitle}</p>
             </div>
           ))}
 
-          <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
-            <ChevronLeft size={20} />
+          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
+            <ChevronLeft size={28} />
           </button>
-          <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
-            <ChevronRight size={20} />
+          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
+            <ChevronRight size={28} />
           </button>
         </div>
 
         {hasDots && (
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center gap-2.5 mt-5">
             {SLIDES.map((_, i) => (
-              <button key={i} onClick={() => goTo(i)} className={`w-2.5 h-2.5 rounded-full transition-all ${i === current ? 'bg-zinc-900 dark:bg-white scale-110' : 'bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'}`} />
+              <button key={i} onClick={() => goTo(i)} className={`w-3 h-3 rounded-full transition-all ${i === current ? 'bg-zinc-900 dark:bg-white scale-125' : 'bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'}`} />
             ))}
           </div>
         )}

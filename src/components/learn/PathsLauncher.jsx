@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { X, ChevronRight, Trophy, GraduationCap, Check } from 'lucide-react';
 import { PATHS } from '../../data/paths';
-import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
-
-function categoryFor(itemId) {
-  return CATEGORIES.find(c => c.items.some(i => i.id === itemId));
-}
-
-function pathColors(path) {
-  const first = categoryFor(path.items[0]);
-  return first ? CATEGORY_COLORS[first.id] : CATEGORY_COLORS.overlays;
-}
+import { CATEGORY_COLORS } from '../../data/categories';
+import { useCategories } from '../../hooks/useCategories';
 
 export default function PathsLauncher({ isOpen, onClose, onSelectPath, mastered, badges }) {
+  const categories = useCategories();
+
+  const categoryFor = (itemId) => categories.find(c => c.items.some(i => i.id === itemId));
+  const pathColors = (path) => {
+    const first = categoryFor(path.items[0]);
+    return first ? CATEGORY_COLORS[first.id] : CATEGORY_COLORS.overlays;
+  };
+
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };

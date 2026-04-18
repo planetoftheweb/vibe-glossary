@@ -13,18 +13,18 @@ export default function OtpDemo({ activeOptions }) {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="flex items-center gap-3">
         {[0, 1, 2, 3].map(i => (
           <span key={i} className="contents">
-            <div className={`w-12 h-14 border-2 rounded-md flex items-center justify-center text-xl font-mono transition-all ${i === focusIdx ? 'border-indigo-500 ring-2 ring-indigo-500/20 z-10' : 'border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'}`}>
+            <div className={`w-20 h-24 border-2 rounded-xl flex items-center justify-center text-4xl font-mono transition-all ${i === focusIdx ? 'border-indigo-500 ring-4 ring-indigo-500/20 z-10' : 'border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'}`}>
               {i < focusIdx
                 ? (isMasked ? '•' : Math.floor(Math.random() * 9))
                 : i === focusIdx
-                  ? <div className="w-0.5 h-6 bg-indigo-500 animate-pulse" />
+                  ? <div className="w-0.5 h-10 bg-indigo-500 animate-pulse" />
                   : ''}
             </div>
-            {hasSep && i === 1 && <span className="text-zinc-400 font-bold">-</span>}
+            {hasSep && i === 1 && <span className="text-zinc-400 font-bold text-3xl">-</span>}
           </span>
         ))}
       </div>

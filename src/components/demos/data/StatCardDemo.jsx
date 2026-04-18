@@ -14,7 +14,7 @@ function Sparkline({ data, color }) {
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
-  const w = 80, h = 24;
+  const w = 100, h = 32;
   const points = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ');
   return (
     <svg width={w} height={h} className="overflow-visible">
@@ -29,26 +29,26 @@ export default function StatCardDemo({ activeOptions }) {
   const isCompact = activeOptions.has('compact');
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className={`w-full max-w-2xl grid ${isCompact ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-2'} gap-3`}>
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className={`w-full max-w-4xl grid ${isCompact ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-2'} gap-5`}>
         {STATS.map(stat => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm">
-              <div className="flex items-start justify-between mb-2">
+            <div key={stat.label} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 shadow-md">
+              <div className="flex items-start justify-between mb-3">
                 <div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mb-1">{stat.label}</p>
-                  <p className={`${isCompact ? 'text-xl' : 'text-2xl'} font-bold text-zinc-900 dark:text-white`}>{stat.value}</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium mb-2">{stat.label}</p>
+                  <p className={`${isCompact ? 'text-2xl' : 'text-3xl'} font-bold text-zinc-900 dark:text-white`}>{stat.value}</p>
                 </div>
                 {hasIcon && (
-                  <div className={`p-2 rounded-lg ${stat.bg}`}>
-                    <Icon size={isCompact ? 16 : 20} className={stat.color} />
+                  <div className={`p-3 rounded-xl ${stat.bg}`}>
+                    <Icon size={isCompact ? 22 : 28} className={stat.color} />
                   </div>
                 )}
               </div>
-              <div className="flex items-center justify-between mt-2">
-                <div className={`flex items-center gap-1 text-xs font-semibold ${stat.up ? 'text-emerald-600' : 'text-rose-500'}`}>
-                  {stat.up ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+              <div className="flex items-center justify-between mt-3">
+                <div className={`flex items-center gap-1.5 text-sm font-semibold ${stat.up ? 'text-emerald-600' : 'text-rose-500'}`}>
+                  {stat.up ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                   {stat.change}
                 </div>
                 {hasSparkline && <Sparkline data={stat.up ? SPARKLINE_UP : SPARKLINE_DOWN} color={stat.color} />}

@@ -39,34 +39,34 @@ export default function InfiniteScrollDemo({ activeOptions }) {
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-sm relative">
-        <div ref={containerRef} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-sm overflow-y-auto max-h-80">
-          <div className="p-1.5 space-y-1">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-xl relative">
+        <div ref={containerRef} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-md overflow-y-auto max-h-[32rem]">
+          <div className="p-3 space-y-1">
             {items.map(item => (
-              <div key={item.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+              <div key={item.id} className="flex items-center gap-4 px-4 py-3.5 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
                   {item.id}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">{item.title}</p>
-                  <p className="text-xs text-zinc-400 truncate">{item.desc}</p>
+                  <p className="text-base font-medium text-zinc-900 dark:text-white truncate">{item.title}</p>
+                  <p className="text-sm text-zinc-400 truncate">{item.desc}</p>
                 </div>
-                <span className="text-[10px] text-zinc-400 shrink-0">{item.time}</span>
+                <span className="text-sm text-zinc-400 shrink-0">{item.time}</span>
               </div>
             ))}
           </div>
 
           {loading && (
-            <div className="flex items-center justify-center py-4">
-              <Loader2 size={18} className="animate-spin text-zinc-400" />
+            <div className="flex items-center justify-center py-5">
+              <Loader2 size={24} className="animate-spin text-zinc-400" />
             </div>
           )}
 
           {isLoadMore && !loading && items.length < 30 && (
-            <div className="p-3">
-              <button onClick={loadMore} className="w-full py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 rounded-lg flex items-center justify-center gap-1.5 transition-colors">
-                <ArrowDown size={14} /> Load more
+            <div className="p-4">
+              <button onClick={loadMore} className="w-full py-3 text-base font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-zinc-50 dark:bg-zinc-700 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                <ArrowDown size={18} /> Load more
               </button>
             </div>
           )}
@@ -75,12 +75,12 @@ export default function InfiniteScrollDemo({ activeOptions }) {
         </div>
 
         {hasBackToTop && (
-          <button onClick={scrollToTop} className="absolute bottom-2 right-2 p-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-full shadow-lg hover:scale-110 transition-transform">
-            <ChevronsUp size={16} />
+          <button onClick={scrollToTop} className="absolute bottom-4 right-4 p-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-full shadow-lg hover:scale-110 transition-transform">
+            <ChevronsUp size={20} />
           </button>
         )}
 
-        <p className="text-center text-xs text-zinc-400 mt-2">{items.length} items loaded</p>
+        <p className="text-center text-sm text-zinc-400 mt-3">{items.length} items loaded</p>
       </div>
     </div>
   );

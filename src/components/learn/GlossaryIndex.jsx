@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { X, Search, BookOpen } from 'lucide-react';
-import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
+import { CATEGORY_COLORS } from '../../data/categories';
 import { useGlossary } from '../../hooks/useGlossary';
+import { useCategories } from '../../hooks/useCategories';
 
 function truncate(str, max = 90) {
   if (!str) return '';
@@ -10,6 +11,7 @@ function truncate(str, max = 90) {
 
 export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
   const glossary = useGlossary();
+  const categories = useCategories();
   const [query, setQuery] = useState('');
   const [activeCatId, setActiveCatId] = useState('all');
   const inputRef = useRef(null);
@@ -23,7 +25,7 @@ export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
   }, [isOpen, onClose]);
 
   const allEntries = useMemo(() => {
-    return CATEGORIES.flatMap(cat =>
+    return categories.flatMap(cat =>
       cat.items.map(item => {
         const data = glossary[item.id];
         return {
@@ -57,7 +59,7 @@ export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
       if (!map.has(e.catId)) map.set(e.catId, []);
       map.get(e.catId).push(e);
     }
-    return CATEGORIES
+    return categories
       .filter(cat => map.has(cat.id))
       .map(cat => ({ ...cat, entries: map.get(cat.id) }));
   }, [filtered]);
@@ -128,7 +130,7 @@ export default function GlossaryIndex({ isOpen, onClose, onSelectItem }) {
               active={activeCatId === 'all'}
               onClick={() => setActiveCatId('all')}
             />
-            {CATEGORIES.map(cat => {
+            {categories.map(cat => {
               const cc = CATEGORY_COLORS[cat.id];
               return (
                 <CatChip

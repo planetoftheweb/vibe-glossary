@@ -31,15 +31,15 @@ export default function TagInputDemo({ activeOptions }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-md">
-        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Technologies</label>
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-xl">
+        <label className="block text-base font-semibold text-zinc-700 dark:text-zinc-300 mb-3">Technologies</label>
         <div className="relative">
-          <div className="flex flex-wrap gap-1.5 p-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-sm min-h-[44px] focus-within:border-indigo-500 transition-colors">
+          <div className="flex flex-wrap gap-2 p-3.5 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-sm min-h-[60px] focus-within:border-indigo-500 transition-colors">
             {tags.map((tag, i) => (
-              <span key={tag} className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${hasColors ? TAG_COLORS[i % TAG_COLORS.length] : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
+              <span key={tag} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${hasColors ? TAG_COLORS[i % TAG_COLORS.length] : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'}`}>
                 {tag}
-                <button onClick={() => removeTag(tag)} className="hover:opacity-70 transition-opacity"><X size={12} /></button>
+                <button onClick={() => removeTag(tag)} className="hover:opacity-70 transition-opacity"><X size={14} /></button>
               </span>
             ))}
             {tags.length < maxTags && (
@@ -50,22 +50,22 @@ export default function TagInputDemo({ activeOptions }) {
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                 onKeyDown={handleKeyDown}
                 placeholder={tags.length ? '' : 'Add tags...'}
-                className="flex-1 min-w-[80px] bg-transparent outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 py-1"
+                className="flex-1 min-w-[100px] bg-transparent outline-none text-base text-zinc-900 dark:text-white placeholder:text-zinc-400 py-1"
               />
             )}
           </div>
 
           {hasAutocomplete && showSuggestions && filteredSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 w-full mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-20 p-1.5 animate-fade-in">
+            <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-20 p-2 animate-fade-in">
               {filteredSuggestions.slice(0, 5).map(s => (
-                <button key={s} onMouseDown={() => addTag(s)} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                  <Plus size={12} /> {s}
+                <button key={s} onMouseDown={() => addTag(s)} className="w-full flex items-center gap-2 px-4 py-2.5 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors">
+                  <Plus size={16} /> {s}
                 </button>
               ))}
             </div>
           )}
         </div>
-        {hasLimit && <p className="text-xs text-zinc-400 mt-2">{tags.length}/{maxTags} tags</p>}
+        {hasLimit && <p className="text-sm text-zinc-400 mt-3">{tags.length}/{maxTags} tags</p>}
       </div>
     </div>
   );

@@ -20,20 +20,20 @@ export default function LightboxDemo({ activeOptions }) {
   const next = () => setOpen(o => (o + 1) % IMAGES.length);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-md">
-        <div className="grid grid-cols-3 gap-2">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-2xl">
+        <div className="grid grid-cols-3 gap-3">
           {IMAGES.map((img, i) => (
             <button
               key={img.id}
               onClick={() => { setOpen(i); setZoomed(false); }}
-              className="aspect-square rounded-xl overflow-hidden group relative"
+              className="aspect-square rounded-2xl overflow-hidden group relative"
             >
               <div className={`w-full h-full bg-gradient-to-br ${img.color} flex items-center justify-center`}>
-                <span className="text-white/60 text-xs font-bold">{img.label}</span>
+                <span className="text-white/70 text-base font-bold">{img.label}</span>
               </div>
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                <Maximize2 size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                <Maximize2 size={28} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </button>
           ))}

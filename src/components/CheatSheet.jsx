@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput, MousePointerClick, Megaphone, X, ArrowRight, Keyboard } from 'lucide-react';
-import { CATEGORIES } from '../data/categories';
+import { useCategories } from '../hooks/useCategories';
 
 const CATEGORY_META = {
   overlays:     { icon: Layers,             color: 'from-violet-600 to-purple-700',  border: 'border-violet-500/30',  glow: 'shadow-violet-500/20' },
@@ -21,6 +21,8 @@ const SHORTCUTS = [
 ];
 
 export default function CheatSheet({ isOpen, onClose, onSelectCategory }) {
+  const categories = useCategories();
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e) => {
@@ -36,7 +38,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory }) {
   if (!isOpen) return null;
 
   const handleSelect = (catId) => {
-    const cat = CATEGORIES.find(c => c.id === catId);
+    const cat = categories.find(c => c.id === catId);
     if (cat && cat.items[0]) {
       onSelectCategory(cat.items[0].id);
       onClose();
@@ -71,7 +73,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory }) {
         <div className="p-6">
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4">Categories</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {CATEGORIES.map(cat => {
+            {categories.map(cat => {
               const meta = CATEGORY_META[cat.id];
               const Icon = meta.icon;
               return (

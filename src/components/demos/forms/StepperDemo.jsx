@@ -16,8 +16,8 @@ export default function StepperDemo({ activeOptions }) {
   const goTo = (step) => { if (isClickable || step <= current) setCurrent(step); };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-sm p-6">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-2xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-md p-8">
         {/* Stepper */}
         <div className={`flex ${isVertical ? 'flex-col gap-0' : 'items-center justify-between'} mb-8`}>
           {STEPS.map((step, i) => {
@@ -29,13 +29,13 @@ export default function StepperDemo({ activeOptions }) {
                 <div className="flex flex-col items-center">
                   <button
                     onClick={() => goTo(step.id)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                    className={`w-14 h-14 rounded-full flex items-center justify-center text-base font-bold transition-all ${
                       isDone ? 'bg-emerald-500 text-white' :
                       isActive ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 ring-4 ring-zinc-200 dark:ring-zinc-700' :
-                      'bg-zinc-100 text-zinc-400 dark:bg-zinc-800'
+                      'bg-zinc-100 text-zinc-400 dark:bg-zinc-700'
                     } ${isClickable ? 'cursor-pointer hover:scale-110' : ''}`}
                   >
-                    {isDone ? <Check size={18} /> : <Icon size={18} />}
+                    {isDone ? <Check size={24} /> : <Icon size={24} />}
                   </button>
                   {isVertical && i < STEPS.length - 1 && (
                     <div className={`w-0.5 h-8 my-1 ${isDone ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'}`} />
@@ -44,9 +44,9 @@ export default function StepperDemo({ activeOptions }) {
                 {!isVertical && i < STEPS.length - 1 && (
                   <div className={`flex-1 h-0.5 mx-3 ${isDone ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'} hidden sm:block`} />
                 )}
-                <div className={isVertical ? '' : 'mt-2 text-center'}>
-                  <p className={`text-xs font-semibold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-500'}`}>{step.label}</p>
-                  {hasDescription && <p className="text-[10px] text-zinc-400 mt-0.5">{step.description}</p>}
+                <div className={isVertical ? '' : 'mt-3 text-center'}>
+                  <p className={`text-base font-semibold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-500'}`}>{step.label}</p>
+                  {hasDescription && <p className="text-xs text-zinc-400 mt-1">{step.description}</p>}
                 </div>
                 {!isVertical && i < STEPS.length - 1 && <div className="flex-1 hidden sm:hidden" />}
               </div>
@@ -55,8 +55,8 @@ export default function StepperDemo({ activeOptions }) {
         </div>
 
         {/* Form content placeholder */}
-        <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-4 mb-6 min-h-[80px] flex items-center justify-center">
-          <p className="text-sm text-zinc-400">Step {current}: {STEPS[current - 1].description}</p>
+        <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-6 mb-8 min-h-[120px] flex items-center justify-center">
+          <p className="text-base text-zinc-400">Step {current}: {STEPS[current - 1].description}</p>
         </div>
 
         {/* Navigation */}
@@ -64,16 +64,16 @@ export default function StepperDemo({ activeOptions }) {
           <button
             onClick={() => setCurrent(c => Math.max(1, c - 1))}
             disabled={current === 1}
-            className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white disabled:opacity-30 transition-colors"
+            className="flex items-center gap-2 px-5 py-3 text-base font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white disabled:opacity-30 transition-colors"
           >
-            <ChevronLeft size={16} /> Back
+            <ChevronLeft size={20} /> Back
           </button>
           <button
             onClick={() => setCurrent(c => Math.min(STEPS.length, c + 1))}
             disabled={current === STEPS.length}
-            className="flex items-center gap-1 px-4 py-2 text-sm font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg disabled:opacity-30 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 px-5 py-3 text-base font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg disabled:opacity-30 hover:opacity-90 transition-opacity"
           >
-            {current === STEPS.length ? 'Submit' : 'Continue'} <ChevronRight size={16} />
+            {current === STEPS.length ? 'Submit' : 'Continue'} <ChevronRight size={20} />
           </button>
         </div>
       </div>

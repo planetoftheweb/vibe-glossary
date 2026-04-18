@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { Shuffle, Calendar, Trophy, ChevronDown, ChevronUp, RotateCcw, Check, Copy, Eye } from 'lucide-react';
-import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
-import { GLOSSARY_DATA } from '../../data/glossary';
-
-function findCategory(itemId) {
-  return CATEGORIES.find(c => c.items.some(i => i.id === itemId));
-}
+import { CATEGORY_COLORS } from '../../data/categories';
+import { useCategories } from '../../hooks/useCategories';
+import { useGlossary } from '../../hooks/useGlossary';
 
 export default function ExploreBar({ explore, activeItem, onSelectItem, activeCatColors }) {
+  const categories = useCategories();
+  const glossary = useGlossary();
   const [expanded, setExpanded] = useState(false);
   const { componentOfTheDay, progress, visited, copied, surpriseMe } = explore;
 
-  const cotdData = GLOSSARY_DATA[componentOfTheDay];
-  const cotdCat = findCategory(componentOfTheDay);
+  const cotdData = glossary[componentOfTheDay];
+  const cotdCat = categories.find(c => c.items.some(i => i.id === componentOfTheDay));
   const cotdColors = cotdCat ? CATEGORY_COLORS[cotdCat.id] : CATEGORY_COLORS.overlays;
   const isCotdActive = activeItem === componentOfTheDay;
 
@@ -104,7 +103,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
 
             {/* Category breakdown */}
             <div className="space-y-3">
-              {CATEGORIES.map(cat => {
+              {categories.map(cat => {
                 const cc = CATEGORY_COLORS[cat.id];
                 const catVisited = cat.items.filter(i => visited.has(i.id)).length;
                 const catCopied = cat.items.filter(i => copied.has(i.id)).length;

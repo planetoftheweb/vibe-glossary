@@ -1,18 +1,17 @@
 import { useEffect, Suspense } from 'react';
 import { X, ArrowLeftRight } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
+import { useCategories } from '../../hooks/useCategories';
 import { DEMO_REGISTRY } from '../../data/demoRegistry';
-import { CATEGORIES, CATEGORY_COLORS } from '../../data/categories';
-
-function categoryFor(itemId) {
-  return CATEGORIES.find(c => c.items.some(i => i.id === itemId));
-}
+import { CATEGORY_COLORS } from '../../data/categories';
 
 function ComponentColumn({ itemId, colors }) {
   const glossary = useGlossary();
+  const categories = useCategories();
   const data = glossary[itemId];
   if (!data) return null;
   const DemoComponent = DEMO_REGISTRY[itemId];
+  const categoryFor = (id) => categories.find(c => c.items.some(i => i.id === id));
 
   return (
     <div className="flex-1 min-w-0 flex flex-col bg-zinc-50 dark:bg-zinc-900/60 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">

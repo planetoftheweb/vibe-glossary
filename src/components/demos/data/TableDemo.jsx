@@ -43,26 +43,26 @@ export default function TableDemo({ activeOptions }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-2xl">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-4xl">
         {isFilterable && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg">
-              <Search size={14} className="text-zinc-400" />
-              <input value={filter} onChange={e => setFilter(e.target.value)} placeholder="Filter rows..." className="bg-transparent outline-none text-sm w-full text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400" />
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 flex items-center gap-2 px-4 py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl">
+              <Search size={18} className="text-zinc-400" />
+              <input value={filter} onChange={e => setFilter(e.target.value)} placeholder="Filter rows..." className="bg-transparent outline-none text-base w-full text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400" />
             </div>
-            <button className="p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-400 hover:text-zinc-600">
-              <Filter size={14} />
+            <button className="p-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-400 hover:text-zinc-600">
+              <Filter size={18} />
             </button>
           </div>
         )}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden shadow-sm">
-          <table className="w-full text-sm">
+        <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden shadow-md">
+          <table className="w-full text-base">
             <thead>
-              <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50">
+              <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                 {['name', 'role', 'status', 'revenue'].map(col => (
-                  <th key={col} onClick={() => handleSort(col)} className={`text-left px-4 py-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider ${isSortable ? 'cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-200 select-none' : ''}`}>
-                    <div className="flex items-center gap-1">
+                  <th key={col} onClick={() => handleSort(col)} className={`text-left px-5 py-4 text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider ${isSortable ? 'cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-200 select-none' : ''}`}>
+                    <div className="flex items-center gap-1.5">
                       {col} <SortIcon col={col} />
                     </div>
                   </th>
@@ -71,16 +71,16 @@ export default function TableDemo({ activeOptions }) {
             </thead>
             <tbody>
               {rows.map((row, i) => (
-                <tr key={row.id} className={`border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors ${isStriped && i % 2 ? 'bg-zinc-25 dark:bg-zinc-800/20' : ''}`}>
-                  <td className="px-4 py-3 font-medium text-zinc-900 dark:text-white">{row.name}</td>
-                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{row.role}</td>
-                  <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[row.status]}`}>{row.status}</span></td>
-                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400 font-mono">{row.revenue}</td>
+                <tr key={row.id} className={`border-b border-zinc-50 dark:border-zinc-700/50 hover:bg-zinc-50 dark:hover:bg-zinc-700/30 transition-colors ${isStriped && i % 2 ? 'bg-zinc-25 dark:bg-zinc-700/20' : ''}`}>
+                  <td className="px-5 py-4 font-medium text-zinc-900 dark:text-white">{row.name}</td>
+                  <td className="px-5 py-4 text-zinc-600 dark:text-zinc-400">{row.role}</td>
+                  <td className="px-5 py-4"><span className={`px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[row.status]}`}>{row.status}</span></td>
+                  <td className="px-5 py-4 text-zinc-600 dark:text-zinc-400 font-mono">{row.revenue}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-2.5 bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-between text-xs text-zinc-400">
+          <div className="px-5 py-3.5 bg-zinc-50 dark:bg-zinc-700/50 flex items-center justify-between text-sm text-zinc-400">
             <span>{rows.length} results</span>
             <span>Page 1 of 1</span>
           </div>

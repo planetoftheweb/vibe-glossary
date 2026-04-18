@@ -32,44 +32,44 @@ export default function ContextMenuDemo({ activeOptions }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
       <div
         onContextMenu={handleContext}
         onClick={() => setMenu({ ...menu, visible: false })}
-        className="relative w-full max-w-md h-64 bg-white dark:bg-zinc-900 border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-xl flex flex-col items-center justify-center cursor-context-menu select-none"
+        className="relative w-full max-w-2xl h-96 bg-white dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-2xl flex flex-col items-center justify-center cursor-context-menu select-none"
       >
-        <MoreHorizontal size={24} className="text-zinc-300 dark:text-zinc-600 mb-2" />
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">Right-click anywhere here</p>
-        <p className="text-xs text-zinc-400 mt-1">or long-press on mobile</p>
+        <MoreHorizontal size={40} className="text-zinc-300 dark:text-zinc-600 mb-3" />
+        <p className="text-lg text-zinc-500 dark:text-zinc-400 font-medium">Right-click anywhere here</p>
+        <p className="text-sm text-zinc-400 mt-2">or long-press on mobile</p>
 
         {selected && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-3 py-1.5 rounded-full text-xs font-medium animate-fade-in">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in">
             {selected} triggered
           </div>
         )}
 
         {menu.visible && (
           <div
-            className="absolute bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl z-50 py-1.5 min-w-[180px] animate-fade-in"
+            className="absolute bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl z-50 py-2 min-w-[240px] animate-fade-in"
             style={{ left: menu.x, top: menu.y }}
             onClick={e => e.stopPropagation()}
           >
             {MENU_ITEMS.map((item, i) => {
-              if (!item) return <div key={i} className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />;
+              if (!item) return <div key={i} className="h-px bg-zinc-100 dark:bg-zinc-700 my-1.5" />;
               const Icon = item.icon;
               return (
                 <button
                   key={item.label}
                   onClick={() => handleClick(item.label)}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
-                    item.danger ? 'text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'
+                  className={`w-full flex items-center justify-between px-4 py-2.5 text-base transition-colors ${
+                    item.danger ? 'text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    {hasIcons && <Icon size={14} />}
+                  <div className="flex items-center gap-3">
+                    {hasIcons && <Icon size={18} />}
                     {item.label}
                   </div>
-                  {hasShortcuts && item.shortcut && <kbd className="text-[10px] font-mono text-zinc-400">{item.shortcut}</kbd>}
+                  {hasShortcuts && item.shortcut && <kbd className="text-xs font-mono text-zinc-400">{item.shortcut}</kbd>}
                 </button>
               );
             })}

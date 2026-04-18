@@ -37,22 +37,22 @@ export default function DragDropDemo({ activeOptions }) {
   if (isKanban) {
     const columns = { todo: 'To Do', progress: 'In Progress', done: 'Done' };
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-        <div className="w-full max-w-2xl grid grid-cols-3 gap-3">
+      <div className="flex flex-col items-center justify-center h-full w-full p-8">
+        <div className="w-full max-w-4xl grid grid-cols-3 gap-4">
           {Object.entries(columns).map(([status, label]) => {
             const config = STATUS_CONFIG[status];
             const Icon = config.icon;
             return (
-              <div key={status} className="bg-zinc-100 dark:bg-zinc-800/50 rounded-xl p-3">
-                <div className="flex items-center gap-2 mb-3">
-                  <Icon size={14} className={config.color} />
-                  <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">{label}</span>
-                  <span className="text-[10px] bg-zinc-200 dark:bg-zinc-700 text-zinc-500 px-1.5 py-0.5 rounded-full">{items.filter(i => i.status === status).length}</span>
+              <div key={status} className="bg-zinc-100 dark:bg-zinc-800/50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Icon size={18} className={config.color} />
+                  <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">{label}</span>
+                  <span className="text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-500 px-2 py-0.5 rounded-full">{items.filter(i => i.status === status).length}</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {items.filter(i => i.status === status).map(item => (
                     <div key={item.id} draggable onDragStart={() => handleDragStart(item.id)} onDragEnd={handleDragEnd} onDragOver={e => handleDragOver(e, item.id)}
-                      className={`bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-3 text-sm text-zinc-700 dark:text-zinc-300 cursor-grab active:cursor-grabbing shadow-sm hover:shadow transition-shadow ${dragging === item.id ? 'opacity-50' : ''}`}>
+                      className={`bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 text-base text-zinc-700 dark:text-zinc-300 cursor-grab active:cursor-grabbing shadow-sm hover:shadow transition-shadow ${dragging === item.id ? 'opacity-50' : ''}`}>
                       {item.text}
                     </div>
                   ))}
@@ -66,8 +66,8 @@ export default function DragDropDemo({ activeOptions }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-zinc-50 dark:bg-zinc-900/50 p-4">
-      <div className="w-full max-w-sm space-y-1.5">
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="w-full max-w-xl space-y-2.5">
         {items.map(item => {
           const config = STATUS_CONFIG[item.status];
           const Icon = config.icon;
@@ -78,17 +78,17 @@ export default function DragDropDemo({ activeOptions }) {
               onDragStart={() => !hasHandle && handleDragStart(item.id)}
               onDragEnd={handleDragEnd}
               onDragOver={e => handleDragOver(e, item.id)}
-              className={`flex items-center gap-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3 shadow-sm hover:shadow transition-all ${
+              className={`flex items-center gap-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl p-5 shadow-sm hover:shadow transition-all ${
                 dragging === item.id ? 'opacity-50 scale-95' : ''
               } ${!hasHandle ? 'cursor-grab active:cursor-grabbing' : ''}`}
             >
               {hasHandle && (
                 <div draggable onDragStart={() => handleDragStart(item.id)} className="cursor-grab active:cursor-grabbing text-zinc-300 hover:text-zinc-500 transition-colors">
-                  <GripVertical size={16} />
+                  <GripVertical size={20} />
                 </div>
               )}
-              <Icon size={16} className={config.color} />
-              <span className="text-sm text-zinc-700 dark:text-zinc-300 flex-1">{item.text}</span>
+              <Icon size={22} className={config.color} />
+              <span className="text-base text-zinc-700 dark:text-zinc-300 flex-1">{item.text}</span>
             </div>
           );
         })}

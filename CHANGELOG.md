@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-04-18
+
+### Added
+- **Learn Mode phase 1** — sibling compare pills, glossary index, inline "Compare this to…" teaching row
+- **Learn Mode phase 2** — Quiz Me mode with mastery tracking (visited → copied → mastered) and progress ring in header
+  - Demo-to-definition matching quiz (swap from name-recall to a visual/interaction prompt)
+  - Inline "Quiz me" toggle next to the Definition label and a full Learn Mode switch in the menu
+- **Learn Mode phase 3** — guided learning paths with badges
+  - PathsLauncher and PathView for stepping through curated component tracks
+  - Progress badges awarded as paths are completed
+- Top-bar navigation pills for Learning / Progress / Help on desktop (dock into the header with progressive collapse as the viewport narrows)
+
+### Changed
+- Teaching row restyled as pill chips; vibeTip moved below the compare row for scannability
+- Menu sections regrouped so Learn Mode lives next to Progress and Help
+
+### Fixed
+- Desktop↔mobile breakpoint is now reactive — resizing the window below 1024px no longer leaves a stale 40% inline width on the info panel (which had been cramping the Spec Generator into a narrow column)
+- Body top padding now matches the taller mobile header (breadcrumb row) below `md` (768px), so the Definition / Live Preview toggle is no longer hidden behind the fixed header
+- PathView now fills vertical space on taller viewports
+- Lint no longer trips on stray worktree files under `.claude/worktrees/`
+
 ## [0.5.0] - 2026-04-17
 
 ### Added
@@ -110,7 +132,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.3.0...v0.4.0

@@ -8,6 +8,7 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 - **Spec Generator** — toggle options, add Requirements and Scaffold code (shadcn/ui, Headless UI, Radix, or Plain HTML), and copy the assembled prompt
 - **Live preview** — every component is interactive, not just static screenshots
 - **Explore Mode** — Component of the Day, Surprise Me, and progress tracking
+- **Learn Mode** — sibling compare pills, glossary index, demo-to-definition quizzes with mastery tracking, and guided learning paths with badges
 - **Resizable panels** — drag to resize the info/preview split
 - **Previous/Next navigation** — step through all components sequentially
 - **Dark/light mode** with class-based Tailwind theming
@@ -51,6 +52,7 @@ src/
 ├── components/
 │   ├── layout/         # TopNav, Footer
 │   ├── ui/             # ExploreBar, PromptBuilder, ConfigToggle
+│   ├── learn/          # CompareView, GlossaryIndex, QuizCard, PathsLauncher, PathView
 │   ├── CheatSheet.jsx
 │   ├── WelcomeScreen.jsx
 │   └── demos/          # One file per component demo

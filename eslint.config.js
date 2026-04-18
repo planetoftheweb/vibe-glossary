@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 
 export default [
-  { ignores: ['dist/**', 'node_modules/**', '**/glossary.js', 'vibeglossary.jsx'] },
+  { ignores: ['dist/**', 'node_modules/**', '.claude/worktrees/**', '**/glossary.js', 'vibeglossary.jsx'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {

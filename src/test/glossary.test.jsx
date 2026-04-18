@@ -10,8 +10,8 @@ const keys = Object.keys(GLOSSARY_DATA);
 
 describe('GLOSSARY_DATA', () => {
   // 1. Correct number of entries
-  it('has exactly 44 keys', () => {
-    expect(keys).toHaveLength(44);
+  it('has exactly 49 keys', () => {
+    expect(keys).toHaveLength(49);
   });
 
   // 2–7. Per-entry shape tests
@@ -85,7 +85,7 @@ describe('GLOSSARY_DATA', () => {
     });
   });
 
-  // 8. All 44 GLOSSARY_DATA keys exist as item IDs in CATEGORIES
+  // 8. All GLOSSARY_DATA keys exist as item IDs in CATEGORIES
   describe('CATEGORIES coverage', () => {
     it('every GLOSSARY_DATA key appears as an item ID in CATEGORIES', () => {
       for (const key of keys) {

@@ -11,10 +11,12 @@ import GlossaryIndex  from './components/learn/GlossaryIndex';
 import QuizCard       from './components/learn/QuizCard';
 import PathsLauncher  from './components/learn/PathsLauncher';
 import PathView       from './components/learn/PathView';
+import BuildLiteracyView from './components/learn/BuildLiteracyView';
 import useExploreMode from './hooks/useExploreMode';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
+import { BUILD_LITERACY_NAV_COLORS } from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
@@ -27,6 +29,7 @@ export default function App() {
   const [showPaths, setShowPaths] = useState(false);
   const [activePath, setActivePath] = useState(null);
   const [activeItem, setActiveItem]       = useState('modal');
+  const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const [darkMode, setDarkMode]           = useState(true);
@@ -177,6 +180,7 @@ export default function App() {
     activeCategory ? CATEGORY_COLORS[activeCategory.id] : CATEGORY_COLORS.overlays,
     [activeCategory]
   );
+  const navAccentColors = siteSection === 'build' ? BUILD_LITERACY_NAV_COLORS : activeCat;
 
   const siblings = useMemo(() => {
     if (!activeCategory) return [];
@@ -292,7 +296,9 @@ export default function App() {
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           categories={categories}
-          activeCatColors={activeCat}
+          activeCatColors={navAccentColors}
+          siteSection={siteSection}
+          setSiteSection={setSiteSection}
           onGetStarted={handleShowWelcome}
           searchInputRef={searchInputRef}
           explore={explore}
@@ -313,8 +319,14 @@ export default function App() {
 
       {/* Body */}
       <div className="flex-1 flex flex-col pt-36 md:pt-20 overflow-hidden">
-
-        {/* Main content row */}
+        {siteSection === 'build' ? (
+          <BuildLiteracyView
+            onOpenGlossaryEntry={(id) => {
+              setSiteSection('glossary');
+              setActiveItem(id);
+            }}
+          />
+        ) : (
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
 
           {/* Mobile view toggle */}
@@ -463,8 +475,8 @@ export default function App() {
           {/* Main Content — Live Preview */}
           <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}>
             {/* Subtle color glow */}
-            <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
-            <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
+            <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
+            <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
 
             {/* Floating controls — desktop only */}
             <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
@@ -491,6 +503,7 @@ export default function App() {
             </div>
           </main>
         </div>
+        )}
 
         {!showWelcome && <Footer />}
       </div>

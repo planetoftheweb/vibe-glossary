@@ -1,4 +1,4 @@
-// Curated learning paths — cover all 44 components in 6 themed sequences.
+// Curated learning paths — cover all 49 component entries in 6 themed sequences.
 // Each path has: id, name, description, items (ordered ids), quiz (5 scenario questions).
 // Quiz answers reference component ids that live in the path's items list.
 
@@ -78,13 +78,13 @@ export const PATHS = [
     name: 'Data & Display',
     tagline: 'Show information at a glance',
     description:
-      'Tables, lists, trees, calendars, stat cards, masonry grids, and carousels — different shapes of data want different containers. Pick the wrong one and your page feels wrong.',
-    items: ['table', 'list', 'tree', 'calendar', 'statcard', 'masonry', 'carousel'],
+      'Tables, lists, trees, calendars, stat cards, charts, filters, pagination, masonry grids, and carousels — different shapes of data want different containers. Pick the wrong one and your page feels wrong.',
+    items: ['table', 'list', 'tree', 'calendar', 'statcard', 'masonry', 'carousel', 'pagination', 'filterbar', 'barchart'],
     quiz: [
       {
         q: 'Displaying a single key metric (e.g. "Revenue: $42K, +12%"). That\'s a…',
         answerId: 'statcard',
-        optionIds: ['statcard', 'table', 'list', 'carousel'],
+        optionIds: ['statcard', 'table', 'list', 'barchart'],
       },
       {
         q: 'A hierarchical folder structure where users expand and collapse nodes. Use a…',
@@ -97,14 +97,14 @@ export const PATHS = [
         optionIds: ['table', 'list', 'calendar', 'tree'],
       },
       {
-        q: 'A Pinterest-style grid of images where tiles have different heights. That\'s a…',
-        answerId: 'masonry',
-        optionIds: ['masonry', 'carousel', 'list', 'table'],
+        q: 'Users narrow a long list with removable chips like "Status: Active" and a search field in the toolbar. That\'s a…',
+        answerId: 'filterbar',
+        optionIds: ['filterbar', 'table', 'pagination', 'list'],
       },
       {
-        q: 'Swipeable product images on a detail page, showing one at a time. That\'s a…',
-        answerId: 'carousel',
-        optionIds: ['carousel', 'masonry', 'list', 'statcard'],
+        q: 'An admin table has 2,000 rows—you show 50 at a time with page numbers and next/previous. That\'s…',
+        answerId: 'pagination',
+        optionIds: ['pagination', 'carousel', 'list', 'barchart'],
       },
     ],
   },
@@ -148,8 +148,8 @@ export const PATHS = [
     name: 'Pages & Layout',
     tagline: 'Structure a full page',
     description:
-      'Sidebars, tabs, breadcrumbs, accordions, cards, heroes, pricing tables, testimonials, FAQ. These are the big building blocks of a real page — from the nav rail to the marketing sections below the fold.',
-    items: ['sidebar', 'tabs', 'breadcrumbs', 'accordion', 'card', 'hero', 'pricing', 'testimonial', 'faq'],
+      'App shells, sidebars, tabs, dropdown menus, breadcrumbs, accordions, cards, heroes, pricing tables, testimonials, FAQ. These are the big building blocks of a real page — from the persistent chrome to the marketing sections below the fold.',
+    items: ['sidebar', 'appshell', 'tabs', 'dropdownmenu', 'breadcrumbs', 'accordion', 'card', 'hero', 'pricing', 'testimonial', 'faq'],
     quiz: [
       {
         q: 'The big attention-grabbing section at the top of a landing page. That\'s a…',
@@ -162,19 +162,19 @@ export const PATHS = [
         optionIds: ['tabs', 'accordion', 'breadcrumbs', 'sidebar'],
       },
       {
+        q: 'The persistent header, main content region, and navigation frame that wrap every screen in an app. That\'s an…',
+        answerId: 'appshell',
+        optionIds: ['appshell', 'hero', 'sidebar', 'card'],
+      },
+      {
+        q: 'Clicking "Account" opens a menu with Profile, Billing, and Log out—not picking one value like a form field. That\'s a…',
+        answerId: 'dropdownmenu',
+        optionIds: ['dropdownmenu', 'tabs', 'breadcrumbs', 'sidebar'],
+      },
+      {
         q: '"Home / Products / Shoes / Running" trail near the top of a page. That\'s…',
         answerId: 'breadcrumbs',
-        optionIds: ['breadcrumbs', 'tabs', 'sidebar', 'hero'],
-      },
-      {
-        q: 'Comparing your Free / Pro / Enterprise plans in columns. That\'s a…',
-        answerId: 'pricing',
-        optionIds: ['pricing', 'card', 'testimonial', 'hero'],
-      },
-      {
-        q: 'A stack of "Q: … A: …" items where only one answer is open at a time. That\'s an…',
-        answerId: 'accordion',
-        optionIds: ['accordion', 'tabs', 'faq', 'breadcrumbs'],
+        optionIds: ['breadcrumbs', 'tabs', 'dropdownmenu', 'accordion'],
       },
     ],
   },

@@ -2,9 +2,10 @@ import { useState, useRef, useEffect, cloneElement } from 'react';
 import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
-  RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List
+  RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
+import { BUILD_LITERACY_NAV_COLORS } from '../../data/buildLiteracy';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Generic popover — used by all three dropdowns (category, component, menu)
@@ -90,6 +91,7 @@ function MainMenu({
   explore, categories, onSelectItem,
   onGetStarted, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
   activeCatColors,
+  siteSection, setSiteSection,
 }) {
   const [statsOpen, setStatsOpen] = useState(() => {
     try { return localStorage.getItem('vg-menu-stats-open') === 'true'; }
@@ -133,8 +135,30 @@ function MainMenu({
     onClose();
   };
 
+  const handleBuildLiteracy = () => {
+    setSiteSection?.('build');
+    onClose();
+  };
+
+  const handleUiGlossary = () => {
+    setSiteSection?.('glossary');
+    onClose();
+  };
+
   return (
     <div className="w-[340px] text-zinc-700 dark:text-zinc-200">
+      <div className="border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-2">
+        <SectionHeader icon={<BookText size={14} />} label="Content" />
+        {siteSection === 'glossary' ? (
+          <MenuItem icon={<BookText size={18} />} onClick={handleBuildLiteracy}>
+            Build literacy
+          </MenuItem>
+        ) : (
+          <MenuItem icon={<BookOpen size={18} />} onClick={handleUiGlossary}>
+            UI glossary
+          </MenuItem>
+        )}
+      </div>
       {/* LEARN section — hidden on lg+ where the Learning pill covers it */}
       <div className="lg:hidden">
         <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
@@ -327,6 +351,7 @@ export default function TopNav({
   learnMode, toggleLearnMode,
   activeItem, setActiveItem,
   categories, activeCatColors,
+  siteSection = 'glossary', setSiteSection = () => {},
   onGetStarted, searchInputRef,
   explore, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
 }) {
@@ -336,7 +361,9 @@ export default function TopNav({
 
   const activeCat = categories.find(c => c.items.some(i => i.id === activeItem));
   const activeItemData = activeCat?.items.find(i => i.id === activeItem);
-  const catColors = activeCat ? CATEGORY_COLORS[activeCat.id] : CATEGORY_COLORS.overlays;
+  const catColors = siteSection === 'build'
+    ? BUILD_LITERACY_NAV_COLORS
+    : (activeCat ? CATEGORY_COLORS[activeCat.id] : CATEGORY_COLORS.overlays);
 
   const searchResults = searchTerm.trim()
     ? categories.flatMap(cat =>
@@ -364,6 +391,13 @@ export default function TopNav({
     setSearchTerm('');
     setSearchOpen(false);
   };
+
+  useEffect(() => {
+    if (siteSection === 'build') {
+      setSearchOpen(false);
+      setSearchTerm('');
+    }
+  }, [siteSection]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -398,9 +432,37 @@ export default function TopNav({
             <span className="hidden sm:inline text-2xl">VibeGlossary</span>
           </button>
 
+          <div className="flex shrink-0 items-center rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800">
+            <button
+              type="button"
+              onClick={() => setSiteSection('glossary')}
+              className={`px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold min-h-[44px] transition-colors ${
+                siteSection === 'glossary'
+                  ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
+                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+              }`}
+            >
+              UI Glossary
+            </button>
+            <button
+              type="button"
+              onClick={() => setSiteSection('build')}
+              className={`px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold min-h-[44px] transition-colors ${
+                siteSection === 'build'
+                  ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
+                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+              }`}
+            >
+              Build literacy
+            </button>
+          </div>
+
+          {siteSection === 'glossary' && (
           <div className="hidden md:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
+          )}
 
           {/* Category */}
+          {siteSection === 'glossary' && (
           <div className="hidden md:block">
             <PillDropdown
               icon={
@@ -437,8 +499,10 @@ export default function TopNav({
               })}
             </PillDropdown>
           </div>
+          )}
 
           {/* Component */}
+          {siteSection === 'glossary' && (
           <div className="hidden md:block">
             <PillDropdown
               icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
@@ -466,8 +530,10 @@ export default function TopNav({
               })}
             </PillDropdown>
           </div>
+          )}
 
           {/* Supplementary pills — icon-only at md, progressively add text/chevron at lg/xl */}
+          {siteSection === 'glossary' && (
           <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3">
             {/* Learning */}
             <PillDropdown
@@ -551,12 +617,13 @@ export default function TopNav({
               </button>
             </PillDropdown>
           </div>
+          )}
         </div>
 
         {/* Right: Search + Menu */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Desktop: inline expanding search */}
-          {searchOpen ? (
+          {siteSection === 'glossary' && searchOpen ? (
             <div className="hidden md:block relative w-72 lg:w-96">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
@@ -599,7 +666,7 @@ export default function TopNav({
                 </div>
               )}
             </div>
-          ) : (
+          ) : siteSection === 'glossary' ? (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
               className="hidden md:flex p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
@@ -608,9 +675,10 @@ export default function TopNav({
             >
               <Search size={20} />
             </button>
-          )}
+          ) : null}
 
           {/* Mobile: icon-only search toggle */}
+          {siteSection === 'glossary' && (
           <button
             onClick={() => { setSearchOpen(!searchOpen); setTimeout(() => searchInputRef.current?.focus(), 50); }}
             className="md:hidden p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
@@ -618,6 +686,7 @@ export default function TopNav({
           >
             <Search size={20} />
           </button>
+          )}
 
           {/* Your Progress pill between search and hamburger */}
           <div className="hidden md:block">
@@ -757,6 +826,8 @@ export default function TopNav({
                   learnMode={learnMode}
                   toggleLearnMode={toggleLearnMode}
                   activeCatColors={activeCatColors}
+                  siteSection={siteSection}
+                  setSiteSection={setSiteSection}
                 />
               </Popover>
             )}
@@ -765,7 +836,7 @@ export default function TopNav({
       </div>
 
       {/* Mobile search overlay — underneath the menu on small devices */}
-      {searchOpen && (
+      {siteSection === 'glossary' && searchOpen && (
         <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
           <div className="relative">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -812,6 +883,7 @@ export default function TopNav({
       )}
 
       {/* Mobile nav — icon-only category + component dropdowns */}
+      {siteSection === 'glossary' && (
       <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
         <PillDropdown
           iconOnly
@@ -882,6 +954,7 @@ export default function TopNav({
           })}
         </PillDropdown>
       </div>
+      )}
     </header>
   );
 }

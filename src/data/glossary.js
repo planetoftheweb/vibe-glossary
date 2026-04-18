@@ -1971,4 +1971,212 @@ return (
       },
     },
   },
+
+  // ─── Added: common patterns (batch 1) ───
+  pagination: {
+    title: 'Pagination',
+    definition: 'Controls that split long lists into pages with numbered links, previous/next, and optional page-size selection.',
+    vibeTip: "Say 'Pagination' or 'PaginationControls'. Pair with tables and grids — not the same as infinite scroll.",
+    comparison: 'Pagination shows explicit pages. Infinite scroll loads more as you scroll.',
+    prompt: {
+      base: 'Add pagination controls below a data table',
+      options: [
+        { id: 'ellipsis', label: 'Ellipsis', text: ' with ellipsis for large page counts' },
+        { id: 'pagesize', label: 'Page Size', text: ' including a page-size selector (10/25/50)' },
+        { id: 'compact', label: 'Compact', text: ' in a compact style for dense layouts' },
+      ],
+      requirements: [
+        'Use nav with aria-label describing the list being paginated',
+        'Mark the current page with aria-current="page"',
+        'Disable previous on first page and next on last page',
+        'Ensure all controls are keyboard focusable',
+      ],
+      scaffolds: {
+        shadcn: `<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+        html: `<nav aria-label="Pagination">
+  <ul>
+    <li><a href="#" aria-disabled="true">Previous</a></li>
+    <li><a href="#" aria-current="page">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">Next</a></li>
+  </ul>
+</nav>`,
+      },
+    },
+  },
+  dropdownmenu: {
+    title: 'Dropdown Menu',
+    definition: 'A button or trigger that opens a list of actions or links. Different from a select: optimized for commands, not picking a single value from a form field.',
+    vibeTip: "Use 'DropdownMenu' in Shadcn. Say 'align to trigger' and 'keyboard roving tabindex'.",
+    comparison: 'Dropdown menu is for actions. Select is for choosing a value. Command palette is search-first.',
+    prompt: {
+      base: 'Implement a dropdown menu triggered by a button',
+      options: [
+        { id: 'icons', label: 'Icons', text: ' with leading icons on each menu item' },
+        { id: 'separator', label: 'Separators', text: ' with visual separators between groups' },
+        { id: 'danger', label: 'Destructive', text: ' including a destructive action styled in red' },
+      ],
+      requirements: [
+        'Use role="menu" on the list container',
+        'Use role="menuitem" on each actionable item',
+        'Close on Escape and when an item is activated',
+        'Move focus with arrow keys within the menu',
+      ],
+      scaffolds: {
+        shadcn: `<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">Open</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="start">
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem className="text-destructive">Log out</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        radix: `<DropdownMenu.Root>
+  <DropdownMenu.Trigger>Menu</DropdownMenu.Trigger>
+  <DropdownMenu.Portal>
+    <DropdownMenu.Content>
+      <DropdownMenu.Item>Profile</DropdownMenu.Item>
+      <DropdownMenu.Item>Log out</DropdownMenu.Item>
+    </DropdownMenu.Content>
+  </DropdownMenu.Portal>
+</DropdownMenu.Root>`,
+        html: `<div>
+  <button aria-haspopup="true" aria-expanded="false" id="m-btn">Menu</button>
+  <ul role="menu" aria-labelledby="m-btn" hidden>
+    <li role="menuitem" tabindex="-1">Profile</li>
+    <li role="menuitem" tabindex="-1">Log out</li>
+  </ul>
+</div>`,
+      },
+    },
+  },
+  appshell: {
+    title: 'App Shell',
+    definition: 'The persistent frame around your app: top bar, optional side navigation, and main content region. Sets hierarchy before you fill in pages.',
+    vibeTip: "Request 'sticky header', 'nav items', and 'user menu in the corner'.",
+    comparison: 'App shell is the chrome. Hero is marketing above the fold.',
+    prompt: {
+      base: 'Build an application shell with a top navigation bar',
+      options: [
+        { id: 'sidebar', label: 'Side Nav', text: ' with a collapsible sidebar in addition to the top bar' },
+        { id: 'search', label: 'Search', text: ' including a prominent search field in the header' },
+        { id: 'dense', label: 'Dense', text: ' in a dense height suitable for productivity tools' },
+      ],
+      requirements: [
+        'Use header, main, and nav landmarks',
+        'Keep primary navigation keyboard accessible',
+        'Reserve space for a mobile menu or drawer on small screens',
+        'Avoid duplicating focus traps between header overlays',
+      ],
+      scaffolds: {
+        shadcn: `<div className="flex min-h-screen flex-col">
+  <header className="sticky top-0 z-40 border-b bg-background">
+    <div className="flex h-14 items-center gap-4 px-4">
+      <span className="font-semibold">App</span>
+      <nav className="flex gap-4" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/docs">Docs</a>
+      </nav>
+    </div>
+  </header>
+  <main className="flex-1 p-6">{children}</main>
+</div>`,
+        html: `<body>
+  <header><nav aria-label="Main">...</nav></header>
+  <main id="main-content">...</main>
+</body>`,
+      },
+    },
+  },
+  filterbar: {
+    title: 'Filter Bar',
+    definition: 'A row of search, facet controls, and removable filter chips so users can narrow a dataset. Often sits above a table or grid.',
+    vibeTip: "Say 'filter chips', 'clear all', and 'sync filters to URL query params' for shareable views.",
+    comparison: 'Filter bar narrows data. Tag input creates values. Command palette jumps in the app.',
+    prompt: {
+      base: 'Add a filter bar above a data table with removable chips',
+      options: [
+        { id: 'chips', label: 'Chips', text: ' showing active filters as dismissible chips' },
+        { id: 'date', label: 'Date Range', text: ' including optional date-range controls' },
+        { id: 'saved', label: 'Saved Views', text: ' with a dropdown to pick saved filter presets' },
+      ],
+      requirements: [
+        'Expose a clear way to reset all filters',
+        'Announce filter changes politely to screen readers (aria-live)',
+        'Keep chip remove buttons reachable by keyboard',
+        'Label comboboxes and date inputs distinctly',
+      ],
+      scaffolds: {
+        shadcn: `<div className="flex flex-wrap items-center gap-2">
+  <Input placeholder="Search…" className="max-w-xs" />
+  {filters.map(f => (
+    <Badge key={f} variant="secondary" className="gap-1">
+      {f}
+      <button type="button" aria-label={\`Remove \${f}\`}>×</button>
+    </Badge>
+  ))}
+  <Button variant="ghost" size="sm">Clear all</Button>
+</div>`,
+        html: `<div role="search" aria-label="Filter products">
+  <input type="search" name="q" />
+  <button type="button">Clear filters</button>
+</div>`,
+      },
+    },
+  },
+  barchart: {
+    title: 'Bar Chart',
+    definition: 'Compares categories with horizontal or vertical bars. The default choice when you have a few labeled buckets and want magnitude at a glance.',
+    vibeTip: "Name your charting lib (Recharts, Chart.js, Visx). Say 'axis labels' and 'color for dark mode'.",
+    comparison: 'Bar chart compares categories. Stat card shows one headline number. Line chart shows trends over time.',
+    prompt: {
+      base: 'Create a bar chart comparing values across categories',
+      options: [
+        { id: 'horizontal', label: 'Horizontal', text: ' using horizontal bars for long category names' },
+        { id: 'grid', label: 'Grid Lines', text: ' with light grid lines for easier reading' },
+        { id: 'stacked', label: 'Stacked', text: ' as a stacked bar for part-to-whole within each category' },
+      ],
+      requirements: [
+        'Provide a text summary or table fallback for accessibility',
+        'Label axes and units',
+        'Use sufficient contrast for bars in light and dark themes',
+        'Avoid relying on color alone — vary patterns or labels when needed',
+      ],
+      scaffolds: {
+        shadcn: `import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+
+<ChartContainer config={chartConfig} className="h-[240px]">
+  <BarChart data={data}>
+    <CartesianGrid vertical={false} />
+    <XAxis dataKey="name" />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <Bar dataKey="value" fill="var(--color-value)" radius={4} />
+  </BarChart>
+</ChartContainer>`,
+        html: `<figure>
+  <figcaption>Monthly signups</figcaption>
+  <table>
+    <caption class="sr-only">Same data as chart</caption>
+    <thead><tr><th>Month</th><th>Count</th></tr></thead>
+    <tbody>...</tbody>
+  </table>
+</figure>`,
+      },
+    },
+  },
 };

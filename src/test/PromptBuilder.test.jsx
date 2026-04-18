@@ -119,7 +119,7 @@ describe('PromptBuilder', () => {
       />
     );
     expect(screen.getByText(/## Scaffold \(shadcn\/ui\)/)).toBeInTheDocument();
-    expect(screen.getByText(/<Dialog>content<\/Dialog>/)).toBeInTheDocument();
+    expect(document.body.textContent).toContain('<Dialog>content</Dialog>');
   });
 
   // 8. When _scaffold is active but the active framework has no scaffold, section does not appear
@@ -215,7 +215,7 @@ describe('PromptBuilder', () => {
       />
     );
 
-    await user.click(screen.getByTitle('Copy to clipboard'));
+    await user.click(screen.getByTitle('Copy to clipboard (markdown)'));
 
     expect(writeTextSpy).toHaveBeenCalledWith(
       expect.stringContaining('Add a centered Dialog modal overlay')
@@ -233,7 +233,7 @@ describe('PromptBuilder', () => {
       />
     );
 
-    await user.click(screen.getByTitle('Copy to clipboard'));
+    await user.click(screen.getByTitle('Copy to clipboard (markdown)'));
     expect(onCopy).toHaveBeenCalledTimes(1);
   });
 });

@@ -60,6 +60,9 @@ export const CATEGORIES = [
     items: [
       { id: 'table',    name: 'Table / Data Grid' },
       { id: 'list',     name: 'List / Feed' },
+      { id: 'pagination', name: 'Pagination' },
+      { id: 'filterbar', name: 'Filter Bar' },
+      { id: 'barchart', name: 'Bar Chart' },
       { id: 'carousel', name: 'Carousel' },
       { id: 'tree',     name: 'Tree View' },
       { id: 'calendar', name: 'Calendar' },
@@ -87,6 +90,7 @@ export const CATEGORIES = [
     icon: <Layout size={14} />,
     items: [
       { id: 'sidebar', name: 'Sidebar vs. Rail' },
+      { id: 'appshell', name: 'App Shell' },
       { id: 'card',    name: 'Card vs. Tile' },
       { id: 'masonry', name: 'Masonry Grid' },
     ],
@@ -98,6 +102,7 @@ export const CATEGORIES = [
     icon: <Grip size={14} />,
     items: [
       { id: 'tabs',        name: 'Tabs vs. Segments' },
+      { id: 'dropdownmenu', name: 'Dropdown Menu' },
       { id: 'breadcrumbs', name: 'Breadcrumbs' },
       { id: 'accordion',   name: 'Accordion' },
     ],

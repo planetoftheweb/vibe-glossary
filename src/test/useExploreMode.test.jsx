@@ -192,10 +192,10 @@ describe('progress', () => {
     expect(result.current.progress.copied).toBe(0);
   });
 
-  it('total matches the number of ALL_IDS entries (44)', () => {
+  it('total matches the number of ALL_IDS entries (49)', () => {
     const { result } = renderHook(() => useExploreMode());
     expect(result.current.progress.total).toBe(TOTAL);
-    expect(result.current.progress.total).toBe(44);
+    expect(result.current.progress.total).toBe(49);
   });
 
   it('updates visited count after markVisited', () => {
@@ -230,7 +230,7 @@ describe('progress', () => {
 
   it('percent rounds correctly for partial progress', () => {
     const { result } = renderHook(() => useExploreMode());
-    // Mark one item visited; expected: Math.round(1/44*100) = 2
+    // Mark one item visited; expected: Math.round(1/49*100) = 2
     act(() => { result.current.markVisited(ALL_IDS[0]); });
     const expected = Math.round((1 / TOTAL) * 100);
     expect(result.current.progress.percent).toBe(expected);

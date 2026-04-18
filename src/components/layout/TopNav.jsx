@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
-  RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen
+  RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 
@@ -36,7 +36,7 @@ function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // A clean pill button that opens a dropdown
 // ─────────────────────────────────────────────────────────────────────────────
-function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width, align }) {
+function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width, align, iconOnly, ariaLabel }) {
   const wrapRef = useRef(null);
 
   useEffect(() => {
@@ -49,18 +49,19 @@ function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width,
   }, [isOpen, onClose]);
 
   return (
-    <div ref={wrapRef} className="relative flex-1 md:flex-none">
+    <div ref={wrapRef} className={`relative ${iconOnly ? '' : 'flex-1 md:flex-none'}`}>
       <button
         onClick={onToggle}
-        className={`w-full flex items-center gap-2.5 px-5 py-3 rounded-lg text-base md:text-lg font-semibold transition-colors ${
+        aria-label={ariaLabel || label}
+        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2.5 px-5 py-3'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
         {icon}
-        <span className="truncate">{label}</span>
-        <ChevronDown size={18} className={`text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+        {!iconOnly && <span className="truncate">{label}</span>}
+        <ChevronDown size={iconOnly ? 14 : 18} className={`text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       {isOpen && (
         <div
@@ -129,39 +130,41 @@ function MainMenu({
 
   return (
     <div className="w-[340px] text-zinc-700 dark:text-zinc-200">
-      {/* LEARN section */}
-      <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
-      <div className="pb-1.5">
-        <button
-          onClick={toggleLearnMode}
-          className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
-        >
-          <GraduationCap size={18} />
-          <div className="flex flex-col items-start min-w-0 text-left">
-            <span className="font-medium">Learn Mode</span>
-            <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
-              Quiz me on each component
+      {/* LEARN section — hidden on lg+ where the Learning pill covers it */}
+      <div className="lg:hidden">
+        <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
+        <div className="pb-1.5">
+          <button
+            onClick={toggleLearnMode}
+            className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+          >
+            <GraduationCap size={18} />
+            <div className="flex flex-col items-start min-w-0 text-left">
+              <span className="font-medium">Learn Mode</span>
+              <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
+                Quiz me on each component
+              </span>
+            </div>
+            <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
             </span>
-          </div>
-          <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
-          </span>
-        </button>
-        <MenuItem icon={<Trophy size={18} />} onClick={handlePaths}>
-          <span className="font-medium">Learning Paths</span>
-          {explore.badges.size > 0 && (
-            <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-              {explore.badges.size} <Check size={11} />
-            </span>
-          )}
-        </MenuItem>
-        <MenuItem icon={<Shuffle size={18} />} onClick={handleSurprise}>
-          Surprise Me
-        </MenuItem>
+          </button>
+          <MenuItem icon={<Trophy size={18} />} onClick={handlePaths}>
+            <span className="font-medium">Learning Paths</span>
+            {explore.badges.size > 0 && (
+              <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                {explore.badges.size} <Check size={11} />
+              </span>
+            )}
+          </MenuItem>
+          <MenuItem icon={<Shuffle size={18} />} onClick={handleSurprise}>
+            Surprise Me
+          </MenuItem>
+        </div>
       </div>
 
-      {/* STATS section — collapsible */}
-      <div className="border-t border-zinc-100 dark:border-zinc-800">
+      {/* STATS section — collapsible, hidden on lg+ where the Progress pill covers it */}
+      <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
         <button
           onClick={toggleStats}
           className="w-full flex items-center gap-2 px-4 pt-3 pb-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
@@ -257,8 +260,8 @@ function MainMenu({
         )}
       </div>
 
-      {/* HELP section */}
-      <div className="border-t border-zinc-100 dark:border-zinc-800">
+      {/* HELP section — hidden on lg+ where the Help pill covers it */}
+      <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
         <MenuItem icon={<BookOpen size={18} />} onClick={handleGlossaryIndex}>
           Glossary Index
@@ -450,6 +453,91 @@ export default function TopNav({
               })}
             </PillDropdown>
           </div>
+
+          {/* Desktop-only supplementary pills — docked in hamburger on mobile */}
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3">
+            {/* Learning */}
+            <PillDropdown
+              icon={<GraduationCap size={18} />}
+              label="Learning"
+              isOpen={openDropdown === 'learning'}
+              onToggle={() => setOpenDropdown(openDropdown === 'learning' ? null : 'learning')}
+              onClose={() => setOpenDropdown(null)}
+              width={280}
+            >
+              <button
+                onClick={() => { toggleLearnMode(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <GraduationCap size={18} />
+                <div className="flex flex-col items-start min-w-0 text-left">
+                  <span className="font-medium">Learn Mode</span>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
+                    Quiz me on each component
+                  </span>
+                </div>
+                <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
+                </span>
+              </button>
+              <button
+                onClick={() => { onOpenPaths?.(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <Trophy size={18} />
+                <span className="font-medium">Learning Paths</span>
+                {explore.badges.size > 0 && (
+                  <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                    {explore.badges.size} <Check size={11} />
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  const id = explore.surpriseMe();
+                  setActiveItem(id);
+                  setOpenDropdown(null);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <Shuffle size={18} />
+                <span className="font-medium">Surprise Me</span>
+              </button>
+            </PillDropdown>
+
+            {/* Help */}
+            <PillDropdown
+              icon={<LifeBuoy size={18} />}
+              label="Help"
+              isOpen={openDropdown === 'help'}
+              onToggle={() => setOpenDropdown(openDropdown === 'help' ? null : 'help')}
+              onClose={() => setOpenDropdown(null)}
+              width={260}
+            >
+              <button
+                onClick={() => { onOpenGlossaryIndex?.(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <BookOpen size={18} />
+                <span className="font-medium">Glossary Index</span>
+              </button>
+              <button
+                onClick={() => { onGetStarted(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <Home size={18} />
+                <span className="font-medium">Welcome Screen</span>
+              </button>
+              <button
+                onClick={() => { onOpenCheatSheet(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+              >
+                <Keyboard size={18} />
+                <span className="font-medium">Cheat Sheet</span>
+                <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
+              </button>
+            </PillDropdown>
+          </div>
         </div>
 
         {/* Right: Search + Menu */}
@@ -517,6 +605,97 @@ export default function TopNav({
           >
             <Search size={20} />
           </button>
+
+          {/* Desktop-only: Your Progress pill between search and hamburger */}
+          <div className="hidden lg:block">
+            <PillDropdown
+              icon={
+                <div className="relative w-6 h-6 shrink-0">
+                  <svg className="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="4" />
+                    <circle
+                      cx="18" cy="18" r="15" fill="none" stroke="currentColor"
+                      className={activeCatColors.accent} strokeWidth="4"
+                      strokeDasharray={`${explore.progress.percent * 0.94} 200`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+              }
+              label={`${explore.progress.visited}/${explore.progress.total}`}
+              isOpen={openDropdown === 'progress'}
+              onToggle={() => setOpenDropdown(openDropdown === 'progress' ? null : 'progress')}
+              onClose={() => setOpenDropdown(null)}
+              align="right"
+              width={320}
+            >
+              <div className="px-4 pt-3 pb-2 flex items-center gap-3">
+                <div className="relative w-14 h-14 shrink-0">
+                  <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
+                    <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
+                      className="text-emerald-500" strokeWidth="1.5"
+                      strokeDasharray={`${explore.progress.masteredPercent * 1.0367} 200`}
+                      strokeLinecap="round"
+                    />
+                    <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
+                    <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
+                      className={activeCatColors.accent} strokeWidth="2.5"
+                      strokeDasharray={`${explore.progress.percent * 0.7854} 200`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-zinc-700 dark:text-zinc-200">
+                    {explore.progress.visited}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">
+                    Your Progress
+                  </p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight mt-0.5">
+                    {explore.progress.visited}/{explore.progress.total} explored · {explore.progress.copied} copied
+                  </p>
+                  {explore.progress.mastered > 0 && (
+                    <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                      {explore.progress.mastered} mastered ✓
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="px-4 pb-3 space-y-2">
+                {categories.map(cat => {
+                  const cc = CATEGORY_COLORS[cat.id];
+                  const catVisited = cat.items.filter(i => explore.visited.has(i.id)).length;
+                  const catPercent = Math.round((catVisited / cat.items.length) * 100);
+                  const isComplete = catVisited === cat.items.length;
+                  return (
+                    <div key={cat.id}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
+                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{cat.name}</span>
+                        {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
+                        <span className="ml-auto text-xs text-zinc-400">{catVisited}/{cat.items.length}</span>
+                      </div>
+                      <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${cc.gradient} transition-all duration-500`}
+                          style={{ width: `${catPercent}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => { explore.resetProgress(); setOpenDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors border-t border-zinc-100 dark:border-zinc-800"
+              >
+                <RotateCcw size={16} />
+                <span className="font-medium">Reset Progress</span>
+              </button>
+            </PillDropdown>
+          </div>
 
           {/* Main menu trigger */}
           <div className="relative">
@@ -611,15 +790,21 @@ export default function TopNav({
         </div>
       )}
 
-      {/* Mobile nav — category + component dropdowns */}
-      <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex gap-2">
+      {/* Mobile nav — icon-only category + component dropdowns */}
+      <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
         <PillDropdown
-          icon={<div className={`w-2 h-2 rounded-full ${catColors.dot}`} />}
-          label={activeCat?.name || 'Overlays'}
+          iconOnly
+          ariaLabel={`Category: ${activeCat?.name || 'Overlays'}`}
+          icon={
+            <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
+              <span className={`w-2 h-2 rounded-full ${catColors.dot}`} />
+              {activeCat?.icon}
+            </span>
+          }
           isOpen={openDropdown === 'mob-cat'}
           onToggle={() => setOpenDropdown(openDropdown === 'mob-cat' ? null : 'mob-cat')}
           onClose={() => setOpenDropdown(null)}
-          width={220}
+          width={240}
         >
           {categories.map(cat => {
             const cc = CATEGORY_COLORS[cat.id];
@@ -642,13 +827,21 @@ export default function TopNav({
           })}
         </PillDropdown>
 
+        <span className="text-zinc-300 dark:text-zinc-700">/</span>
+
         <PillDropdown
-          icon={activeCat?.icon || null}
-          label={activeItemData?.name || 'Modal'}
+          iconOnly
+          ariaLabel={`Component: ${activeItemData?.name || 'Modal'}`}
+          icon={
+            <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
+              <List size={16} className="text-zinc-400" />
+              <span className="truncate max-w-[9rem]">{activeItemData?.name || 'Modal'}</span>
+            </span>
+          }
           isOpen={openDropdown === 'mob-comp'}
           onToggle={() => setOpenDropdown(openDropdown === 'mob-comp' ? null : 'mob-comp')}
           onClose={() => setOpenDropdown(null)}
-          width={220}
+          width={240}
         >
           {activeCat?.items.map(item => {
             const isActive = item.id === activeItem;

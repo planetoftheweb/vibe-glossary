@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
-  Menu as MenuIcon, Shuffle, Calendar, Trophy, GraduationCap,
+  Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
   RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
-import { GLOSSARY_DATA } from '../../data/glossary';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Generic popover — used by all three dropdowns (category, component, menu)
@@ -100,17 +99,11 @@ function MainMenu({
   };
 
   if (!isOpen) return null;
-  const { progress, componentOfTheDay, surpriseMe, visited, copied, resetProgress } = explore;
-  const cotdData = GLOSSARY_DATA[componentOfTheDay];
+  const { progress, surpriseMe, visited, copied, resetProgress } = explore;
 
   const handleSurprise = () => {
     const id = surpriseMe();
     onSelectItem(id);
-    onClose();
-  };
-
-  const handleToday = () => {
-    onSelectItem(componentOfTheDay);
     onClose();
   };
 
@@ -149,17 +142,8 @@ function MainMenu({
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
           </span>
         </button>
-        <MenuItem icon={<Calendar size={18} />} onClick={handleToday}>
-          <div className="flex flex-col items-start min-w-0">
-            <span className="text-xs text-zinc-400 leading-none">Today's Pick</span>
-            <span className="font-medium truncate">{cotdData?.title || componentOfTheDay}</span>
-          </div>
-        </MenuItem>
         <MenuItem icon={<Shuffle size={18} />} onClick={handleSurprise}>
           Surprise Me
-        </MenuItem>
-        <MenuItem icon={<BookOpen size={18} />} onClick={handleGlossaryIndex}>
-          Glossary Index
         </MenuItem>
       </div>
 
@@ -263,6 +247,9 @@ function MainMenu({
       {/* HELP section */}
       <div className="border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
+        <MenuItem icon={<BookOpen size={18} />} onClick={handleGlossaryIndex}>
+          Glossary Index
+        </MenuItem>
         <MenuItem icon={<Home size={18} />} onClick={handleWelcome}>
           Welcome Screen
         </MenuItem>

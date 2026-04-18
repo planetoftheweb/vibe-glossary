@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
+import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, Lightbulb, GraduationCap } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
@@ -316,11 +316,24 @@ export default function App() {
                 {/* Definition Header */}
                 <div className="flex items-start justify-between mb-4 lg:mb-8">
                   <div>
-                    <div className="flex items-center gap-2 lg:gap-2.5 mb-2 lg:mb-3">
+                    <div className="flex items-center flex-wrap gap-2 lg:gap-2.5 mb-2 lg:mb-3">
                       <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${activeCat.dot}`} />
                       <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>
                         {showQuiz ? 'Learn Mode' : 'Definition'}
                       </span>
+                      <button
+                        onClick={toggleLearnMode}
+                        aria-pressed={learnMode}
+                        title={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
+                        className={`ml-1 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
+                          learnMode
+                            ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-500'
+                            : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <GraduationCap size={13} />
+                        {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                      </button>
                     </div>
                     <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                       {currentData.title}

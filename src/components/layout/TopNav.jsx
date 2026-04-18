@@ -55,8 +55,8 @@ function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width,
         aria-label={ariaLabel || label}
         className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 lg:gap-2.5 px-3 lg:px-4 xl:px-5 py-2.5 lg:py-3'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
-            ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
-            : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
+            ? 'bg-amber-50 text-[#5a1f13] shadow-md'
+            : 'bg-black/15 text-amber-50 hover:bg-black/30'
         }`}
       >
         {icon}
@@ -382,8 +382,8 @@ export default function TopNav({
   }, [searchInputRef]);
 
   return (
-    <header className="relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50 fixed top-0 left-0 right-0 overflow-hidden">
-      <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.08] dark:opacity-[0.14] pointer-events-none transition-opacity duration-500`} />
+    <header className="relative bg-[#7a2e1f] dark:bg-[#3d1710] border-b border-[#5a1f13] dark:border-[#2a0f0a] shrink-0 z-50 fixed top-0 left-0 right-0 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#8b3a20] via-[#6b2515] to-[#8b3a20] dark:from-[#4d1c13] dark:via-[#2e1009] dark:to-[#4d1c13] pointer-events-none" />
       <div className="relative flex items-center justify-between px-4 md:px-6 h-20">
         {/* Left: Logo + pill dropdowns */}
         <div className="flex items-center gap-2 md:gap-4 min-w-0">
@@ -600,7 +600,7 @@ export default function TopNav({
           ) : (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
-              className="hidden md:flex p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+              className="hidden md:flex p-2.5 rounded-lg text-amber-50/80 hover:text-amber-50 hover:bg-black/30 transition-colors"
               aria-label="Search (⌘K)"
               title="Search (⌘K)"
             >
@@ -611,7 +611,7 @@ export default function TopNav({
           {/* Mobile: icon-only search toggle */}
           <button
             onClick={() => { setSearchOpen(!searchOpen); setTimeout(() => searchInputRef.current?.focus(), 50); }}
-            className="md:hidden p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+            className="md:hidden p-2.5 rounded-lg text-amber-50/80 hover:text-amber-50 hover:bg-black/30 transition-colors"
             aria-label="Search"
           >
             <Search size={20} />
@@ -715,12 +715,12 @@ export default function TopNav({
               onClick={() => setOpenDropdown(openDropdown === 'menu' ? null : 'menu')}
               className={`flex items-center gap-1.5 pl-2.5 pr-2 py-1.5 rounded-full border transition-colors ${
                 openDropdown === 'menu'
-                  ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-600'
-                  : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
+                  ? 'bg-amber-50 border-amber-200 text-[#5a1f13]'
+                  : 'bg-black/15 border-black/20 text-amber-50 hover:bg-black/30'
               }`}
               aria-label="Open menu"
             >
-              <MenuIcon size={16} className="text-zinc-600 dark:text-zinc-300" />
+              <MenuIcon size={16} />
               <div className="md:hidden relative w-7 h-7 shrink-0">
                 <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
                   <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-700" strokeWidth="4" />

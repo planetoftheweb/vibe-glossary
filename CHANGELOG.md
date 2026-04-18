@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-04-18
+
+### Added
+- **Firestore-backed content** — `useGlossary()` and `useCategories()` hooks read from Firestore `components` / `categories` collections with local `GLOSSARY_DATA` / `CATEGORIES` as instant fallback (no loading flash)
+- **Lazy-loaded demo components** — 44 demo components now code-split into separate chunks (~1–7 kB each) via `React.lazy()`, dramatically shrinking the initial bundle as the glossary scales
+- `CATEGORY_ICON_REGISTRY` maps Firestore-safe icon IDs to Lucide components, so categories can be edited in Firestore without touching code
+- Firestore security rules (`firestore.rules`) — public read, no writes
+- Seed script (`scripts/seedFirestore.js`) seeds both `components` and `categories` collections via `firebase-admin`
+- Top header background now carries a subtle gradient tint matching the active category color
+
+### Changed
+- `src/data/glossary.js` split: demo imports and `demo:` fields moved into a dedicated `src/data/demoRegistry.jsx` with dynamic imports
+- `useExploreMode` now accepts a dynamic `categories` parameter (derives `allIds`/`total` via `useMemo`) instead of importing module-level constants
+- Progress pill in the desktop top bar is now icon-only — the count label was duplicating what the hamburger progress ring already shows
+- Mobile hamburger button shows a progress ring (no number); desktop hides the ring since the dedicated progress pill already renders it
+- Dropdown panels got thicker (2px) borders and a subtle ring for contrast against the tinted header
+
+### Fixed
+- Header `overflow-hidden` (from the new gradient overlay) was clipping nav dropdowns — moved `overflow-hidden` onto a dedicated gradient wrapper so dropdowns can extend below the header again
+
 ## [0.6.0] - 2026-04-18
 
 ### Added
@@ -132,7 +152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.0...v0.4.1

@@ -5,6 +5,8 @@ An interactive UI component glossary designed for vibe coding with AI tools. Bro
 ## Features
 
 - **44 interactive demos** across 9 categories: Overlays, Inputs, Data Display, Forms, Layouts, Navigation, Interactions, Feedback, Marketing
+- **Lazy-loaded demos** — each component ships as its own ~1–7 kB code-split chunk, so the initial bundle stays small as the glossary grows
+- **Firestore-backed content** — component entries and categories can be edited in Firestore without a code deploy; local data seeds instantly and Firestore merges in silently
 - **Spec Generator** — toggle options, add Requirements and Scaffold code (shadcn/ui, Headless UI, Radix, or Plain HTML), and copy the assembled prompt
 - **Live preview** — every component is interactive, not just static screenshots
 - **Explore Mode** — Component of the Day, Surprise Me, and progress tracking
@@ -66,10 +68,14 @@ src/
 │       ├── feedback/
 │       └── marketing/
 ├── data/
-│   ├── categories.jsx  # Category structure + color system
-│   └── glossary.js     # Component metadata + demo imports
+│   ├── categories.jsx   # Category structure + color system + icon registry
+│   ├── glossary.js      # Component metadata (content-only, used as Firestore fallback)
+│   └── demoRegistry.jsx # React.lazy() map of component IDs → demo chunks
 ├── hooks/
-│   └── useExploreMode.js
+│   ├── useExploreMode.js
+│   ├── useGlossary.js   # Reads components from Firestore (local data as fallback)
+│   └── useCategories.jsx # Reads categories from Firestore (local data as fallback)
+├── firebase.js          # Firebase app + Firestore init
 ├── test/              # Vitest test suite (541 tests)
 ├── styles/
 │   └── animations.css

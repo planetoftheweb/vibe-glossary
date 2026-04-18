@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { MessageSquare, ArrowRight, BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
-import ExploreBar    from './components/ui/ExploreBar';
 import WelcomeScreen from './components/WelcomeScreen';
 import CheatSheet    from './components/CheatSheet';
+import CompareView   from './components/learn/CompareView';
+import GlossaryIndex from './components/learn/GlossaryIndex';
 import useExploreMode from './hooks/useExploreMode';
 import { CATEGORIES, CATEGORY_COLORS } from './data/categories';
 import { GLOSSARY_DATA } from './data/glossary';
@@ -16,6 +17,8 @@ export default function App() {
     return !localStorage.getItem('vg-visited');
   });
   const [showCheatSheet, setShowCheatSheet] = useState(false);
+  const [compareWith, setCompareWith]     = useState(null);
+  const [showGlossaryIndex, setShowGlossaryIndex] = useState(false);
   const [activeItem, setActiveItem]       = useState('modal');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
@@ -130,10 +133,20 @@ export default function App() {
   const prevData = prevItem ? GLOSSARY_DATA[prevItem] : null;
   const nextData = nextItem ? GLOSSARY_DATA[nextItem] : null;
 
-  const activeCat = useMemo(() => {
-    const cat = CATEGORIES.find(c => c.items.some(i => i.id === activeItem));
-    return cat ? CATEGORY_COLORS[cat.id] : CATEGORY_COLORS.overlays;
-  }, [activeItem]);
+  const activeCategory = useMemo(() =>
+    CATEGORIES.find(c => c.items.some(i => i.id === activeItem)),
+    [activeItem]
+  );
+
+  const activeCat = useMemo(() =>
+    activeCategory ? CATEGORY_COLORS[activeCategory.id] : CATEGORY_COLORS.overlays,
+    [activeCategory]
+  );
+
+  const siblings = useMemo(() => {
+    if (!activeCategory) return [];
+    return activeCategory.items.filter(i => i.id !== activeItem).slice(0, 3);
+  }, [activeCategory, activeItem]);
 
   return (
     <div className={`flex flex-col h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
@@ -150,6 +163,21 @@ export default function App() {
         onSelectCategory={setActiveItem}
       />
 
+      {compareWith && !showWelcome && (
+        <CompareView
+          leftId={activeItem}
+          rightId={compareWith}
+          onClose={() => setCompareWith(null)}
+          onSelectItem={setActiveItem}
+        />
+      )}
+
+      <GlossaryIndex
+        isOpen={showGlossaryIndex && !showWelcome}
+        onClose={() => setShowGlossaryIndex(false)}
+        onSelectItem={setActiveItem}
+      />
+
       {/* Top Navigation */}
       {!showWelcome && (
         <TopNav
@@ -161,6 +189,9 @@ export default function App() {
           activeCatColors={activeCat}
           onGetStarted={handleShowWelcome}
           searchInputRef={searchInputRef}
+          explore={explore}
+          onOpenCheatSheet={() => setShowCheatSheet(true)}
+          onOpenGlossaryIndex={() => setShowGlossaryIndex(true)}
         />
       )}
 
@@ -174,17 +205,7 @@ export default function App() {
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex flex-col pt-[4.5rem] overflow-hidden">
-
-        {/* Explore Bar */}
-        {!showWelcome && (
-          <ExploreBar
-            explore={explore}
-            activeItem={activeItem}
-            onSelectItem={setActiveItem}
-            activeCatColors={activeCat}
-          />
-        )}
+      <div className="flex-1 flex flex-col pt-20 overflow-hidden">
 
         {/* Main content row */}
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
@@ -240,12 +261,39 @@ export default function App() {
                   </button>
                 </div>
 
-                <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-6 lg:mb-10">
+                <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
                   {currentData.definition}
                 </p>
 
-                {/* Prompt Builder */}
-                <div className="mb-8">
+                {/* Compact teaching row: sibling comparisons + vibeTip */}
+                {(siblings.length > 0 || currentData.vibeTip) && (
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 mb-6 lg:mb-10 text-sm lg:text-base">
+                    {siblings.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-x-1 gap-y-1 text-zinc-500 dark:text-zinc-400">
+                        {siblings.map((sib, i) => (
+                          <span key={sib.id} className="flex items-center gap-1">
+                            {i > 0 && <span className="mx-1 text-zinc-300 dark:text-zinc-700">·</span>}
+                            <button
+                              onClick={() => setCompareWith(sib.id)}
+                              className={`hover:underline font-medium ${activeCat.text}`}
+                            >
+                              vs {sib.name}
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {currentData.vibeTip && (
+                      <div className="flex items-start gap-1.5 text-zinc-500 dark:text-zinc-400 italic lg:ml-auto">
+                        <Lightbulb size={16} className="shrink-0 mt-0.5" />
+                        <span>{currentData.vibeTip}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Prompt Builder with carousel arrows in the top-right */}
+                <div className="mb-8 relative">
                   <PromptBuilder
                     data={currentData}
                     activeOptions={activeOptions}
@@ -253,54 +301,33 @@ export default function App() {
                     categoryColors={activeCat}
                     onCopy={handleCopyPrompt}
                   />
-                </div>
-
-                <div className="space-y-5 mt-auto">
-                  <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-zinc-100 dark:border-zinc-800">
-                    <div className="flex items-center gap-2 lg:gap-2.5 mb-2 lg:mb-3 text-zinc-500 dark:text-zinc-400">
-                      <MessageSquare size={18} />
-                      <span className="text-sm lg:text-base font-bold uppercase tracking-wide">Pro Tip</span>
-                    </div>
-                    <p className="text-sm lg:text-lg text-zinc-700 dark:text-zinc-300 italic leading-relaxed">
-                      "{currentData.vibeTip}"
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm lg:text-base font-bold text-zinc-400 uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-1.5 lg:gap-2">
-                      <ArrowRight size={16} /> Distinction
-                    </h3>
-                    <p className="text-sm lg:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                      {currentData.comparison}
-                    </p>
-                  </div>
-
-                  {/* Prev / Next navigation */}
-                  <div className="flex items-stretch gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                    {prevItem ? (
+                  <div className="absolute top-3 lg:top-4 right-3 lg:right-4 flex items-center gap-1.5 z-20">
+                    {prevItem && (
                       <button
                         onClick={() => setActiveItem(prevItem)}
-                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors text-left group"
+                        className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+                        aria-label={`Previous: ${prevData?.title}`}
                       >
-                        <ChevronLeft size={18} className="text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 shrink-0" />
-                        <div className="min-w-0">
-                          <span className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-zinc-400 block">Previous</span>
-                          <span className="text-sm lg:text-base font-semibold text-zinc-700 dark:text-zinc-200 truncate block">{prevData?.title}</span>
-                        </div>
+                        <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+                        <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+                          <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
+                          <span className="block text-lg font-semibold text-white">{prevData?.title}</span>
+                        </span>
                       </button>
-                    ) : <div className="flex-1" />}
-                    {nextItem ? (
+                    )}
+                    {nextItem && (
                       <button
                         onClick={() => setActiveItem(nextItem)}
-                        className="flex-1 flex items-center justify-end gap-3 px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors text-right group"
+                        className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+                        aria-label={`Next: ${nextData?.title}`}
                       >
-                        <div className="min-w-0">
-                          <span className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-zinc-400 block">Next</span>
-                          <span className="text-sm lg:text-base font-semibold text-zinc-700 dark:text-zinc-200 truncate block">{nextData?.title}</span>
-                        </div>
-                        <ChevronRight size={18} className="text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 shrink-0" />
+                        <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+                        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-left opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+                          <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
+                          <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
+                        </span>
                       </button>
-                    ) : <div className="flex-1" />}
+                    )}
                   </div>
                 </div>
               </div>
@@ -312,14 +339,14 @@ export default function App() {
             <div
               onMouseDown={handleResizeStart}
               onTouchStart={handleResizeStart}
-              className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-zinc-200/50 dark:bg-zinc-800/50 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-all group/resize shrink-0 z-20"
+              className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
             >
-              <GripVertical size={14} className="text-zinc-300 dark:text-zinc-600 group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
+              <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
             </div>
           )}
 
           {/* Main Content — Live Preview */}
-          <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-100 dark:bg-black`}>
+          <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}>
             {/* Subtle color glow */}
             <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
             <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${activeCat.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
@@ -337,11 +364,9 @@ export default function App() {
               )}
             </div>
 
-            {/* Demo area — fills available space, centers content */}
-            <div className="w-full h-full relative z-10 flex flex-col items-center justify-center p-4 lg:p-8">
-              <div className="w-full max-w-4xl flex-1 flex flex-col justify-center">
-                <DemoComponent activeOptions={activeOptions} />
-              </div>
+            {/* Demo area — fills available space */}
+            <div className="w-full h-full relative z-10 flex flex-col">
+              <DemoComponent activeOptions={activeOptions} />
             </div>
           </main>
         </div>

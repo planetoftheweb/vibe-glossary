@@ -720,7 +720,7 @@ export default function TopNav({
               aria-label="Open menu"
             >
               <MenuIcon size={16} className="text-zinc-600 dark:text-zinc-300" />
-              <div className="relative w-7 h-7 shrink-0">
+              <div className="md:hidden relative w-7 h-7 shrink-0">
                 <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
                   <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-700" strokeWidth="4" />
                   <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor"
@@ -729,9 +729,6 @@ export default function TopNav({
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="hidden md:flex absolute inset-0 items-center justify-center text-[10px] font-bold text-zinc-700 dark:text-zinc-200">
-                  {explore.progress.visited}
-                </span>
               </div>
             </button>
 

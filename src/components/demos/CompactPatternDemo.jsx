@@ -47,9 +47,15 @@ const cx = {
 /** One centered column for all batch-2 previews — avoids double max-width and uneven padding */
 const PREVIEW = {
   scroll: 'flex-1 min-h-0 overflow-y-auto overflow-x-hidden',
-  inner: 'mx-auto w-full max-w-lg px-4 py-6 sm:px-6 sm:py-8',
+  inner: 'mx-auto w-full max-w-xl px-5 py-8 sm:px-8 sm:py-10',
   lede: 'text-sm leading-relaxed text-zinc-600 dark:text-zinc-400',
   sectionTitle: 'text-base font-semibold tracking-tight text-zinc-900 dark:text-white',
+  /** Centered form column inside the preview (inputs, search, URL bar, etc.) */
+  formNarrow: 'mx-auto flex w-full max-w-md flex-col items-stretch gap-5',
+  fieldLabel: 'mb-2 block text-sm font-semibold text-zinc-800 dark:text-zinc-200',
+  /** Large, comfortable text fields — used across interactive + static demos */
+  input:
+    'min-h-[52px] w-full rounded-xl border-2 border-zinc-200 bg-white px-5 py-3.5 text-base leading-snug text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-indigo-400',
 };
 
 const MULTI_IDS = ['design', 'eng', 'qa', 'docs', 'pm'];
@@ -98,8 +104,8 @@ function MultiSelectPatternPreview({ o }) {
   const clearAll = () => setSelected(new Set());
 
   return (
-    <div className="w-full">
-      <div className={`${cx.card} p-5 shadow-md sm:p-6`}>
+    <div className="mx-auto w-full max-w-lg">
+      <div className={`${cx.card} p-6 shadow-md sm:p-8`}>
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className={PREVIEW.sectionTitle}>Assign teams</p>
@@ -172,7 +178,7 @@ function MultiSelectPatternPreview({ o }) {
                     toggle(id);
                   }}
                   disabled={atLimit}
-                  className={`flex min-h-[48px] w-full items-center gap-4 px-4 py-3 text-left text-base transition sm:min-h-[44px] sm:text-sm ${
+                  className={`flex min-h-[52px] w-full items-center gap-4 px-5 py-3.5 text-left text-base transition sm:text-sm ${
                     atLimit
                       ? 'cursor-not-allowed opacity-45'
                       : 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/80'
@@ -265,8 +271,8 @@ function ColorPickerPatternPreview({ o }) {
   };
 
   return (
-    <div className="w-full">
-      <div className={`${cx.card} space-y-5 p-5 sm:p-6`}>
+    <div className="mx-auto w-full max-w-lg">
+      <div className={`${cx.card} space-y-6 p-6 sm:p-8`}>
         <div>
           <p className={PREVIEW.sectionTitle}>Color</p>
           <p className={`mt-1 ${PREVIEW.lede}`}>Use the bar, type a hex value, or tap a preset.</p>
@@ -292,7 +298,7 @@ function ColorPickerPatternPreview({ o }) {
         </div>
 
         <div>
-          <label htmlFor="vg-native-color" className="mb-2 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <label htmlFor="vg-native-color" className={PREVIEW.fieldLabel}>
             System picker
           </label>
           <input
@@ -300,13 +306,13 @@ function ColorPickerPatternPreview({ o }) {
             type="color"
             value={hex}
             onChange={(e) => setHex(e.target.value)}
-            className="h-14 w-full min-h-[44px] cursor-pointer rounded-xl border-2 border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-600 dark:bg-zinc-800"
+            className="h-16 w-full min-h-[52px] cursor-pointer rounded-xl border-2 border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-600 dark:bg-zinc-800"
             aria-label="Open system color picker"
           />
         </div>
 
         <div>
-          <label htmlFor="vg-hex-input" className="mb-2 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <label htmlFor="vg-hex-input" className={PREVIEW.fieldLabel}>
             Hex value
           </label>
           <input
@@ -318,7 +324,7 @@ function ColorPickerPatternPreview({ o }) {
             onKeyDown={(e) => {
               if (e.key === 'Enter') applyHexDraft();
             }}
-            className="min-h-[48px] w-full rounded-xl border border-zinc-200 bg-white px-4 font-mono text-base text-zinc-900 outline-none ring-indigo-500/30 focus:border-indigo-500 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className={`${PREVIEW.input} font-mono tracking-wide`}
             spellCheck={false}
             autoCapitalize="off"
             autoCorrect="off"
@@ -454,8 +460,8 @@ function ComboboxPatternPreview({ o }) {
   const showListBody = !(o('opt1') && loading && q) && !loadError;
 
   return (
-    <div className="w-full space-y-5">
-      <div className="space-y-2">
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-8">
+      <div className="w-full space-y-2 text-center sm:px-4">
         <p className={PREVIEW.lede}>
           <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span> — type to filter a fixed list,
           then pick one option (not the same as open search).
@@ -471,9 +477,9 @@ function ComboboxPatternPreview({ o }) {
         )}
       </div>
 
-      <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
-        <div className="border-b border-zinc-200 bg-zinc-50/80 px-4 py-4 dark:border-zinc-700 dark:bg-zinc-900/50 sm:px-5">
-          <label htmlFor="vg-combobox-input" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+      <div className={`${cx.card} w-full overflow-hidden p-0 shadow-md`}>
+        <div className="space-y-2 border-b border-zinc-200 bg-zinc-50/90 px-5 py-5 dark:border-zinc-700 dark:bg-zinc-900/60 sm:px-6 sm:py-6">
+          <label htmlFor="vg-combobox-input" className={PREVIEW.fieldLabel}>
             Framework
           </label>
           <input
@@ -486,24 +492,24 @@ function ComboboxPatternPreview({ o }) {
             placeholder="Type to filter…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-h-[48px] w-full bg-transparent text-base text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+            className={PREVIEW.input}
           />
         </div>
 
-        <div role="listbox" aria-label="Matching frameworks" className="max-h-56 overflow-y-auto">
+        <div role="listbox" aria-label="Matching frameworks" className="max-h-72 overflow-y-auto">
           {loadError && o('opt1') && (
-            <div className="px-4 py-5 text-sm text-rose-600 dark:text-rose-400" role="alert">
+            <div className="px-5 py-6 text-sm text-rose-600 dark:text-rose-400" role="alert">
               Couldn’t load suggestions. (Demo error — try another query.)
             </div>
           )}
           {o('opt1') && loading && q && !loadError && (
-            <div className="flex items-center gap-3 px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-3 px-5 py-6 text-sm text-zinc-500 dark:text-zinc-400">
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-indigo-500" aria-hidden />
               Searching…
             </div>
           )}
           {showListBody && filtered.length === 0 && !showCreatable && (
-            <div className="px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400">No framework matches that text.</div>
+            <div className="px-5 py-6 text-sm text-zinc-500 dark:text-zinc-400">No framework matches that text.</div>
           )}
           {showListBody &&
             filtered.map((label) => {
@@ -515,7 +521,7 @@ function ComboboxPatternPreview({ o }) {
                   role="option"
                   aria-selected={active}
                   onClick={() => pick(label)}
-                  className={`flex min-h-[48px] w-full items-center border-b border-zinc-100 px-4 text-left text-base transition last:border-b-0 dark:border-zinc-800 sm:text-sm ${
+                  className={`flex min-h-[52px] w-full items-center border-b border-zinc-100 px-5 text-left text-base transition last:border-b-0 dark:border-zinc-800 sm:text-sm ${
                     active
                       ? 'bg-indigo-50 font-semibold text-indigo-900 dark:bg-indigo-950/60 dark:text-indigo-100'
                       : 'text-zinc-800 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800/80'
@@ -529,7 +535,7 @@ function ComboboxPatternPreview({ o }) {
             <button
               type="button"
               onClick={pickCreatable}
-              className="flex min-h-[48px] w-full items-center px-4 text-left text-base font-semibold text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40 sm:text-sm"
+              className="flex min-h-[52px] w-full items-center px-5 text-left text-base font-semibold text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40 sm:text-sm"
             >
               + Create “{q}”
             </button>
@@ -537,12 +543,12 @@ function ComboboxPatternPreview({ o }) {
         </div>
 
         {selected ? (
-          <div className="border-t border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-300">
+          <div className="border-t border-zinc-200 bg-zinc-50 px-5 py-4 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-300">
             <span className="text-zinc-500 dark:text-zinc-500">Selected:</span>{' '}
             <span className="font-semibold text-zinc-900 dark:text-white">{selected}</span>
           </div>
         ) : (
-          <div className="border-t border-zinc-200 px-4 py-3 text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
+          <div className="border-t border-zinc-200 px-5 py-4 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
             Pick a row to set the value.
           </div>
         )}
@@ -705,27 +711,31 @@ const RENDER = {
 
   daterange(o) {
     return (
-      <div className={`${cx.card} p-4 flex items-center gap-3 flex-wrap`}>
-        <CalendarRange className="w-5 h-5 text-indigo-500 shrink-0" />
-        <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="rounded-md border border-zinc-200 dark:border-zinc-600 px-2 py-1">Apr 1</span>
-          <span className="text-zinc-400">→</span>
-          <span className="rounded-md border border-zinc-200 dark:border-zinc-600 px-2 py-1">Apr 18</span>
+      <div className="mx-auto flex w-full max-w-md justify-center">
+        <div className={`${cx.card} flex flex-wrap items-center justify-center gap-4 p-6 sm:p-7`}>
+          <CalendarRange className="h-6 w-6 shrink-0 text-indigo-500" />
+          <div className="flex items-center gap-3 font-mono text-base text-zinc-800 dark:text-zinc-100">
+            <span className="rounded-lg border-2 border-zinc-200 px-4 py-2.5 dark:border-zinc-600">Apr 1</span>
+            <span className="text-zinc-400">→</span>
+            <span className="rounded-lg border-2 border-zinc-200 px-4 py-2.5 dark:border-zinc-600">Apr 18</span>
+          </div>
+          {o('opt1') && <span className={`${cx.pill} text-amber-800 border-amber-300 text-xs`}>Presets</span>}
         </div>
-        {o('opt1') && <span className={`${cx.pill} text-amber-700 border-amber-300`}>Presets</span>}
       </div>
     );
   },
 
   timepicker(o) {
     return (
-      <div className={`${cx.card} p-4 flex items-center justify-center gap-4`}>
-        <Clock className="w-6 h-6 text-indigo-500" />
-        <div className="flex items-center gap-1 font-mono text-xl font-bold text-zinc-800 dark:text-zinc-100">
-          <span className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 py-1">02</span>
-          <span>:</span>
-          <span className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 py-1">30</span>
-          {o('opt1') && <span className="text-sm font-semibold text-zinc-500 ml-1">PM</span>}
+      <div className="mx-auto flex w-full max-w-md justify-center">
+        <div className={`${cx.card} flex items-center justify-center gap-5 p-7 sm:p-8`}>
+          <Clock className="h-7 w-7 shrink-0 text-indigo-500" />
+          <div className="flex items-center gap-2 font-mono text-2xl font-bold tabular-nums text-zinc-800 dark:text-zinc-100">
+            <span className="rounded-xl bg-zinc-100 px-4 py-2.5 dark:bg-zinc-800">02</span>
+            <span className="text-zinc-400">:</span>
+            <span className="rounded-xl bg-zinc-100 px-4 py-2.5 dark:bg-zinc-800">30</span>
+            {o('opt1') && <span className="ml-1 text-base font-semibold text-zinc-500">PM</span>}
+          </div>
         </div>
       </div>
     );
@@ -741,47 +751,62 @@ const RENDER = {
 
   inputgroup(o) {
     return (
-      <div className={`${cx.card} flex overflow-hidden`}>
-        <span className="shrink-0 px-3 flex items-center bg-zinc-100 dark:bg-zinc-800 text-xs text-zinc-500 border-r border-zinc-200 dark:border-zinc-700">
-          https://
-        </span>
-        <input className="flex-1 min-w-0 px-3 py-2 text-sm bg-transparent outline-none" readOnly value="vibe.app" />
-        {o('opt1') && (
-          <button type="button" className="shrink-0 px-3 text-xs font-semibold text-indigo-600 dark:text-indigo-400 border-l border-zinc-200 dark:border-zinc-700">
-            Copy
-          </button>
-        )}
+      <div className={PREVIEW.formNarrow}>
+        <label className={PREVIEW.fieldLabel}>Website URL</label>
+        <div className="flex overflow-hidden rounded-xl border-2 border-zinc-200 bg-white shadow-sm dark:border-zinc-600 dark:bg-zinc-950">
+          <span className="flex shrink-0 items-center border-r border-zinc-200 bg-zinc-50 px-4 text-sm font-medium text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+            https://
+          </span>
+          <input
+            className="min-h-[52px] flex-1 min-w-0 border-0 bg-transparent px-3 py-3 text-base text-zinc-900 outline-none dark:text-zinc-100"
+            readOnly
+            value="vibe.app"
+          />
+          {o('opt1') && (
+            <button
+              type="button"
+              className="shrink-0 border-l border-zinc-200 px-4 text-sm font-semibold text-indigo-600 dark:border-zinc-700 dark:text-indigo-400"
+            >
+              Copy
+            </button>
+          )}
+        </div>
       </div>
     );
   },
 
   textfield(o) {
     return (
-      <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Display name</label>
-        <input
-          className={`w-full rounded-lg border px-3 py-2 text-sm bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-600 ${o('opt1') ? 'ring-2 ring-indigo-500/30' : ''}`}
-          readOnly
-          value="Alex"
-        />
-        {o('opt2') && <p className={cx.muted}>Shown on your profile</p>}
+      <div className={PREVIEW.formNarrow}>
+        <div>
+          <label className={PREVIEW.fieldLabel}>Display name</label>
+          <input
+            className={`${PREVIEW.input} ${o('opt1') ? 'ring-2 ring-indigo-500/30' : ''}`}
+            readOnly
+            value="Alex"
+          />
+        </div>
+        {o('opt2') && <p className={`${cx.muted} text-center text-sm`}>Shown on your profile</p>}
       </div>
     );
   },
 
   passwordfield(o) {
     return (
-      <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Password</label>
-        <div className="flex rounded-lg border border-zinc-200 dark:border-zinc-600 overflow-hidden">
+      <div className={PREVIEW.formNarrow}>
+        <label className={PREVIEW.fieldLabel}>Password</label>
+        <div className="flex overflow-hidden rounded-xl border-2 border-zinc-200 bg-white shadow-sm dark:border-zinc-600 dark:bg-zinc-950">
           <input
             type="password"
-            className="flex-1 px-3 py-2 text-sm bg-transparent outline-none tracking-widest"
+            className="min-h-[52px] flex-1 border-0 bg-transparent px-5 py-3.5 text-base tracking-widest text-zinc-900 outline-none dark:text-zinc-100"
             readOnly
             value="••••••••"
           />
           {o('opt1') && (
-            <button type="button" className="px-3 text-xs text-zinc-500 border-l border-zinc-200 dark:border-zinc-700">
+            <button
+              type="button"
+              className="border-l border-zinc-200 px-5 text-sm font-medium text-zinc-600 dark:border-zinc-700 dark:text-zinc-400"
+            >
               Show
             </button>
           )}
@@ -792,10 +817,23 @@ const RENDER = {
 
   searchfield(o) {
     return (
-      <div className={`${cx.card} flex items-center gap-2 px-3 py-2`}>
-        <span className="text-zinc-400 text-sm">⌕</span>
-        <input className="flex-1 bg-transparent text-sm outline-none" placeholder="Search…" readOnly />
-        {o('opt1') && <kbd className="hidden sm:inline text-[10px] text-zinc-400 border border-zinc-300 dark:border-zinc-600 rounded px-1">⌘K</kbd>}
+      <div className={PREVIEW.formNarrow}>
+        <label className={PREVIEW.fieldLabel}>Search</label>
+        <div className="flex min-h-[52px] items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-4 shadow-sm dark:border-zinc-600 dark:bg-zinc-950 sm:px-5">
+          <span className="text-lg text-zinc-400" aria-hidden>
+            ⌕
+          </span>
+          <input
+            className="min-h-[48px] flex-1 border-0 bg-transparent text-base text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+            placeholder="Search…"
+            readOnly
+          />
+          {o('opt1') && (
+            <kbd className="hidden shrink-0 rounded border border-zinc-300 px-2 py-1 text-xs text-zinc-400 sm:inline dark:border-zinc-600">
+              ⌘K
+            </kbd>
+          )}
+        </div>
       </div>
     );
   },

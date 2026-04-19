@@ -844,9 +844,10 @@ export const GLOSSARY_BATCH_2 = {
 
   linkcard: {
     title: "Link Preview Card",
-    definition: "Card with title, description, and image from a URL — open graph style.",
+    definition:
+      "Rich unfurl when a URL is pasted in chat or social: Open Graph image, title, description, and hostname — not a KPI tile.",
     vibeTip: "Mention fallbacks when metadata is missing.",
-    comparison: "Link preview summarizes URLs. Stat card shows metrics.",
+    comparison: "Link preview summarizes a URL before click-through. Stat card shows metrics; this is metadata from the destination page.",
     prompt: {
       base: "Add a link preview card component",
       options: [

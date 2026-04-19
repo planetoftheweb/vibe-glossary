@@ -3,6 +3,7 @@ import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, Megaphone,
   Sparkles, Link2, ChevronDown, ChevronRight, Check, X, Pipette, Folder, FileCode, FileText,
+  Globe,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
 
@@ -1326,6 +1327,122 @@ function ActivityStreamPatternPreview({ o }) {
   );
 }
 
+const LINK_PREVIEW_DEMO_URL = 'https://vibe-glossary.web.app/patterns/modal';
+const LINK_PREVIEW_HOST = 'vibe-glossary.web.app';
+
+/** Rich link unfurl: OG metadata as a tappable card (chat apps, social). Options = loading / failure / domain emphasis. */
+function LinkCardPatternPreview({ o }) {
+  const skeleton = o('opt1');
+  const broken = o('opt2');
+  const domainBar = o('opt3');
+
+  if (skeleton) {
+    return (
+      <div className="mx-auto w-full max-w-lg space-y-4">
+        <div>
+          <p className={PREVIEW.sectionTitle}>Link preview loading</p>
+          <p className={`${PREVIEW.lede} mt-1`}>
+            While Open Graph HTML is fetched, use a <strong className="text-zinc-800 dark:text-zinc-200">skeleton</strong> with a
+            fixed image ratio so the layout does not jump when metadata arrives.
+          </p>
+        </div>
+        <div className={`${cx.card} animate-pulse overflow-hidden p-0`}>
+          <div className="aspect-[1200/630] bg-zinc-200 dark:bg-zinc-700" />
+          <div className="space-y-3 p-5 sm:p-6">
+            <div className="h-5 w-3/4 rounded-lg bg-zinc-200 dark:bg-zinc-600" />
+            <div className="h-4 w-full rounded-lg bg-zinc-200 dark:bg-zinc-700" />
+            <div className="h-4 w-11/12 rounded-lg bg-zinc-200 dark:bg-zinc-700" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (broken) {
+    return (
+      <div className="mx-auto w-full max-w-lg space-y-4">
+        <div>
+          <p className={PREVIEW.sectionTitle}>Preview failed</p>
+          <p className={`${PREVIEW.lede} mt-1`}>
+            Crawlers can be blocked (robots, paywalls, 404). Show a compact error and{' '}
+            <strong className="text-zinc-800 dark:text-zinc-200">keep the raw URL visible</strong> so users still know the destination.
+          </p>
+        </div>
+        <article
+          className={`${cx.card} border-rose-200 p-5 shadow-sm dark:border-rose-900/40 sm:p-6`}
+          aria-live="polite"
+        >
+          <div className="flex gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950/50">
+              <X className="h-6 w-6 text-rose-600 dark:text-rose-400" strokeWidth={2.5} aria-hidden />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Couldn’t load link preview</p>
+              <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                The fetch failed or the page returned an error — you can still open the link below.
+              </p>
+              <p className="mt-3 break-all font-mono text-sm font-medium text-indigo-600 dark:text-indigo-400">{LINK_PREVIEW_DEMO_URL}</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-lg space-y-5">
+      <div>
+        <p className={PREVIEW.sectionTitle}>Rich link unfurl</p>
+        <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
+          Paste a URL in Slack, Discord, or iMessage and the client fetches{' '}
+          <span className="font-medium text-zinc-800 dark:text-zinc-100">Open Graph</span> tags (
+          <code className="rounded bg-zinc-200/80 px-1.5 py-0.5 text-xs font-semibold dark:bg-zinc-800">og:title</code>,{' '}
+          <code className="rounded bg-zinc-200/80 px-1.5 py-0.5 text-xs font-semibold dark:bg-zinc-800">og:image</code>, etc.) to build
+          this card — <span className="font-medium">it is not a stat tile or a generic “card” pattern</span>.
+        </p>
+      </div>
+      <article className={`${cx.card} overflow-hidden p-0 shadow-md`}>
+        {domainBar && (
+          <div className="flex flex-wrap items-center gap-2 border-b border-amber-200/90 bg-amber-50 px-4 py-3 dark:border-amber-900/50 dark:bg-amber-950/40 sm:px-5">
+            <Globe className="h-5 w-5 shrink-0 text-amber-700 dark:text-amber-400" aria-hidden />
+            <span className="font-mono text-base font-semibold tracking-tight text-amber-950 dark:text-amber-100">
+              {LINK_PREVIEW_HOST}
+            </span>
+            <span className="text-sm font-medium text-amber-900/90 dark:text-amber-200/90">
+              Always show hostname — helps spot look-alike phishing domains.
+            </span>
+          </div>
+        )}
+        <a
+          href="#link-preview-demo"
+          className="group block text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
+          aria-label={`Open preview: VibeGlossary — UI patterns as prompts (${LINK_PREVIEW_HOST})`}
+        >
+          <div
+            className="aspect-[1200/630] w-full bg-gradient-to-br from-indigo-600 via-violet-600 to-sky-500"
+            role="img"
+            aria-label=""
+          />
+          <div className="space-y-2 p-5 sm:p-6">
+            {!domainBar && (
+              <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                <Globe className="h-4 w-4 shrink-0" aria-hidden />
+                <span className="font-mono text-zinc-600 dark:text-zinc-300">{LINK_PREVIEW_HOST}</span>
+              </p>
+            )}
+            <h3 className="text-lg font-bold leading-snug text-zinc-900 group-hover:underline dark:text-white sm:text-xl">
+              VibeGlossary — UI patterns as prompts
+            </h3>
+            <p className="text-base leading-relaxed text-zinc-600 dark:text-zinc-300">
+              Pick a component, copy a structured prompt, and ship UI that matches how your team talks about interface design.
+            </p>
+          </div>
+        </a>
+      </article>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -1895,17 +2012,7 @@ const RENDER = {
   },
 
   linkcard(o) {
-    return (
-      <div className={`${cx.card} w-full overflow-hidden`}>
-        <div className="h-28 bg-gradient-to-r from-sky-400 to-indigo-500" />
-        <div className="p-4">
-          <p className="text-sm font-bold text-zinc-900 dark:text-white">Blog — Patterns</p>
-          <p className={`${cx.muted} mt-1.5 line-clamp-2 text-sm`}>
-            {o('opt1') ? 'Open Graph title + image + domain' : 'vibe.glossary · preview'}
-          </p>
-        </div>
-      </div>
-    );
+    return <LinkCardPatternPreview o={o} />;
   },
 
   formcolumns(o) {

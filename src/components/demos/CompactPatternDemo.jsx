@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, ToggleLeft, Megaphone,
-  Sparkles, Link2, ChevronDown, Check, X,
+  Sparkles, Link2, ChevronDown, Check, X, Pipette,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
 
@@ -199,6 +199,186 @@ function MultiSelectPatternPreview({ o }) {
   );
 }
 
+const COLOR_SWATCHES = ['#6366f1', '#22c55e', '#f59e0b', '#ec4899', '#0ea5e9', '#64748b'];
+
+function normalizeHex6(v) {
+  let s = v.trim();
+  if (!s.startsWith('#')) s = `#${s}`;
+  return /^#[0-9a-f]{6}$/i.test(s) ? s.toLowerCase() : null;
+}
+
+function hexToRgb(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function rgbaFromHex(hex, a) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  return `rgba(${rgb.r},${rgb.g},${rgb.b},${a})`;
+}
+
+/** Real color picking: native input, hex field, optional swatches / alpha / EyeDropper. */
+function ColorPickerPatternPreview({ o }) {
+  const [hex, setHex] = useState('#6366f1');
+  const [hexDraft, setHexDraft] = useState('#6366f1');
+  const [alphaPct, setAlphaPct] = useState(100);
+  const [eyeMsg, setEyeMsg] = useState('');
+
+  useEffect(() => {
+    setHexDraft(hex);
+  }, [hex]);
+
+  const applyHexDraft = () => {
+    const n = normalizeHex6(hexDraft);
+    if (n) setHex(n);
+    else setHexDraft(hex);
+  };
+
+  const alpha = o('opt1') ? alphaPct / 100 : 1;
+  const previewBg = o('opt1') ? rgbaFromHex(hex, alpha) : hex;
+
+  const runEyedropper = async () => {
+    setEyeMsg('');
+    try {
+      const E = window.EyeDropper;
+      if (!E) {
+        setEyeMsg('EyeDropper not supported in this browser.');
+        return;
+      }
+      const dropper = new E();
+      const { sRGBHex } = await dropper.open();
+      setHex(sRGBHex);
+    } catch {
+      setEyeMsg('');
+    }
+  };
+
+  return (
+    <div className="mx-auto w-full max-w-md">
+      <div className={`${cx.card} space-y-4 p-5 sm:p-6`}>
+        <div>
+          <p className="text-base font-semibold text-zinc-900 dark:text-white">Color</p>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Use the swatch control, type hex, or tap presets.</p>
+        </div>
+
+        <div className="relative h-28 w-full overflow-hidden rounded-2xl border-2 border-zinc-200 shadow-inner dark:border-zinc-600" aria-hidden>
+          {o('opt1') && (
+            <div
+              className="absolute inset-0 dark:opacity-90"
+              style={{
+                backgroundColor: '#fafafa',
+                backgroundImage:
+                  'linear-gradient(45deg, #d4d4d8 25%, transparent 25%), linear-gradient(-45deg, #d4d4d8 25%, transparent 25%)',
+                backgroundSize: '14px 14px',
+                backgroundPosition: '0 0, 0 7px',
+              }}
+            />
+          )}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: previewBg }}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="vg-native-color" className="mb-2 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Choose
+          </label>
+          <input
+            id="vg-native-color"
+            type="color"
+            value={hex}
+            onChange={(e) => setHex(e.target.value)}
+            className="h-14 w-full min-h-[44px] cursor-pointer rounded-xl border-2 border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-600 dark:bg-zinc-800"
+            aria-label="Open system color picker"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="vg-hex-input" className="mb-2 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Hex
+          </label>
+          <input
+            id="vg-hex-input"
+            type="text"
+            value={hexDraft}
+            onChange={(e) => setHexDraft(e.target.value)}
+            onBlur={applyHexDraft}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') applyHexDraft();
+            }}
+            className="min-h-[48px] w-full rounded-xl border border-zinc-200 bg-white px-4 font-mono text-base text-zinc-900 outline-none ring-indigo-500/30 focus:border-indigo-500 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            spellCheck={false}
+            autoCapitalize="off"
+            autoCorrect="off"
+            aria-label="Color as hex value"
+          />
+        </div>
+
+        {o('opt1') && (
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Opacity</span>
+              <span className="text-sm font-mono tabular-nums text-zinc-600 dark:text-zinc-300">{alphaPct}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={alphaPct}
+              onChange={(e) => setAlphaPct(Number(e.target.value))}
+              className="h-11 w-full cursor-pointer accent-indigo-600"
+              aria-label="Opacity"
+            />
+          </div>
+        )}
+
+        <div>
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            {o('opt2') ? 'Brand presets' : 'Quick presets'}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {COLOR_SWATCHES.map((c) => {
+              const active = hex.toLowerCase() === c.toLowerCase();
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setHex(c)}
+                  className={`h-12 w-12 min-h-[44px] min-w-[44px] rounded-xl border-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 ${
+                    active ? 'border-indigo-600 ring-2 ring-indigo-500' : 'border-zinc-300 dark:border-zinc-600'
+                  }`}
+                  style={{ backgroundColor: c }}
+                  title={c}
+                  aria-label={`Use ${c}`}
+                  aria-pressed={active}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {o('opt3') && (
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={runEyedropper}
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-sm font-semibold text-zinc-800 hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+            >
+              <Pipette className="h-4 w-4 shrink-0" aria-hidden />
+              Pick from screen
+            </button>
+            {eyeMsg ? <p className="text-center text-xs text-amber-600 dark:text-amber-400">{eyeMsg}</p> : null}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -378,31 +558,7 @@ const RENDER = {
   },
 
   colorpicker(o) {
-    return (
-      <div className={`${cx.card} p-4 space-y-3`}>
-        <div className="h-8 rounded-lg bg-gradient-to-r from-rose-400 via-amber-300 to-indigo-500" />
-        {o('opt1') && (
-          <div className="h-2 rounded-full bg-zinc-200 dark:bg-zinc-700">
-            <div className="h-2 w-3/5 rounded-full bg-zinc-500" />
-          </div>
-        )}
-        <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-full border-2 border-white shadow ring-2 ring-zinc-200 dark:ring-zinc-600"
-            style={{ background: '#6366f1' }}
-          />
-          <span className="text-xs font-mono text-zinc-600 dark:text-zinc-300">#6366F1</span>
-          {o('opt3') && <span className="text-[10px] text-zinc-400">Eyedropper</span>}
-        </div>
-        {o('opt2') && (
-          <div className="flex gap-1.5">
-            {['#6366f1', '#22c55e', '#f59e0b'].map((c) => (
-              <div key={c} className="h-6 w-6 rounded-md border border-zinc-200 dark:border-zinc-600" style={{ background: c }} />
-            ))}
-          </div>
-        )}
-      </div>
-    );
+    return <ColorPickerPatternPreview o={o} />;
   },
 
   combobox(o) {

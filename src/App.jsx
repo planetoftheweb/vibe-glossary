@@ -297,6 +297,8 @@ export default function App() {
           toggleLearnMode={toggleLearnMode}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
+          activeBuildTopic={activeBuildTopic}
+          setActiveBuildTopic={setActiveBuildTopic}
           categories={categories}
           activeCatColors={navAccentColors}
           siteSection={siteSection}

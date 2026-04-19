@@ -3,9 +3,26 @@ import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
   RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
+  Compass, Lightbulb, Wrench, FileText, Database, KeyRound,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
-import { BUILD_LITERACY_NAV_COLORS } from '../../data/buildLiteracy';
+import {
+  BUILD_LITERACY_NAV_COLORS,
+  BUILD_LITERACY_CLUSTERS,
+  getBuildTopic,
+  getBuildCluster,
+} from '../../data/buildLiteracy';
+
+// Lucide icon per Build Literacy cluster, kept in the nav so the data file
+// stays plain JSON-shaped.
+const BUILD_CLUSTER_ICONS = {
+  'web-foundations': <Compass size={20} />,
+  product: <Lightbulb size={20} />,
+  engineering: <Wrench size={20} />,
+  'spec-driven': <FileText size={20} />,
+  data: <Database size={20} />,
+  auth: <KeyRound size={20} />,
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Generic popover, used by all three dropdowns (category, component, menu)
@@ -350,6 +367,7 @@ export default function TopNav({
   darkMode, setDarkMode,
   learnMode, toggleLearnMode,
   activeItem, setActiveItem,
+  activeBuildTopic, setActiveBuildTopic = () => {},
   categories, activeCatColors,
   siteSection = 'glossary', setSiteSection = () => {},
   onGetStarted, searchInputRef,
@@ -364,6 +382,26 @@ export default function TopNav({
   const catColors = siteSection === 'build'
     ? BUILD_LITERACY_NAV_COLORS
     : (activeCat ? CATEGORY_COLORS[activeCat.id] : CATEGORY_COLORS.overlays);
+
+  // Build literacy: active topic and its cluster, mirroring the glossary's
+  // category + component pair.
+  const activeBuildTopicData = activeBuildTopic ? getBuildTopic(activeBuildTopic) : null;
+  const activeBuildCluster = activeBuildTopicData
+    ? getBuildCluster(activeBuildTopicData.clusterId)
+    : BUILD_LITERACY_CLUSTERS[0];
+
+  const handleSelectBuildCluster = (clusterId) => {
+    const cluster = getBuildCluster(clusterId);
+    if (cluster?.topics?.length) {
+      setActiveBuildTopic(cluster.topics[0].id);
+      setOpenDropdown(null);
+    }
+  };
+
+  const handleSelectBuildTopic = (topicId) => {
+    setActiveBuildTopic(topicId);
+    setOpenDropdown(null);
+  };
 
   const searchResults = searchTerm.trim()
     ? categories.flatMap(cat =>
@@ -530,6 +568,87 @@ export default function TopNav({
               })}
             </PillDropdown>
           </div>
+          )}
+
+          {/* Build literacy: divider before the two pills */}
+          {siteSection === 'build' && (
+            <div className="hidden md:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
+          )}
+
+          {/* Build literacy: Cluster pill */}
+          {siteSection === 'build' && (
+            <div className="hidden md:block">
+              <PillDropdown
+                icon={
+                  <span className={`flex items-center gap-1.5 ${BUILD_LITERACY_NAV_COLORS.accent}`}>
+                    <span className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+                    {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={20} />}
+                  </span>
+                }
+                label={activeBuildCluster?.title || 'Web foundations'}
+                isOpen={openDropdown === 'build-cluster'}
+                onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
+                onClose={() => setOpenDropdown(null)}
+                width={320}
+              >
+                {BUILD_LITERACY_CLUSTERS.map(cluster => {
+                  const isActive = activeBuildCluster?.id === cluster.id;
+                  return (
+                    <button
+                      key={cluster.id}
+                      onClick={() => handleSelectBuildCluster(cluster.id)}
+                      className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
+                        isActive
+                          ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                          : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
+                      }`}
+                    >
+                      <div className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+                      <span className={isActive ? '' : 'text-zinc-500 dark:text-zinc-400'}>
+                        {BUILD_CLUSTER_ICONS[cluster.id]}
+                      </span>
+                      <span className="font-medium text-left">{cluster.title}</span>
+                      <span className="ml-auto text-sm text-zinc-400 tabular-nums">{cluster.topics.length}</span>
+                    </button>
+                  );
+                })}
+              </PillDropdown>
+            </div>
+          )}
+
+          {/* Build literacy: Topic pill */}
+          {siteSection === 'build' && (
+            <div className="hidden md:block">
+              <PillDropdown
+                icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
+                label={activeBuildTopicData?.title || 'Pick a topic'}
+                isOpen={openDropdown === 'build-topic'}
+                onToggle={() => setOpenDropdown(openDropdown === 'build-topic' ? null : 'build-topic')}
+                onClose={() => setOpenDropdown(null)}
+                width={340}
+              >
+                {activeBuildCluster?.topics?.map(topic => {
+                  const isActive = topic.id === activeBuildTopic;
+                  const isMastered = explore.mastered.has(topic.id);
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => handleSelectBuildTopic(topic.id)}
+                      className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
+                        isActive
+                          ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                          : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
+                      }`}
+                    >
+                      <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
+                      {isMastered && (
+                        <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />
+                      )}
+                    </button>
+                  );
+                })}
+              </PillDropdown>
+            </div>
           )}
 
           {/* Supplementary pills, icon-only at md, progressively add text/chevron at lg/xl */}
@@ -880,6 +999,81 @@ export default function TopNav({
             )}
           </div>
         </div>
+      )}
+
+      {/* Mobile nav, icon-only cluster + topic dropdowns for Build literacy */}
+      {siteSection === 'build' && (
+      <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
+        <PillDropdown
+          iconOnly
+          ariaLabel={`Cluster: ${activeBuildCluster?.title || 'Web foundations'}`}
+          icon={
+            <span className={`flex items-center gap-1.5 ${BUILD_LITERACY_NAV_COLORS.accent}`}>
+              <span className={`w-2 h-2 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+              {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={18} />}
+            </span>
+          }
+          isOpen={openDropdown === 'mob-build-cluster'}
+          onToggle={() => setOpenDropdown(openDropdown === 'mob-build-cluster' ? null : 'mob-build-cluster')}
+          onClose={() => setOpenDropdown(null)}
+          width={260}
+        >
+          {BUILD_LITERACY_CLUSTERS.map(cluster => {
+            const isActive = activeBuildCluster?.id === cluster.id;
+            return (
+              <button
+                key={cluster.id}
+                onClick={() => handleSelectBuildCluster(cluster.id)}
+                className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
+                  isActive
+                    ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                    : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
+                }`}
+              >
+                <div className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+                {BUILD_CLUSTER_ICONS[cluster.id]}
+                <span className="font-medium">{cluster.title}</span>
+              </button>
+            );
+          })}
+        </PillDropdown>
+
+        <span className="text-zinc-300 dark:text-zinc-700">/</span>
+
+        <PillDropdown
+          iconOnly
+          ariaLabel={`Topic: ${activeBuildTopicData?.title || 'Pick a topic'}`}
+          icon={
+            <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
+              <List size={16} className="text-zinc-400" />
+              <span className="truncate max-w-[9rem]">{activeBuildTopicData?.title || 'Pick a topic'}</span>
+            </span>
+          }
+          isOpen={openDropdown === 'mob-build-topic'}
+          onToggle={() => setOpenDropdown(openDropdown === 'mob-build-topic' ? null : 'mob-build-topic')}
+          onClose={() => setOpenDropdown(null)}
+          width={260}
+        >
+          {activeBuildCluster?.topics?.map(topic => {
+            const isActive = topic.id === activeBuildTopic;
+            const isMastered = explore.mastered.has(topic.id);
+            return (
+              <button
+                key={topic.id}
+                onClick={() => handleSelectBuildTopic(topic.id)}
+                className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
+                  isActive
+                    ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                    : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
+                }`}
+              >
+                <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
+                {isMastered && <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />}
+              </button>
+            );
+          })}
+        </PillDropdown>
+      </div>
       )}
 
       {/* Mobile nav, icon-only category + component dropdowns */}

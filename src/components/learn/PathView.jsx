@@ -8,6 +8,7 @@ import { useCategories } from '../../hooks/useCategories';
 import { CATEGORY_COLORS } from '../../data/categories';
 import { DEMO_REGISTRY } from '../../data/demoRegistry';
 import { evaluateAttempt, explainReasons, TIME_FLOOR_MS } from '../../lib/quizIntegrity';
+import ShareAchievement from './ShareAchievement';
 
 const PASS_THRESHOLD = 0.8; // 80% correct to earn badge
 
@@ -500,9 +501,20 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
           <p className="text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 mb-2">
             You scored <strong>{correct}/{totalQuiz}</strong> ({percent}%).
           </p>
-          <p className="text-base lg:text-lg text-zinc-500 dark:text-zinc-400 mb-8">
+          <p className="text-base lg:text-lg text-zinc-500 dark:text-zinc-400 mb-6">
             You've mastered the <strong>{path.name}</strong> path. +25 to your VibeScore.
           </p>
+          <div className="mb-8 flex justify-center">
+            <ShareAchievement
+              achievement={{
+                kind: 'path-badge',
+                pathName: path.name,
+                section: 'glossary',
+              }}
+              align="center"
+              label="Share this badge"
+            />
+          </div>
         </>
       ) : passedButPractice ? (
         <>

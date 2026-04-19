@@ -3,6 +3,7 @@ import {
   X, Sparkles, Eye, ClipboardCopy, GraduationCap, Award, Repeat, Trophy, Info,
 } from 'lucide-react';
 import { POINTS, LEVELS } from '../../lib/scoring';
+import ShareAchievement from './ShareAchievement';
 
 /**
  * Modal that shows where the learner's VibeScore came from. Splits the total
@@ -51,13 +52,27 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level }) {
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="shrink-0 p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-            aria-label="Close score breakdown"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {total > 0 && (
+              <ShareAchievement
+                achievement={{
+                  kind: 'vibe-score',
+                  score: total,
+                  level: level.current.label,
+                }}
+                size="sm"
+                align="right"
+                label="Share score"
+              />
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              aria-label="Close score breakdown"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Body */}

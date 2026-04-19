@@ -416,7 +416,7 @@ export default function TopNav({
   }, [searchInputRef]);
 
   return (
-    <header className="relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50 fixed top-0 left-0 right-0">
+    <header className="relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>

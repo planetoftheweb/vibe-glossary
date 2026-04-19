@@ -1207,6 +1207,125 @@ function StickyTableHeaderPatternPreview({ o }) {
   );
 }
 
+const ACTIVITY_STREAM_EVENTS = [
+  {
+    id: '1',
+    actor: 'Jordan Lee',
+    verb: 'pushed a commit to',
+    object: 'api-service',
+    relative: 'Just now',
+    iso: '2026-04-18T17:52:00.000Z',
+    icon: Activity,
+  },
+  {
+    id: '2',
+    actor: 'Sam Kim',
+    verb: 'commented on',
+    object: 'PR #482',
+    relative: '12 minutes ago',
+    iso: '2026-04-18T17:40:00.000Z',
+    icon: MessageSquare,
+  },
+  {
+    id: '3',
+    actor: 'Release bot',
+    verb: 'merged',
+    object: 'main',
+    relative: '1 hour ago',
+    iso: '2026-04-18T16:52:00.000Z',
+    icon: Sparkles,
+  },
+  {
+    id: '4',
+    actor: 'Morgan Quinn',
+    verb: 'deployed',
+    object: 'checkout-web v4.2.1',
+    relative: '3 hours ago',
+    iso: '2026-04-18T14:52:00.000Z',
+    icon: Megaphone,
+  },
+];
+
+function ActivityStreamPatternPreview({ o }) {
+  const actorLinks = o('opt1');
+  const verbStyle = o('opt2');
+  const loadMore = o('opt3');
+
+  const Actor = ({ children }) =>
+    actorLinks ? (
+      <a
+        href="#profile"
+        className="font-semibold text-indigo-600 underline decoration-indigo-300 underline-offset-2 hover:text-indigo-700 dark:text-indigo-400 dark:decoration-indigo-600 dark:hover:text-indigo-300"
+      >
+        {children}
+      </a>
+    ) : (
+      <span className="font-semibold text-zinc-900 dark:text-zinc-100">{children}</span>
+    );
+
+  return (
+    <div className="mx-auto w-full max-w-xl">
+      <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
+        <div className="border-b border-zinc-200/90 bg-gradient-to-br from-white to-zinc-50/80 px-6 py-5 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-950 sm:px-7 sm:py-6">
+          <p className={PREVIEW.sectionTitle}>Activity</p>
+          <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
+            Event log: who did what — large enough to scan without squinting; timestamps stay secondary.
+          </p>
+        </div>
+        <ol className="divide-y divide-zinc-100 dark:divide-zinc-800" aria-label="Recent activity">
+          {ACTIVITY_STREAM_EVENTS.map((e) => {
+            const Icon = e.icon;
+            return (
+              <li key={e.id} className="flex gap-4 px-6 py-5 sm:gap-5 sm:px-7 sm:py-6">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950/70 sm:h-14 sm:w-14">
+                  <Icon className="h-6 w-6 text-indigo-600 dark:text-indigo-400 sm:h-7 sm:w-7" aria-hidden />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-base leading-relaxed text-zinc-800 sm:text-[1.0625rem] dark:text-zinc-200">
+                    <Actor>{e.actor}</Actor>
+                    {verbStyle ? (
+                      <>
+                        {' '}
+                        <span className="font-normal text-zinc-500 dark:text-zinc-400">{e.verb} </span>
+                        <span className="font-semibold text-zinc-900 dark:text-white">{e.object}</span>
+                      </>
+                    ) : (
+                      <>
+                        {' '}
+                        <span className="text-zinc-700 dark:text-zinc-300">
+                          {e.verb}{' '}
+                          <span className="font-semibold text-zinc-900 dark:text-zinc-100">{e.object}</span>
+                        </span>
+                      </>
+                    )}
+                  </p>
+                  <time
+                    dateTime={e.iso}
+                    title={new Date(e.iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                    className="mt-2 block text-sm font-medium text-zinc-500 dark:text-zinc-400"
+                  >
+                    {e.relative}
+                  </time>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        {loadMore && (
+          <div className="border-t border-zinc-100 px-6 py-4 dark:border-zinc-800 sm:px-7">
+            <button
+              type="button"
+              className="min-h-[48px] w-full rounded-xl border-2 border-zinc-200 bg-zinc-50 text-base font-semibold text-zinc-800 shadow-sm transition hover:bg-white dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+            >
+              Load older events
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -1847,24 +1966,7 @@ const RENDER = {
   },
 
   activitystream(o) {
-    return (
-      <div className={`${cx.card} p-3 space-y-3`}>
-        {[
-          { t: 'Pushed commit', icon: Activity },
-          { t: 'Commented on PR', icon: MessageSquare },
-        ].map(({ t, icon: Icon }) => (
-          <div key={t} className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center shrink-0">
-              <Icon className="w-4 h-4 text-zinc-600" />
-            </div>
-            <div>
-              <p className="text-xs font-medium text-zinc-800 dark:text-zinc-100">{t}</p>
-              <p className={cx.muted}>{o('opt1') ? 'Just now' : '2m ago'}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <ActivityStreamPatternPreview o={o} />;
   },
 
   filterpanel(o) {

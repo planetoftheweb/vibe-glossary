@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
-  PanelTop, MessageSquare, Activity, Filter, ToggleLeft, Megaphone,
+  PanelTop, MessageSquare, Activity, Filter, Megaphone,
   Sparkles, Link2, ChevronDown, Check, X, Pipette,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
@@ -66,6 +66,88 @@ const MULTI_LABELS = {
   docs: 'Docs',
   pm: 'Product',
 };
+
+/** Toolbar toggles (aria-pressed) — visually distinct from a settings switch (thumb in a track). */
+function ToggleButtonPatternPreview({ o }) {
+  const syncBoldFromPrompt = o('opt1');
+  const withLabels = o('opt2');
+  const mutuallyExclusive = o('opt3');
+
+  const [fmt, setFmt] = useState(() => ({
+    bold: syncBoldFromPrompt,
+    italic: false,
+    underline: false,
+  }));
+
+  useEffect(() => {
+    setFmt((f) => {
+      if (mutuallyExclusive && syncBoldFromPrompt) {
+        return { bold: true, italic: false, underline: false };
+      }
+      return { ...f, bold: syncBoldFromPrompt };
+    });
+  }, [syncBoldFromPrompt, mutuallyExclusive]);
+
+  const applyToggle = (key) => {
+    setFmt((prev) => {
+      if (mutuallyExclusive) {
+        if (prev[key]) {
+          return { bold: false, italic: false, underline: false };
+        }
+        return {
+          bold: key === 'bold',
+          italic: key === 'italic',
+          underline: key === 'underline',
+        };
+      }
+      return { ...prev, [key]: !prev[key] };
+    });
+  };
+
+  const slots = [
+    { key: 'bold', name: 'Bold', sym: 'B', symClass: 'font-bold' },
+    { key: 'italic', name: 'Italic', sym: 'I', symClass: 'italic' },
+    { key: 'underline', name: 'Underline', sym: 'U', symClass: 'underline' },
+  ];
+
+  return (
+    <div className="mx-auto flex w-full max-w-lg flex-col items-center gap-6 text-center">
+      <div className="w-full">
+        <p className={PREVIEW.sectionTitle}>Formatting toolbar</p>
+        <p className={`mt-2 max-w-prose mx-auto ${PREVIEW.lede}`}>
+          Each control is an independent pressed button — not an on/off track like a switch.
+        </p>
+      </div>
+      <div
+        role="toolbar"
+        aria-label="Text formatting"
+        className="inline-flex flex-wrap items-center justify-center gap-2 rounded-2xl border-2 border-zinc-200 bg-white p-2 shadow-sm dark:border-zinc-600 dark:bg-zinc-900/90"
+      >
+        {slots.map(({ key, name, sym, symClass }) => {
+          const pressed = fmt[key];
+          return (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={pressed}
+              onClick={() => applyToggle(key)}
+              className={`inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border-2 px-4 text-base font-semibold transition ${
+                withLabels ? 'min-w-0 sm:px-5' : 'min-w-[52px] px-0 sm:min-w-[56px]'
+              } ${
+                pressed
+                  ? 'border-indigo-500 bg-indigo-50 text-indigo-950 shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:border-indigo-400 dark:bg-indigo-950/60 dark:text-indigo-50'
+                  : 'border-transparent text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800/90'
+              }`}
+            >
+              <span className={`text-lg leading-none ${symClass}`}>{sym}</span>
+              {withLabels && <span className="text-sm font-semibold tracking-tight">{name}</span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 /** Interactive multi-select so toggles and chips actually work (RENDER map is otherwise static). */
 function MultiSelectPatternPreview({ o }) {
@@ -1387,21 +1469,7 @@ const RENDER = {
   },
 
   togglebutton(o) {
-    return (
-      <div className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-700 p-0.5 bg-zinc-50 dark:bg-zinc-900">
-        <button
-          type="button"
-          className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1 ${
-            o('opt1') ? 'bg-white dark:bg-zinc-800 shadow text-zinc-900 dark:text-white' : 'text-zinc-500'
-          }`}
-        >
-          <ToggleLeft className="w-4 h-4" /> Bold
-        </button>
-        <button type="button" className="px-3 py-1.5 rounded-md text-xs font-semibold text-zinc-500">
-          Italic
-        </button>
-      </div>
-    );
+    return <ToggleButtonPatternPreview o={o} />;
   },
 
   actionsheet(o) {

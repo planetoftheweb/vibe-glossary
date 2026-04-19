@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import {
   Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput,
   MousePointerClick, Megaphone, X, ArrowRight, Keyboard,
-  Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound,
+  Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
   BookOpen, GraduationCap,
 } from 'lucide-react';
 import { useCategories } from '../hooks/useCategories';
@@ -28,6 +28,7 @@ const BUILD_CLUSTER_META = {
   'spec-driven':     { icon: FileText, color: 'from-cyan-500 to-sky-600',       border: 'border-cyan-500/30',   glow: 'shadow-cyan-500/20' },
   data:              { icon: Database, color: 'from-blue-500 to-indigo-600',    border: 'border-blue-500/30',   glow: 'shadow-blue-500/20' },
   auth:              { icon: KeyRound, color: 'from-rose-500 to-pink-600',      border: 'border-rose-500/30',   glow: 'shadow-rose-500/20' },
+  'ai-literacy':     { icon: Bot,      color: 'from-purple-500 to-violet-700',  border: 'border-purple-500/30', glow: 'shadow-purple-500/20' },
 };
 
 const SHORTCUTS = [

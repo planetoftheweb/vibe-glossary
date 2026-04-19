@@ -253,6 +253,40 @@ export const BUILD_PATHS = [
       },
     ],
   },
+  {
+    id: 'ai-literacy',
+    name: 'AI literacy',
+    tagline: 'LLMs, tokens, agents, RAG, MCP: the words behind the magic',
+    description:
+      'What an LLM actually does, why tokens matter, how the system/user/assistant roles shape behavior, what agents and tool calling really are, and when to reach for RAG vs fine-tuning. The vocabulary that lets you read any AI release post and tell your AI exactly how to behave.',
+    quiz: [
+      {
+        q: 'A neural network that, given some words, predicts the next word over and over is a...',
+        answerId: 'llm',
+        optionIds: ['llm', 'agents', 'rag', 'fine-tuning'],
+      },
+      {
+        q: 'The maximum number of tokens (input + history + output) a model can hold in one call is its...',
+        answerId: 'tokens',
+        optionIds: ['tokens', 'sampling', 'multimodal', 'moe'],
+      },
+      {
+        q: 'Setting temperature to 0 so the same prompt gives the most likely answer every time is tuning...',
+        answerId: 'sampling',
+        optionIds: ['sampling', 'tokens', 'prompts-roles', 'fine-tuning'],
+      },
+      {
+        q: 'An LLM in a loop that calls tools, reads the results, and decides the next step until it is done is an...',
+        answerId: 'agents',
+        optionIds: ['agents', 'tool-calling', 'mcp', 'rag'],
+      },
+      {
+        q: 'Searching your own documents, pasting the relevant chunks into the prompt, and asking the model to answer using only that context is...',
+        answerId: 'rag',
+        optionIds: ['rag', 'fine-tuning', 'tool-calling', 'mcp'],
+      },
+    ],
+  },
 ];
 
 // Inject the topic ids from each matching cluster into path.items so the path

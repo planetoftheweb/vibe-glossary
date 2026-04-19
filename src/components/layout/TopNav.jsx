@@ -3,7 +3,7 @@ import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
   RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
-  Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette,
+  Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette, Bot,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import VibeScorePill from '../learn/VibeScorePill';
@@ -24,6 +24,7 @@ const BUILD_CLUSTER_ICONS = {
   'spec-driven': <FileText size={20} />,
   data: <Database size={20} />,
   auth: <KeyRound size={20} />,
+  'ai-literacy': <Bot size={20} />,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

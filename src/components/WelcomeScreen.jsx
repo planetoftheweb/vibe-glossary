@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput,
   MousePointerClick, Megaphone, ArrowRight, BookOpen, Copy, Zap, X,
-  Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound,
+  Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
   GraduationCap,
 } from 'lucide-react';
 import { BUILD_LITERACY_CLUSTERS } from '../data/buildLiteracy';
@@ -160,6 +160,13 @@ const BUILD_CLUSTER_VISUALS = {
     glow: 'shadow-rose-500/30',
     border: 'border-rose-500/30',
     blurb: 'OAuth, SSO, RBAC. Who is in and what can they do.',
+  },
+  'ai-literacy': {
+    icon: Bot,
+    color: 'from-purple-500 to-violet-700',
+    glow: 'shadow-purple-500/30',
+    border: 'border-purple-500/30',
+    blurb: 'LLMs, tokens, agents, MCP. Talk to AI like you mean it.',
   },
 };
 

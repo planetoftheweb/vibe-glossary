@@ -1,5 +1,6 @@
 import { WEB_FOUNDATIONS_CLUSTER } from './webFoundations.js';
 import { DESIGN_LANGUAGE_CLUSTER } from './designLanguage.js';
+import { AI_LITERACY_CLUSTER } from './aiLiteracy.js';
 
 /**
  * Build Literacy: ideas from the rest of the build (planning, tests, specs,
@@ -83,6 +84,12 @@ export const BUILD_CLUSTER_COLORS = {
     active: 'bg-rose-600 text-white', hover: 'hover:bg-rose-500/10',
     dot: 'bg-rose-500', accent: 'text-rose-500',
     gradient: 'from-rose-500 to-pink-600',
+  },
+  'ai-literacy': {
+    text: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30',
+    active: 'bg-purple-600 text-white', hover: 'hover:bg-purple-500/10',
+    dot: 'bg-purple-500', accent: 'text-purple-500',
+    gradient: 'from-purple-600 to-violet-700',
   },
 };
 
@@ -530,6 +537,90 @@ export const BUILD_LITERACY_CLUSTERS = [
         mnemonic:
           'Trunk-based: short branches, fast merges. Git Flow: long branches, painful merges.',
         relatedGlossaryIds: ['kanban'],
+      },
+      {
+        id: 'commit-messages',
+        title: 'Commit messages and Conventional Commits',
+        summary:
+          'A commit message is the one-line note attached to every change. Conventional Commits is a tiny standard (feat:, fix:, docs:, refactor:, etc.) that machines and humans can both read.',
+        details:
+          'A commit message is the explanation that travels with a change forever. Six months from now, "git blame" will land on a line, and the commit message is the only context the next person (often you) gets. "fix stuff" tells you nothing. "fix(checkout): handle expired card response from Stripe" tells you everything.\n\nConventional Commits is a small spec that puts a type and an optional scope at the front of every message: feat, fix, docs, style, refactor, perf, test, chore, build, ci, revert. The scope in parentheses names the area touched. A bang after the type (feat!:) signals a breaking change. The body explains the "why" if it is not obvious from the title.\n\nThe payoff is automation. Tools like changesets, semantic-release, and release-please read Conventional Commits to generate changelogs and decide the next semver bump (feat = minor, fix = patch, ! = major). Even without automation, a clean history is searchable: "show me every fix in checkout this quarter" becomes one git log command.\n\nA good rule of thumb: if you cannot summarize the change in one Conventional Commits line, the commit is doing too many things. Split it.',
+        comparison:
+          'Plain message = a note. Conventional Commits = a note that tools can also read. Same effort, way more leverage.',
+        vibeTip:
+          'Tell your AI "use Conventional Commits, scope by directory, body only when the why is non-obvious". You get clean history without thinking about it.',
+        talkToAi: {
+          starter:
+            'Write commit messages for the staged changes in [repo]. Before writing, ask me: 1) whether we follow Conventional Commits (yes is the default), 2) the scope conventions used in the repo (look at recent history if unsure), 3) whether to split the staged diff into multiple commits if it covers multiple intents. Then propose either one Conventional Commits line per logical change or a multi-commit plan with messages, and explain any breaking changes you flagged with !.',
+          example:
+            'Write commit messages for the currently staged changes. We use Conventional Commits with directory-based scopes (feat(api), fix(web), refactor(lib)). Split into multiple commits if the staged diff mixes a bug fix with a new feature. Body only when the why is non-obvious.',
+        },
+        mnemonic:
+          'feat: new thing. fix: broken thing. refactor: same behavior, cleaner code. !: breaking change. Future-you will thank present-you.',
+        relatedGlossaryIds: ['list'],
+      },
+      {
+        id: 'merge-vs-rebase',
+        title: 'Merge vs rebase (and squash)',
+        summary:
+          'Two ways to fold a branch back into another. Merge keeps the full history with a merge commit. Rebase replays your commits on top of the latest main as if they happened today. Squash collapses a branch into one commit.',
+        details:
+          'When your feature branch is ready, you have to combine it with main. The three flavors look different in the history.\n\nMerge creates a merge commit that joins both lines of history. Pros: it preserves what actually happened, including parallel work. Cons: the history grows a forest of merge commits that can be hard to read on a busy repo.\n\nRebase rewrites your branch so its commits appear on top of the current main, as if you had started your work today. Pros: a clean, linear history. Cons: it rewrites commit hashes, so anyone else who pulled your branch is now in conflict-land. Rule of thumb: only rebase branches that nobody else has based work on.\n\nSquash merge takes every commit on the branch and collapses them into one new commit on main. Pros: every PR is one tidy commit, the changelog reads beautifully, and "git revert" undoes the whole feature in one shot. Cons: you lose the per-step granularity. Most modern teams default to squash for PRs and use rebase locally to keep their branch up to date.\n\nThe vibe coder default in 2026: squash on merge to main; rebase your local branch onto main to resolve conflicts before requesting review; never rebase a branch other people have pulled.',
+        comparison:
+          'Merge = keep both histories joined. Rebase = pretend you started today, linear history. Squash = collapse the whole PR into one commit on main.',
+        vibeTip:
+          'When the AI proposes a "merge main into my branch" right before your PR, ask for "rebase onto main" instead. Cleaner conflict, cleaner diff for the reviewer.',
+        talkToAi: {
+          starter:
+            'Help me handle [branch] vs main. Before recommending merge, rebase, or squash, ask me: 1) whether anyone else has based work on this branch, 2) the team\'s policy for merging into main (merge commit, rebase merge, squash merge), 3) how messy the in-progress commits are on the branch. Then walk me through the exact git commands, what conflicts to expect, and how to recover if I get tangled.',
+          example:
+            'I have a 3-day-old feature branch off main. Nobody else has pulled it. Main has moved 12 commits since I branched. Team policy is squash on merge. My branch has 7 commits, some are "wip" noise. Walk me through rebasing onto main locally and then opening the PR.',
+        },
+        mnemonic:
+          'Merge keeps history. Rebase rewrites it. Squash collapses it. Never rebase shared branches.',
+        relatedGlossaryIds: ['kanban'],
+      },
+      {
+        id: 'merge-conflicts',
+        title: 'Merge conflicts',
+        summary:
+          'Git\'s "I cannot decide" moment. When two branches change the same lines and git cannot pick a winner, it pauses and asks you to resolve the conflict by hand (or with AI help) before the merge can finish.',
+        details:
+          'A merge conflict happens when git tries to combine changes and finds that the same region of the same file has been edited differently in both branches. Git is conservative: rather than guess, it pauses, marks the conflicting region with <<<<<<<, =======, and >>>>>>> markers, and waits for you.\n\nResolution is a series of small decisions: keep yours, keep theirs, keep both, or write a new combined version. Then you remove the markers, save, "git add" the file, and continue the merge or rebase. The actual git commands are short. The thinking is the work.\n\nThe two situations where conflicts get scary are big diffs (a 500-line PR conflicting with a 500-line refactor) and renamed/moved files (git often gives up and treats it as "deleted in one, modified in the other"). Both get easier when you keep PRs small, rebase often, and pull main into your branch (or rebase onto it) every day instead of every two weeks.\n\nAI is genuinely useful here. Pasting both versions plus "the goal of my branch was X, the goal of main\'s change was Y, write the merged version" produces a good first draft you can review. Just never commit a conflict resolution without reading the result; the model is happy to silently drop one side\'s logic.',
+        comparison:
+          'Merge = git did the math. Conflict = git refuses to guess and hands you the marker. The fix is human (or AI) judgment, not a git command.',
+        vibeTip:
+          'When you hit a conflict, do not panic-paste the whole file into the AI. Paste just the conflicted hunk plus a one-line description of each side\'s intent. Cleaner, safer resolution.',
+        talkToAi: {
+          starter:
+            'Help me resolve the merge conflicts in [branch]. Before suggesting fixes, ask me: 1) the goal of my branch in one sentence, 2) the goal of the conflicting changes from main (commit message or PR title is fine), 3) any files where I want to keep mine entirely or theirs entirely without thinking. Then walk through each conflicted hunk, propose a resolution that respects both intents, and flag any hunk where the two sides genuinely disagree and I have to pick.',
+          example:
+            'Resolve the conflicts after rebasing my "switch to cursor pagination" branch onto main. Main\'s conflicting change was "rename Product to Item across the API". For each conflict, take the rename from main and the pagination logic from mine, unless the two genuinely fight, in which case flag it for me.',
+        },
+        mnemonic:
+          'Conflict = git refuses to guess. Read both sides, pick or combine, never blind-trust the AI\'s resolution.',
+        relatedGlossaryIds: ['compare'],
+      },
+      {
+        id: 'tags-releases',
+        title: 'Tags, releases, and changelogs',
+        summary:
+          'A tag is a sticky note on a specific commit (usually a version number like v1.4.0). A release is a tag plus notes, binaries, and a changelog. Both turn "this commit" into "this version" everyone can refer to.',
+        details:
+          'A git tag is a permanent label on a single commit. Unlike branches, tags do not move. "v1.4.0" today and "v1.4.0" five years from now point at the same commit. That stability is exactly why tags are how teams mark releases. The convention is "git tag -a v1.4.0 -m \'short summary\'" then "git push --tags".\n\nA release is the polished version of a tag. On GitHub or GitLab, a release wraps a tag with a title, release notes, optional binaries or built artifacts, and a public URL you can share with users. Released tools (npm packages, Docker images, mobile apps) almost always have one tag per release.\n\nA changelog is the running list of "what changed in each version, for humans". CHANGELOG.md is the convention; "Keep a Changelog" is the most common format (Added, Changed, Fixed, Removed, Security, per version). Tools like changesets, semantic-release, and release-please read your Conventional Commits and generate the changelog and the next semver tag for you, so the whole release can be one PR merge.\n\nThe vibe coder cheat: even on a personal project, tag whenever something is worth keeping. "v0.7.0-the-day-quizzes-worked" beats "let me find that commit from a month ago".',
+        comparison:
+          'Tag = sticky note on a commit. Release = tag + notes + downloads. Changelog = the human-readable list across releases.',
+        vibeTip:
+          'Have your AI generate the release notes from the commits since the last tag, in Keep-a-Changelog format. Then edit, do not generate-and-paste.',
+        talkToAi: {
+          starter:
+            'Cut the next release for [repo]. Before doing anything, ask me: 1) the current version and what kind of bump this should be (major, minor, patch), 2) whether we already use Conventional Commits and a tool like changesets or release-please, 3) where the changelog lives. Then list every commit since the last tag, propose the next version with reasoning, draft Keep-a-Changelog entries grouped by Added/Changed/Fixed/Removed, and give me the exact git tag and push commands.',
+          example:
+            'Cut the next release for our CLI. Last tag was v0.6.3. We use Conventional Commits but no automation yet. CHANGELOG.md is in the repo root in Keep-a-Changelog format. Walk me through the version bump (probably minor since I added two feat: commits), draft the changelog, and give me the tag commands.',
+        },
+        mnemonic:
+          'Tag a commit, release a tag, log the changes. Future users (and bug reports) need to know which version they are on.',
+        relatedGlossaryIds: ['list'],
       },
       {
         id: 'observability',
@@ -1248,6 +1339,7 @@ export const BUILD_LITERACY_CLUSTERS = [
       },
     ],
   },
+  AI_LITERACY_CLUSTER,
 ];
 
 /** Flat lookup: id -> topic with cluster info attached. */

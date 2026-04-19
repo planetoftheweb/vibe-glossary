@@ -30,7 +30,7 @@ export default function CompactPatternDemo({ demoId, activeOptions = new Set() }
         </p>
         <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 truncate">{title}</p>
       </div>
-      <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-auto">
+      <div className="flex-1 flex items-start justify-center p-4 pt-6 min-h-0 overflow-auto">
         <div className="w-full max-w-lg">{body}</div>
       </div>
     </div>

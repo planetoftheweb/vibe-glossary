@@ -392,6 +392,60 @@ function MenuItem({ icon, onClick, children }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SearchResultsList - shared dropdown for unified glossary + build search
+// ─────────────────────────────────────────────────────────────────────────────
+function SearchResultsList({ results, onSelect, maxHeight = 'max-h-80' }) {
+  const uiResults = results.filter(r => r.kind === 'ui');
+  const buildResults = results.filter(r => r.kind === 'build');
+
+  const renderRow = (r) => {
+    const colors = r.kind === 'build'
+      ? BUILD_LITERACY_NAV_COLORS
+      : (CATEGORY_COLORS[r.groupId] || CATEGORY_COLORS.overlays);
+    return (
+      <button
+        key={`${r.kind}-${r.id}`}
+        onClick={() => onSelect(r)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-left"
+      >
+        <div className={`w-2.5 h-2.5 rounded-full ${colors.dot} shrink-0`} />
+        <span className="font-medium text-zinc-900 dark:text-white truncate">{r.name}</span>
+        <span className={`ml-auto text-sm ${colors.text} shrink-0`}>{r.groupName}</span>
+      </button>
+    );
+  };
+
+  const renderHeader = (label, count) => (
+    <div className="px-4 pt-2 pb-1 flex items-center justify-between">
+      <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+        {label}
+      </span>
+      <span className="text-[11px] text-zinc-400 dark:text-zinc-500">{count}</span>
+    </div>
+  );
+
+  return (
+    <div className={`absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 py-1.5 ${maxHeight} overflow-y-auto`}>
+      {uiResults.length > 0 && (
+        <>
+          {renderHeader('UI components', uiResults.length)}
+          {uiResults.map(renderRow)}
+        </>
+      )}
+      {uiResults.length > 0 && buildResults.length > 0 && (
+        <div className="my-1 border-t border-zinc-200 dark:border-zinc-800" />
+      )}
+      {buildResults.length > 0 && (
+        <>
+          {renderHeader('Build literacy', buildResults.length)}
+          {buildResults.map(renderRow)}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // TopNav
 // ─────────────────────────────────────────────────────────────────────────────
 export default function TopNav({
@@ -455,13 +509,36 @@ export default function TopNav({
     setOpenDropdown(null);
   };
 
-  const searchResults = searchTerm.trim()
-    ? categories.flatMap(cat =>
-        cat.items
-          .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-          .map(item => ({ ...item, catId: cat.id, catName: cat.name }))
-      )
-    : [];
+  const searchResults = (() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return [];
+    const uiHits = categories.flatMap(cat =>
+      cat.items
+        .filter(item => item.name.toLowerCase().includes(q))
+        .map(item => ({
+          kind: 'ui',
+          id: item.id,
+          name: item.name,
+          groupId: cat.id,
+          groupName: cat.name,
+        }))
+    );
+    const buildHits = BUILD_LITERACY_CLUSTERS.flatMap(cluster =>
+      (cluster.topics || [])
+        .filter(t =>
+          t.title.toLowerCase().includes(q) ||
+          (t.summary && t.summary.toLowerCase().includes(q))
+        )
+        .map(t => ({
+          kind: 'build',
+          id: t.id,
+          name: t.title,
+          groupId: cluster.id,
+          groupName: cluster.title,
+        }))
+    );
+    return [...uiHits, ...buildHits];
+  })();
 
   const handleSelectCategory = (catId) => {
     const cat = categories.find(c => c.id === catId);
@@ -476,18 +553,17 @@ export default function TopNav({
     setOpenDropdown(null);
   };
 
-  const handleSearchSelect = (itemId) => {
-    setActiveItem(itemId);
+  const handleSearchSelect = (result) => {
+    if (result.kind === 'build') {
+      setActiveBuildTopic(result.id);
+      setSiteSection('build');
+    } else {
+      setActiveItem(result.id);
+      setSiteSection('glossary');
+    }
     setSearchTerm('');
     setSearchOpen(false);
   };
-
-  useEffect(() => {
-    if (siteSection === 'build') {
-      setSearchOpen(false);
-      setSearchTerm('');
-    }
-  }, [siteSection]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -809,13 +885,13 @@ export default function TopNav({
         {/* Right: Search + Menu */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Desktop: inline expanding search */}
-          {siteSection === 'glossary' && searchOpen ? (
+          {searchOpen ? (
             <div className="hidden md:block relative w-72 lg:w-96">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search components..."
+                placeholder="Search components and build topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
@@ -829,30 +905,15 @@ export default function TopNav({
                 <X size={16} />
               </button>
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 py-1.5 max-h-80 overflow-y-auto">
-                  {searchResults.map(item => {
-                    const cc = CATEGORY_COLORS[item.catId];
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => handleSearchSelect(item.id)}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                      >
-                        <div className={`w-2.5 h-2.5 rounded-full ${cc.dot}`} />
-                        <span className="font-medium text-zinc-900 dark:text-white">{item.name}</span>
-                        <span className={`ml-auto text-sm ${cc.text}`}>{item.catName}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                <SearchResultsList results={searchResults} onSelect={handleSearchSelect} />
               )}
               {searchTerm && searchResults.length === 0 && (
                 <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 p-4 text-center text-base text-zinc-400">
-                  No components found
+                  No matches found
                 </div>
               )}
             </div>
-          ) : siteSection === 'glossary' ? (
+          ) : (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
               className="hidden md:flex p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
@@ -861,10 +922,9 @@ export default function TopNav({
             >
               <Search size={20} />
             </button>
-          ) : null}
+          )}
 
           {/* Mobile: icon-only search toggle */}
-          {siteSection === 'glossary' && (
           <button
             onClick={() => { setSearchOpen(!searchOpen); setTimeout(() => searchInputRef.current?.focus(), 50); }}
             className="md:hidden p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
@@ -872,7 +932,6 @@ export default function TopNav({
           >
             <Search size={20} />
           </button>
-          )}
 
           {/* Your Progress pill between search and hamburger */}
           <div className="hidden md:block">
@@ -1025,14 +1084,14 @@ export default function TopNav({
       </div>
 
       {/* Mobile search overlay, underneath the menu on small devices */}
-      {siteSection === 'glossary' && searchOpen && (
+      {searchOpen && (
         <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
           <div className="relative">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               ref={searchInputRef}
               type="text"
-              placeholder="Search all components..."
+              placeholder="Search components and build topics..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-10 py-3 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
@@ -1045,26 +1104,11 @@ export default function TopNav({
               <X size={16} />
             </button>
             {searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 py-1.5 max-h-64 overflow-y-auto">
-                {searchResults.map(item => {
-                  const cc = CATEGORY_COLORS[item.catId];
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSearchSelect(item.id)}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                    >
-                      <div className={`w-2.5 h-2.5 rounded-full ${cc.dot}`} />
-                      <span className="font-medium text-zinc-900 dark:text-white">{item.name}</span>
-                      <span className={`text-sm ${cc.text}`}>{item.catName}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              <SearchResultsList results={searchResults} onSelect={handleSearchSelect} maxHeight="max-h-64" />
             )}
             {searchTerm && searchResults.length === 0 && (
               <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 p-4 text-center text-sm text-zinc-400">
-                No components found
+                No matches found
               </div>
             )}
           </div>

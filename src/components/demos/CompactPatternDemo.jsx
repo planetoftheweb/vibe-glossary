@@ -1,10 +1,11 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
-  Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
+  Loader2, Bell, Play, Share2, MapPin, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, Megaphone,
   Sparkles, Link2, ChevronDown, ChevronRight, Check, X, Pipette, Folder, FileCode, FileText,
   Globe,
 } from 'lucide-react';
+import QRCode from 'qrcode';
 import { useGlossary } from '../../hooks/useGlossary';
 
 /**
@@ -1443,6 +1444,78 @@ function LinkCardPatternPreview({ o }) {
   );
 }
 
+const QR_PREVIEW_URL = 'https://vibe-glossary.web.app';
+
+function QrCodePatternPreview({ o }) {
+  const highEc = o('opt1');
+  const quietZone = o('opt2');
+  const altAndUrl = o('opt3');
+  const [dataUrl, setDataUrl] = useState(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setFailed(false);
+    setDataUrl(null);
+    QRCode.toDataURL(QR_PREVIEW_URL, {
+      width: 320,
+      margin: quietZone ? 4 : 1,
+      errorCorrectionLevel: highEc ? 'H' : 'M',
+      color: { dark: '#18181b', light: '#ffffff' },
+    })
+      .then((url) => {
+        if (!cancelled) setDataUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [highEc, quietZone]);
+
+  const imgAlt = altAndUrl
+    ? 'QR code that encodes the VibeGlossary site URL — scan with a phone camera to open it'
+    : 'QR code';
+
+  return (
+    <div className="mx-auto w-full max-w-md space-y-4">
+      <div className="text-center sm:text-left">
+        <p className={PREVIEW.sectionTitle}>QR code</p>
+        <p className={`${PREVIEW.lede} mt-1`}>
+          Encodes a real URL — scan with a camera app. Error correction {highEc ? <strong>H</strong> : <strong>M</strong>}
+          {quietZone ? '; quiet zone preserved' : '; tight margin (riskier for scanners)'}.
+        </p>
+      </div>
+      <div
+        className={`flex min-h-[280px] items-center justify-center rounded-2xl border-2 border-zinc-200 bg-white p-4 shadow-inner dark:border-zinc-600 ${
+          quietZone ? 'p-8 sm:p-10' : 'p-3'
+        } ${highEc ? 'ring-2 ring-indigo-400 ring-offset-2 ring-offset-zinc-50 dark:ring-offset-zinc-950' : ''}`}
+      >
+        {dataUrl && !failed ? (
+          <img
+            src={dataUrl}
+            width={320}
+            height={320}
+            alt={imgAlt}
+            className="h-auto w-full max-w-[320px] select-none"
+            draggable={false}
+          />
+        ) : failed ? (
+          <p className="text-center text-sm font-medium text-rose-600 dark:text-rose-400">Could not generate QR code.</p>
+        ) : (
+          <Loader2 className="h-10 w-10 animate-spin text-indigo-500" aria-label="Generating QR code" />
+        )}
+      </div>
+      {altAndUrl && (
+        <p className="break-all text-center font-mono text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          {QR_PREVIEW_URL}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -1979,20 +2052,7 @@ const RENDER = {
   },
 
   qrcode(o) {
-    return (
-      <div className="flex flex-col items-center gap-3">
-        <div
-          className={`w-36 h-36 rounded-lg border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 p-2 ${o('opt1') ? 'ring-2 ring-indigo-400' : ''}`}
-          style={{
-            backgroundImage: 'repeating-linear-gradient(90deg,#000 0,#000 2px,transparent 2px,transparent 4px),repeating-linear-gradient(0deg,#000 0,#000 2px,transparent 2px,transparent 4px)',
-            backgroundSize: '8px 8px',
-            backgroundBlendMode: 'multiply',
-            opacity: 0.85,
-          }}
-        />
-        <QrCode className="w-6 h-6 text-zinc-400" />
-      </div>
-    );
+    return <QrCodePatternPreview o={o} />;
   },
 
   fileuploadrow(o) {

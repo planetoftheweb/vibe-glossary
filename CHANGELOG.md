@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-04-19
+
+### Added
+- **Build Literacy section** — a parallel teaching surface that mirrors the UI Glossary's two-pane layout but covers the *why* and *how-to-talk-to-an-AI* of vibe coding. 105 topics across 7 clusters (Web Foundations, Engineering, Auth & Security, Product, Design Language, Spec & Process, AI Literacy), each with starter + example prompts, mnemonics, sibling Compare chips, dockable left pane, accordion long-form details, dynamic per-cluster color theming, and the same responsive icon-only navigation collapse as the UI Glossary
+- **VibeScore system** — a single learning score that rewards understanding over clicks, with per-tier points (Visited 1, Used 2, Passed 5, Mastered 10, Retained +5 monthly) and a Path bonus (+25). Includes the score pill in the top bar, a full breakdown modal showing UI Glossary vs Build Literacy sub-scores, and a six-rung level ladder (Lurker → Scroller → Tinkerer → Shipper → Polyglot → Vibe Coder)
+- **Quiz integrity rules** — 4-second time floor, 90-second ceiling, 30-minute cooldown after a counted pass, rotating question variants, and mastery requires two clean passes in different browser sessions on different question variants. Wrong answers never lose points
+- **Per-topic Tier Badge** showing the highest learning tier achieved (Visited / Used / Passed / Mastered / Retained)
+- **AI Literacy cluster** (12 topics) — LLMs, tokens, prompts/roles, sampling parameters, multimodal, mixture of experts, agents, tool calling, MCP, RAG, fine-tuning vs prompting, hallucinations and evals
+- **Git topics** added to the Engineering cluster — Conventional Commits, merge vs rebase, merge conflicts, tags/releases/changelogs
+- **Social share popover** (`ShareAchievement`) — earn a path badge or hit a level and a Share button surfaces the message pre-filled with score/level/path. Posts to X, LinkedIn, Bluesky, Facebook, Reddit, Email; falls back to Copy text + link, and uses `navigator.share` on mobile when available
+- **Unified search** spanning UI Glossary components and Build Literacy topics in one ⌘K palette
+- **Cheat Sheet** (⌘/) now lists Build Literacy clusters alongside UI categories
+- **Welcome Screen** rebuilt to surface both UI Glossary and Build Literacy as equal entry points
+- **Resizable two-pane layout** with drag-to-resize handles, persisted in `localStorage`, working consistently across UI Glossary and Build Literacy
+- **Learn Mode parity for Build Literacy** — quizzes, learning paths with end-of-path quizzes (80% to earn the badge), Surprise Me, Build Literacy Index
+- **Cross-cluster carousel navigation** in the left pane — Previous/Next now flow across category and cluster boundaries on both surfaces
+- **Long-form details accordion** for every UI Glossary and Build Literacy entry, with paragraphing for readability
+- **5 additional UI Glossary entries** for a total of 98 components
+
+### Changed
+- **Beginner-friendly copy pass** across the entire UI Glossary — definitions rewritten to avoid jargon, em dashes removed everywhere, with a one-line summary sentence followed by an expandable detailed explanation
+- **Build Literacy "Talk to AI" prompts** split into two parts — a generic starter prompt that asks the AI to interview the learner, plus a practical example they can adapt
+- Build Literacy navigation refactored to use the same cluster + topic dropdown pattern as the UI Glossary's category + component dropdowns, including responsive icon-only collapse below `lg`
+- Per-cluster color palettes for Build Literacy mirror the UI Glossary's dynamic color theming so accents shift as the learner moves between clusters
+- Top-nav pill labels cap their max width and truncate long topic titles so the second dropdown stays compact
+- Minimum readable type sizes — replaced every `text-[10px]` with `text-xs` or larger
+- Removed the unused full-bleed black header bar and reclaimed the vertical space
+- Numerous demo previews polished (color picker, multi-select, hover card, modal entrance animation, sticky table header, activity stream, tree grid, line chart, toggle button, time picker, and others)
+
+### Fixed
+- Build Literacy "Next topic" tooltip was being clipped by the side panel; anchored to the right edge so it expands inward
+- Map Embed demo now uses a live OpenStreetMap iframe with attribution instead of a static placeholder
+
+### Removed
+- **Action Sheet** glossary entry — mobile-specific pattern that did not fit the current scope; quiz question replaced with a Drawer one and slice math made elastic to total component count
+- **Image Cropper** and **Sparkline** glossary entries (cleanup)
+- "Vibe tip" lightbulb line from glossary and path views (the same guidance now lives inside the longer details accordion)
+
 ## [0.7.0] - 2026-04-18
 
 ### Added
@@ -152,7 +190,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.4.1...v0.5.0

@@ -7,24 +7,8 @@ const STATS = [
   { label: 'Page Views', value: '89.4K', change: '+24.6%', up: true, icon: Eye, color: 'text-violet-500', bg: 'bg-violet-500/10' },
 ];
 
-const SPARKLINE_UP = [20, 25, 18, 30, 28, 35, 32, 40, 38, 45, 42, 50];
-const SPARKLINE_DOWN = [45, 42, 44, 38, 40, 35, 38, 30, 32, 28, 30, 25];
-
-function Sparkline({ data, color }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min || 1;
-  const w = 100, h = 32;
-  const points = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ');
-  return (
-    <svg width={w} height={h} className="overflow-visible">
-      <polyline points={points} fill="none" stroke="currentColor" className={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export default function StatCardDemo({ activeOptions }) {
-  const hasSparkline = activeOptions.has('sparkline');
+  const hasPeriod = activeOptions.has('period');
   const hasIcon = activeOptions.has('icon');
   const isCompact = activeOptions.has('compact');
 
@@ -38,6 +22,9 @@ export default function StatCardDemo({ activeOptions }) {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium mb-2">{stat.label}</p>
+                  {hasPeriod && (
+                    <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 mb-1">Last 30 days</p>
+                  )}
                   <p className={`${isCompact ? 'text-2xl' : 'text-3xl'} font-bold text-zinc-900 dark:text-white`}>{stat.value}</p>
                 </div>
                 {hasIcon && (
@@ -51,7 +38,6 @@ export default function StatCardDemo({ activeOptions }) {
                   {stat.up ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                   {stat.change}
                 </div>
-                {hasSparkline && <Sparkline data={stat.up ? SPARKLINE_UP : SPARKLINE_DOWN} color={stat.color} />}
               </div>
             </div>
           );

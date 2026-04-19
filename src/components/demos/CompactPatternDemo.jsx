@@ -1034,29 +1034,6 @@ const RENDER = {
     );
   },
 
-  sparkline(o) {
-    return (
-      <div className="relative flex items-end gap-2">
-        <span
-          className={`text-lg font-bold tabular-nums ${o('opt1') ? 'text-emerald-500' : 'text-zinc-700 dark:text-zinc-200'}`}
-        >
-          +2.4%
-        </span>
-        <div className="relative">
-          <svg viewBox="0 0 80 28" className="w-24 h-8 text-emerald-500">
-            {o('opt2') && <line x1="0" x2="80" y1="22" y2="22" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.75" />}
-            <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points="0,20 15,18 30,12 45,14 60,6 80,4" />
-          </svg>
-          {o('opt3') && (
-            <span className="absolute -top-1 left-6 rounded border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-1 text-[8px] shadow-sm">
-              high 6.2k
-            </span>
-          )}
-        </div>
-      </div>
-    );
-  },
-
   multiselect(o) {
     return <MultiSelectPatternPreview o={o} />;
   },

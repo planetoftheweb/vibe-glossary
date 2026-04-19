@@ -740,13 +740,13 @@ toast({
   },
   statcard: {
     title: 'Stat Card / KPI',
-    definition: 'Dashboard metric display showing a number, label, trend indicator, and optional sparkline chart.',
+    definition: 'Dashboard metric display showing a number, label, trend indicator, and optional reporting period.',
     vibeTip: "Specify 'up/down trend arrows' and 'percentage change'. Use grid layout for multiple stats.",
     comparison: 'Stat Card is for single metrics. Dashboard is a full layout of stat cards.',
     prompt: {
       base: 'Add KPI stat cards',
       options: [
-        { id: 'sparkline', label: 'Sparkline',   text: ' with inline sparkline charts' },
+        { id: 'period', label: 'Reporting period', text: ' with a visible period label (e.g. “Last 30 days”)' },
         { id: 'icon',      label: 'Category Icon', text: ' including a category icon badge' },
         { id: 'compact',   label: 'Compact Grid', text: ' in a compact 4-column grid layout' },
       ],

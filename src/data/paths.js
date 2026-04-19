@@ -1,4 +1,4 @@
-// Curated learning paths — all glossary component ids in 6 themed sequences (100 entries).
+// Curated learning paths — all glossary component ids in 6 themed sequences (99 entries).
 // Each path: id, name, description, items (ordered ids), quiz (5 questions).
 // Quiz answers reference component ids that appear in that path's items list.
 
@@ -6,14 +6,14 @@ import { CATEGORIES } from './categories.jsx';
 
 const ALL_COMPONENT_IDS = CATEGORIES.flatMap((c) => c.items.map((i) => i.id));
 
-// Six contiguous slices covering every id once: 17+17+17+17+17+15 = 100
+// Six contiguous slices covering every id once: 17+17+17+17+17+14 = 99
 const SLICES = [
   [0, 17],
   [17, 34],
   [34, 51],
   [51, 68],
   [68, 85],
-  [85, 100],
+  [85, 99],
 ];
 
 function sliceItems([a, b]) {
@@ -100,14 +100,14 @@ export const PATHS = [
     items: sliceItems(SLICES[2]),
     quiz: [
       {
-        q: 'A thin trend line embedded next to a metric uses a…',
-        answerId: 'sparkline',
-        optionIds: ['sparkline', 'piechart', 'treegrid', 'mapview'],
+        q: 'Values plotted over time on a continuous axis — with room for axes and a legend — use a…',
+        answerId: 'linechart',
+        optionIds: ['linechart', 'piechart', 'treegrid', 'mapview'],
       },
       {
         q: 'Part-to-whole percentages with a hollow center label is a donut /…',
         answerId: 'piechart',
-        optionIds: ['piechart', 'sparkline', 'virtuallist', 'mapview'],
+        optionIds: ['piechart', 'linechart', 'virtuallist', 'mapview'],
       },
       {
         q: 'A long chat history with alternating bubbles is a…',
@@ -122,7 +122,7 @@ export const PATHS = [
       {
         q: 'Scanning a ticket or deep-linking a device often uses a…',
         answerId: 'qrcode',
-        optionIds: ['qrcode', 'linkcard', 'mapview', 'sparkline'],
+        optionIds: ['qrcode', 'linkcard', 'mapview', 'linechart'],
       },
     ],
   },

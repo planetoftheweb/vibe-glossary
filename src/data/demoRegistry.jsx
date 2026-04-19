@@ -9,7 +9,7 @@ const BATCH2_DEMO_IDS = [
   'formcolumns', 'hovercard', 'inputgroup', 'kanban', 'keyvalue', 'linechart', 'linkcard',
   'loadingoverlay', 'mapview', 'megamenu', 'menubar', 'meter', 'multiselect', 'notificationcenter',
   'passwordfield', 'piechart', 'presencedot', 'producttour', 'qrcode', 'radiocards', 'relativetime',
-  'scrollarea', 'searchfield', 'segmented', 'sharesheet', 'shortcutkeys', 'sparkline', 'splitpane',
+  'scrollarea', 'searchfield', 'segmented', 'sharesheet', 'shortcutkeys', 'splitpane',
   'spinner', 'stickyheader', 'textfield', 'timepicker', 'togglebutton', 'toolbar', 'treegrid',
   'virtuallist', 'mediaplayer',
 ];

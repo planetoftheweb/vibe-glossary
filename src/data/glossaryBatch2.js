@@ -914,30 +914,6 @@ export const GLOSSARY_BATCH_2 = {
     },
   },
 
-  sparkline: {
-    title: "Sparkline",
-    definition: "Tiny inline chart without axes — trend in a small space.",
-    vibeTip: "Often paired with a KPI number.",
-    comparison: "Sparkline is compact. Line chart is full. Stat card may hold both.",
-    prompt: {
-      base: "Add sparklines next to KPI numbers",
-      options: [
-        { id: 'opt1', label: 'Trend color', text: ', coloring green/red or up/down based on metric direction' },
-        { id: 'opt2', label: 'Baseline', text: ', drawing a subtle zero or target baseline for context' },
-        { id: 'opt3', label: 'Tooltip', text: ', attaching a tooltip with min/max/last on hover' },
-      ],
-      requirements: [
-        'Sparkline must not be the only place the number exists — show numeric KPI too',
-        'Provide text summary for screen readers (e.g. \"up 12% over 7 days\")',
-        'SVG should include role="img" and aria-label describing the trend',
-      ],
-      scaffolds: {
-        shadcn: `<span className="inline-flex items-center gap-2"><span className="text-lg font-bold">+12%</span><svg aria-label="7-day trend up" … /></span>`,
-        html: `<span><strong>42</strong><img role="img" alt="Upward trend" src="spark.svg" /></span>`,
-      },
-    },
-  },
-
   treegrid: {
     title: "Tree Grid",
     definition: "Hierarchical table — expandable rows with aligned columns.",

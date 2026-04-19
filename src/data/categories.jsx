@@ -85,7 +85,6 @@ export const CATEGORIES = [
       { id: 'virtuallist', name: 'Virtualized List' },
       { id: 'chatthread', name: 'Chat / Message Thread' },
       { id: 'mapview', name: 'Map Embed' },
-      { id: 'sparkline', name: 'Sparkline' },
       { id: 'treegrid', name: 'Tree Grid' },
       { id: 'keyvalue', name: 'Key-Value List' },
       { id: 'stickyheader', name: 'Sticky Table Header' },

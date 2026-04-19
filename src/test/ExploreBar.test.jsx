@@ -20,7 +20,7 @@ const mockActiveCatColors = {
 
 const makeExplore = (overrides = {}) => ({
   componentOfTheDay: 'modal',
-  progress: { visited: 2, copied: 1, total: 100, percent: 2 },
+  progress: { visited: 2, copied: 1, total: 99, percent: 2 },
   visited: new Set(['modal', 'drawer']),
   copied: new Set(['modal']),
   surpriseMe: vi.fn().mockReturnValue('tabs'),
@@ -66,15 +66,15 @@ describe('progress display', () => {
   it('renders "{visited}/{total} explored" text', () => {
     const props = defaultProps();
     render(<ExploreBar {...props} />);
-    expect(screen.getByText('2/100 explored')).toBeInTheDocument();
+    expect(screen.getByText('2/99 explored')).toBeInTheDocument();
   });
 
   it('reflects custom visited/total values', () => {
     const props = defaultProps({
-      progress: { visited: 10, copied: 3, total: 100, percent: 10 },
+      progress: { visited: 10, copied: 3, total: 99, percent: 10 },
     });
     render(<ExploreBar {...props} />);
-    expect(screen.getByText('10/100 explored')).toBeInTheDocument();
+    expect(screen.getByText('10/99 explored')).toBeInTheDocument();
   });
 });
 
@@ -90,7 +90,7 @@ describe('prompts copied count', () => {
 
   it('reflects a different copied count', () => {
     const props = defaultProps({
-      progress: { visited: 2, copied: 5, total: 100, percent: 2 },
+      progress: { visited: 2, copied: 5, total: 99, percent: 2 },
     });
     render(<ExploreBar {...props} />);
     expect(screen.getByText('5 prompts copied')).toBeInTheDocument();

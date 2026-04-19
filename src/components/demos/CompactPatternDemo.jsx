@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, Megaphone,
@@ -66,6 +66,216 @@ const MULTI_LABELS = {
   docs: 'Docs',
   pm: 'Product',
 };
+
+/** Months of sample MRR (thousands USD) — smooth upward trend with a believable dip. */
+const LINE_CHART_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const LINE_CHART_REVENUE_K = [24, 28, 26, 34, 42, 52];
+const LINE_CHART_COST_K = [20, 21, 22, 23, 24, 25];
+const LINE_CHART_Y_MAX = 60;
+
+function LineChartPatternPreview({ o }) {
+  const uid = useId().replace(/:/g, '');
+  const showAxes = o('opt1');
+  const showTooltip = o('opt2');
+  const showSecond = o('opt3');
+
+  const W = 480;
+  const H = 228;
+  const padL = showAxes ? 54 : 14;
+  const padR = 14;
+  const padT = 12;
+  const padB = showAxes ? 42 : 20;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const bottomY = padT + innerH;
+
+  const n = LINE_CHART_REVENUE_K.length;
+  const idxToX = (i) => padL + (n <= 1 ? innerW / 2 : (i / (n - 1)) * innerW);
+  const valToY = (v) => padT + innerH - (v / LINE_CHART_Y_MAX) * innerH;
+
+  const revPts = LINE_CHART_REVENUE_K.map((v, i) => ({
+    x: idxToX(i),
+    y: valToY(v),
+    v,
+    label: LINE_CHART_LABELS[i],
+  }));
+  const costPts = LINE_CHART_COST_K.map((v, i) => ({
+    x: idxToX(i),
+    y: valToY(v),
+    v,
+  }));
+
+  const revLineD = revPts.map((p, i) => `${i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`}`).join(' ');
+  const revAreaD = `${revLineD} L ${revPts[n - 1].x} ${bottomY} L ${revPts[0].x} ${bottomY} Z`;
+  const costLineD = costPts.map((p, i) => `${i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`}`).join(' ');
+
+  const tipIdx = 4;
+  const tip = revPts[tipIdx];
+  const yTicks = [60, 45, 30, 15, 0];
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      <div className={`${cx.card} overflow-hidden shadow-md`}>
+        <div className="border-b border-zinc-200/90 bg-gradient-to-br from-indigo-50/40 via-white to-white px-5 py-5 sm:px-7 sm:py-6 dark:border-zinc-800 dark:from-indigo-950/25 dark:via-zinc-900 dark:to-zinc-900">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="text-left">
+              <p className={PREVIEW.sectionTitle}>MRR over time</p>
+              <p className={`mt-1 max-w-md ${PREVIEW.lede}`}>
+                Continuous time axis — readers follow the slope, not bar-to-bar gaps.
+              </p>
+            </div>
+            {showSecond && (
+              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-1 w-9 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/40" />
+                  Revenue
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-0 w-9 border-t-[3px] border-dashed border-violet-500" />
+                  Operating cost
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="px-3 pb-4 pt-5 sm:px-6 sm:pb-6 sm:pt-6">
+          <figure className="m-0">
+            <svg
+              viewBox={`0 0 ${W} ${H}`}
+              className="h-52 w-full sm:h-64"
+              role="img"
+              aria-label="Line chart of monthly recurring revenue in thousands of US dollars"
+            >
+              <defs>
+                <linearGradient id={`lc-fill-${uid}`} x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.28" />
+                  <stop offset="70%" stopColor="#6366f1" stopOpacity="0.05" />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+                </linearGradient>
+                <filter id={`lc-line-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="0" dy="1" stdDeviation="1.2" floodColor="#6366f1" floodOpacity="0.35" />
+                </filter>
+              </defs>
+
+              {showAxes &&
+                yTicks.map((tick) => {
+                  const y = valToY(tick);
+                  return (
+                    <g key={tick}>
+                      <line
+                        x1={padL}
+                        x2={W - padR}
+                        y1={y}
+                        y2={y}
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        className="text-zinc-200 dark:text-zinc-700/90"
+                        strokeDasharray="5 6"
+                      />
+                      <text
+                        x={padL - 10}
+                        y={y + 4}
+                        textAnchor="end"
+                        className="fill-zinc-400 text-[11px] font-medium tabular-nums dark:fill-zinc-500"
+                      >
+                        ${tick}k
+                      </text>
+                    </g>
+                  );
+                })}
+
+              {!showAxes && (
+                <line
+                  x1={padL}
+                  x2={W - padR}
+                  y1={bottomY}
+                  y2={bottomY}
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  className="text-zinc-200 dark:text-zinc-700"
+                />
+              )}
+
+              <path d={revAreaD} fill={`url(#lc-fill-${uid})`} />
+
+              {showSecond && (
+                <path
+                  d={costLineD}
+                  fill="none"
+                  stroke="#a855f7"
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="7 5"
+                  opacity={0.92}
+                />
+              )}
+
+              <path
+                d={revLineD}
+                fill="none"
+                stroke="#6366f1"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                filter={`url(#lc-line-${uid})`}
+              />
+
+              {showTooltip &&
+                revPts.map((p, i) => (
+                  <circle
+                    key={p.label}
+                    cx={p.x}
+                    cy={p.y}
+                    r={i === tipIdx ? 6 : 3.5}
+                    className="fill-white stroke-indigo-500 dark:fill-zinc-900"
+                    strokeWidth={i === tipIdx ? 2.5 : 2}
+                  />
+                ))}
+
+              {showTooltip && (
+                <g transform={`translate(${tip.x}, ${tip.y})`}>
+                  <g transform="translate(-70, -52)">
+                    <rect
+                      width={140}
+                      height={44}
+                      rx={10}
+                      className="fill-white stroke-zinc-200 shadow-lg dark:fill-zinc-800 dark:stroke-zinc-600"
+                      strokeWidth="1"
+                    />
+                    <text x={70} y={20} textAnchor="middle" className="fill-zinc-500 text-[11px] font-semibold uppercase tracking-wide">
+                      {tip.label} 2026
+                    </text>
+                    <text x={70} y={36} textAnchor="middle" className="fill-zinc-900 text-sm font-bold tabular-nums dark:fill-white">
+                      ${tip.v}k MRR
+                    </text>
+                  </g>
+                </g>
+              )}
+            </svg>
+
+            {showAxes && (
+              <figcaption className="mt-3 grid grid-cols-6 gap-1 text-center text-[11px] font-medium text-zinc-500 dark:text-zinc-400 sm:text-xs">
+                {LINE_CHART_LABELS.map((lab) => (
+                  <span key={lab} className="min-w-0 truncate">
+                    {lab}
+                  </span>
+                ))}
+              </figcaption>
+            )}
+          </figure>
+
+          {!showAxes && (
+            <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
+              Enable <span className="font-semibold text-zinc-600 dark:text-zinc-300">Axes and grid</span> for scale and dates.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /** Toolbar toggles (aria-pressed) — visually distinct from a settings switch (thumb in a track). */
 function ToggleButtonPatternPreview({ o }) {
@@ -670,65 +880,7 @@ const RENDER = {
   },
 
   linechart(o) {
-    return (
-      <div className={`${cx.card} p-4 relative`}>
-        <div className="flex justify-between items-center mb-1">
-          <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300">Revenue</span>
-          {o('opt2') && (
-            <span className="absolute top-10 left-1/3 z-10 rounded-md border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-2 py-1 text-[10px] shadow-md text-zinc-800 dark:text-zinc-100">
-              Apr 12: $42k
-            </span>
-          )}
-        </div>
-        <svg viewBox="0 0 240 80" className="w-full h-24 text-indigo-500">
-          {o('opt1') && (
-            <g className="text-zinc-200 dark:text-zinc-700">
-              {[0, 20, 40, 60, 80].map((y) => (
-                <line key={y} x1="0" x2="240" y1={y} y2={y} stroke="currentColor" strokeWidth="0.5" />
-              ))}
-              <text x="2" y="12" className="text-[8px] fill-zinc-400">
-                $50k
-              </text>
-              <text x="200" y="78" className="text-[8px] fill-zinc-400">
-                Apr
-              </text>
-            </g>
-          )}
-          <defs>
-            <linearGradient id="lg" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path d="M0 60 L40 45 L80 50 L120 25 L160 35 L200 15 L240 20 V80 H0 Z" fill="url(#lg)" />
-          <polyline
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            points="0,60 40,45 80,50 120,25 160,35 200,15 240,20"
-          />
-          {o('opt3') && (
-            <polyline
-              fill="none"
-              stroke="#a855f7"
-              strokeWidth="2"
-              strokeDasharray="4 3"
-              points="0,70 40,65 80,55 120,50 160,45 200,40 240,35"
-            />
-          )}
-        </svg>
-        {o('opt3') && (
-          <div className="mt-1 flex items-center gap-3 text-[10px] text-zinc-500">
-            <span className="inline-flex items-center gap-1">
-              <span className="h-0.5 w-4 bg-indigo-500" /> Revenue
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="h-0.5 w-4 border-t-2 border-dashed border-violet-500" /> Costs
-            </span>
-          </div>
-        )}
-      </div>
-    );
+    return <LineChartPatternPreview o={o} />;
   },
 
   piechart(o) {

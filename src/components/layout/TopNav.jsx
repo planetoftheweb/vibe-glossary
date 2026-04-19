@@ -105,8 +105,9 @@ function MainMenu({
   isOpen, onClose,
   darkMode, setDarkMode,
   learnMode, toggleLearnMode,
-  explore, categories, onSelectItem,
+  explore, categories, onSelectItem, onSelectBuildTopic,
   onGetStarted, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
+  onOpenBuildIndex, onOpenBuildPaths,
   activeCatColors,
   siteSection, setSiteSection,
 }) {
@@ -124,7 +125,8 @@ function MainMenu({
   };
 
   if (!isOpen) return null;
-  const { surpriseMe, visited, copied, resetProgress } = explore;
+  const { surpriseMe, surpriseMeBuild, visited, copied, resetProgress } = explore;
+  const isBuild = siteSection === 'build';
 
   // Progress UI follows the active section so "Your Progress" always means
   // "your progress in the thing I am currently looking at".
@@ -145,8 +147,13 @@ function MainMenu({
       }));
 
   const handleSurprise = () => {
-    const id = surpriseMe();
-    onSelectItem(id);
+    if (isBuild) {
+      const id = surpriseMeBuild?.();
+      if (id) onSelectBuildTopic?.(id);
+    } else {
+      const id = surpriseMe();
+      onSelectItem(id);
+    }
     onClose();
   };
 
@@ -161,12 +168,14 @@ function MainMenu({
   };
 
   const handleGlossaryIndex = () => {
-    onOpenGlossaryIndex?.();
+    if (isBuild) onOpenBuildIndex?.();
+    else onOpenGlossaryIndex?.();
     onClose();
   };
 
   const handlePaths = () => {
-    onOpenPaths?.();
+    if (isBuild) onOpenBuildPaths?.();
+    else onOpenPaths?.();
     onClose();
   };
 
@@ -327,8 +336,11 @@ function MainMenu({
       {/* HELP section, hidden on lg+ where the Help pill covers it */}
       <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
-        <MenuItem icon={<BookOpen size={18} />} onClick={handleGlossaryIndex}>
-          Glossary Index
+        <MenuItem
+          icon={isBuild ? <BookText size={18} /> : <BookOpen size={18} />}
+          onClick={handleGlossaryIndex}
+        >
+          {isBuild ? 'Build Literacy Index' : 'Glossary Index'}
         </MenuItem>
         <MenuItem icon={<Home size={18} />} onClick={handleWelcome}>
           Welcome Screen
@@ -390,6 +402,7 @@ export default function TopNav({
   siteSection = 'glossary', setSiteSection = () => {},
   onGetStarted, searchInputRef,
   explore, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
+  onOpenBuildIndex, onOpenBuildPaths,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -689,8 +702,9 @@ export default function TopNav({
             </div>
           )}
 
-          {/* Supplementary pills, icon-only at md, progressively add text/chevron at lg/xl */}
-          {siteSection === 'glossary' && (
+          {/* Supplementary pills, icon-only at md, progressively add text/chevron at lg/xl.
+              Available in both sections; behavior swaps based on siteSection so
+              build literacy gets its own Surprise Me, Paths, and Index. */}
           <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3">
             {/* Learning */}
             <PillDropdown
@@ -709,7 +723,7 @@ export default function TopNav({
                 <div className="flex flex-col items-start min-w-0 text-left">
                   <span className="font-medium">Learn Mode</span>
                   <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
-                    Quiz me on each component
+                    {siteSection === 'build' ? 'Quiz me on each topic' : 'Quiz me on each component'}
                   </span>
                 </div>
                 <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
@@ -717,7 +731,11 @@ export default function TopNav({
                 </span>
               </button>
               <button
-                onClick={() => { onOpenPaths?.(); setOpenDropdown(null); }}
+                onClick={() => {
+                  if (siteSection === 'build') onOpenBuildPaths?.();
+                  else onOpenPaths?.();
+                  setOpenDropdown(null);
+                }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
                 <Trophy size={18} />
@@ -730,8 +748,13 @@ export default function TopNav({
               </button>
               <button
                 onClick={() => {
-                  const id = explore.surpriseMe();
-                  setActiveItem(id);
+                  if (siteSection === 'build') {
+                    const id = explore.surpriseMeBuild?.();
+                    if (id) setActiveBuildTopic(id);
+                  } else {
+                    const id = explore.surpriseMe();
+                    setActiveItem(id);
+                  }
                   setOpenDropdown(null);
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
@@ -751,11 +774,17 @@ export default function TopNav({
               width={260}
             >
               <button
-                onClick={() => { onOpenGlossaryIndex?.(); setOpenDropdown(null); }}
+                onClick={() => {
+                  if (siteSection === 'build') onOpenBuildIndex?.();
+                  else onOpenGlossaryIndex?.();
+                  setOpenDropdown(null);
+                }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                <BookOpen size={18} />
-                <span className="font-medium">Glossary Index</span>
+                {siteSection === 'build' ? <BookText size={18} /> : <BookOpen size={18} />}
+                <span className="font-medium">
+                  {siteSection === 'build' ? 'Build Literacy Index' : 'Glossary Index'}
+                </span>
               </button>
               <button
                 onClick={() => { onGetStarted(); setOpenDropdown(null); }}
@@ -774,7 +803,6 @@ export default function TopNav({
               </button>
             </PillDropdown>
           </div>
-          )}
         </div>
 
         {/* Right: Search + Menu */}
@@ -976,10 +1004,13 @@ export default function TopNav({
                   explore={explore}
                   categories={categories}
                   onSelectItem={setActiveItem}
+                  onSelectBuildTopic={setActiveBuildTopic}
                   onGetStarted={onGetStarted}
                   onOpenCheatSheet={onOpenCheatSheet}
                   onOpenGlossaryIndex={onOpenGlossaryIndex}
                   onOpenPaths={onOpenPaths}
+                  onOpenBuildIndex={onOpenBuildIndex}
+                  onOpenBuildPaths={onOpenBuildPaths}
                   learnMode={learnMode}
                   toggleLearnMode={toggleLearnMode}
                   activeCatColors={activeCatColors}

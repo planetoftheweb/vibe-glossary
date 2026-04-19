@@ -13,6 +13,9 @@ import QuizCard       from './components/learn/QuizCard';
 import PathsLauncher  from './components/learn/PathsLauncher';
 import PathView       from './components/learn/PathView';
 import BuildLiteracyView from './components/learn/BuildLiteracyView';
+import BuildLiteracyIndex from './components/learn/BuildLiteracyIndex';
+import BuildPathsLauncher from './components/learn/BuildPathsLauncher';
+import BuildPathView from './components/learn/BuildPathView';
 import useExploreMode from './hooks/useExploreMode';
 import usePanelResize from './hooks/usePanelResize';
 import { useGlossary } from './hooks/useGlossary';
@@ -30,6 +33,9 @@ export default function App() {
   const [showGlossaryIndex, setShowGlossaryIndex] = useState(false);
   const [showPaths, setShowPaths] = useState(false);
   const [activePath, setActivePath] = useState(null);
+  const [showBuildIndex, setShowBuildIndex] = useState(false);
+  const [showBuildPaths, setShowBuildPaths] = useState(false);
+  const [activeBuildPath, setActiveBuildPath] = useState(null);
   const [activeItem, setActiveItem]       = useState('modal');
   const [activeBuildTopic, setActiveBuildTopic] = useState(() => BUILD_TOPIC_IDS[0] || 'mvp');
   const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
@@ -267,6 +273,35 @@ export default function App() {
         onSelectItem={setActiveItem}
       />
 
+      <BuildLiteracyIndex
+        isOpen={showBuildIndex && !showWelcome}
+        onClose={() => setShowBuildIndex(false)}
+        onSelectTopic={(id) => {
+          setSiteSection('build');
+          setActiveBuildTopic(id);
+        }}
+        mastered={explore.mastered}
+      />
+
+      <BuildPathsLauncher
+        isOpen={showBuildPaths && !showWelcome && !activeBuildPath}
+        onClose={() => setShowBuildPaths(false)}
+        onSelectPath={(path) => { setActiveBuildPath(path); setShowBuildPaths(false); }}
+        mastered={explore.mastered}
+        badges={explore.badges}
+      />
+
+      <BuildPathView
+        path={activeBuildPath}
+        isOpen={!!activeBuildPath && !showWelcome}
+        onClose={() => setActiveBuildPath(null)}
+        onAwardBadge={(pathId) => explore.awardBadge(pathId)}
+        onSelectTopic={(id) => {
+          setSiteSection('build');
+          setActiveBuildTopic(id);
+        }}
+      />
+
       {/* Top Navigation */}
       {!showWelcome && (
         <TopNav
@@ -288,6 +323,8 @@ export default function App() {
           onOpenCheatSheet={() => setShowCheatSheet(true)}
           onOpenGlossaryIndex={() => setShowGlossaryIndex(true)}
           onOpenPaths={() => setShowPaths(true)}
+          onOpenBuildIndex={() => setShowBuildIndex(true)}
+          onOpenBuildPaths={() => setShowBuildPaths(true)}
         />
       )}
 

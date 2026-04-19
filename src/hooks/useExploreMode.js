@@ -94,6 +94,15 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
     return pool[Math.floor(Math.random() * pool.length)];
   }, [visited, allIds]);
 
+  // Surprise Me, build-literacy edition. Same "favor unvisited" trick so a
+  // user who has explored most of the section eventually sees the new things.
+  const surpriseMeBuild = useCallback(() => {
+    if (!buildIds.length) return null;
+    const unvisited = buildIds.filter(id => !visited.has(id));
+    const pool = unvisited.length > 0 ? unvisited : buildIds;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }, [visited, buildIds]);
+
   // Glossary-only progress (preserves the existing public shape).
   const visitedGlossary = useMemo(
     () => allIds.filter(id => visited.has(id)).length,
@@ -164,6 +173,7 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
     markMastered,
     awardBadge,
     surpriseMe,
+    surpriseMeBuild,
     progress,
     buildProgress,
     buildClusters,

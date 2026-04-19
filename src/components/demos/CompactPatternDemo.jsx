@@ -23,15 +23,15 @@ export default function CompactPatternDemo({ demoId, activeOptions = new Set() }
   const body = RENDER[demoId] ? RENDER[demoId](o) : RENDER.__generic(o, demoId);
 
   return (
-    <div className="flex flex-col h-full w-full min-h-0 bg-zinc-50/80 dark:bg-zinc-950/40">
-      <div className="shrink-0 px-4 pt-4 pb-2 border-b border-zinc-200/80 dark:border-zinc-800/80">
+    <div className="flex h-full min-h-0 w-full flex-col bg-zinc-50/80 dark:bg-zinc-950/40">
+      <div className="shrink-0 border-b border-zinc-200/80 px-4 pb-3 pt-4 dark:border-zinc-800/80 sm:px-6">
         <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Pattern preview
         </p>
-        <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 truncate">{title}</p>
+        <p className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">{title}</p>
       </div>
-      <div className="flex-1 flex items-start justify-center p-4 pt-6 min-h-0 overflow-auto">
-        <div className="w-full max-w-lg">{body}</div>
+      <div className={PREVIEW.scroll}>
+        <div className={PREVIEW.inner}>{body}</div>
       </div>
     </div>
   );
@@ -42,6 +42,14 @@ const cx = {
   muted: 'text-zinc-500 dark:text-zinc-400 text-xs',
   pill: 'rounded-full px-2 py-0.5 text-[10px] font-semibold border border-zinc-200 dark:border-zinc-600',
   bar: 'rounded bg-zinc-200 dark:bg-zinc-700',
+};
+
+/** One centered column for all batch-2 previews — avoids double max-width and uneven padding */
+const PREVIEW = {
+  scroll: 'flex-1 min-h-0 overflow-y-auto overflow-x-hidden',
+  inner: 'mx-auto w-full max-w-lg px-4 py-6 sm:px-6 sm:py-8',
+  lede: 'text-sm leading-relaxed text-zinc-600 dark:text-zinc-400',
+  sectionTitle: 'text-base font-semibold tracking-tight text-zinc-900 dark:text-white',
 };
 
 const MULTI_IDS = ['design', 'eng', 'qa', 'docs', 'pm'];
@@ -90,12 +98,12 @@ function MultiSelectPatternPreview({ o }) {
   const clearAll = () => setSelected(new Set());
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col items-stretch justify-center">
-      <div className={`${cx.card} p-4 shadow-md sm:p-5`}>
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+    <div className="w-full">
+      <div className={`${cx.card} p-5 shadow-md sm:p-6`}>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-base font-semibold text-zinc-900 dark:text-white">Assign teams</p>
-            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Pick everyone who should access this project.</p>
+            <p className={PREVIEW.sectionTitle}>Assign teams</p>
+            <p className={`mt-1 ${PREVIEW.lede}`}>Pick everyone who should access this project.</p>
           </div>
           {o('opt1') && (
             <span
@@ -257,11 +265,11 @@ function ColorPickerPatternPreview({ o }) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className={`${cx.card} space-y-4 p-5 sm:p-6`}>
+    <div className="w-full">
+      <div className={`${cx.card} space-y-5 p-5 sm:p-6`}>
         <div>
-          <p className="text-base font-semibold text-zinc-900 dark:text-white">Color</p>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Use the swatch control, type hex, or tap presets.</p>
+          <p className={PREVIEW.sectionTitle}>Color</p>
+          <p className={`mt-1 ${PREVIEW.lede}`}>Use the bar, type a hex value, or tap a preset.</p>
         </div>
 
         <div className="relative h-28 w-full overflow-hidden rounded-2xl border-2 border-zinc-200 shadow-inner dark:border-zinc-600" aria-hidden>
@@ -284,8 +292,8 @@ function ColorPickerPatternPreview({ o }) {
         </div>
 
         <div>
-          <label htmlFor="vg-native-color" className="mb-2 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Choose
+          <label htmlFor="vg-native-color" className="mb-2 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            System picker
           </label>
           <input
             id="vg-native-color"
@@ -298,8 +306,8 @@ function ColorPickerPatternPreview({ o }) {
         </div>
 
         <div>
-          <label htmlFor="vg-hex-input" className="mb-2 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Hex
+          <label htmlFor="vg-hex-input" className="mb-2 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            Hex value
           </label>
           <input
             id="vg-hex-input"
@@ -337,7 +345,7 @@ function ColorPickerPatternPreview({ o }) {
         )}
 
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             {o('opt2') ? 'Brand presets' : 'Quick presets'}
           </p>
           <div className="flex flex-wrap gap-3">
@@ -446,26 +454,26 @@ function ComboboxPatternPreview({ o }) {
   const showListBody = !(o('opt1') && loading && q) && !loadError;
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className="mb-4 space-y-2">
-        <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span> = an input plus a list you
-          filter by typing. You still choose from known options (unlike free search).
+    <div className="w-full space-y-5">
+      <div className="space-y-2">
+        <p className={PREVIEW.lede}>
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span> — type to filter a fixed list,
+          then pick one option (not the same as open search).
         </p>
         {o('opt1') && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-500">
-            Async demo: there’s a short “Searching…” delay while you type. Type{' '}
-            <kbd className="rounded border border-zinc-300 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] dark:border-zinc-600 dark:bg-zinc-800">
+          <p className="text-sm text-zinc-500 dark:text-zinc-500">
+            Async demo: short “Searching…” delay while you type. Type{' '}
+            <kbd className="rounded border border-zinc-300 bg-zinc-100 px-2 py-0.5 font-mono text-xs dark:border-zinc-600 dark:bg-zinc-800">
               error
             </kbd>{' '}
-            to see a fake error state.
+            for a fake error state.
           </p>
         )}
       </div>
 
       <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
-        <div className="border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
-          <label htmlFor="vg-combobox-input" className="mb-1 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <div className="border-b border-zinc-200 bg-zinc-50/80 px-4 py-4 dark:border-zinc-700 dark:bg-zinc-900/50 sm:px-5">
+          <label htmlFor="vg-combobox-input" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             Framework
           </label>
           <input
@@ -534,7 +542,7 @@ function ComboboxPatternPreview({ o }) {
             <span className="font-semibold text-zinc-900 dark:text-white">{selected}</span>
           </div>
         ) : (
-          <div className="border-t border-zinc-200 px-4 py-2.5 text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
+          <div className="border-t border-zinc-200 px-4 py-3 text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
             Pick a row to set the value.
           </div>
         )}
@@ -547,9 +555,11 @@ function ComboboxPatternPreview({ o }) {
 const RENDER = {
   __generic(o, id) {
     return (
-      <div className={`${cx.card} p-6 text-center`}>
-        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">{id}</p>
-        <p className={`${cx.muted} mt-2`}>Interactive demo coming soon — definition & prompts are ready.</p>
+      <div className={`${cx.card} flex min-h-[14rem] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}>
+        <p className="text-base font-semibold capitalize text-zinc-800 dark:text-zinc-100">{id.replace(/-/g, ' ')}</p>
+        <p className={`${cx.muted} max-w-sm text-sm leading-relaxed`}>
+          Interactive demo coming soon — definition and spec generator are ready.
+        </p>
       </div>
     );
   },
@@ -1182,11 +1192,11 @@ const RENDER = {
 
   linkcard(o) {
     return (
-      <div className={`${cx.card} overflow-hidden max-w-md`}>
-        <div className="h-24 bg-gradient-to-r from-sky-400 to-indigo-500" />
-        <div className="p-3">
-          <p className="text-xs font-bold text-zinc-900 dark:text-white">Blog — Patterns</p>
-          <p className={`${cx.muted} mt-1 line-clamp-2`}>
+      <div className={`${cx.card} w-full overflow-hidden`}>
+        <div className="h-28 bg-gradient-to-r from-sky-400 to-indigo-500" />
+        <div className="p-4">
+          <p className="text-sm font-bold text-zinc-900 dark:text-white">Blog — Patterns</p>
+          <p className={`${cx.muted} mt-1.5 line-clamp-2 text-sm`}>
             {o('opt1') ? 'Open Graph title + image + domain' : 'vibe.glossary · preview'}
           </p>
         </div>
@@ -1360,7 +1370,7 @@ const RENDER = {
     return (
       <div className="flex w-full flex-col overflow-hidden rounded-xl border border-zinc-300/80 bg-zinc-300/30 dark:border-zinc-600 dark:bg-zinc-900/60 min-h-[min(22rem,50vh)] max-h-[min(26rem,58vh)]">
         {/* In-flow “screen” so height includes the sheet — avoids clipping from overflow-auto ancestors */}
-        <div className="flex min-h-[6rem] flex-1 flex-col items-center justify-center px-4 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+        <div className="flex min-h-[6rem] flex-1 flex-col items-center justify-center px-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
           Page
         </div>
         <div className="shrink-0 px-2 pb-3 pt-1">
@@ -1440,24 +1450,24 @@ const RENDER = {
       : '';
 
     return (
-      <div className="flex min-h-[11rem] justify-center pt-6">
+      <div className="flex w-full min-h-[12rem] flex-col items-center justify-start pt-2">
         {/* pb-* extends the group’s hover hit area so the pointer can reach the popover without leaving :hover */}
         <div className="group relative inline-flex flex-col items-center pb-40">
           <button
             type="button"
-            className="rounded-sm text-sm font-semibold text-indigo-600 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/70 dark:text-indigo-400 border-b border-dashed border-indigo-400"
+            className="rounded-sm border-b border-dashed border-indigo-400 text-base font-semibold text-indigo-600 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/70 dark:text-indigo-400"
           >
             @alex
           </button>
           <div
-            className={`absolute left-1/2 top-full z-30 mt-2 w-56 -translate-x-1/2 translate-y-1 rounded-xl border border-zinc-200 bg-white p-3 text-left shadow-xl transition-[opacity,transform] duration-200 ease-out dark:border-zinc-700 dark:bg-zinc-900 ${delayClass} invisible pointer-events-none opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ${focusOpen}`}
+            className={`absolute left-1/2 top-full z-30 mt-3 w-64 -translate-x-1/2 translate-y-1 rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-xl transition-[opacity,transform] duration-200 ease-out dark:border-zinc-700 dark:bg-zinc-900 ${delayClass} invisible pointer-events-none opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ${focusOpen}`}
           >
-            <p className="text-sm font-bold text-zinc-900 dark:text-white">Alex Rivera</p>
-            <p className={cx.muted}>Design · NYC</p>
+            <p className="text-base font-bold text-zinc-900 dark:text-white">Alex Rivera</p>
+            <p className={`${cx.muted} mt-1 text-sm`}>Design · NYC</p>
             {o('opt3') && (
               <a
                 href="#hover-card-demo"
-                className="mt-2 block text-xs font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-400"
+                className="mt-3 block text-sm font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-400"
                 onClick={(e) => e.preventDefault()}
               >
                 Open profile
@@ -1475,12 +1485,11 @@ const RENDER = {
     const reduced = o('opt3');
 
     return (
-      <div className="w-full space-y-3">
-        <p className="text-[11px] leading-snug text-zinc-600 dark:text-zinc-400">
-          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Product tours</span> darken the rest of the
-          screen and leave a bright cut-out over the control you’re explaining, plus a floating panel for copy. Toggle{' '}
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">Spotlight</span> in the spec to switch between
-          that mask and a lighter “ring only” highlight.
+      <div className="w-full space-y-5">
+        <p className={PREVIEW.lede}>
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Product tours</span> dim the rest of the UI
+          and leave a clear window on one control, plus a step card. Use <span className="font-medium">Spotlight</span> in
+          the spec to compare full mask vs ring-only emphasis.
         </p>
 
         {mask ? (
@@ -1516,37 +1525,36 @@ const RENDER = {
             >
               Export
             </button>
-            <p className="max-w-[15rem] text-center text-[11px] text-zinc-600 dark:text-zinc-400">
+            <p className="max-w-xs text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               With <span className="font-medium text-zinc-800 dark:text-zinc-200">Spotlight</span> off, many libraries
               still pulse or ring the target instead of dimming the whole page.
             </p>
           </div>
         )}
 
-        <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-md dark:border-zinc-700 dark:bg-zinc-900">
-          <div className="flex gap-2">
-            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden />
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-md dark:border-zinc-700 dark:bg-zinc-900 sm:p-5">
+          <div className="flex gap-3">
+            <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-indigo-500" aria-hidden />
             <div className="min-w-0">
-              <p className="text-xs font-bold text-zinc-900 dark:text-white">Step 1 — Export your work</p>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
-                This floating panel is the copy for the current step (title + short help). In a real tour it moves when
-                you go Next.
+              <p className="text-sm font-bold text-zinc-900 dark:text-white">Step 1 — Export your work</p>
+              <p className={`mt-2 ${PREVIEW.lede}`}>
+                This panel is the tour copy for the current step. In a real product it advances with Next / Back.
               </p>
               {tourChrome && (
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 pt-3 dark:border-zinc-800">
-                  <button type="button" className="text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+                  <button type="button" className="min-h-[44px] text-sm font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300">
                     Skip tour
                   </button>
-                  <span className="text-[10px] font-medium tabular-nums text-zinc-400">1 / 3</span>
-                  <div className="flex items-center gap-1">
+                  <span className="text-xs font-medium tabular-nums text-zinc-400">1 / 3</span>
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      className="rounded-md border border-zinc-200 px-2 py-1 text-[11px] text-zinc-600 dark:border-zinc-600 dark:text-zinc-300"
+                      className="min-h-[44px] rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-700 dark:border-zinc-600 dark:text-zinc-300"
                       aria-label="Previous step"
                     >
                       Back
                     </button>
-                    <button type="button" className="rounded-md bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold text-white">
+                    <button type="button" className="min-h-[44px] rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white">
                       Next
                     </button>
                   </div>

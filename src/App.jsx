@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from 'react';
-import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, Lightbulb, GraduationCap } from 'lucide-react';
+import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
@@ -409,18 +409,9 @@ export default function App() {
                     onCorrect={handleQuizCorrect}
                   />
                 ) : (
-                  <>
-                    <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
-                      {currentData.definition}
-                    </p>
-
-                    {currentData.vibeTip && (
-                      <div className="flex items-start gap-2 text-sm lg:text-base text-zinc-500 dark:text-zinc-400 italic mb-6 lg:mb-8">
-                        <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
-                        <span>{currentData.vibeTip}</span>
-                      </div>
-                    )}
-                  </>
+                  <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
+                    {currentData.definition}
+                  </p>
                 )}
 
                 {/* Prompt Builder — hidden during an active quiz so it doesn't reveal the answer */}

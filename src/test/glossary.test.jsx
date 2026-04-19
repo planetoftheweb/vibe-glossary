@@ -17,10 +17,9 @@ describe('GLOSSARY_DATA', () => {
   // 2–7. Per-entry shape tests
   describe.each(entries)('entry: %s', (key, entry) => {
     // 2. Required top-level fields exist (no demo — that lives in DEMO_REGISTRY)
-    it('has title, definition, vibeTip, comparison, and prompt', () => {
+    it('has title, definition, comparison, and prompt', () => {
       expect(entry).toHaveProperty('title');
       expect(entry).toHaveProperty('definition');
-      expect(entry).toHaveProperty('vibeTip');
       expect(entry).toHaveProperty('comparison');
       expect(entry).toHaveProperty('prompt');
       expect(entry).not.toHaveProperty('demo');
@@ -35,11 +34,6 @@ describe('GLOSSARY_DATA', () => {
     it('definition is a non-empty string', () => {
       expect(typeof entry.definition).toBe('string');
       expect(entry.definition.trim().length).toBeGreaterThan(0);
-    });
-
-    it('vibeTip is a non-empty string', () => {
-      expect(typeof entry.vibeTip).toBe('string');
-      expect(entry.vibeTip.trim().length).toBeGreaterThan(0);
     });
 
     it('comparison is a non-empty string', () => {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import {
-  X, ChevronLeft, ChevronRight, Check, Lightbulb,
+  X, ChevronLeft, ChevronRight, Check,
   Trophy, Sparkles, RotateCcw, GraduationCap,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
@@ -342,12 +342,6 @@ function StepScreen({ itemId, data, colors, stepIndex, totalSteps }) {
           <p className="text-sm lg:text-base italic text-zinc-500 dark:text-zinc-400 mb-4">
             {data.comparison}
           </p>
-        )}
-        {data.vibeTip && (
-          <div className="flex items-start gap-2 text-sm lg:text-base text-zinc-500 dark:text-zinc-400 italic">
-            <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
-            <span>{data.vibeTip}</span>
-          </div>
         )}
       </div>
       {/* Right: live demo */}

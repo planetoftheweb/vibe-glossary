@@ -1431,8 +1431,8 @@ toast({
     prompt: {
       base: 'Add an image lightbox',
       options: [
-        { id: 'zoom',    label: 'Zoom',     text: ' with click-to-zoom functionality' },
-        { id: 'gallery', label: 'Gallery Nav', text: ' including prev/next navigation and dot indicators' },
+        { id: 'zoom',    label: 'Fit / zoom', text: ' with a clear Fit vs Zoom toggle and tap-to-magnify on the image' },
+        { id: 'gallery', label: 'Gallery nav', text: ' including symmetric prev/next controls, dot indicators, and 1 / N counter' },
       ],
       requirements: [
         'Trap focus inside lightbox when open',

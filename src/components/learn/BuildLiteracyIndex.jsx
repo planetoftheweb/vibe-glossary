@@ -3,6 +3,7 @@ import { X, Search, BookText } from 'lucide-react';
 import {
   BUILD_LITERACY_CLUSTERS,
   BUILD_LITERACY_NAV_COLORS,
+  getBuildClusterColors,
 } from '../../data/buildLiteracy';
 
 function truncate(str, max = 110) {
@@ -136,7 +137,7 @@ export default function BuildLiteracyIndex({ isOpen, onClose, onSelectTopic, mas
                 key={cluster.id}
                 label={cluster.title}
                 count={cluster.topics.length}
-                colors={cc}
+                colors={getBuildClusterColors(cluster.id)}
                 active={activeClusterId === cluster.id}
                 onClick={() => setActiveClusterId(cluster.id)}
               />
@@ -151,11 +152,13 @@ export default function BuildLiteracyIndex({ isOpen, onClose, onSelectTopic, mas
               No topics match your search.
             </div>
           ) : (
-            grouped.map(cluster => (
+            grouped.map(cluster => {
+              const clusterColors = getBuildClusterColors(cluster.id);
+              return (
               <section key={cluster.id} className="mb-7 last:mb-0">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className={`w-2.5 h-2.5 rounded-full ${cc.dot}`} />
-                  <h3 className={`text-sm lg:text-base font-bold uppercase tracking-wider ${cc.accent}`}>
+                  <div className={`w-2.5 h-2.5 rounded-full ${clusterColors.dot}`} />
+                  <h3 className={`text-sm lg:text-base font-bold uppercase tracking-wider ${clusterColors.accent}`}>
                     {cluster.title}
                   </h3>
                   <span className="text-sm text-zinc-400 dark:text-zinc-500">
@@ -171,7 +174,7 @@ export default function BuildLiteracyIndex({ isOpen, onClose, onSelectTopic, mas
                           onClick={() => handleSelect(entry.id)}
                           className="w-full flex items-start gap-3 lg:gap-4 px-4 py-3 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
                         >
-                          <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${cc.dot}`} />
+                          <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${clusterColors.dot}`} />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <div className="text-base lg:text-lg font-semibold text-zinc-900 dark:text-white">
@@ -193,7 +196,8 @@ export default function BuildLiteracyIndex({ isOpen, onClose, onSelectTopic, mas
                   })}
                 </ul>
               </section>
-            ))
+              );
+            })
           )}
         </div>
       </div>

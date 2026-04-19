@@ -21,7 +21,12 @@ import usePanelResize from './hooks/usePanelResize';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
-import { BUILD_LITERACY_NAV_COLORS, BUILD_TOPIC_IDS, BUILD_LITERACY_CLUSTERS } from './data/buildLiteracy';
+import {
+  BUILD_TOPIC_IDS,
+  BUILD_LITERACY_CLUSTERS,
+  getBuildTopic,
+  getBuildClusterColors,
+} from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
@@ -175,7 +180,14 @@ export default function App() {
     activeCategory ? CATEGORY_COLORS[activeCategory.id] : CATEGORY_COLORS.overlays,
     [activeCategory]
   );
-  const navAccentColors = siteSection === 'build' ? BUILD_LITERACY_NAV_COLORS : activeCat;
+  const activeBuildClusterId = useMemo(() => {
+    if (siteSection !== 'build' || !activeBuildTopic) return null;
+    return getBuildTopic(activeBuildTopic)?.clusterId || null;
+  }, [siteSection, activeBuildTopic]);
+
+  const navAccentColors = siteSection === 'build'
+    ? getBuildClusterColors(activeBuildClusterId)
+    : activeCat;
 
   const siblings = useMemo(() => {
     if (!activeCategory) return [];

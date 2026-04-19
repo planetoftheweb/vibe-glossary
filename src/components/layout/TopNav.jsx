@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import {
-  BUILD_LITERACY_NAV_COLORS,
+  getBuildClusterColors,
   BUILD_LITERACY_CLUSTERS,
   getBuildTopic,
   getBuildCluster,
@@ -138,7 +138,7 @@ function MainMenu({
         id: cluster.id,
         name: cluster.title,
         items: cluster.topics,
-        colors: BUILD_LITERACY_NAV_COLORS,
+        colors: getBuildClusterColors(cluster.id),
       }))
     : categories.map(cat => ({
         id: cat.id,
@@ -400,7 +400,7 @@ function SearchResultsList({ results, onSelect, maxHeight = 'max-h-80' }) {
 
   const renderRow = (r) => {
     const colors = r.kind === 'build'
-      ? BUILD_LITERACY_NAV_COLORS
+      ? getBuildClusterColors(r.groupId)
       : (CATEGORY_COLORS[r.groupId] || CATEGORY_COLORS.overlays);
     return (
       <button
@@ -465,22 +465,31 @@ export default function TopNav({
 
   const activeCat = categories.find(c => c.items.some(i => i.id === activeItem));
   const activeItemData = activeCat?.items.find(i => i.id === activeItem);
+
+  // Pre-resolve the active build topic + cluster so we can color everything
+  // (cluster pill, dropdown, dots, progress ring) by the cluster's palette.
+  const activeBuildTopicData = activeBuildTopic ? getBuildTopic(activeBuildTopic) : null;
+  const activeBuildCluster = activeBuildTopicData
+    ? getBuildCluster(activeBuildTopicData.clusterId)
+    : BUILD_LITERACY_CLUSTERS[0];
+  const activeBuildColors = getBuildClusterColors(activeBuildCluster?.id);
+
   const catColors = siteSection === 'build'
-    ? BUILD_LITERACY_NAV_COLORS
+    ? activeBuildColors
     : (activeCat ? CATEGORY_COLORS[activeCat.id] : CATEGORY_COLORS.overlays);
 
   // Progress UI (rings + breakdown) follows the active section.
   const isBuildSection = siteSection === 'build';
   const activeProgress = isBuildSection ? explore.buildProgress : explore.progress;
   const progressRingColor = isBuildSection
-    ? BUILD_LITERACY_NAV_COLORS.accent
+    ? activeBuildColors.accent
     : activeCatColors.accent;
   const progressSections = isBuildSection
     ? BUILD_LITERACY_CLUSTERS.map(cluster => ({
         id: cluster.id,
         name: cluster.title,
         items: cluster.topics,
-        colors: BUILD_LITERACY_NAV_COLORS,
+        colors: getBuildClusterColors(cluster.id),
       }))
     : categories.map(cat => ({
         id: cat.id,
@@ -488,13 +497,6 @@ export default function TopNav({
         items: cat.items,
         colors: CATEGORY_COLORS[cat.id],
       }));
-
-  // Build literacy: active topic and its cluster, mirroring the glossary's
-  // category + component pair.
-  const activeBuildTopicData = activeBuildTopic ? getBuildTopic(activeBuildTopic) : null;
-  const activeBuildCluster = activeBuildTopicData
-    ? getBuildCluster(activeBuildTopicData.clusterId)
-    : BUILD_LITERACY_CLUSTERS[0];
 
   const handleSelectBuildCluster = (clusterId) => {
     const cluster = getBuildCluster(clusterId);
@@ -708,8 +710,8 @@ export default function TopNav({
             <div className="hidden md:block">
               <PillDropdown
                 icon={
-                  <span className={`flex items-center gap-1.5 ${BUILD_LITERACY_NAV_COLORS.accent}`}>
-                    <span className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+                  <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
+                    <span className={`w-2.5 h-2.5 rounded-full ${activeBuildColors.dot}`} />
                     {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={20} />}
                   </span>
                 }
@@ -721,18 +723,19 @@ export default function TopNav({
               >
                 {BUILD_LITERACY_CLUSTERS.map(cluster => {
                   const isActive = activeBuildCluster?.id === cluster.id;
+                  const cColors = getBuildClusterColors(cluster.id);
                   return (
                     <button
                       key={cluster.id}
                       onClick={() => handleSelectBuildCluster(cluster.id)}
                       className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
                         isActive
-                          ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                          ? `${cColors.bg} ${cColors.text} font-semibold`
                           : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                       }`}
                     >
-                      <div className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
-                      <span className={isActive ? '' : 'text-zinc-500 dark:text-zinc-400'}>
+                      <div className={`w-2.5 h-2.5 rounded-full ${cColors.dot}`} />
+                      <span className={isActive ? cColors.accent : 'text-zinc-500 dark:text-zinc-400'}>
                         {BUILD_CLUSTER_ICONS[cluster.id]}
                       </span>
                       <span className="font-medium text-left">{cluster.title}</span>
@@ -764,7 +767,7 @@ export default function TopNav({
                       onClick={() => handleSelectBuildTopic(topic.id)}
                       className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
                         isActive
-                          ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                          ? `${activeBuildColors.bg} ${activeBuildColors.text} font-semibold`
                           : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                       }`}
                     >
@@ -1122,8 +1125,8 @@ export default function TopNav({
           iconOnly
           ariaLabel={`Cluster: ${activeBuildCluster?.title || 'Web foundations'}`}
           icon={
-            <span className={`flex items-center gap-1.5 ${BUILD_LITERACY_NAV_COLORS.accent}`}>
-              <span className={`w-2 h-2 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+            <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
+              <span className={`w-2 h-2 rounded-full ${activeBuildColors.dot}`} />
               {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={18} />}
             </span>
           }
@@ -1134,17 +1137,18 @@ export default function TopNav({
         >
           {BUILD_LITERACY_CLUSTERS.map(cluster => {
             const isActive = activeBuildCluster?.id === cluster.id;
+            const cColors = getBuildClusterColors(cluster.id);
             return (
               <button
                 key={cluster.id}
                 onClick={() => handleSelectBuildCluster(cluster.id)}
                 className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
                   isActive
-                    ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                    ? `${cColors.bg} ${cColors.text} font-semibold`
                     : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                 }`}
               >
-                <div className={`w-2.5 h-2.5 rounded-full ${BUILD_LITERACY_NAV_COLORS.dot}`} />
+                <div className={`w-2.5 h-2.5 rounded-full ${cColors.dot}`} />
                 {BUILD_CLUSTER_ICONS[cluster.id]}
                 <span className="font-medium">{cluster.title}</span>
               </button>
@@ -1177,7 +1181,7 @@ export default function TopNav({
                 onClick={() => handleSelectBuildTopic(topic.id)}
                 className={`w-full flex items-center gap-3 px-5 py-3.5 text-base transition-colors ${
                   isActive
-                    ? `${BUILD_LITERACY_NAV_COLORS.bg} ${BUILD_LITERACY_NAV_COLORS.text} font-semibold`
+                    ? `${activeBuildColors.bg} ${activeBuildColors.text} font-semibold`
                     : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                 }`}
               >

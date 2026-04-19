@@ -19,7 +19,11 @@ import { DESIGN_LANGUAGE_CLUSTER } from './designLanguage.js';
  *   - No em dashes anywhere.
  */
 
-/** Top nav accent when the Build literacy section is active. */
+/**
+ * Default Build literacy accent (indigo). Used as the section identity
+ * (top-level "Build literacy" pill) and as a fallback when no specific
+ * cluster is active.
+ */
 export const BUILD_LITERACY_NAV_COLORS = {
   text: 'text-indigo-400',
   bg: 'bg-indigo-500/10',
@@ -30,6 +34,61 @@ export const BUILD_LITERACY_NAV_COLORS = {
   accent: 'text-indigo-500',
   gradient: 'from-indigo-600 to-violet-700',
 };
+
+/**
+ * Per-cluster color palettes. Mirrors CATEGORY_COLORS in src/data/categories.jsx
+ * so the active cluster's accents flow through the whole UI (cluster pill,
+ * dropdown highlights, dots, definition vibe-tip backgrounds, talk-to-AI tab,
+ * background glow) just like UI Glossary categories.
+ */
+export const BUILD_CLUSTER_COLORS = {
+  'web-foundations': {
+    text: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/30',
+    active: 'bg-indigo-600 text-white', hover: 'hover:bg-indigo-500/10',
+    dot: 'bg-indigo-500', accent: 'text-indigo-500',
+    gradient: 'from-indigo-600 to-violet-700',
+  },
+  'design-language': {
+    text: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/30',
+    active: 'bg-fuchsia-600 text-white', hover: 'hover:bg-fuchsia-500/10',
+    dot: 'bg-fuchsia-500', accent: 'text-fuchsia-500',
+    gradient: 'from-fuchsia-500 to-pink-600',
+  },
+  product: {
+    text: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30',
+    active: 'bg-amber-600 text-white', hover: 'hover:bg-amber-500/10',
+    dot: 'bg-amber-500', accent: 'text-amber-500',
+    gradient: 'from-amber-500 to-orange-600',
+  },
+  engineering: {
+    text: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30',
+    active: 'bg-emerald-600 text-white', hover: 'hover:bg-emerald-500/10',
+    dot: 'bg-emerald-500', accent: 'text-emerald-500',
+    gradient: 'from-emerald-500 to-teal-600',
+  },
+  'spec-driven': {
+    text: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/30',
+    active: 'bg-sky-600 text-white', hover: 'hover:bg-sky-500/10',
+    dot: 'bg-sky-500', accent: 'text-sky-500',
+    gradient: 'from-sky-500 to-cyan-600',
+  },
+  data: {
+    text: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30',
+    active: 'bg-blue-600 text-white', hover: 'hover:bg-blue-500/10',
+    dot: 'bg-blue-500', accent: 'text-blue-500',
+    gradient: 'from-blue-500 to-indigo-600',
+  },
+  auth: {
+    text: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/30',
+    active: 'bg-rose-600 text-white', hover: 'hover:bg-rose-500/10',
+    dot: 'bg-rose-500', accent: 'text-rose-500',
+    gradient: 'from-rose-500 to-pink-600',
+  },
+};
+
+export function getBuildClusterColors(clusterId) {
+  return BUILD_CLUSTER_COLORS[clusterId] || BUILD_LITERACY_NAV_COLORS;
+}
 
 export const BUILD_LITERACY_INTRO = {
   title: 'Build literacy',

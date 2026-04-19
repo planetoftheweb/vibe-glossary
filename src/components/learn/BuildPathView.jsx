@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import {
   getBuildTopic,
-  BUILD_LITERACY_NAV_COLORS,
+  getBuildClusterColors,
 } from '../../data/buildLiteracy';
 
 const PASS_THRESHOLD = 0.8;
@@ -25,7 +25,7 @@ function shuffle(arr) {
  * vibe tip, mnemonic) instead of a glossary live demo.
  */
 export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onSelectTopic }) {
-  const cc = BUILD_LITERACY_NAV_COLORS;
+  const cc = getBuildClusterColors(path?.id);
   const [phase, setPhase] = useState('intro');
   const [stepIndex, setStepIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);

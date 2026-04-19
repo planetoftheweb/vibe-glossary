@@ -2,10 +2,10 @@ import { useState, useMemo, useEffect } from 'react';
 import { FileText, Sparkles, GripVertical, BookOpen } from 'lucide-react';
 import {
   BUILD_LITERACY_CLUSTERS,
-  BUILD_LITERACY_NAV_COLORS,
   BUILD_TOPIC_IDS,
   getBuildTopic,
   getBuildCluster,
+  getBuildClusterColors,
 } from '../../data/buildLiteracy';
 import { useGlossary } from '../../hooks/useGlossary';
 import usePanelResize from '../../hooks/usePanelResize';
@@ -42,7 +42,7 @@ export default function BuildLiteracyView({
     ? getBuildCluster(topic.clusterId)
     : BUILD_LITERACY_CLUSTERS[0];
 
-  const cc = BUILD_LITERACY_NAV_COLORS;
+  const cc = getBuildClusterColors(cluster?.id);
 
   const currentIndex = topic ? BUILD_TOPIC_IDS.indexOf(topic.id) : -1;
   const prevTopic = currentIndex > 0 ? getBuildTopic(BUILD_TOPIC_IDS[currentIndex - 1]) : null;

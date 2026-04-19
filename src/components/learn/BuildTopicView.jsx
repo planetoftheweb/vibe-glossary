@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import DefinitionPanel from '../ui/DefinitionPanel';
 import QuizCard from './QuizCard';
-import { BUILD_LITERACY_NAV_COLORS } from '../../data/buildLiteracy';
+import { getBuildClusterColors } from '../../data/buildLiteracy';
 
 /**
  * Left-pane topic view for Build Literacy. Mirrors the glossary info pane:
@@ -28,7 +28,7 @@ export default function BuildTopicView({
   quizPool,
   onCloseInfo,
 }) {
-  const cc = BUILD_LITERACY_NAV_COLORS;
+  const cc = getBuildClusterColors(cluster?.id);
   const showQuiz = learnMode && !isMastered && quizPool.length >= 4;
 
   const carouselArrows = useMemo(() => (

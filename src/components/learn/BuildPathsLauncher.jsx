@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { X, ChevronRight, Trophy, GraduationCap, Check } from 'lucide-react';
 import { BUILD_PATHS } from '../../data/buildPaths';
-import { BUILD_LITERACY_NAV_COLORS } from '../../data/buildLiteracy';
+import { BUILD_LITERACY_NAV_COLORS, getBuildClusterColors } from '../../data/buildLiteracy';
 
 /**
  * Launcher modal for Build Literacy learning paths. Each cluster IS a path:
@@ -58,6 +58,7 @@ export default function BuildPathsLauncher({ isOpen, onClose, onSelectPath, mast
             const masteredPercent = path.items.length
               ? Math.round((masteredInPath / path.items.length) * 100)
               : 0;
+            const pathColors = getBuildClusterColors(path.id);
 
             return (
               <button
@@ -66,7 +67,7 @@ export default function BuildPathsLauncher({ isOpen, onClose, onSelectPath, mast
                 className="w-full text-left group block rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 bg-white dark:bg-zinc-900/40 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors overflow-hidden"
               >
                 <div className="flex items-start gap-4 p-4 lg:p-5">
-                  <div className={`shrink-0 w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${cc.gradient} flex items-center justify-center shadow-md`}>
+                  <div className={`shrink-0 w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${pathColors.gradient} flex items-center justify-center shadow-md`}>
                     {earned ? (
                       <Trophy size={26} className="text-white" />
                     ) : (
@@ -92,7 +93,7 @@ export default function BuildPathsLauncher({ isOpen, onClose, onSelectPath, mast
                     <div className="flex items-center gap-3">
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full bg-gradient-to-r ${cc.gradient} transition-all duration-500`}
+                          className={`h-full rounded-full bg-gradient-to-r ${pathColors.gradient} transition-all duration-500`}
                           style={{ width: `${masteredPercent}%` }}
                         />
                       </div>

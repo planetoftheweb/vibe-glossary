@@ -52,7 +52,7 @@ export default function BuildTopicView({
           aria-label={`Next topic: ${nextTopic.title}`}
         >
           <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
-          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-left opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+          <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
             <span className="block text-lg font-semibold text-white">{nextTopic.title}</span>
           </span>

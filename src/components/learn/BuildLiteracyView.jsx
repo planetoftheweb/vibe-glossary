@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { FileText, Sparkles } from 'lucide-react';
+import { FileText, Sparkles, GripVertical } from 'lucide-react';
 import {
   BUILD_LITERACY_CLUSTERS,
   BUILD_LITERACY_NAV_COLORS,
@@ -8,6 +8,7 @@ import {
   getBuildCluster,
 } from '../../data/buildLiteracy';
 import { useGlossary } from '../../hooks/useGlossary';
+import usePanelResize from '../../hooks/usePanelResize';
 import BuildTopicView from './BuildTopicView';
 import TalkToAiCard from './TalkToAiCard';
 
@@ -15,6 +16,9 @@ import TalkToAiCard from './TalkToAiCard';
  * Build Literacy section: two-pane body that mirrors the UI Glossary.
  * Cluster + topic navigation lives in the TopNav (matching the glossary's
  * Category + Component pills), so this view is just the content.
+ *
+ * Resize behavior: shares the panelWidth state with the UI Glossary so the
+ * user's chosen split persists across both sections (and across reloads).
  */
 export default function BuildLiteracyView({
   activeTopicId,
@@ -24,6 +28,9 @@ export default function BuildLiteracyView({
   toggleLearnMode,
   mastered,
   onMastered,
+  panelWidth = 44,
+  setPanelWidth,
+  isDesktop = true,
 }) {
   const glossary = useGlossary();
   const [mobileView, setMobileView] = useState('info'); // 'info' | 'preview'
@@ -61,6 +68,10 @@ export default function BuildLiteracyView({
 
   useEffect(() => { setMobileView('info'); }, [activeTopicId]);
 
+  // Mirror the UI Glossary's drag-to-resize behavior. The hook owns its own
+  // container ref so the math is relative to this view, not the App shell.
+  const { containerRef, onResizeStart } = usePanelResize(setPanelWidth || (() => {}));
+
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
       {/* Mobile view toggle */}
@@ -90,10 +101,11 @@ export default function BuildLiteracyView({
       </div>
 
       {/* Two-pane body */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+      <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
         {/* Left: topic info */}
         <div
-          className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full lg:w-[44%] xl:w-[46%]`}
+          className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`}
+          style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}
         >
           {topic ? (
             <BuildTopicView
@@ -115,6 +127,18 @@ export default function BuildLiteracyView({
               Pick a topic from the dropdown above to get started.
             </div>
           )}
+        </div>
+
+        {/* Resize handle, desktop only */}
+        <div
+          onMouseDown={onResizeStart}
+          onTouchStart={onResizeStart}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize panels"
+          className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
+        >
+          <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
         </div>
 
         {/* Right: Talk to your AI showpiece */}

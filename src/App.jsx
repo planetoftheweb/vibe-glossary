@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from 'react';
+import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
@@ -14,6 +14,7 @@ import PathsLauncher  from './components/learn/PathsLauncher';
 import PathView       from './components/learn/PathView';
 import BuildLiteracyView from './components/learn/BuildLiteracyView';
 import useExploreMode from './hooks/useExploreMode';
+import usePanelResize from './hooks/usePanelResize';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
@@ -52,43 +53,13 @@ export default function App() {
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth >= 1024
   );
-  const isResizing = useRef(false);
-  const containerRef = useRef(null);
+  const { containerRef, onResizeStart: handleResizeStart } = usePanelResize(setPanelWidth);
 
   // Keep isDesktop reactive so inline panel width is removed below lg breakpoint.
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleResizeStart = useCallback((e) => {
-    e.preventDefault();
-    isResizing.current = true;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-
-    const handleMove = (ev) => {
-      if (!isResizing.current || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = (ev.clientX || ev.touches?.[0]?.clientX) - rect.left;
-      const pct = Math.min(60, Math.max(25, (x / rect.width) * 100));
-      setPanelWidth(pct);
-    };
-    const handleUp = () => {
-      isResizing.current = false;
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-      setPanelWidth(prev => { localStorage.setItem('vg-panel-width', prev); return prev; });
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleUp);
-      window.removeEventListener('touchmove', handleMove);
-      window.removeEventListener('touchend', handleUp);
-    };
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleUp);
-    window.addEventListener('touchmove', handleMove);
-    window.addEventListener('touchend', handleUp);
   }, []);
 
   // Apply dark mode class
@@ -241,7 +212,7 @@ export default function App() {
           aria-label={`Next: ${nextData?.title}`}
         >
           <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
-          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-left opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
+          <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
             <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
           </span>
@@ -343,6 +314,9 @@ export default function App() {
             toggleLearnMode={toggleLearnMode}
             mastered={explore.mastered}
             onMastered={(id) => explore.markMastered(id)}
+            panelWidth={panelWidth}
+            setPanelWidth={setPanelWidth}
+            isDesktop={isDesktop}
           />
         ) : (
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
@@ -472,6 +446,9 @@ export default function App() {
             <div
               onMouseDown={handleResizeStart}
               onTouchStart={handleResizeStart}
+              role="separator"
+              aria-orientation="vertical"
+              aria-label="Resize panels"
               className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
             >
               <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />

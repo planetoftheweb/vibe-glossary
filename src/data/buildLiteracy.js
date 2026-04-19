@@ -1,3 +1,5 @@
+import { WEB_FOUNDATIONS_CLUSTER } from './webFoundations.js';
+
 /**
  * Build Literacy: ideas from the rest of the build (planning, tests, specs,
  * data, auth) plus the web foundations every vibe coder needs to read code,
@@ -32,6 +34,7 @@ export const BUILD_LITERACY_INTRO = {
 };
 
 export const BUILD_LITERACY_CLUSTERS = [
+  WEB_FOUNDATIONS_CLUSTER,
   {
     id: 'product',
     title: 'Product and planning',

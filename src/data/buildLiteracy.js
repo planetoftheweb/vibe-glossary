@@ -1,4 +1,5 @@
 import { WEB_FOUNDATIONS_CLUSTER } from './webFoundations.js';
+import { DESIGN_LANGUAGE_CLUSTER } from './designLanguage.js';
 
 /**
  * Build Literacy: ideas from the rest of the build (planning, tests, specs,
@@ -38,6 +39,7 @@ export const BUILD_LITERACY_INTRO = {
 
 export const BUILD_LITERACY_CLUSTERS = [
   WEB_FOUNDATIONS_CLUSTER,
+  DESIGN_LANGUAGE_CLUSTER,
   {
     id: 'product',
     title: 'Product and planning',
@@ -158,6 +160,111 @@ export const BUILD_LITERACY_CLUSTERS = [
         mnemonic:
           'A roadmap is a promise about direction, not about dates.',
         relatedGlossaryIds: ['timeline'],
+      },
+      {
+        id: 'jtbd',
+        title: 'Jobs-to-be-Done (JTBD)',
+        summary:
+          'A way to think about features by the "job" the user is hiring your product to do, instead of by demographics or personas.',
+        details:
+          'Clayton Christensen popularized the framing: people do not buy products, they "hire" them to do a job. The classic example is the milkshake. McDonald\'s found that morning milkshake buyers were not "young moms" or "office workers", they were anyone who needed a one-handed breakfast that lasted the commute. The job was "keep me occupied and fed during my drive". Once you see the job, you can compete with bagels, bananas, and podcasts, not just other milkshakes.\n\nJTBD beats personas when you want feature ideas. Personas describe people; jobs describe situations. Two very different people can hire your product for the same job, and the same person hires different products for different jobs.\n\nThe canonical job statement is: "When [situation], I want to [motivation], so I can [expected outcome]." Write three of those for your product, and your roadmap practically writes itself.',
+        comparison:
+          'Personas describe who. JTBD describes the situation and the outcome they want. JTBD ages better than demographics.',
+        vibeTip:
+          'Hand your AI a JTBD statement before asking for features. "When [situation], I want to [job]" gives it the constraint personas miss.',
+        talkToAi: {
+          starter:
+            'Help me write Jobs-to-be-Done statements for [product]. Before suggesting jobs, ask me: 1) the moments users actually open the product, 2) what they are trying to accomplish (the outcome, not the action), 3) what they currently use instead (your real competition). Then propose 3-5 jobs in the canonical "When X, I want to Y, so I can Z" format, and pick the one or two that should drive next quarter\'s roadmap.',
+          example:
+            'Help me write JTBD statements for a personal finance app. Users open it after big purchases and on payday. They want to feel in control without staring at spreadsheets. Today they use Notion or nothing. Suggest 3 jobs and which one should drive Q1 features.',
+        },
+        mnemonic:
+          'People hire products to do jobs. Find the job, the features get obvious.',
+        relatedGlossaryIds: ['hero', 'card'],
+      },
+      {
+        id: 'okrs',
+        title: 'OKRs (Objectives and Key Results)',
+        summary:
+          'A goal-setting format used by most tech companies. One Objective (qualitative, inspiring) plus 2-4 Key Results (numeric, time-boxed, hard to fake).',
+        details:
+          'OKRs come from Andy Grove at Intel and were popularized by John Doerr at Google. The format is deceptively simple. The Objective is the destination ("Become the obvious choice for indie developers"). Key Results are the numeric proof you got there ("Reach 5,000 weekly active devs", "Hit 30 NPS", "Land 10 case studies").\n\nThe rules that make OKRs work, that everyone forgets: Key Results measure outcomes, not work shipped (so "ship the new dashboard" is not a KR, "increase dashboard DAU to 60% of WAU" is). KRs are ambitious enough that hitting all of them feels surprising. They are time-boxed (usually a quarter). And there are not too many; three per Objective forces priority.\n\nOKRs replace the "let\'s build a lot of stuff and see what sticks" trap. If a feature does not move a Key Result, it should not be on this quarter\'s plan.',
+        comparison:
+          'KPIs measure ongoing health. OKRs are time-boxed, ambitious bets you make this quarter.',
+        vibeTip:
+          'Tell your AI your OKRs in the system prompt for prioritization questions. It will rank features by likely KR impact instead of by what sounds cool.',
+        talkToAi: {
+          starter:
+            'Help me write OKRs for [team or quarter]. Before proposing any, ask me: 1) the one or two strategic priorities for the quarter, 2) what we currently measure (so KRs are realistic), 3) the size of the team and how ambitious we want to be (commit OKRs vs aspirational). Then propose 1-2 Objectives, each with 3 Key Results that are numeric, outcome-focused (not work-focused), and time-boxed. Push back on any KR I suggested that just describes work shipped.',
+          example:
+            'Write Q1 OKRs for our 4-person growth team. Strategic priority: paid conversion. We currently measure signups (1,200/mo) and trial-to-paid (8%). Aspirational level: 1.4x or better. Two Objectives max.',
+        },
+        mnemonic:
+          'Objective inspires. Key Results prove. KRs are numbers, not to-dos.',
+        relatedGlossaryIds: ['statcard', 'linechart'],
+      },
+      {
+        id: 'personas',
+        title: 'User personas',
+        summary:
+          'A short profile of a representative user (goals, frustrations, context) so the team can debate "what would Maya the freelance designer want?" instead of arguing in the abstract.',
+        details:
+          'A persona is a fictional but research-grounded user profile. The good ones have a name, a photo, a job, a goal, three frustrations, and a quote. The point is not the photo. It is having a shorthand the whole team uses: "would Maya understand this?" beats "would the user understand this?" because Maya has a face.\n\nGood personas come from talking to real users (5-10 interviews per persona). Bad personas come from a brainstorm in a conference room and read like horoscopes. If your persona could describe anyone, it is not useful.\n\nMost products need 1-3 personas, not 12. Ranking them matters as much as creating them: which persona is "primary" (every decision optimizes for them), which is "secondary" (we will not break the experience for them but we will not optimize), which is "anti" (we explicitly do NOT serve them).',
+        comparison:
+          'Persona = who. JTBD = the situation and outcome. ICP (Ideal Customer Profile) = who you sell to (B2B). Use the right one for the question.',
+        vibeTip:
+          'Paste a persona into your AI prompt before asking it to draft copy or pick a feature. It writes for "Maya" instead of "the user".',
+        talkToAi: {
+          starter:
+            'Help me draft user personas for [product]. Before writing them, ask me: 1) how much real research we have done (interviews, support tickets, analytics), 2) the 1-3 user types we think we are serving, 3) which one is primary. Then propose a persona for each (name, role, goal, top 3 frustrations, a real-sounding quote), label primary/secondary/anti, and call out any persona that is too vague to be useful.',
+          example:
+            'Draft personas for a tool that helps freelance designers send invoices. We have done 6 interviews. Two user types: solo freelancer ("Maya") and small agency owner ("Dev"). Maya is primary. Show me both with the full template.',
+        },
+        mnemonic:
+          'A persona has a face, a goal, and three frustrations. Anything fuzzier is a horoscope.',
+        relatedGlossaryIds: ['card', 'avatar'],
+      },
+      {
+        id: 'sprint',
+        title: 'Sprint and iteration',
+        summary:
+          'A sprint is a fixed-length window (usually 1 or 2 weeks) where the team commits to a small set of work, ships it, and reviews. Iteration is the same idea, lighter on ceremony.',
+        details:
+          'A sprint is the unit of work in Scrum: pick a small batch of items, agree on what "done" means, ship at the end, review what happened, plan the next one. Most teams run 1- or 2-week sprints. Anything longer and the world changes mid-sprint; anything shorter and you spend more time planning than building.\n\n"Iteration" is the same loop without the Scrum ritual (no planning poker, no sprint review theater). Lots of teams use the words interchangeably, which is fine, but be aware which kind of org you are in.\n\nThe valuable parts of a sprint are usually the smallest: a stand-up to surface blockers, a demo at the end so the team sees what shipped, and a short retro to fix the worst thing about how the team works. The valueless parts are the ones a vibe coder would happily skip: 90-minute estimation meetings.',
+        comparison:
+          'Sprint = Scrum-flavored iteration with ceremonies. Iteration = the same loop, less ritual. Both are about shipping in small batches.',
+        vibeTip:
+          'When planning with your AI, frame the request as a sprint goal: "the next 2 weeks should produce X". You get tighter scope than open-ended "build this app".',
+        talkToAi: {
+          starter:
+            'Help me plan the next sprint for [project]. Before suggesting work, ask me: 1) the sprint length (1 or 2 weeks), 2) the 1-2 outcomes that would make this sprint a win, 3) the team size and known constraints (vacation, on-call, etc.). Then propose a slate of items sized to the time, group them by outcome, mark stretch goals separately, and push back on anything I asked for that does not fit.',
+          example:
+            'Plan a 1-week sprint for me (solo). Goal: ship the new pricing page and connect it to Stripe Checkout in test mode. Other constraint: I will be out Friday. Suggest the smallest scope that hits the goal.',
+        },
+        mnemonic:
+          'A sprint is a small batch with a deadline and a demo. Skip the ceremony, keep the demo.',
+        relatedGlossaryIds: ['timeline', 'kanban'],
+      },
+      {
+        id: 'prioritization',
+        title: 'Prioritization frameworks (MoSCoW, RICE, Eisenhower)',
+        summary:
+          'Three popular ways to rank work. MoSCoW splits into Must, Should, Could, Won\'t. RICE scores Reach × Impact × Confidence ÷ Effort. Eisenhower is Urgent vs Important.',
+        details:
+          'Every prioritization framework is the same trick: force you to compare items on the same scale so you stop saying "everything is important". The three you will hear most:\n\nMoSCoW (Must/Should/Could/Won\'t this release) is the lightest. Great for narrowing scope on a single release. Weakness: nothing in the framework forces hard trade-offs, so "Must" creep happens.\n\nRICE (Reach × Impact × Confidence ÷ Effort) gives every item a numeric score. Great for comparing across teams. Weakness: the numbers are guesses dressed up as math, and "Confidence" is the knob people use to win the argument.\n\nEisenhower (Urgent vs Important, 2×2 grid) is for personal task triage, not roadmaps. Great for "what should I do this morning?". Weakness: most product work is "important not urgent" and falls into one quadrant.\n\nThe right answer is usually "pick one, use it consistently for a quarter, change later if it stops helping".',
+        comparison:
+          'MoSCoW = quick scope cut. RICE = score-based ranking. Eisenhower = personal triage. Pick one and stop arguing about the framework.',
+        vibeTip:
+          'When asking your AI to plan, name the framework: "rank these items by RICE" beats "rank these by importance" because the AI shows its math.',
+        talkToAi: {
+          starter:
+            'Help me prioritize [list of items]. Before scoring, ask me: 1) the framework I want (MoSCoW, RICE, Eisenhower, or your recommendation), 2) the time horizon (this sprint, this quarter, this year), 3) any items that are non-negotiable for non-product reasons (legal, contractual). Then apply the framework with explicit assumptions (especially Confidence and Effort), show your math, and call out items where the score is suspiciously easy to game.',
+          example:
+            'Rank these 8 features for next quarter using RICE: [list]. Reach is monthly active users likely to use it (we have 3,000 MAU). Impact 1-3. Confidence as percent. Effort in person-weeks. Show the table.',
+        },
+        mnemonic:
+          'Pick a framework. Use it consistently. The framework matters less than committing to one.',
+        relatedGlossaryIds: ['table', 'kanban'],
       },
     ],
   },
@@ -283,6 +390,111 @@ export const BUILD_LITERACY_CLUSTERS = [
         mnemonic:
           'Flags = ship code dark, turn it on later. Always plan when to remove the flag.',
         relatedGlossaryIds: ['badge', 'switch'],
+      },
+      {
+        id: 'code-review',
+        title: 'Code review',
+        summary:
+          'A teammate (or now an AI) reads your change before it merges and either approves it or asks for changes. The point is shared understanding, not just bug catching.',
+        details:
+          'Code review is the moment a change leaves your head and enters the team\'s. The reviewer\'s job is three things, in order. First, "do I understand what this change is doing and why?". Second, "is anything obviously broken or unsafe?". Third, "is there a meaningfully better way?". Note that style, naming, and personal preferences come last; if they were that important, the linter would catch them.\n\nGood reviews are small (under 400 lines, ideally under 200), focused on one thing, and accompanied by a description that says what changed and how to test it. Big reviews get rubber-stamped, every time.\n\nAI is great at the second job (catching obvious issues), so-so at the first (it lacks the context the human reviewer has from yesterday\'s standup), and bad at the third (it does not know your team\'s actual style or constraints). Use AI review as a first pass, not a replacement for a human.',
+        comparison:
+          'Linter catches style. AI review catches obvious bugs. Human review catches "this is the wrong solution to the right problem".',
+        vibeTip:
+          'Before opening a PR, ask your AI to review the diff for clarity and safety, then fix what it finds. The human reviewer thanks you.',
+        talkToAi: {
+          starter:
+            'Review this diff before I open the PR. Before reviewing, ask me: 1) the goal of the change in one sentence, 2) the parts I am least sure about, 3) anything I deliberately left out of scope. Then walk through the diff and call out (a) bugs and unsafe patterns, (b) places where intent is unclear, (c) test gaps, (d) anything that feels overengineered for the goal. Save style nits for last and label them "nit:" so I can ignore them.',
+          example:
+            'Review the diff in the current branch. Goal: switch the products list from offset to cursor pagination. I am least sure about the empty state handling. Deliberately not changing the UI yet, just the data layer. Look at lib/products.ts and the matching test file.',
+        },
+        mnemonic:
+          'Review for understanding first, bugs second, style last. Small diffs get real reviews.',
+        relatedGlossaryIds: ['table'],
+      },
+      {
+        id: 'pull-request',
+        title: 'Pull request (PR) / merge request',
+        summary:
+          'A proposal to merge a branch into another branch (usually main). The PR is the unit of review: title, description, diff, comments, approvals, CI results, all in one place.',
+        details:
+          'A pull request (GitHub\'s name) or merge request (GitLab\'s name) is the same thing: a packaged proposal that says "I made these changes on this branch, please review and merge them". The PR holds the diff, a description, the back-and-forth conversation, the CI results, and the approval state.\n\nA good PR has a tight title that reads as a sentence in the changelog ("Switch products list to cursor pagination"), a description that explains what changed, why, and how to test it, and a small enough diff that a reviewer can read it in 15 minutes. Anything bigger gets stacked into a series of smaller PRs.\n\nThe magic of a PR is that it is also documentation. Six months from now, "git blame" leads to the PR, and the PR explains why. Bad PRs leave the next person digging.',
+        comparison:
+          'A branch is "where you work". A PR is "what you propose". A merge is "what actually changes main".',
+        vibeTip:
+          'Have your AI write the PR description from the diff and your one-line intent. It picks up details you would skip.',
+        talkToAi: {
+          starter:
+            'Write the PR description for the current branch. Before writing, ask me: 1) the one-sentence intent, 2) anything that is NOT in this PR but seems related, 3) any non-obvious testing notes. Then produce a description with sections: Summary, Why, How to test, Out of scope, and Screenshots if relevant. Match the tone of the last 3 PRs in the repo if you can see them.',
+          example:
+            'Write the PR description for the current branch. Intent: switch the products list from offset to cursor pagination. Out of scope: UI changes, those come in a follow-up. Test by hitting /api/products?cursor=... and confirming the response shape matches.',
+        },
+        mnemonic:
+          'A PR is the unit of review and the unit of history. Write it for your future self.',
+        relatedGlossaryIds: ['kanban'],
+      },
+      {
+        id: 'branching',
+        title: 'Branching strategy: trunk vs Git Flow',
+        summary:
+          'How a team uses branches. Trunk-based: short-lived branches off main, merged in a day. Git Flow: long-lived develop, release, feature branches. Trunk wins for most teams.',
+        details:
+          'Branching strategies are agreements about where work lives and how it gets to production. The two famous ones could not be more different.\n\nTrunk-based development has one long-lived branch (main, sometimes called trunk). All work happens in short-lived branches that merge back to main within a day or two, behind feature flags if needed. Production deploys from main. Pros: minimal merge pain, fast feedback, code is always near-production. Cons: requires CI you trust and feature flags for unfinished work.\n\nGit Flow is the older Vincent Driessen model: a long-lived develop branch, release branches for stabilizing, feature branches that can live for weeks, hotfix branches off main. Pros: clear separation of in-progress vs released. Cons: massive merge pain, slow feedback, code drifts from production for weeks.\n\nFor most modern teams, trunk-based is the right answer. Git Flow makes sense for teams shipping versioned software (libraries, native apps with App Store reviews) where "release" is a real event.',
+        comparison:
+          'Trunk = one main branch, fast merges, feature flags. Git Flow = many long branches, slow merges, painful releases.',
+        vibeTip:
+          'Tell your AI which model your repo uses. "We are trunk-based with feature flags" stops it from suggesting a develop branch.',
+        talkToAi: {
+          starter:
+            'Help me set up a branching strategy for [repo or team]. Before recommending one, ask me: 1) how often we deploy (per merge, daily, weekly, per release), 2) the team size and how many in-flight changes there usually are, 3) whether we have a CI pipeline we trust and feature flags. Then recommend trunk-based or Git Flow with reasoning, write a CONTRIBUTING.md section that explains the workflow, and call out the one habit that will make or break it.',
+          example:
+            'Recommend a branching strategy for our 3-person team. We deploy on every merge to main with a CI pipeline. No feature flags yet. Each person has 1-2 changes in flight. Write the CONTRIBUTING.md and the one habit we need to build.',
+        },
+        mnemonic:
+          'Trunk-based: short branches, fast merges. Git Flow: long branches, painful merges.',
+        relatedGlossaryIds: ['kanban'],
+      },
+      {
+        id: 'observability',
+        title: 'Observability: logs, metrics, traces',
+        summary:
+          'The three telescopes that let you see what your app did in production. Logs are timestamped messages. Metrics are numbers over time. Traces are timelines of one request through every service.',
+        details:
+          'Observability is "can I figure out what my app did from the outside?". The three pillars complement each other.\n\nLogs are messages your app emits ("user 42 signed in", "checkout failed: card declined"). Great for "what happened to this specific user?". Use a structured logger (pino, Winston, the platform default) so you can search by field, not just by string.\n\nMetrics are numeric measurements aggregated over time (request count, p95 latency, error rate). Great for "is the system healthy?" and dashboards. Tools: Prometheus, Datadog, OpenTelemetry.\n\nTraces follow a single request as it touches every service (frontend → API → database → cache → email service). Great for "why was this one request slow?". Tools: Jaeger, Datadog APM, Honeycomb, Sentry Performance.\n\nThe trap: shipping with neither. Add at least logs from day one. Add metrics when you have users. Add traces when you have services.',
+        comparison:
+          'Logs = messages. Metrics = numbers. Traces = request timelines. You need all three eventually, but logs first.',
+        vibeTip:
+          'Tell your AI to add structured logging at every boundary (request in, response out, external call) when scaffolding an API. Trace IDs included.',
+        talkToAi: {
+          starter:
+            'Add observability to [app or service]. Before changing code, ask me: 1) what is in place today (console.log? a logger? metrics?), 2) the platform we are deployed on (Vercel, Fly, AWS, Render), 3) the budget (free / cheap / "we have Datadog"). Then recommend the smallest stack that covers logs, metrics, and traces, wire up structured logging at request boundaries with trace IDs, and add a dashboard or query I can use to spot-check the most important pages.',
+          example:
+            'Add observability to our Next.js app on Vercel. We have console.logs everywhere. Free tier is fine. Use pino for structured logs, Vercel Analytics for the basic metrics, and Sentry for error + slow-request traces. Wire it all up and write the README section.',
+        },
+        mnemonic:
+          'Logs say what happened. Metrics say how often. Traces say where the time went.',
+        relatedGlossaryIds: ['linechart', 'statcard'],
+      },
+      {
+        id: 'secrets',
+        title: 'Environment variables and secrets',
+        summary:
+          'Config that changes per environment (dev, staging, prod) lives in environment variables. Secrets (API keys, passwords) are env vars that must NEVER end up in your repo or your client bundle.',
+        details:
+          'Environment variables let the same code behave differently in different places. Database URL is different in dev vs production. Stripe is in test mode locally and live mode in prod. The convention is a .env file for local development, a managed config in production (Vercel env vars, Render env groups, Fly secrets).\n\nSecrets are env vars that are dangerous if leaked. The two rules: never commit them to git (.env is in .gitignore, .env.example is checked in with empty values), and never expose them to the client (anything prefixed with NEXT_PUBLIC_, VITE_, REACT_APP_ ends up in the browser bundle, where any visitor can read it). If a key starts with sk_ or has "secret" in the name, it lives on the server only.\n\nLayered above raw env vars are secret managers (1Password Secrets Automation, Doppler, AWS Secrets Manager, Infisical). They give you rotation, audit, and shared access for teams. For a solo project, .env + your hosting provider\'s env panel is enough.',
+        comparison:
+          'Env var = config that changes per environment. Secret = env var you would be in trouble if it leaked. Never commit secrets, never ship them to the browser.',
+        vibeTip:
+          'Tell your AI "the only secrets allowed in client code are public keys (pk_*). Anything starting with sk_ stays server-only". It stops suggesting fetch calls with your Stripe secret key.',
+        talkToAi: {
+          starter:
+            'Audit env var and secret handling in [repo]. Before changing code, ask me: 1) the hosting platform (Vercel, Render, Fly, etc.), 2) the secret manager we use (or none), 3) any keys that have rotated or might be leaked. Then look at .env, .env.example, .gitignore, and any usage in client bundles. List secrets that are committed, secrets that leak to the client, missing entries in .env.example, and any keys that should rotate. Give me a fix list ordered by risk.',
+          example:
+            'Audit env vars in this Next.js repo on Vercel. We use Doppler for production secrets. Look for any sk_ keys read in components/ or app/ (those would ship to the browser), missing rows in .env.example, and any committed .env files in git history.',
+        },
+        mnemonic:
+          'Env vars = config. Secrets = dangerous env vars. .env in gitignore, sk_ on server only.',
+        relatedGlossaryIds: ['configpanel', 'switch'],
       },
     ],
   },
@@ -411,6 +623,90 @@ export const BUILD_LITERACY_CLUSTERS = [
           'An RFC is a chance to be wrong cheaply, before you write the code.',
         relatedGlossaryIds: [],
       },
+      {
+        id: 'design-doc',
+        title: 'Design doc',
+        summary:
+          'A short document (1-5 pages) that describes how you will build a non-trivial feature, written before the code, so the team can review the approach before any keys are pressed.',
+        details:
+          'A design doc is the engineering cousin of a PRD. The PRD says what we want to build and why. The design doc says how we plan to build it. The audience is engineers, the questions are technical: which services change, what the data model looks like, what the API contract is, what we considered and rejected, what could go wrong, what we will measure.\n\nGood design docs are short, specific, and dated. The Google template has sections for Context, Goals, Non-goals, Proposed solution, Alternatives considered, Risks, and Open questions. The "Alternatives considered" section is the secret weapon. Future readers stop asking "did you think about X?" because the answer is right there.\n\nDesign docs replace 4 hours of meetings with 30 minutes of reading. They also become the de-facto record once the work ships, similar to an ADR but more detailed.',
+        comparison:
+          'PRD = what + why. Design doc = how. ADR = a single decision pulled out of the design doc for the long term.',
+        vibeTip:
+          'Hand your AI a design doc before asking for code. It picks the right libraries and respects the boundaries you already decided.',
+        talkToAi: {
+          starter:
+            'Help me write a design doc for [feature]. Before drafting, ask me: 1) the PRD or product context, 2) the existing services and data this touches, 3) any constraints I already know (cost, latency, compliance). Then produce a doc with sections: Context, Goals, Non-goals, Proposed solution (with a small diagram in ASCII or Mermaid), Alternatives considered (at least two), Data model changes, API changes, Risks, Open questions. Keep it under 4 pages.',
+          example:
+            'Write a design doc for adding background email sending to our app. Today we send synchronously inside the request handler, which makes signups slow. Constraints: we are on Vercel, no managed queue yet, budget under $20/mo. Consider Resend + Vercel cron, Inngest, and Trigger.dev as alternatives.',
+        },
+        mnemonic:
+          'PRD says what. Design doc says how. Alternatives considered is the section that earns its keep.',
+        relatedGlossaryIds: ['table'],
+      },
+      {
+        id: 'runbook',
+        title: 'Runbook',
+        summary:
+          'A short, step-by-step guide for what to do when a specific thing goes wrong (or needs doing) in production. "If alert X fires, do Y. If that fails, page Z."',
+        details:
+          'A runbook is operational documentation. Not "here is how the system works" but "here is what to do when this specific thing happens". The audience is whoever is on-call at 3am, possibly someone who has never seen this system before.\n\nGood runbooks have one task per page: a clear trigger ("if the error rate dashboard shows > 1% for 5 minutes"), the exact steps to investigate (commands, dashboards, log queries), the most common root causes, and what to do for each. Bad runbooks are a wall of context.\n\nAI is great at drafting first-pass runbooks from your code and incident history. The trick is keeping them current. A runbook that lies is worse than no runbook. Treat them like tests: when the code changes, the runbook changes, in the same PR.',
+        comparison:
+          'Design doc = how we built it. Runbook = what to do when it breaks. Read the runbook at 3am, not the design doc.',
+        vibeTip:
+          'After every incident, ask your AI to draft or update the runbook from the incident notes. Future-you sleeping at 3am thanks present-you.',
+        talkToAi: {
+          starter:
+            'Draft a runbook for [scenario]. Before writing, ask me: 1) the trigger (alert, customer report, manual check) and exactly what it looks like, 2) the systems involved and where their dashboards / logs live, 3) the most common root causes I have seen and how each was fixed. Then write the runbook with sections: Trigger, Quick check (5 commands), Common causes (each with a fix), Escalation (who to page when), Related links. Keep it on one page if you can.',
+          example:
+            'Draft a runbook for "checkout error rate above 1% for 5 minutes". Trigger comes from Datadog. Most common causes: Stripe webhook delays, our DB at capacity, a bug we just shipped. Logs are in Datadog (service:checkout), DB is in Supabase. Escalate to me first, then platform on-call.',
+        },
+        mnemonic:
+          'A runbook is a 3am script. One task, exact commands, current or do not bother.',
+        relatedGlossaryIds: ['toast', 'banner'],
+      },
+      {
+        id: 'contract-testing',
+        title: 'Contract testing',
+        summary:
+          'Tests that verify two services agree on the API between them. The frontend\'s "shape it expects" matches the backend\'s "shape it returns", checked automatically on every change.',
+        details:
+          'When two services talk to each other (frontend ↔ API, service A ↔ service B), they share a contract: this endpoint accepts these fields and returns this shape. Contract tests pin that contract down so it cannot drift silently.\n\nThe simplest version: the API publishes an OpenAPI spec, and every service that calls it generates a typed client from that spec. The compiler tells you when the contract changes. This is the "free" version, just from using OpenAPI plus codegen.\n\nThe heavy version: tools like Pact let consumers (frontend) write a "pact" describing what they call and expect, and providers (backend) verify their service matches every consumer\'s pact in CI. Useful at company scale where many teams own different services.\n\nFor a vibe coder, contract tests are usually overkill. OpenAPI plus generated types is enough until you have multiple services owned by different people. Then contract tests pay for themselves the first time someone changes a response shape and breaks a service they did not know existed.',
+        comparison:
+          'Unit test = one function. Integration test = several pieces. Contract test = the agreement between two services.',
+        vibeTip:
+          'Tell your AI "generate a typed client from the OpenAPI spec on every build". You get contract checking for free, no Pact required.',
+        talkToAi: {
+          starter:
+            'Help me set up contract testing for [service or services]. Before suggesting an approach, ask me: 1) the services involved and who owns each, 2) whether we already have an OpenAPI or other spec, 3) the realistic blast radius of a contract break (one team, all teams, paying customers). Then recommend the lightest tool that fits (often just OpenAPI + generated types, sometimes Pact, sometimes schema-first GraphQL), wire up one example, and add the CI step that fails on contract drift.',
+          example:
+            'Set up contract checking between our Next.js frontend and our Go API. We already have an OpenAPI spec the API serves at /openapi.json. Generate a typed TypeScript client on every build using openapi-typescript, fail the build if the spec changes without the client regenerating, document the workflow in CONTRIBUTING.md.',
+        },
+        mnemonic:
+          'Two services + one shared contract = contract test. OpenAPI + codegen handles 80% of the cases.',
+        relatedGlossaryIds: ['table'],
+      },
+      {
+        id: 'user-journey',
+        title: 'User journey map',
+        summary:
+          'A timeline of the steps a user takes to accomplish a goal across your product, plus what they think and feel at each step. Reveals where to invest and where the cracks are.',
+        details:
+          'A user journey map is a horizontal strip with the stages of a goal across the top (Discover → Sign up → First use → Habit → Advocate, for example) and rows underneath: actions the user takes, what they are thinking, what they are feeling, the touchpoints (your app, support, marketing site). The cells are filled with what we know from research.\n\nThe payoff is seeing the whole arc at once. Most products are great at one stage and quietly bad at another. The map makes that visible: "we crush onboarding but the second week is a desert" is the kind of insight that changes a roadmap.\n\nJourney maps are not personas (those describe the person), not flow diagrams (those describe the steps in one feature), and not a wireframe (those describe a screen). They are about emotional and contextual progression across time. Light versions live on a Notion page; heavy versions live in Miro and become a team artifact.',
+        comparison:
+          'Persona = who. JTBD = what they want. Journey map = the timeline they go through. Three different lenses on the same user.',
+        vibeTip:
+          'Hand your AI a journey map before brainstorming features. It stops suggesting onboarding ideas when the actual problem is the second week.',
+        talkToAi: {
+          starter:
+            'Help me build a user journey map for [primary persona accomplishing a goal]. Before drafting, ask me: 1) the persona and the goal, 2) the stages I think exist today (or "you suggest"), 3) the data sources we have (interviews, support tickets, analytics, gut). Then propose 4-6 stages, fill in actions, thoughts, feelings, and touchpoints for each (label which cells are research-backed vs assumptions), and call out the 1-2 stages where investment would have the biggest impact.',
+          example:
+            'Map the journey for a freelance designer using our invoicing tool to get paid for one project. Stages: send proposal → start work → log time → send invoice → get paid. We have 5 interviews and a year of support tickets. Highlight the worst stage and why.',
+        },
+        mnemonic:
+          'A journey map is the whole arc on one page. Find the stage that is quietly bad.',
+        relatedGlossaryIds: ['stepper', 'timeline'],
+      },
     ],
   },
   {
@@ -534,6 +830,111 @@ export const BUILD_LITERACY_CLUSTERS = [
           'Caching is easy. Knowing when to throw the cache away is the job.',
         relatedGlossaryIds: ['skeleton'],
       },
+      {
+        id: 'api-styles',
+        title: 'API styles: REST vs GraphQL vs RPC',
+        summary:
+          'Three flavors of "how clients talk to a server". REST = nouns and HTTP verbs. GraphQL = one endpoint, you ask for the shape you want. RPC = call a remote function (tRPC, gRPC).',
+        details:
+          'REST is the default for most web APIs. Each resource has a URL (/products, /products/42), HTTP verbs map to actions (GET reads, POST creates, PATCH updates, DELETE removes). It is simple to understand, easy to cache, and every tool speaks it. The pain shows up when one screen needs data from 4 endpoints, or when you keep changing the response shape.\n\nGraphQL flips it. One endpoint, the client sends a query that says "give me this user, plus their last 5 orders, plus the product name on each, but only the fields I name". The server resolves it. Great for complex client needs (mobile apps with limited bandwidth, dashboards with many panels). Trade-off: harder to cache, easier to write expensive queries by accident, schema becomes a coordination point.\n\nRPC (tRPC, gRPC) is "call a function on the server like it is local". tRPC is the typescript-everywhere version: define functions on the server, call them with full type safety on the client, no schemas, no codegen if you control both sides. gRPC is the binary, polyglot, microservices-y version. RPC wins when one team owns both ends.\n\nFor a vibe-coded fullstack app, the right answer is usually tRPC if you are all-TypeScript, REST otherwise.',
+        comparison:
+          'REST = resources + verbs. GraphQL = one endpoint, client picks the shape. RPC = remote function call. Three answers to the same question.',
+        vibeTip:
+          'Tell your AI which style your project uses upfront. "We use tRPC" stops it from suggesting REST routes that duplicate work.',
+        talkToAi: {
+          starter:
+            'Help me pick an API style for [project]. Before suggesting one, ask me: 1) the languages on each side (TS+TS, TS+Go, mobile native, etc.), 2) the client patterns (one big query per screen vs many small ones, mobile or desktop), 3) the team and ownership (one team both sides vs many teams, internal vs public API). Then recommend REST, GraphQL, or RPC with reasoning, list the trade-off you are most worried about for my context, and scaffold one example endpoint.',
+          example:
+            'Pick an API style for our solo-developer Next.js + Supabase app. Frontend and backend both TypeScript. One person owns both. Mostly dashboard-style screens, sometimes complex queries. Recommend a stack and scaffold one example endpoint.',
+        },
+        mnemonic:
+          'REST = nouns. GraphQL = "give me this exact shape". RPC = "call this function".',
+        relatedGlossaryIds: ['table'],
+      },
+      {
+        id: 'webhooks',
+        title: 'Webhooks',
+        summary:
+          'A reverse API: instead of you polling another service ("anything new?"), it POSTs to a URL on your server when something happens. Stripe, GitHub, and Slack run on these.',
+        details:
+          'A webhook is the other service\'s way of telling you something happened. You give Stripe a URL (https://yourapp.com/webhooks/stripe). When a charge succeeds, Stripe POSTs to that URL with a JSON payload. Your server processes it. No polling, near-instant updates.\n\nThree gotchas trip everyone. First, webhooks come from the public internet, so they need to work locally during development. Tools like ngrok, Cloudflare Tunnel, or Stripe CLI\'s "stripe listen" forward them to your dev server. Second, webhooks must be idempotent (see the next topic): the same event might arrive twice if the network blinked. Third, webhooks must be verified (every provider signs the payload with a secret), or anyone on the internet can post fake events to your endpoint and create chaos.\n\nThe right shape for a webhook handler: verify signature → respond 200 immediately → enqueue the actual work in a background job. Doing the work synchronously means a slow handler causes the provider to retry, and now you have duplicates.',
+        comparison:
+          'You poll a regular API. A webhook posts to you. Webhooks need verification, idempotency, and ideally a queue.',
+        vibeTip:
+          'When asking your AI for a webhook, name the provider ("Stripe webhook for charge.succeeded"). It pulls in the right verification helper (stripe.webhooks.constructEvent) instead of writing custom HMAC.',
+        talkToAi: {
+          starter:
+            'Set up a [provider] webhook for [event]. Before writing code, ask me: 1) the events I want to handle, 2) where the secret is stored (env var name), 3) what the handler should do (database write, send email, enqueue a job). Then write the route handler that verifies the signature with the official SDK, returns 200 fast, enqueues the work (or does it inline if trivial), and is idempotent (uses the event id to dedupe). Show me how to test it locally with the provider\'s CLI tunnel.',
+          example:
+            'Set up a Stripe webhook for checkout.session.completed in our Next.js app. Secret is in STRIPE_WEBHOOK_SECRET. On success, mark the order paid in Supabase using the session metadata.orderId, then send a confirmation email via Resend. Idempotent on event.id. Show me the stripe listen command for local dev.',
+        },
+        mnemonic:
+          'They post to you. Verify, respond fast, dedupe. Otherwise the same event runs five times.',
+        relatedGlossaryIds: ['toast', 'banner'],
+      },
+      {
+        id: 'queues',
+        title: 'Background jobs and queues',
+        summary:
+          'Slow or scheduled work (sending emails, processing uploads, nightly reports) does not happen during the user\'s request. It goes on a queue, and a worker handles it later.',
+        details:
+          'If your request handler takes 8 seconds because it sends an email, the user waits 8 seconds. Bad. The fix: take the request, write a "send email" job to a queue, return 200 to the user immediately. A worker process pulls from the queue and does the actual sending. The user got their response in 50ms; the email arrives a moment later.\n\nQueues are the right home for: emails, file processing, third-party API calls, exports, anything that runs on a schedule (nightly billing, weekly digests), and any work that might fail and want to retry.\n\nThe job system you pick depends on your platform. Inngest, Trigger.dev, and Hatchet are modern hosted options that work great on serverless. BullMQ on Redis is the self-hosted standard for Node. Sidekiq is the equivalent for Ruby. Cloudflare Queues, AWS SQS, and Google Cloud Tasks are platform-native options.\n\nThe one rule that matters: jobs must be idempotent. The queue might run the same job twice. If "send email" runs twice, the user gets two emails. If "charge card" runs twice, the user files a complaint.',
+        comparison:
+          'Sync work happens during the request. Async / background work happens after, on a queue. Slow things go on the queue.',
+        vibeTip:
+          'When asking your AI to add "send email after signup", say "add it as a background job, not inline in the request". You stop shipping slow signup flows.',
+        talkToAi: {
+          starter:
+            'Add a background job for [task] in [project]. Before writing code, ask me: 1) the trigger (after a request, on a schedule, on a webhook), 2) the platform we are on (Vercel, Render, Fly, self-hosted), 3) whether we already have a job system. Then recommend the lightest fit (Inngest, Trigger.dev, BullMQ, native cloud queue), wire up one job end to end, make the handler idempotent (uses an external id to dedupe), and add a way to inspect failed jobs.',
+          example:
+            'Add a background job to send the welcome email after signup. We are on Vercel + Supabase. Use Inngest. Idempotent by user id. If the email provider fails, retry with backoff up to 3 times, then alert me via a Discord webhook.',
+        },
+        mnemonic:
+          'Slow work goes on a queue. The user gets their response. The worker does the slow part. Always idempotent.',
+        relatedGlossaryIds: ['skeleton', 'toast'],
+      },
+      {
+        id: 'transactions',
+        title: 'Database transactions and ACID',
+        summary:
+          'A transaction groups multiple database writes into one all-or-nothing operation. Either every write happens or none of them do. The classic example: transferring money.',
+        details:
+          'Money transfers explain transactions perfectly. Subtract $100 from account A. Add $100 to account B. If your server crashes between those two writes, money disappeared. Wrap both writes in a transaction and the database guarantees: either both happen, or neither does, even if the power goes out.\n\nACID is the four guarantees a real transaction makes. Atomicity: all-or-nothing (the money example). Consistency: the database stays valid (no negative balances if a constraint says so). Isolation: concurrent transactions do not see each other\'s half-done state. Durability: once a transaction commits, it survives crashes.\n\nMost ORMs make transactions easy: prisma.$transaction([...ops]) in Prisma, db.transaction() in Drizzle, BEGIN/COMMIT in raw SQL. The trap is doing non-database work inside a transaction (sending an email mid-transaction, calling an external API). If that fails, the whole transaction rolls back, and you sent the email anyway.',
+        comparison:
+          'No transaction = each write commits independently. Transaction = all writes commit together or none do. ACID = the four guarantees.',
+        vibeTip:
+          'Tell your AI to wrap multi-step writes in a transaction explicitly: "use a Prisma transaction so both inserts succeed or both roll back". It is the kind of thing AI forgets.',
+        talkToAi: {
+          starter:
+            'Add a transaction around [operation] in [project]. Before changing code, ask me: 1) the writes that must happen together, 2) any external side effects (emails, webhooks, external API calls) that are currently inside the same code path, 3) the ORM or driver in use. Then wrap the writes in a single transaction, move side effects OUTSIDE the transaction (typically into a job triggered after commit), and add a test that simulates a failure halfway through to confirm the rollback works.',
+          example:
+            'Wrap our "create order" code in a Prisma transaction so the orders insert and the order_items inserts commit together. Move the "send confirmation email" call out of the transaction and into an Inngest job that fires after commit. Add a test that throws between the two inserts and verifies nothing was written.',
+        },
+        mnemonic:
+          'All or nothing. Side effects go outside the transaction or you send emails for orders that never saved.',
+        relatedGlossaryIds: ['table'],
+      },
+      {
+        id: 'idempotency',
+        title: 'Idempotency',
+        summary:
+          'A safe-to-repeat operation. Calling it once or calling it five times produces the same result. The shield against retries, double clicks, and webhook duplicates.',
+        details:
+          'Idempotent comes from "same state". An operation is idempotent if running it twice has the same effect as running it once. GET /products is naturally idempotent (it does not change anything). DELETE /products/42 is idempotent (deleting an already-deleted product is fine). POST /charge is naturally NOT idempotent (calling it twice charges twice).\n\nMaking write operations idempotent is the magic that makes distributed systems work. Stripe, Shopify, AWS, every serious API supports an idempotency key: you generate a UUID, send it with your request, and the server promises that within some window (usually 24 hours), the same key returns the same result without re-doing the work.\n\nFor your own code, idempotency comes from "is this thing already done?" checks: before sending the email, look up "did we send this welcome email to this user yet?" and skip if yes. Before processing the webhook, look up the event id and skip if seen. This is mundane and tedious, and it is also why your app does not double-charge users when the network blinks.',
+        comparison:
+          'Idempotent = safe to repeat. Non-idempotent = each call has additional effect. Always make webhook handlers and retry-prone calls idempotent.',
+        vibeTip:
+          'Tell your AI "this handler is called from a webhook, so it must be idempotent on event.id". You stop having to reason about duplicate emails after the fact.',
+        talkToAi: {
+          starter:
+            'Audit [endpoint or handler] for idempotency. Before changing code, ask me: 1) how this handler is invoked (user request, webhook, queue job, retry), 2) the side effects it produces (DB write, email, external API call, charge), 3) any unique id we can use to dedupe (event id, request id, business id). Then identify each non-idempotent step, propose the dedupe mechanism for each (a unique constraint, a "processed_events" table, an idempotency key sent to the third-party API), and write the migration plus the code.',
+          example:
+            'Audit our Stripe webhook handler at /api/webhooks/stripe for idempotency. Make it safe to receive the same event.id twice. Use a processed_stripe_events table with event.id as the unique key. If we have already seen the event, return 200 immediately without processing.',
+        },
+        mnemonic:
+          'Idempotent = same result whether you call it once or five times. Webhooks demand it, retries assume it.',
+        relatedGlossaryIds: ['toast'],
+      },
     ],
   },
   {
@@ -638,6 +1039,111 @@ export const BUILD_LITERACY_CLUSTERS = [
         mnemonic:
           'Roles in the database. Checks at the API. UI hides what the API would refuse.',
         relatedGlossaryIds: ['table', 'modal', 'badge'],
+      },
+      {
+        id: '2fa',
+        title: '2FA / MFA (two- or multi-factor auth)',
+        summary:
+          'A second proof you are you, beyond just a password. The factors come from "something you know" (password), "something you have" (phone, security key), "something you are" (fingerprint).',
+        details:
+          'Passwords leak. Always. Two-factor authentication adds a second factor so a leaked password alone is not enough. The cheap and common version is TOTP (time-based one-time passwords): an authenticator app like 1Password, Authy, or Google Authenticator generates a 6-digit code that changes every 30 seconds. The user types it after their password. Behind the scenes, the server and the app share a secret seed and compute the same code at the same time.\n\nSMS-based 2FA exists but is the weakest factor (SIM-swap attacks, intercepted texts). Use TOTP, push notifications via an authenticator app, or hardware keys (YubiKey, security keys via WebAuthn) for anything sensitive.\n\nFor a vibe-coded app, a managed auth provider (Auth.js, Clerk, Supabase Auth, WorkOS) hands you 2FA as a toggle. Rolling your own TOTP is doable (otplib in Node), but the recovery flow (lost phone, backup codes, admin override) is where most projects get the design wrong.',
+        comparison:
+          '1FA = password only. 2FA = password + one more thing. MFA = two or more factors, generally interchangeable with 2FA in casual use.',
+        vibeTip:
+          'Use a provider that ships 2FA out of the box. Tell your AI "use the Auth.js TOTP plugin" instead of asking it to roll TOTP by hand.',
+        talkToAi: {
+          starter:
+            'Add 2FA to [app]. Before writing code, ask me: 1) the auth library we use (Auth.js, Clerk, Supabase, custom), 2) the factor I want (TOTP via authenticator app is the safe default; ignore SMS unless required), 3) the recovery story (backup codes, admin reset). Then add enrollment, verification, and recovery flows using the library\'s built-in support, write the recovery codes to a UI the user can save once, and call out anywhere the recovery design has a known footgun (admin reset bypassing 2FA, etc.).',
+          example:
+            'Add TOTP 2FA to our Next.js app using Auth.js. Generate 8 single-use backup codes at enrollment, show them once, and force the user to confirm they saved them. Admin reset requires support ticket review. Update the sign-in flow to prompt for the 6-digit code after password.',
+        },
+        mnemonic:
+          'Password is something you know. 2FA adds something you have. SMS is the weakest factor.',
+        relatedGlossaryIds: ['inputgroup', 'modal'],
+      },
+      {
+        id: 'password-hashing',
+        title: 'Password hashing (bcrypt, argon2)',
+        summary:
+          'Passwords are NEVER stored as plain text. They get hashed (one-way scrambled) so even if the database leaks, the original passwords are not directly readable. Use bcrypt or argon2.',
+        details:
+          'Hashing is one-way: you can compute a hash from a password, but you cannot reverse the hash to get the password. To verify a login, you hash what the user typed and compare it to the stored hash.\n\nNot every hash is good for passwords. SHA-256 is fast, which is bad for password hashing because attackers can compute billions of guesses per second. Password-safe hashes (bcrypt, scrypt, argon2) are deliberately slow and memory-hungry, which makes brute-force expensive. Argon2id is the current state of the art; bcrypt is still fine for most apps and is widely supported.\n\nThe other essential is the "salt": a random per-user value mixed into the hash so two users with the same password get different hashes. Modern libraries do this automatically; if you find yourself writing salt logic by hand, stop and use the library.\n\nRules: never store plain text. Never use SHA-256 or MD5 for passwords. Use bcrypt or argon2 from a maintained library. Re-hash on login if the cost factor goes up. If you use a managed auth provider (Auth.js, Clerk, Supabase), this is already handled.',
+        comparison:
+          'Encryption = reversible with a key. Hashing = one-way. Password hashing = deliberately slow hashing with a salt.',
+        vibeTip:
+          'If your AI suggests SHA-256 for passwords, push back hard. The right answer is bcrypt or argon2, every time.',
+        talkToAi: {
+          starter:
+            'Audit password handling in [project]. Before changing code, ask me: 1) where passwords are stored today (own DB or managed provider), 2) the language and the library currently used to hash, 3) whether we have any legacy users with weaker hashes (md5/sha) that need migration. Then verify we are using bcrypt or argon2 with sane cost, salt is per-user, plain-text passwords never appear in logs or error messages, and password resets use single-use time-limited tokens. Output a fix list ordered by risk and a migration plan if any legacy hashes exist.',
+          example:
+            'Audit our Express + Prisma project for password handling. We use bcryptjs at cost factor 10. Confirm there are no plaintext passwords in logs, the cost factor is high enough for 2026 (suggest 12), and the password reset uses single-use tokens that expire in 1 hour.',
+        },
+        mnemonic:
+          'Never plain. Never SHA-256. Bcrypt or argon2 with a per-user salt, from a real library.',
+        relatedGlossaryIds: ['inputgroup'],
+      },
+      {
+        id: 'csrf-cors',
+        title: 'CSRF and CORS',
+        summary:
+          'Two browser security rules that confuse everyone. CORS controls which origins can call your API from a browser. CSRF prevents another site from making your logged-in user submit something they did not mean to.',
+        details:
+          'CORS (Cross-Origin Resource Sharing) is the browser asking your server "is it ok if a script on https://other-site.com calls you?". The server answers with Access-Control-Allow-Origin headers. If the headers say no, the browser blocks the response. CORS is about which sites can read responses from your API.\n\nCSRF (Cross-Site Request Forgery) is the other direction: a malicious page tricks the user\'s browser into submitting a form to your site, using the user\'s logged-in cookies. Defenses: SameSite=lax cookies (the modern default, blocks cross-site cookie sending for top-level navigations), and CSRF tokens (a hidden value the server checks on form submits). If you use SameSite=lax or strict on session cookies and check the Origin header on state-changing requests, you have covered most cases.\n\nThe shortcut for vibe coders: use a modern auth library, default cookies to SameSite=lax, lock CORS down to your own origins (not "*"), and use POST/PATCH/DELETE for any write that matters. The library defaults usually do the right thing; the bugs come from people loosening the defaults to "make CORS work" without understanding what they turned off.',
+        comparison:
+          'CORS = "can this other site read my API?". CSRF = "can another site trick my user into POSTing here?". Different problems, different fixes.',
+        vibeTip:
+          'Tell your AI "lock CORS to specific origins, never wildcard" and "use SameSite=lax cookies". Half the production CSRF/CORS bugs come from someone setting Access-Control-Allow-Origin: * to silence a console warning.',
+        talkToAi: {
+          starter:
+            'Audit CORS and CSRF in [project]. Before changing code, ask me: 1) the origins that should legitimately call our API (own frontend, partner integrations, none), 2) the auth model (cookie session, JWT, OAuth bearer), 3) whether we currently have CORS errors users complain about. Then check Access-Control-Allow-Origin (must be specific, not *), credentials handling, cookie SameSite settings, and CSRF protection on state-changing requests. Output a fix list ordered by risk.',
+          example:
+            'Audit our Next.js API routes for CORS and CSRF. The frontend is at app.example.com, the API at api.example.com. We use cookie sessions. Confirm CORS allows app.example.com only, cookies are SameSite=lax, and our POST/PATCH/DELETE handlers check the Origin header. Show me any route that is currently too permissive.',
+        },
+        mnemonic:
+          'CORS = who can call. CSRF = who can trick your user. SameSite=lax + specific CORS origins solves most of it.',
+        relatedGlossaryIds: ['toast', 'modal'],
+      },
+      {
+        id: 'magic-links-passkeys',
+        title: 'Magic links and passkeys',
+        summary:
+          'Two ways to skip the password entirely. Magic link: user types email, server sends a one-click sign-in URL. Passkey: phone or laptop signs a challenge with a private key tied to your device.',
+        details:
+          'Passwords are a 60-year-old idea and they are losing. Two replacements have momentum.\n\nMagic links work like this: user types their email, server emails a one-time URL with a signed token, clicking it signs them in. Pros: no password to forget or leak, simple to build. Cons: depends on email being fast (often it is not), users who use one device for email and another for the app find it annoying, phishing risk if the email is intercepted.\n\nPasskeys are the modern WebAuthn-based replacement for passwords. The browser asks the user to confirm a sign-in with their device (Face ID, Touch ID, Windows Hello, hardware key). The device signs a challenge with a private key tied to your origin. The private key never leaves the device. Pros: phishing-proof, no shared secret to leak, syncs across Apple/Google/Microsoft accounts now. Cons: less familiar to users, recovery story still rough.\n\nBoth are well-supported by modern auth libraries (Auth.js, Clerk, Supabase, WorkOS). For a new app in 2026, magic links are the easy default, and adding passkeys as an option is the modern move.',
+        comparison:
+          'Password = something you know (and probably reused). Magic link = email is the second factor. Passkey = your device IS the credential.',
+        vibeTip:
+          'Tell your AI "magic link as the default, passkey as the upgrade". You skip the password reset flow entirely.',
+        talkToAi: {
+          starter:
+            'Set up passwordless auth for [app]. Before writing code, ask me: 1) the auth library, 2) my preference (magic link only, passkey only, both with magic link as fallback), 3) the email service available (Resend, Postmark, SES). Then implement the chosen flow, set token TTLs (15 minutes for magic links is the sweet spot), make tokens single-use, and write the user-facing copy ("Check your email for a sign-in link"). Add a clear error path for expired or already-used links.',
+          example:
+            'Add magic link sign-in to our Next.js app using Auth.js with Resend as the email provider. 15-minute token expiry, single-use, link goes to /signin/verify with the token in the URL. Show "Check your email" UI after submit and a friendly error page for expired links.',
+        },
+        mnemonic:
+          'Magic link = email is the second factor. Passkey = the device is the credential. Either beats reused passwords.',
+        relatedGlossaryIds: ['inputgroup', 'modal'],
+      },
+      {
+        id: 'audit-log',
+        title: 'Audit log',
+        summary:
+          'A timestamped record of every important action in your system: who did what, to which resource, when, and from where. The thing you wish you had after the security incident.',
+        details:
+          'An audit log is the answer to "what happened?". Every meaningful action (sign-in, role change, payment, deletion, export, settings update) writes a row: who (user id), what (action name), target (resource id and type), when (timestamp), where (IP, user agent), and any relevant context (old value, new value).\n\nThe two reasons audit logs matter: security incidents (figuring out what an attacker touched) and customer trust (enterprise customers will ask for an audit log feature; ignore them at your peril).\n\nThe rules that make audit logs actually useful: append-only (you cannot delete or edit rows), separate from your main data store (or at least RLS-locked so the same user cannot tamper with their own log), structured (one row per action, JSON columns for context), and exportable (your enterprise customers will want CSVs).\n\nFor a vibe-coded app, start with a simple audit_logs table and a writeAudit() helper used at every meaningful action. Tools like Vercel Audit Logs, Sentry, or specialized services (Liveblocks Audit, Workos Audit Logs) handle the heavy lift if you outgrow the simple table.',
+        comparison:
+          'Application logs = "the system did X". Audit logs = "user U did X to resource R". One for engineers, one for security and compliance.',
+        vibeTip:
+          'Add a writeAudit() helper early. Tell your AI "every state-changing action calls writeAudit with actor, action, target, and context". Future-you investigating an incident will be grateful.',
+        talkToAi: {
+          starter:
+            'Add audit logging to [app or feature]. Before writing code, ask me: 1) the actions that should be audited (auth events, role changes, deletions, exports, paid-tier changes), 2) where the log should live (own table, separate database, third-party service), 3) who can read the log (admin only, the user themselves for their own actions, both). Then create the audit_logs schema with append-only enforcement, write a writeAudit(actor, action, target, context) helper, instrument the listed actions, and add an admin UI page to filter and search the log.',
+          example:
+            'Add audit logging to our Next.js + Supabase app. Audit: sign-in success/failure, role changes, user deletions, paid plan changes, settings exports. Use a Supabase audit_logs table with RLS so admins read all and users read only their own actions. writeAudit() helper called from each handler. Admin /audit page with filter by user, action, date.',
+        },
+        mnemonic:
+          'Who did what to which thing, when, from where. Append-only. The thing you wish you had after the incident.',
+        relatedGlossaryIds: ['table', 'timeline'],
       },
     ],
   },

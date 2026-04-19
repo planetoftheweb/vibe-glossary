@@ -50,6 +50,40 @@ export const BUILD_PATHS = [
     ],
   },
   {
+    id: 'design-language',
+    name: 'Design language',
+    tagline: 'Tokens, scales, states, variants: the words designers use',
+    description:
+      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints. The vocabulary that lets you ask an AI for "the secondary button at md size" instead of "make it look better".',
+    quiz: [
+      {
+        q: 'A named value like "color.primary.500" or "space.4" that stands in for a hard-coded value is a...',
+        answerId: 'design-tokens',
+        optionIds: ['design-tokens', 'design-system', 'color-palette', 'spacing-scale'],
+      },
+      {
+        q: 'Picking 5-8 fixed font sizes and never inventing a one-off is using a...',
+        answerId: 'typography-scale',
+        optionIds: ['typography-scale', 'spacing-scale', 'design-tokens', 'border-radius'],
+      },
+      {
+        q: 'The state most often skipped, the one that breaks accessibility, is the...',
+        answerId: 'component-states',
+        optionIds: ['component-states', 'variants-sizes', 'density', 'motion'],
+      },
+      {
+        q: 'A single Button component with `variant="ghost"` and `size="sm"` props is using...',
+        answerId: 'variants-sizes',
+        optionIds: ['variants-sizes', 'design-system', 'atomic-design', 'density'],
+      },
+      {
+        q: 'Writing styles for the smallest screen first and adding `md:` and `lg:` rules on top is...',
+        answerId: 'responsive-breakpoints',
+        optionIds: ['responsive-breakpoints', 'density', 'atomic-design', 'fidelity'],
+      },
+    ],
+  },
+  {
     id: 'product',
     name: 'Product and planning',
     tagline: 'How teams decide what to build before anyone opens an editor',

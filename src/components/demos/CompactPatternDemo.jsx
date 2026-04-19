@@ -379,6 +379,170 @@ function ColorPickerPatternPreview({ o }) {
   );
 }
 
+const COMBO_OPTIONS = ['React', 'Vue', 'Svelte', 'Solid', 'Angular', 'Qwik'];
+
+function highlightComboboxLabel(label, query, enabled) {
+  if (!enabled || !query) return label;
+  const q = query.trim();
+  if (!q) return label;
+  const i = label.toLowerCase().indexOf(q.toLowerCase());
+  if (i < 0) return label;
+  return (
+    <>
+      {label.slice(0, i)}
+      <mark className="rounded-sm bg-amber-200 px-0.5 dark:bg-amber-500/35">{label.slice(i, i + q.length)}</mark>
+      {label.slice(i + q.length)}
+    </>
+  );
+}
+
+function ComboboxPatternPreview({ o }) {
+  const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+
+  const q = query.trim();
+
+  useEffect(() => {
+    if (!o('opt1')) {
+      setLoading(false);
+      setLoadError(false);
+      return;
+    }
+    if (!q) {
+      setLoading(false);
+      setLoadError(false);
+      return;
+    }
+    if (q.toLowerCase() === 'error') {
+      setLoading(false);
+      setLoadError(true);
+      return;
+    }
+    setLoadError(false);
+    setLoading(true);
+    const t = window.setTimeout(() => setLoading(false), 420);
+    return () => window.clearTimeout(t);
+  }, [q, o]);
+
+  const filtered = useMemo(() => {
+    if (!q) return COMBO_OPTIONS;
+    return COMBO_OPTIONS.filter((x) => x.toLowerCase().includes(q.toLowerCase()));
+  }, [q]);
+
+  const showCreatable = o('opt2') && q.length > 0 && filtered.length === 0 && !loadError;
+
+  const pick = (label) => {
+    setSelected(label);
+    setQuery(label);
+  };
+
+  const pickCreatable = () => {
+    const label = `“${q}” (new)`;
+    setSelected(label);
+  };
+
+  const showListBody = !(o('opt1') && loading && q) && !loadError;
+
+  return (
+    <div className="mx-auto w-full max-w-md">
+      <div className="mb-4 space-y-2">
+        <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span> = an input plus a list you
+          filter by typing. You still choose from known options (unlike free search).
+        </p>
+        {o('opt1') && (
+          <p className="text-xs text-zinc-500 dark:text-zinc-500">
+            Async demo: there’s a short “Searching…” delay while you type. Type{' '}
+            <kbd className="rounded border border-zinc-300 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] dark:border-zinc-600 dark:bg-zinc-800">
+              error
+            </kbd>{' '}
+            to see a fake error state.
+          </p>
+        )}
+      </div>
+
+      <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
+        <div className="border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
+          <label htmlFor="vg-combobox-input" className="mb-1 block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Framework
+          </label>
+          <input
+            id="vg-combobox-input"
+            type="text"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="true"
+            autoComplete="off"
+            placeholder="Type to filter…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="min-h-[48px] w-full bg-transparent text-base text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+          />
+        </div>
+
+        <div role="listbox" aria-label="Matching frameworks" className="max-h-56 overflow-y-auto">
+          {loadError && o('opt1') && (
+            <div className="px-4 py-5 text-sm text-rose-600 dark:text-rose-400" role="alert">
+              Couldn’t load suggestions. (Demo error — try another query.)
+            </div>
+          )}
+          {o('opt1') && loading && q && !loadError && (
+            <div className="flex items-center gap-3 px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400">
+              <Loader2 className="h-5 w-5 shrink-0 animate-spin text-indigo-500" aria-hidden />
+              Searching…
+            </div>
+          )}
+          {showListBody && filtered.length === 0 && !showCreatable && (
+            <div className="px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400">No framework matches that text.</div>
+          )}
+          {showListBody &&
+            filtered.map((label) => {
+              const active = selected === label;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => pick(label)}
+                  className={`flex min-h-[48px] w-full items-center border-b border-zinc-100 px-4 text-left text-base transition last:border-b-0 dark:border-zinc-800 sm:text-sm ${
+                    active
+                      ? 'bg-indigo-50 font-semibold text-indigo-900 dark:bg-indigo-950/60 dark:text-indigo-100'
+                      : 'text-zinc-800 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800/80'
+                  }`}
+                >
+                  {highlightComboboxLabel(label, q, o('opt3'))}
+                </button>
+              );
+            })}
+          {showListBody && showCreatable && (
+            <button
+              type="button"
+              onClick={pickCreatable}
+              className="flex min-h-[48px] w-full items-center px-4 text-left text-base font-semibold text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40 sm:text-sm"
+            >
+              + Create “{q}”
+            </button>
+          )}
+        </div>
+
+        {selected ? (
+          <div className="border-t border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-300">
+            <span className="text-zinc-500 dark:text-zinc-500">Selected:</span>{' '}
+            <span className="font-semibold text-zinc-900 dark:text-white">{selected}</span>
+          </div>
+        ) : (
+          <div className="border-t border-zinc-200 px-4 py-2.5 text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
+            Pick a row to set the value.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -562,37 +726,7 @@ const RENDER = {
   },
 
   combobox(o) {
-    return (
-      <div className={`${cx.card} p-0 overflow-hidden`}>
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-zinc-200 dark:border-zinc-700">
-          <input
-            className="flex-1 bg-transparent text-sm outline-none"
-            placeholder="Search framework…"
-            readOnly
-            value={o('opt2') ? 'Rea' : 'React'}
-          />
-          {o('opt1') && <span className="text-[10px] text-zinc-400">Loading…</span>}
-        </div>
-        <div className="py-1 max-h-28 overflow-hidden">
-          {['React', 'Vue', 'Svelte'].map((x) => (
-            <div
-              key={x}
-              className={`px-3 py-1.5 text-xs cursor-default ${x === 'React' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-200' : 'text-zinc-600 dark:text-zinc-400'}`}
-            >
-              {o('opt3') && x === 'React' ? (
-                <>
-                  <mark className="bg-amber-200/80 dark:bg-amber-500/30 px-0.5">Rea</mark>
-                  ct
-                </>
-              ) : (
-                x
-              )}
-            </div>
-          ))}
-          {o('opt2') && <div className="px-3 py-1.5 text-xs text-indigo-600 dark:text-indigo-400">+ Create &quot;Rea&quot;</div>}
-        </div>
-      </div>
-    );
+    return <ComboboxPatternPreview o={o} />;
   },
 
   inputgroup(o) {

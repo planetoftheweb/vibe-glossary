@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, ToggleLeft, Megaphone,
-  Sparkles, Link2, ChevronDown,
+  Sparkles, Link2, ChevronDown, Check, X,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
 
@@ -43,6 +43,161 @@ const cx = {
   pill: 'rounded-full px-2 py-0.5 text-[10px] font-semibold border border-zinc-200 dark:border-zinc-600',
   bar: 'rounded bg-zinc-200 dark:bg-zinc-700',
 };
+
+const MULTI_IDS = ['design', 'eng', 'qa', 'docs', 'pm'];
+const MULTI_LABELS = {
+  design: 'Design',
+  eng: 'Engineering',
+  qa: 'QA',
+  docs: 'Docs',
+  pm: 'Product',
+};
+
+/** Interactive multi-select so toggles and chips actually work (RENDER map is otherwise static). */
+function MultiSelectPatternPreview({ o }) {
+  const maxPick = o('opt1') ? 3 : Infinity;
+  const [selected, setSelected] = useState(() => new Set(['design', 'eng']));
+
+  const toggle = (id) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+        return next;
+      }
+      if (next.size >= maxPick) return prev;
+      next.add(id);
+      return next;
+    });
+  };
+
+  const remove = (id) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    if (maxPick === Infinity) {
+      setSelected(new Set(MULTI_IDS));
+      return;
+    }
+    setSelected(new Set(MULTI_IDS.slice(0, maxPick)));
+  };
+
+  const clearAll = () => setSelected(new Set());
+
+  return (
+    <div className="mx-auto flex w-full max-w-md flex-col items-stretch justify-center">
+      <div className={`${cx.card} p-4 shadow-md sm:p-5`}>
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-base font-semibold text-zinc-900 dark:text-white">Assign teams</p>
+            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Pick everyone who should access this project.</p>
+          </div>
+          {o('opt1') && (
+            <span
+              className="shrink-0 rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900 dark:border-amber-700 dark:bg-amber-950/60 dark:text-amber-200"
+              aria-live="polite"
+            >
+              {selected.size} / {maxPick} max
+            </span>
+          )}
+        </div>
+
+        <div className="mb-4 flex min-h-[3rem] flex-wrap items-center gap-2">
+          {selected.size === 0 ? (
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">No teams selected — tap rows below.</span>
+          ) : (
+            [...selected].map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => remove(id)}
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 pl-3 pr-2 text-sm font-medium text-indigo-900 shadow-sm transition hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-100 dark:hover:bg-indigo-900/80"
+              >
+                {MULTI_LABELS[id]}
+                <span className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-indigo-200/80 dark:hover:bg-indigo-800/80" aria-hidden>
+                  <X className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+              </button>
+            ))
+          )}
+        </div>
+
+        {o('opt2') && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={selectAll}
+              className="min-h-[44px] rounded-lg border border-zinc-200 px-4 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-800"
+            >
+              Select all
+            </button>
+            <button
+              type="button"
+              onClick={clearAll}
+              className="min-h-[44px] rounded-lg border border-zinc-200 px-4 text-sm font-semibold text-zinc-600 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
+        <ul
+          role="listbox"
+          aria-label="Teams"
+          aria-multiselectable="true"
+          className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-600"
+        >
+          {MULTI_IDS.map((id) => {
+            const on = selected.has(id);
+            const atLimit = !on && selected.size >= maxPick;
+            return (
+              <li key={id} role="option" aria-selected={on} aria-disabled={atLimit} className="border-b border-zinc-100 last:border-b-0 dark:border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (atLimit) return;
+                    toggle(id);
+                  }}
+                  disabled={atLimit}
+                  className={`flex min-h-[48px] w-full items-center gap-4 px-4 py-3 text-left text-base transition sm:min-h-[44px] sm:text-sm ${
+                    atLimit
+                      ? 'cursor-not-allowed opacity-45'
+                      : 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/80'
+                  } ${on ? 'bg-indigo-50/80 dark:bg-indigo-950/40' : ''}`}
+                >
+                  <span
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 ${
+                      on
+                        ? 'border-indigo-600 bg-indigo-600 text-white dark:border-indigo-500 dark:bg-indigo-500'
+                        : 'border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-900'
+                    }`}
+                    aria-hidden
+                  >
+                    {on && <Check className="h-4 w-4" strokeWidth={3} />}
+                  </span>
+                  <span className={`font-medium ${on ? 'text-indigo-950 dark:text-indigo-50' : 'text-zinc-900 dark:text-zinc-100'}`}>
+                    {MULTI_LABELS[id]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        {o('opt3') && (
+          <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+            In production: typeahead, Arrow keys to move, Space toggles, Esc closes.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
@@ -191,36 +346,7 @@ const RENDER = {
   },
 
   multiselect(o) {
-    return (
-      <div className={`${cx.card} p-3 space-y-2`}>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {['Design', 'Eng'].map((t) => (
-            <span key={t} className="inline-flex items-center gap-1 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200 px-2 py-0.5 text-xs font-medium">
-              {t} ×
-            </span>
-          ))}
-          {o('opt1') && (
-            <span className={`${cx.pill} text-amber-800 border-amber-300 dark:text-amber-200`}>2 / 5 max</span>
-          )}
-          {o('opt2') && (
-            <button type="button" className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
-              Select all
-            </button>
-          )}
-        </div>
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-600 divide-y divide-zinc-100 dark:divide-zinc-800">
-          {['QA', 'Docs'].map((x) => (
-            <div key={x} className="flex items-center gap-2 px-2 py-1.5 text-xs">
-              <input type="checkbox" className="rounded border-zinc-300" readOnly checked={x === 'QA'} />
-              {x}
-            </div>
-          ))}
-        </div>
-        {o('opt3') && (
-          <p className="text-[10px] text-zinc-500">↑↓ navigate · Space toggles · Esc closes</p>
-        )}
-      </div>
-    );
+    return <MultiSelectPatternPreview o={o} />;
   },
 
   daterange(o) {

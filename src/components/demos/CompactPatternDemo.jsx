@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, Megaphone,
@@ -1095,6 +1095,118 @@ function TreeGridPatternPreview({ o }) {
   );
 }
 
+const STICKY_TABLE_SAMPLE = Array.from({ length: 20 }, (_, i) => ({
+  id: i + 1,
+  name: ['Checkout flow', 'Billing portal', 'Team invites', 'API keys', 'Webhooks'][i % 5],
+  status: ['Live', 'Beta', 'Draft'][i % 3],
+  owner: ['A. Chen', 'J. Rivera', 'Ops bot'][i % 3],
+}));
+
+/** Sticky only works inside a scrolling box — this preview scrolls the tbody region so the behavior is visible. */
+function StickyTableHeaderPatternPreview({ o }) {
+  const stickyCorner = o('opt1');
+  const strongLayer = o('opt2');
+  const shadowWhenScrolled = o('opt3');
+  const scrollRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  const headBg = strongLayer
+    ? 'bg-zinc-200 dark:bg-zinc-950'
+    : 'bg-zinc-100 dark:bg-zinc-800';
+
+  const onScroll = (e) => {
+    setScrolled(e.currentTarget.scrollTop > 8);
+  };
+
+  const headShadow =
+    shadowWhenScrolled && scrolled
+      ? 'shadow-[0_8px_16px_-8px_rgba(0,0,0,0.18)] dark:shadow-[0_10px_24px_-10px_rgba(0,0,0,0.55)]'
+      : '';
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
+        <div className="border-b border-zinc-200/90 bg-gradient-to-br from-white to-zinc-50/90 px-5 py-4 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-950 sm:px-6 sm:py-5">
+          <p className={PREVIEW.sectionTitle}>Sticky table header</p>
+          <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
+            <span className="font-medium text-zinc-800 dark:text-zinc-100">Scroll inside the frame</span> — the thead row
+            stays pinned; without a scrolling ancestor, <code className="rounded bg-zinc-200/80 px-1 text-xs font-semibold dark:bg-zinc-800">sticky</code>{' '}
+            never “sticks.”
+          </p>
+        </div>
+        <div
+          ref={scrollRef}
+          onScroll={onScroll}
+          tabIndex={0}
+          role="region"
+          aria-label="Table with scrollable body and sticky header"
+          className="max-h-[min(52vh,320px)] overflow-auto scroll-smooth border-t border-zinc-100 dark:border-zinc-800"
+        >
+          <table className="w-full min-w-[36rem] border-collapse text-sm">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className={`sticky top-0 z-30 border-b border-zinc-300 px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:border-zinc-600 dark:text-zinc-300 ${headBg} ${headShadow} ${
+                    stickyCorner ? 'left-0 shadow-[4px_0_12px_-6px_rgba(0,0,0,0.12)] dark:shadow-[4px_0_12px_-6px_rgba(0,0,0,0.45)]' : ''
+                  }`}
+                >
+                  #
+                </th>
+                <th
+                  scope="col"
+                  className={`sticky top-0 z-20 border-b border-zinc-300 px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:border-zinc-600 dark:text-zinc-300 ${headBg} ${headShadow}`}
+                >
+                  Feature
+                </th>
+                <th
+                  scope="col"
+                  className={`sticky top-0 z-20 border-b border-zinc-300 px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:border-zinc-600 dark:text-zinc-300 ${headBg} ${headShadow}`}
+                >
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  className={`sticky top-0 z-20 border-b border-zinc-300 px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:border-zinc-600 dark:text-zinc-300 ${headBg} ${headShadow}`}
+                >
+                  Owner
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {STICKY_TABLE_SAMPLE.map((row, i) => {
+                const rowBg = i % 2 === 0 ? 'bg-white dark:bg-zinc-950' : 'bg-zinc-50/90 dark:bg-zinc-900/50';
+                const cornerBg = i % 2 === 0 ? 'bg-white dark:bg-zinc-950' : 'bg-zinc-50/90 dark:bg-zinc-900/50';
+                return (
+                  <tr key={row.id} className={rowBg}>
+                    <td
+                      className={`whitespace-nowrap px-4 py-3 tabular-nums text-zinc-500 dark:text-zinc-400 ${
+                        stickyCorner
+                          ? `sticky left-0 z-10 border-r border-zinc-200 ${cornerBg} dark:border-zinc-700`
+                          : ''
+                      }`}
+                    >
+                      {row.id}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{row.name}</td>
+                    <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">{row.status}</td>
+                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{row.owner}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="border-t border-zinc-100 px-4 py-3 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+          {shadowWhenScrolled
+            ? 'Shadow under the header appears after you scroll — layered above body text.'
+            : 'Turn on Shadow in the spec to emphasize separation when scrolled.'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -1530,21 +1642,7 @@ const RENDER = {
   },
 
   stickyheader(o) {
-    return (
-      <div className={`${cx.card} p-0 overflow-hidden max-h-40`}>
-        <div className="sticky top-0 z-10 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 text-xs font-bold border-b border-zinc-200 dark:border-zinc-700">
-          Column A · B · C
-        </div>
-        <div className="divide-y divide-zinc-100 dark:divide-zinc-800 text-xs">
-          {Array.from({ length: 5 }, (_, i) => (
-            <div key={i} className="px-3 py-2 flex gap-2">
-              <span className="w-8 text-zinc-400">{i + 1}</span>
-              <span className={cx.bar + ' h-3 flex-1'} />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <StickyTableHeaderPatternPreview o={o} />;
   },
 
   toolbar(o) {

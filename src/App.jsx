@@ -248,7 +248,8 @@ export default function App() {
       <CheatSheet
         isOpen={showCheatSheet && !showWelcome}
         onClose={() => setShowCheatSheet(false)}
-        onSelectCategory={setActiveItem}
+        onSelectCategory={(itemId) => { setActiveItem(itemId); setSiteSection('glossary'); }}
+        onSelectBuildTopic={(topicId) => { setActiveBuildTopic(topicId); setSiteSection('build'); }}
       />
 
       {compareWith && !showWelcome && (

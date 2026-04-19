@@ -28,6 +28,9 @@ export default function BuildLiteracyView({
   toggleLearnMode,
   mastered,
   onMastered,
+  attempts = {},
+  recordQuizAttempt,
+  tiers,
   panelWidth = 44,
   setPanelWidth,
   isDesktop = true,
@@ -124,6 +127,9 @@ export default function BuildLiteracyView({
                 isMastered={isMastered}
                 onMastered={onMastered}
                 quizPool={quizPool}
+                pastAttempts={topic ? (attempts[topic.id] || []) : []}
+                recordQuizAttempt={recordQuizAttempt}
+                topicTier={topic ? tiers?.[topic.id] : null}
                 onCloseInfo={setInfoOpen ? () => setInfoOpen(false) : undefined}
               />
             ) : (

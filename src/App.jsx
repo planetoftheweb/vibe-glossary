@@ -16,6 +16,8 @@ import BuildLiteracyView from './components/learn/BuildLiteracyView';
 import BuildLiteracyIndex from './components/learn/BuildLiteracyIndex';
 import BuildPathsLauncher from './components/learn/BuildPathsLauncher';
 import BuildPathView from './components/learn/BuildPathView';
+import ScoreBreakdownModal from './components/learn/ScoreBreakdownModal';
+import TopicTierBadge from './components/learn/TopicTierBadge';
 import useExploreMode from './hooks/useExploreMode';
 import usePanelResize from './hooks/usePanelResize';
 import { useGlossary } from './hooks/useGlossary';
@@ -41,6 +43,7 @@ export default function App() {
   const [showBuildIndex, setShowBuildIndex] = useState(false);
   const [showBuildPaths, setShowBuildPaths] = useState(false);
   const [activeBuildPath, setActiveBuildPath] = useState(null);
+  const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
   const [activeItem, setActiveItem]       = useState('modal');
   const [activeBuildTopic, setActiveBuildTopic] = useState(() => BUILD_TOPIC_IDS[0] || 'mvp');
   const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
@@ -156,8 +159,28 @@ export default function App() {
   };
 
   const handleQuizCorrect = () => {
-    explore.markMastered(activeItem);
+    // Intentionally a no-op: mastery now flows through `recordQuizAttempt`
+    // and the auto-promote effect inside useExploreMode. Calling
+    // `markMastered` here would short-circuit the second-session pass
+    // required to actually master the topic.
   };
+
+  const handleQuizAttempt = (attempt) => {
+    explore.recordQuizAttempt(activeItem, attempt);
+  };
+
+  // Latest valid+correct attempt timestamp for the active topic, used to
+  // enforce the 30-minute counted-pass cooldown without re-scanning history
+  // inside QuizCard.
+  const cooldownLastTs = useMemo(() => {
+    const list = explore.attempts?.[activeItem] || [];
+    for (let i = list.length - 1; i >= 0; i--) {
+      if (list[i].valid && list[i].correct) return list[i].ts;
+    }
+    return null;
+  }, [explore.attempts, activeItem]);
+
+  const pastAttempts = explore.attempts?.[activeItem] || [];
 
   const currentData  = glossary[activeItem] || glossary['modal'];
   const DemoComponent = DEMO_REGISTRY[activeItem] || DEMO_REGISTRY['modal'];
@@ -214,7 +237,11 @@ export default function App() {
   }, [activeCategory]);
 
   const isMastered = explore.mastered.has(activeItem);
-  const showQuiz = learnMode && !isMastered;
+  // Quiz stays available even after the topic is "mastered" so a learner can
+  // come back, take a fresh variant, and rack up retention points later.
+  // Hiding the quiz on mastery would also block the second-session pass
+  // required for full mastery in the first place.
+  const showQuiz = learnMode;
 
   const carouselArrows = (
     <div className="flex items-center gap-1.5">
@@ -324,6 +351,13 @@ export default function App() {
         }}
       />
 
+      <ScoreBreakdownModal
+        isOpen={showScoreBreakdown && !showWelcome}
+        onClose={() => setShowScoreBreakdown(false)}
+        score={explore.score}
+        level={explore.level}
+      />
+
       {/* Top Navigation */}
       {!showWelcome && (
         <TopNav
@@ -347,6 +381,7 @@ export default function App() {
           onOpenPaths={() => setShowPaths(true)}
           onOpenBuildIndex={() => setShowBuildIndex(true)}
           onOpenBuildPaths={() => setShowBuildPaths(true)}
+          onOpenScoreBreakdown={() => setShowScoreBreakdown(true)}
         />
       )}
 
@@ -372,7 +407,13 @@ export default function App() {
             learnMode={learnMode}
             toggleLearnMode={toggleLearnMode}
             mastered={explore.mastered}
-            onMastered={(id) => explore.markMastered(id)}
+            onMastered={() => {
+              // No-op for parity with UI Glossary; mastery flows through
+              // recordQuizAttempt + the auto-promote effect.
+            }}
+            attempts={explore.attempts}
+            recordQuizAttempt={explore.recordQuizAttempt}
+            tiers={explore.tiers}
             panelWidth={panelWidth}
             setPanelWidth={setPanelWidth}
             isDesktop={isDesktop}
@@ -434,6 +475,7 @@ export default function App() {
                         <GraduationCap size={13} />
                         {learnMode ? 'Learn Mode: On' : 'Quiz me'}
                       </button>
+                      <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
                     <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                       {currentData.title}
@@ -460,6 +502,10 @@ export default function App() {
                     distractorPool={quizPool}
                     categoryColors={activeCat}
                     onCorrect={handleQuizCorrect}
+                    variantBank={currentData.quizBank}
+                    pastAttempts={pastAttempts}
+                    cooldownLastTs={cooldownLastTs}
+                    onAttemptComplete={handleQuizAttempt}
                   />
                 ) : (
                   <DefinitionPanel

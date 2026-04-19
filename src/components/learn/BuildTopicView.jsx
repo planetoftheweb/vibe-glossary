@@ -4,7 +4,9 @@ import {
 } from 'lucide-react';
 import DefinitionPanel from '../ui/DefinitionPanel';
 import QuizCard from './QuizCard';
+import TopicTierBadge from './TopicTierBadge';
 import { getBuildClusterColors } from '../../data/buildLiteracy';
+import { tierFor } from '../../lib/scoring';
 
 /**
  * Left-pane topic view for Build Literacy. Mirrors the glossary info pane:
@@ -26,10 +28,22 @@ export default function BuildTopicView({
   isMastered,
   onMastered,
   quizPool,
+  pastAttempts = [],
+  recordQuizAttempt,
+  topicTier,
   onCloseInfo,
 }) {
   const cc = getBuildClusterColors(cluster?.id);
-  const showQuiz = learnMode && !isMastered && quizPool.length >= 4;
+  // Stay available even after the topic is "mastered" so the learner can come
+  // back, hit a fresh variant, and earn retention points.
+  const showQuiz = learnMode && quizPool.length >= 4;
+  const cooldownLastTs = useMemo(() => {
+    for (let i = pastAttempts.length - 1; i >= 0; i--) {
+      const a = pastAttempts[i];
+      if (a.valid && a.correct) return a.ts;
+    }
+    return null;
+  }, [pastAttempts]);
 
   const carouselArrows = useMemo(() => (
     <div className="flex items-center gap-1.5">
@@ -90,11 +104,10 @@ export default function BuildTopicView({
               <GraduationCap size={13} />
               {learnMode ? 'Learn Mode: On' : 'Quiz me'}
             </button>
-            {isMastered && (
-              <span className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                Mastered
-              </span>
-            )}
+            <TopicTierBadge
+              tier={topicTier || tierFor({ visited: true, attempts: pastAttempts })}
+              className="ml-1"
+            />
           </div>
           <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
             {topic.title}
@@ -125,7 +138,14 @@ export default function BuildTopicView({
           correctComparison={topic.comparison}
           distractorPool={quizPool}
           categoryColors={cc}
-          onCorrect={() => onMastered(topic.id)}
+          // Mastery now flows through the attempts log; do not insta-mark
+          // mastered on first correct or the second-session pass becomes
+          // unreachable.
+          onCorrect={() => {}}
+          variantBank={topic.quizBank}
+          pastAttempts={pastAttempts}
+          cooldownLastTs={cooldownLastTs}
+          onAttemptComplete={(attempt) => recordQuizAttempt?.(topic.id, attempt)}
         />
       ) : (
         <DefinitionPanel

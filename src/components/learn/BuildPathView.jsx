@@ -2,11 +2,13 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   X, ChevronLeft, ChevronRight, Check,
   Trophy, Sparkles, RotateCcw, GraduationCap, Lightbulb, MessageSquareQuote,
+  Clock, ShieldCheck, ShieldAlert,
 } from 'lucide-react';
 import {
   getBuildTopic,
   getBuildClusterColors,
 } from '../../data/buildLiteracy';
+import { evaluateAttempt, explainReasons, TIME_FLOOR_MS } from '../../lib/quizIntegrity';
 
 const PASS_THRESHOLD = 0.8;
 
@@ -31,6 +33,8 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState([]);
   const [picked, setPicked] = useState(null);
+  const [questionStartedAt, setQuestionStartedAt] = useState(() => Date.now());
+  const [quizSalt, setQuizSalt] = useState(0);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -39,7 +43,12 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
     setQuizIndex(0);
     setQuizAnswers([]);
     setPicked(null);
+    setQuizSalt(s => s + 1);
   }, [isOpen, path?.id]);
+
+  useEffect(() => {
+    if (phase === 'quiz') setQuestionStartedAt(Date.now());
+  }, [phase, quizIndex, quizSalt]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -50,14 +59,16 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
 
   const quiz = useMemo(() => {
     if (!path) return [];
-    return path.quiz.map(q => ({
+    const reordered = shuffle(path.quiz);
+    return reordered.map(q => ({
       ...q,
       shuffled: shuffle(q.optionIds).map(id => ({
         id,
         title: getBuildTopic(id)?.title || id,
       })),
     }));
-  }, [path]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, quizSalt]);
 
   if (!isOpen || !path) return null;
 
@@ -81,7 +92,8 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
     setPicked(optId);
     const q = quiz[quizIndex];
     const correct = optId === q.answerId;
-    setQuizAnswers(prev => [...prev, { correct, pickedId: optId, answerId: q.answerId }]);
+    const timeMs = Date.now() - questionStartedAt;
+    setQuizAnswers(prev => [...prev, { correct, pickedId: optId, answerId: q.answerId, timeMs }]);
   };
 
   const handleNextQuestion = () => {
@@ -89,9 +101,13 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
     if (quizIndex < quiz.length - 1) {
       setQuizIndex(quizIndex + 1);
     } else {
-      const correct = quizAnswers.filter(a => a.correct).length;
-      const passed = correct / quiz.length >= PASS_THRESHOLD;
-      if (passed) onAwardBadge?.(path.id);
+      const correctCount = quizAnswers.filter(a => a.correct).length;
+      const passedScore = correctCount / quiz.length >= PASS_THRESHOLD;
+      const integrity = evaluateAttempt({
+        timePerQuestionMs: quizAnswers.map(a => a.timeMs ?? 0),
+        now: Date.now(),
+      });
+      if (passedScore && integrity.valid) onAwardBadge?.(path.id);
       setPhase('result');
     }
   };
@@ -100,6 +116,7 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
     setQuizIndex(0);
     setQuizAnswers([]);
     setPicked(null);
+    setQuizSalt(s => s + 1);
     setPhase('quiz');
   };
 
@@ -160,6 +177,7 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
               quizIndex={quizIndex}
               totalQuiz={quiz.length}
               colors={cc}
+              questionStartedAt={questionStartedAt}
             />
           )}
           {phase === 'result' && (
@@ -364,16 +382,35 @@ function StepScreen({ topic, colors, stepIndex, totalSteps }) {
   );
 }
 
-function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, colors }) {
+function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, colors, questionStartedAt }) {
   const showNext = !!picked;
   const pickedId = picked;
   const isCorrect = pickedId === question.answerId;
+  const [elapsedMs, setElapsedMs] = useState(0);
+  useEffect(() => {
+    setElapsedMs(0);
+    const t = setInterval(() => setElapsedMs(Date.now() - questionStartedAt), 250);
+    return () => clearInterval(t);
+  }, [questionStartedAt]);
+  const floorMet = elapsedMs >= TIME_FLOOR_MS;
+  const secsLeft = Math.max(0, Math.ceil((TIME_FLOOR_MS - elapsedMs) / 1000));
 
   return (
-    <div className="flex-1 p-6 lg:p-10 flex flex-col">
-      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-sm lg:text-base font-semibold mb-4`}>
-        <Trophy size={14} />
-        Quiz · {quizIndex + 1} / {totalQuiz}
+    <div className="flex-1 p-6 lg:p-10 flex flex-col" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
+      <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-sm lg:text-base font-semibold`}>
+          <Trophy size={14} />
+          Quiz · {quizIndex + 1} / {totalQuiz}
+        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+            floorMet ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-300'
+          }`}
+          title={floorMet ? 'This question will count toward the path badge.' : 'Spend at least four seconds on each question for the badge to count.'}
+        >
+          {floorMet ? <ShieldCheck size={13} /> : <Clock size={13} />}
+          {floorMet ? 'Counts' : `${secsLeft}s…`}
+        </span>
       </div>
       <p className="text-xl lg:text-3xl font-bold text-zinc-900 dark:text-white mb-5 lg:mb-7 leading-snug">
         {question.q}
@@ -431,7 +468,13 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
 function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, onJump }) {
   const correct = quizAnswers.filter(a => a.correct).length;
   const percent = Math.round((correct / totalQuiz) * 100);
-  const passed = correct / totalQuiz >= PASS_THRESHOLD;
+  const passedScore = correct / totalQuiz >= PASS_THRESHOLD;
+  const integrity = evaluateAttempt({
+    timePerQuestionMs: quizAnswers.map(a => a.timeMs ?? 0),
+    now: Date.now(),
+  });
+  const passed = passedScore && integrity.valid;
+  const passedButPractice = passedScore && !integrity.valid;
 
   return (
     <div className="flex-1 p-6 lg:p-10 text-center flex flex-col">
@@ -447,7 +490,22 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
             You scored <strong>{correct}/{totalQuiz}</strong> ({percent}%).
           </p>
           <p className="text-base lg:text-lg text-zinc-500 dark:text-zinc-400 mb-8">
-            You've mastered the <strong>{path.name}</strong> path.
+            You've mastered the <strong>{path.name}</strong> path. +25 to your VibeScore.
+          </p>
+        </>
+      ) : passedButPractice ? (
+        <>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 dark:bg-amber-500/20 mb-5 mx-auto">
+            <ShieldAlert size={36} className="text-amber-600 dark:text-amber-300" />
+          </div>
+          <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-2">
+            Great practice!
+          </h2>
+          <p className="text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 mb-2">
+            You scored <strong>{correct}/{totalQuiz}</strong> ({percent}%).
+          </p>
+          <p className="text-base lg:text-lg text-amber-700 dark:text-amber-300 mb-8">
+            {explainReasons(integrity.reasons)} Run it again at a steady pace and the badge is yours.
           </p>
         </>
       ) : (

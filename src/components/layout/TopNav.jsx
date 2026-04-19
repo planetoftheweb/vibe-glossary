@@ -6,6 +6,7 @@ import {
   Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
+import VibeScorePill from '../learn/VibeScorePill';
 import {
   getBuildClusterColors,
   BUILD_LITERACY_CLUSTERS,
@@ -468,6 +469,7 @@ export default function TopNav({
   onGetStarted, searchInputRef,
   explore, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
   onOpenBuildIndex, onOpenBuildPaths,
+  onOpenScoreBreakdown,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -945,6 +947,17 @@ export default function TopNav({
           >
             <Search size={20} />
           </button>
+
+          {/* VibeScore pill, opens the breakdown modal */}
+          {explore?.score && onOpenScoreBreakdown && (
+            <div className="hidden md:block">
+              <VibeScorePill
+                score={explore.score}
+                level={explore.level}
+                onClick={onOpenScoreBreakdown}
+              />
+            </div>
+          )}
 
           {/* Your Progress pill between search and hamburger */}
           <div className="hidden md:block">

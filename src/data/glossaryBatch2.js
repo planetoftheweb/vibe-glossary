@@ -685,7 +685,7 @@ export const GLOSSARY_BATCH_2 = {
     title: "Share Sheet",
     definition: "Mobile-style sheet with share targets, OS pattern adapted for web.",
     vibeTip: "Include copy link and native share when available.",
-    comparison: "Share sheet offers actions. Drawer is generic panel. Action sheet is iOS choices.",
+    comparison: "Share sheet offers send-to targets. Drawer is a generic side panel. Modal blocks the page for confirmation.",
     prompt: {
       base: "Implement a share sheet with social targets",
       options: [
@@ -1063,30 +1063,6 @@ export const GLOSSARY_BATCH_2 = {
       scaffolds: {
         shadcn: `<Toggle aria-pressed="false" size="sm">Bold</Toggle>`,
         html: `<button type="button" aria-pressed="false" aria-label="Bold"><strong>B</strong></button>`,
-      },
-    },
-  },
-
-  actionsheet: {
-    title: "Action Sheet",
-    definition: "Bottom sheet of quick actions, mobile pattern for destructive choices.",
-    vibeTip: "Avoid too many actions; group with separators.",
-    comparison: "Action sheet is bottom actions. Drawer is generic panel. Modal blocks focus.",
-    prompt: {
-      base: "Add a mobile action sheet",
-      options: [
-        { id: 'opt1', label: 'Destructive style', text: ', styling destructive actions in danger color at the bottom' },
-        { id: 'opt2', label: 'Cancel', text: ', including a full-width Cancel that dismisses without action' },
-        { id: 'opt3', label: 'Handle', text: ', showing a drag handle affordance for bottom sheets on supporting browsers' },
-      ],
-      requirements: [
-        'Focus moves to sheet on open; Esc and backdrop dismiss',
-        'Destructive actions require confirmation step or explicit label',
-        'Safe-area padding for iOS home indicator',
-      ],
-      scaffolds: {
-        shadcn: `<Sheet><SheetContent side="bottom" className="rounded-t-xl">…</SheetContent></Sheet>`,
-        html: `<dialog class="bottom-sheet"><form method="dialog">…</form></dialog>`,
       },
     },
   },

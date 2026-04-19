@@ -36,7 +36,6 @@ export const CATEGORIES = [
       { id: 'popover', name: 'Popover' },
       { id: 'tooltip', name: 'Tooltip' },
       { id: 'toast',   name: 'Toast / Snackbar' },
-      { id: 'actionsheet', name: 'Action Sheet' },
       { id: 'hovercard', name: 'Hover Card' },
       { id: 'producttour', name: 'Product Tour' },
       { id: 'loadingoverlay', name: 'Loading Overlay' },

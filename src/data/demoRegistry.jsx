@@ -4,7 +4,7 @@ import { lazy } from 'react';
 const CompactPatternDemo = lazy(() => import('../components/demos/CompactPatternDemo'));
 
 const BATCH2_DEMO_IDS = [
-  'actionsheet', 'activitystream', 'banner', 'bottomnav', 'chatthread', 'codeblock', 'colorpicker',
+  'activitystream', 'banner', 'bottomnav', 'chatthread', 'codeblock', 'colorpicker',
   'combobox', 'cookieconsent', 'countdown', 'daterange', 'disclosure', 'fileuploadrow', 'filterpanel',
   'formcolumns', 'hovercard', 'inputgroup', 'kanban', 'keyvalue', 'linechart', 'linkcard',
   'loadingoverlay', 'mapview', 'megamenu', 'menubar', 'meter', 'multiselect', 'notificationcenter',

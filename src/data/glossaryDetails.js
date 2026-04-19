@@ -298,9 +298,6 @@ export const GLOSSARY_DETAILS = {
   togglebutton:
     'A toggle button stays in a pressed or released state to represent an on or off setting. The classic uses are formatting buttons in editors (Bold pressed) and view filters that turn a category on or off.\n\nIt is similar to a switch in spirit but lives in toolbars and groups, not in settings. Use the button role with aria-pressed so assistive tech announces the state, make the pressed appearance distinct from a hover, and pair color with a visual depth or check icon so the state is not color-only.\n\nFor one of several mutually exclusive options, use a segmented control instead.',
 
-  actionsheet:
-    'An action sheet is a list of choices that slides up from the bottom of the screen, common on phones for confirming actions or picking from a few options. It pairs well with destructive actions because the bottom of the screen is easy to reach and easy to cancel.\n\nAlways include a clear Cancel option at the very bottom (or as a separate dismiss area), label destructive actions with a different color and a clear verb (Delete, Remove), and trap focus inside the sheet while it is open. On larger screens, an action sheet often becomes an inline popover or a modal because there is more room and a different mouse-driven interaction model.',
-
   meter:
     'A meter shows a value within a known range, like disk usage, password strength, calories left, or a score. It is similar to a progress bar but represents a current measurement, not the percentage of a task.\n\nUse the HTML meter element where possible because it brings semantics for assistive tech for free. Mark the low, optimum, and high zones so people understand whether the value is good or bad, and pair color with text or icon (do not use red alone to mean "danger").\n\nFor indeterminate loading, do not use a meter; that is what a spinner is for.',
 

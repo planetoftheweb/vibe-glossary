@@ -2187,49 +2187,6 @@ const RENDER = {
     return <ToggleButtonPatternPreview o={o} />;
   },
 
-  actionsheet(o) {
-    return (
-      <div className="flex w-full flex-col overflow-hidden rounded-xl border border-zinc-300/80 bg-zinc-300/30 dark:border-zinc-600 dark:bg-zinc-900/60 min-h-[min(22rem,50vh)] max-h-[min(26rem,58vh)]">
-        {/* In-flow “screen” so height includes the sheet, avoids clipping from overflow-auto ancestors */}
-        <div className="flex min-h-[6rem] flex-1 flex-col items-center justify-center px-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-          Page
-        </div>
-        <div className="shrink-0 px-2 pb-3 pt-1">
-          {o('opt3') && (
-            <div className="mb-2 flex justify-center" aria-hidden>
-              <div className="h-1 w-12 rounded-full bg-zinc-400/90 dark:bg-zinc-500" title="Drag handle" />
-            </div>
-          )}
-          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl divide-y divide-zinc-100 dark:divide-zinc-800 dark:border-zinc-700 dark:bg-zinc-900">
-            {['Duplicate', 'Share'].map((x) => (
-              <button key={x} type="button" className="w-full py-3.5 text-sm font-medium text-zinc-800 dark:text-zinc-100 active:bg-zinc-100 dark:active:bg-zinc-800">
-                {x}
-              </button>
-            ))}
-            <button
-              type="button"
-              className={`w-full py-3.5 text-sm font-semibold active:bg-zinc-100 dark:active:bg-zinc-800 ${
-                o('opt1')
-                  ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300'
-                  : 'text-rose-600 dark:text-rose-400'
-              }`}
-            >
-              Delete
-            </button>
-            {o('opt2') && (
-              <button
-                type="button"
-                className="w-full border-t border-zinc-100 bg-zinc-50 py-3.5 text-sm font-semibold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950/80 dark:text-zinc-300"
-              >
-                Cancel
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  },
-
   meter(o) {
     return (
       <div className={`${cx.card} p-4 space-y-2`}>

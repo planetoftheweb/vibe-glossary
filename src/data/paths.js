@@ -1,4 +1,4 @@
-// Curated learning paths, all glossary component ids in 6 themed sequences (99 entries).
+// Curated learning paths, all glossary component ids in 6 themed sequences.
 // Each path: id, name, description, items (ordered ids), quiz (5 questions).
 // Quiz answers reference component ids that appear in that path's items list.
 
@@ -6,15 +6,20 @@ import { CATEGORIES } from './categories.jsx';
 
 const ALL_COMPONENT_IDS = CATEGORIES.flatMap((c) => c.items.map((i) => i.id));
 
-// Six contiguous slices covering every id once: 17+17+17+17+17+14 = 99
-const SLICES = [
-  [0, 17],
-  [17, 34],
-  [34, 51],
-  [51, 68],
-  [68, 85],
-  [85, 99],
-];
+// Six contiguous slices covering every id once. Slice ranges expand to fit
+// the current total component count so paths stay balanced as items change.
+const TOTAL = ALL_COMPONENT_IDS.length;
+const BASE = Math.floor(TOTAL / 6);
+const REMAINDER = TOTAL - BASE * 6;
+const SLICES = (() => {
+  const sizes = Array.from({ length: 6 }, (_, i) => BASE + (i < REMAINDER ? 1 : 0));
+  let cursor = 0;
+  return sizes.map((size) => {
+    const start = cursor;
+    cursor += size;
+    return [start, cursor];
+  });
+})();
 
 function sliceItems([a, b]) {
   return ALL_COMPONENT_IDS.slice(a, b);
@@ -40,9 +45,9 @@ export const PATHS = [
         optionIds: ['toast', 'modal', 'drawer', 'popover'],
       },
       {
-        q: 'On mobile, destructive actions appear as a bottom sheet of buttons. That pattern is an…',
-        answerId: 'actionsheet',
-        optionIds: ['actionsheet', 'popover', 'drawer', 'toast'],
+        q: 'A side panel that slides in for filters or settings without fully blocking the page is a…',
+        answerId: 'drawer',
+        optionIds: ['drawer', 'modal', 'popover', 'tooltip'],
       },
       {
         q: 'A 6-digit verification code with one character per box is an…',

@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 
-/** Glossary batch 2 — shared compact live preview */
+/** Glossary batch 2, shared compact live preview */
 const CompactPatternDemo = lazy(() => import('../components/demos/CompactPatternDemo'));
 
 const BATCH2_DEMO_IDS = [

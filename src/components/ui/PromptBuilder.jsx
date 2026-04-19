@@ -170,7 +170,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
           </button>
         )}
 
-        {/* Framework picker — only visible when scaffold is active */}
+        {/* Framework picker, only visible when scaffold is active */}
         {includeScaffold && data.prompt.scaffolds && (
           <div className="relative">
             <button

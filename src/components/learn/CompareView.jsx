@@ -109,7 +109,7 @@ export default function CompareView({ leftId, rightId, onClose, onSelectItem }) 
           </div>
         </div>
 
-        {/* Footer — pick one */}
+        {/* Footer, pick one */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-5 lg:px-7 py-3 lg:py-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 shrink-0">
           <span className="text-sm lg:text-base text-zinc-500 dark:text-zinc-400">
             Pick one to open its page

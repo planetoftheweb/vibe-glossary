@@ -97,7 +97,7 @@ export default function LightboxDemo({ activeOptions }) {
             onClick={close}
           />
 
-          {/* Content — centered column; sits above backdrop */}
+          {/* Content, centered column; sits above backdrop */}
           <div
             className="relative z-10 flex h-[min(100dvh,100vh)] w-full max-w-5xl flex-col items-center justify-center pointer-events-none"
           >
@@ -143,7 +143,7 @@ export default function LightboxDemo({ activeOptions }) {
               </div>
             </div>
 
-            {/* Stage: arrows + image — flex-1 centers the block vertically */}
+            {/* Stage: arrows + image, flex-1 centers the block vertically */}
             <div className="pointer-events-auto relative flex w-full flex-1 items-center justify-center min-h-0 py-2">
               {hasGallery && (
                 <button

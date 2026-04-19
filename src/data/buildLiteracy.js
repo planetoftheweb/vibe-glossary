@@ -1,5 +1,5 @@
 /**
- * Build literacy — concepts for the development process (auth, data, specs, etc.).
+ * Build literacy, concepts for the development process (auth, data, specs, etc.).
  * Separate from UI glossary entries: no interactive demo; optional links to related components.
  */
 
@@ -46,7 +46,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'acceptance-criteria',
         title: 'Acceptance criteria',
         definition:
-          'Checklist conditions that must be true for a story to be "done"—testable statements like "User can reset password from email link."',
+          'Checklist conditions that must be true for a story to be "done", testable statements like "User can reset password from email link."',
         relatedGlossaryIds: ['stepper', 'alert'],
       },
       {
@@ -88,7 +88,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'staging-vs-prod',
         title: 'Staging vs production',
         definition:
-          'Staging mirrors production closely for final checks. Production is what real users hit—changes here should be deliberate and monitored.',
+          'Staging mirrors production closely for final checks. Production is what real users hit, changes here should be deliberate and monitored.',
         relatedGlossaryIds: ['badge'],
       },
     ],
@@ -116,7 +116,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'rfc',
         title: 'RFC (Request for Comments)',
         definition:
-          'A proposal circulated for feedback before a big change—naming, APIs, or migrations. Common in larger teams and open source.',
+          'A proposal circulated for feedback before a big change, naming, APIs, or migrations. Common in larger teams and open source.',
         relatedGlossaryIds: [],
       },
     ],
@@ -151,7 +151,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'crud',
         title: 'CRUD',
         definition:
-          'Create, Read, Update, Delete—the basic operations on stored records. Often maps to HTTP POST/GET/PATCH/DELETE in APIs.',
+          'Create, Read, Update, Delete, the basic operations on stored records. Often maps to HTTP POST/GET/PATCH/DELETE in APIs.',
         relatedGlossaryIds: ['table', 'modal'],
       },
       {
@@ -166,13 +166,13 @@ export const BUILD_LITERACY_CLUSTERS = [
   {
     id: 'auth',
     title: 'Authentication and authorization',
-    summary: 'Who someone is vs what they may do—get the terms right when you prompt or review code.',
+    summary: 'Who someone is vs what they may do, get the terms right when you prompt or review code.',
     topics: [
       {
         id: 'session-vs-jwt',
         title: 'Session cookies vs JWT',
         definition:
-          'Sessions store state on the server and send a small session id cookie. JWTs are self-contained tokens—verify signature and expiry on each request; no server session store required.',
+          'Sessions store state on the server and send a small session id cookie. JWTs are self-contained tokens, verify signature and expiry on each request; no server session store required.',
         relatedGlossaryIds: ['toast'],
       },
       {
@@ -186,14 +186,14 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'sso',
         title: 'SSO (Single Sign-On)',
         definition:
-          'One corporate login grants access to many apps—often SAML or OIDC behind the scenes.',
+          'One corporate login grants access to many apps, often SAML or OIDC behind the scenes.',
         relatedGlossaryIds: [],
       },
       {
         id: 'refresh-token',
         title: 'Refresh token',
         definition:
-          'A long-lived credential used only to obtain new short-lived access tokens—limits exposure if an access token leaks.',
+          'A long-lived credential used only to obtain new short-lived access tokens, limits exposure if an access token leaks.',
         relatedGlossaryIds: [],
       },
     ],
@@ -203,5 +203,5 @@ export const BUILD_LITERACY_CLUSTERS = [
 export const BUILD_LITERACY_INTRO = {
   title: 'Build literacy',
   lead:
-    'The UI glossary names what you see on screen. This section names ideas from the rest of the build: planning, tests, specs, data, and auth—so you can read docs, tickets, and AI output with confidence.',
+    'The UI glossary names what you see on screen. This section names ideas from the rest of the build: planning, tests, specs, data, and auth, so you can read docs, tickets, and AI output with confidence.',
 };

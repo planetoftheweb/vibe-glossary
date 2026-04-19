@@ -4,6 +4,7 @@ import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, Che
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
+import DefinitionPanel from './components/ui/DefinitionPanel';
 import WelcomeScreen from './components/WelcomeScreen';
 import CheatSheet    from './components/CheatSheet';
 import CompareView    from './components/learn/CompareView';
@@ -355,7 +356,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* Info & Prompt Panel — always visible on desktop, toggled on mobile */}
+          {/* Info & Prompt Panel, always visible on desktop, toggled on mobile */}
           {infoOpen && (
             <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
@@ -409,12 +410,15 @@ export default function App() {
                     onCorrect={handleQuizCorrect}
                   />
                 ) : (
-                  <p className="text-base lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-4 lg:mb-5">
-                    {currentData.definition}
-                  </p>
+                  <DefinitionPanel
+                    summary={currentData.definition}
+                    details={currentData.details}
+                    resetKey={activeItem}
+                    categoryColors={activeCat}
+                  />
                 )}
 
-                {/* Prompt Builder — hidden during an active quiz so it doesn't reveal the answer */}
+                {/* Prompt Builder, hidden during an active quiz so it doesn't reveal the answer */}
                 <div className={`mb-8 ${showQuiz ? 'hidden' : ''}`}>
                   <PromptBuilder
                     data={currentData}
@@ -425,7 +429,7 @@ export default function App() {
                   />
                 </div>
 
-                {/* Compare — below spec generator */}
+                {/* Compare, below spec generator */}
                 {!showQuiz && siblings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
                     <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
@@ -446,7 +450,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Resize handle — desktop only */}
+          {/* Resize handle, desktop only */}
           {infoOpen && (
             <div
               onMouseDown={handleResizeStart}
@@ -457,13 +461,13 @@ export default function App() {
             </div>
           )}
 
-          {/* Main Content — Live Preview */}
+          {/* Main Content, Live Preview */}
           <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}>
             {/* Subtle color glow */}
             <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
             <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
 
-            {/* Floating controls — desktop only */}
+            {/* Floating controls, desktop only */}
             <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
               {!infoOpen && (
                 <button
@@ -476,7 +480,7 @@ export default function App() {
               )}
             </div>
 
-            {/* Demo area — fills available space */}
+            {/* Demo area, fills available space */}
             <div className="w-full h-full relative z-10 flex flex-col">
               <Suspense fallback={
                 <div className="flex-1 flex items-center justify-center text-zinc-400 dark:text-zinc-600 text-base">

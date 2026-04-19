@@ -1,10 +1,10 @@
-// Glossary batch 2 — learner-focused prompt toggles (opt1–opt3) + pattern-specific requirements.
+// Glossary batch 2, learner-focused prompt toggles (opt1–opt3) + pattern-specific requirements.
 // Merged into GLOSSARY_DATA in glossary.js
 
 export const GLOSSARY_BATCH_2 = {
   spinner: {
     title: "Spinner / Loading",
-    definition: "Indeterminate loading indicator — motion that says \"work in progress\" without a known percentage.",
+    definition: "Indeterminate loading indicator, motion that says \"work in progress\" without a known percentage.",
     vibeTip: "Use \"Spinner\" or \"Loader2\" from Lucide. Pair with aria-busy and aria-live.",
     comparison: "Spinner is indeterminate. Progress bar shows a fraction. Skeleton shows layout placeholders.",
     prompt: {
@@ -16,7 +16,7 @@ export const GLOSSARY_BATCH_2 = {
       ],
       requirements: [
         'Set aria-busy="true" on the loading region while work is in progress',
-        'Do not rely on motion alone — pair with text and/or aria-live',
+        'Do not rely on motion alone, pair with text and/or aria-live',
         'When loading completes, clear busy state and restore any stolen focus',
       ],
       scaffolds: {
@@ -36,11 +36,11 @@ export const GLOSSARY_BATCH_2 = {
       options: [
         { id: 'opt1', label: 'Axes & grid', text: ' with labeled time (X) and value (Y) axes and a light grid so readers can estimate values' },
         { id: 'opt2', label: 'Tooltips', text: ' with tooltips (hover + keyboard focus) showing exact timestamp and value' },
-        { id: 'opt3', label: 'Multi-series', text: ' comparing two metrics with distinct stroke colors, dashed vs solid, or shapes — plus a legend' },
+        { id: 'opt3', label: 'Multi-series', text: ' comparing two metrics with distinct stroke colors, dashed vs solid, or shapes, plus a legend' },
       ],
       requirements: [
         'Use a continuous ordered X domain (time or sequence), not categorical bar spacing',
-        'Provide a non-visual fallback: summary, data table, or CSV link — the chart alone is not enough for accessibility',
+        'Provide a non-visual fallback: summary, data table, or CSV link, the chart alone is not enough for accessibility',
         'Declare units on the Y axis (%, USD, ms) and timezone or format for dates',
       ],
       scaffolds: {
@@ -77,7 +77,7 @@ export const GLOSSARY_BATCH_2 = {
   multiselect: {
     title: "Multi-Select",
     definition:
-      "Choose more than one option from a list — often shown as removable tags or checkmarks inside a dropdown.",
+      "Choose more than one option from a list, often shown as removable tags or checkmarks inside a dropdown.",
     vibeTip: "Say how many selections are allowed at most. Common uses: filters, assignees, categories.",
     comparison: "Multi-select allows many known options. Single select picks one. Tag input lets people type new tags.",
     prompt: {
@@ -101,7 +101,7 @@ export const GLOSSARY_BATCH_2 = {
 
   daterange: {
     title: "Date Range Picker",
-    definition: "Choose a start and end date in one control — common for analytics and booking.",
+    definition: "Choose a start and end date in one control, common for analytics and booking.",
     vibeTip: "Request two calendars or a preset range (Last 7 days).",
     comparison: "Date range picks an interval. Date picker picks one day. Calendar shows a month grid.",
     prompt: {
@@ -125,7 +125,7 @@ export const GLOSSARY_BATCH_2 = {
 
   timepicker: {
     title: "Time Picker",
-    definition: "Selects clock time — standalone or paired with a date.",
+    definition: "Selects clock time, standalone or paired with a date.",
     vibeTip: "Specify 12h vs 24h and minute step.",
     comparison: "Time picker is for clock values. Date picker is for calendar days.",
     prompt: {
@@ -150,7 +150,7 @@ export const GLOSSARY_BATCH_2 = {
   colorpicker: {
     title: "Color Picker",
     definition:
-      "Lets someone pick a color — for example by typing a hex code (#RRGGBB), adjusting hue and lightness sliders, or tapping preset swatches.",
+      "Lets someone pick a color, for example by typing a hex code (#RRGGBB), adjusting hue and lightness sliders, or tapping preset swatches.",
     vibeTip: "Mention eyedropper, presets, and alpha channel if needed.",
     comparison: "Color picker sets a color value. Button triggers it. Swatches are quick presets.",
     prompt: {
@@ -175,7 +175,7 @@ export const GLOSSARY_BATCH_2 = {
   combobox: {
     title: "Combobox / Autocomplete",
     definition:
-      "Like a dropdown, but you can type to narrow the list. You still choose one of the offered options — it is not a general web search box.",
+      "Like a dropdown, but you can type to narrow the list. You still choose one of the offered options, it is not a general web search box.",
     vibeTip: "Many kits label this Combobox. Say if results come from an API and how loading or empty states look.",
     comparison: "Combobox picks from a defined list. Command palette runs actions. A plain text field accepts any string.",
     prompt: {
@@ -199,7 +199,7 @@ export const GLOSSARY_BATCH_2 = {
 
   inputgroup: {
     title: "Input Group",
-    definition: "Text field with addons — prefix/suffix icons, currency, or units.",
+    definition: "Text field with addons, prefix/suffix icons, currency, or units.",
     vibeTip: "Say \"leading addon\" and \"trailing button\". Keep focus order logical.",
     comparison: "Input group decorates one field. Fieldset groups many fields.",
     prompt: {
@@ -272,7 +272,7 @@ export const GLOSSARY_BATCH_2 = {
   splitpane: {
     title: "Split Pane / Resizable Panels",
     definition:
-      "Two or more panels side by side with a draggable divider between them — common for code next to preview, or two documents at once.",
+      "Two or more panels side by side with a draggable divider between them, common for code next to preview, or two documents at once.",
     vibeTip: "Say minimum width or height for each pane so nothing collapses to zero. Some libraries call this a panel group or split view.",
     comparison: "Split pane resizes regions. A sidebar width is usually fixed. A drawer slides over the page temporarily.",
     prompt: {
@@ -296,7 +296,7 @@ export const GLOSSARY_BATCH_2 = {
 
   menubar: {
     title: "Menu Bar",
-    definition: "Horizontal row of menus (File, Edit, View) — desktop-app pattern.",
+    definition: "Horizontal row of menus (File, Edit, View), desktop-app pattern.",
     vibeTip: "Keyboard accelerators and nested submenus matter.",
     comparison: "Menubar is persistent top menus. Dropdown menu is contextual. Context menu is right-click.",
     prompt: {
@@ -320,7 +320,7 @@ export const GLOSSARY_BATCH_2 = {
 
   megamenu: {
     title: "Mega Menu",
-    definition: "Large dropdown with columns of links, sometimes media — for dense site nav.",
+    definition: "Large dropdown with columns of links, sometimes media, for dense site nav.",
     vibeTip: "Specify columns, headings, and mobile fallback.",
     comparison: "Mega menu is wide navigation. Dropdown menu is compact.",
     prompt: {
@@ -331,7 +331,7 @@ export const GLOSSARY_BATCH_2 = {
         { id: 'opt3', label: 'Featured', text: ', optionally highlighting one promo tile with image + CTA' },
       ],
       requirements: [
-        'Do not rely on hover alone — keyboard and touch must open the panel',
+        'Do not rely on hover alone, keyboard and touch must open the panel',
         'Focus trap inside open panel; Esc closes and returns focus to trigger',
         'Wide panel should not overflow viewport; add max-height + scroll if needed',
       ],
@@ -344,7 +344,7 @@ export const GLOSSARY_BATCH_2 = {
 
   bottomnav: {
     title: "Bottom Navigation",
-    definition: "Fixed tab bar for primary sections on mobile — 3–5 targets.",
+    definition: "Fixed tab bar for primary sections on mobile, 3–5 targets.",
     vibeTip: "Use clear icons and labels; avoid too many items.",
     comparison: "Bottom nav is mobile primary. Sidebar is desktop. Tabs switch within a view.",
     prompt: {
@@ -368,7 +368,7 @@ export const GLOSSARY_BATCH_2 = {
 
   segmented: {
     title: "Segmented Control",
-    definition: "Mutually exclusive options styled as a connected control — like iOS segments.",
+    definition: "Mutually exclusive options styled as a connected control, like iOS segments.",
     vibeTip: "Often 2–5 options; avoid overcrowding.",
     comparison: "Segmented control picks one mode. Tabs switch pages. Radio group is form-oriented.",
     prompt: {
@@ -394,7 +394,7 @@ export const GLOSSARY_BATCH_2 = {
     title: "Virtualized List",
     definition:
       "For very long lists, only the rows on screen are built in the page. As you scroll, rows swap in and out so the browser stays fast.",
-    vibeTip: "Libraries include react-window and TanStack Virtual — mention row height or dynamic height if rows differ.",
+    vibeTip: "Libraries include react-window and TanStack Virtual, mention row height or dynamic height if rows differ.",
     comparison: "Virtual list is for thousands of rows. A normal list is fine for tens or a few hundred items.",
     prompt: {
       base: "Add a virtualized list for 10k+ rows",
@@ -417,7 +417,7 @@ export const GLOSSARY_BATCH_2 = {
 
   chatthread: {
     title: "Chat / Message Thread",
-    definition: "Scrollable conversation of bubbles — chronological messages with avatars and timestamps.",
+    definition: "Scrollable conversation of bubbles, chronological messages with avatars and timestamps.",
     vibeTip: "Specify message types: text, image, system.",
     comparison: "Chat thread is conversational. List feed is generic items. Activity stream shows events.",
     prompt: {
@@ -430,7 +430,7 @@ export const GLOSSARY_BATCH_2 = {
       requirements: [
         'Distinguish incoming vs outgoing semantically (not color alone)',
         'Live region: announce new messages when user is near bottom; avoid spamming when scrolled up',
-        'Composer: Enter to send vs newline — document behavior; Shift+Enter for newline',
+        'Composer: Enter to send vs newline, document behavior; Shift+Enter for newline',
       ],
       scaffolds: {
         shadcn: `<ScrollArea className="h-96"><div className="flex flex-col gap-2">{/* bubbles */}</div></ScrollArea>`,
@@ -441,7 +441,7 @@ export const GLOSSARY_BATCH_2 = {
 
   notificationcenter: {
     title: "Notification Center",
-    definition: "Persistent panel of alerts — unlike toasts that disappear.",
+    definition: "Persistent panel of alerts, unlike toasts that disappear.",
     vibeTip: "Include read/unread and bulk actions.",
     comparison: "Notification center keeps history. Toast is ephemeral. Badge shows counts only.",
     prompt: {
@@ -489,7 +489,7 @@ export const GLOSSARY_BATCH_2 = {
 
   mediaplayer: {
     title: "Media Player",
-    definition: "Controls for video or audio — play, pause, seek, volume, fullscreen.",
+    definition: "Controls for video or audio, play, pause, seek, volume, fullscreen.",
     vibeTip: "Mention native controls vs custom skin and captions.",
     comparison: "Media player controls playback. Lightbox is image-focused.",
     prompt: {
@@ -514,7 +514,7 @@ export const GLOSSARY_BATCH_2 = {
   mapview: {
     title: "Map Embed",
     definition:
-      "An interactive map you pan and zoom — often with pins, clusters of pins, and sometimes the user’s location (with permission).",
+      "An interactive map you pan and zoom, often with pins, clusters of pins, and sometimes the user’s location (with permission).",
     vibeTip: "Say which provider you want (for example Mapbox, Google Maps, Leaflet) and that map services need API keys.",
     comparison: "Map shows geography. List shows rows. Tree shows hierarchy.",
     prompt: {
@@ -525,7 +525,7 @@ export const GLOSSARY_BATCH_2 = {
         { id: 'opt3', label: 'Geolocation', text: ', offering a \"use my location\" button with permission UX' },
       ],
       requirements: [
-        'Provide text list alternative or search — map alone is not enough for screen reader users',
+        'Provide text list alternative or search, map alone is not enough for screen reader users',
         'Keyboard: markers reachable and open popups; trap focus inside popup',
         'Disclose attribution and terms per provider (Mapbox, Google, OSM)',
       ],
@@ -540,7 +540,7 @@ export const GLOSSARY_BATCH_2 = {
     title: "Keyboard Shortcuts",
     definition:
       "Small labels that show which keys to press (often styled like keys on a keyboard) so people can learn shortcuts without a cheat sheet.",
-    vibeTip: "Spell out modifier keys in words the first time (Command, Option, Shift) — symbols help after that.",
+    vibeTip: "Spell out modifier keys in words the first time (Command, Option, Shift), symbols help after that.",
     comparison: "Shortcut hints teach keys. Command palette runs actions when you pick them.",
     prompt: {
       base: "Display keyboard shortcuts in a help panel",
@@ -563,7 +563,7 @@ export const GLOSSARY_BATCH_2 = {
 
   disclosure: {
     title: "Disclosure",
-    definition: "Simple show/hide pattern — one section toggles with a button.",
+    definition: "Simple show/hide pattern, one section toggles with a button.",
     vibeTip: "Often details/summary; simpler than accordion for one block.",
     comparison: "Disclosure toggles one region. Accordion manages many. Collapsible is generic.",
     prompt: {
@@ -587,7 +587,7 @@ export const GLOSSARY_BATCH_2 = {
 
   scrollarea: {
     title: "Scroll Area",
-    definition: "Custom scrollable region with styled scrollbars — not the whole page.",
+    definition: "Custom scrollable region with styled scrollbars, not the whole page.",
     vibeTip: "Mention shadow scroll hints and overflow.",
     comparison: "Scroll area wraps overflow. Page scroll is the viewport.",
     prompt: {
@@ -611,7 +611,7 @@ export const GLOSSARY_BATCH_2 = {
 
   stickyheader: {
     title: "Sticky Table Header",
-    definition: "Header row stays visible while body rows scroll — large data tables.",
+    definition: "Header row stays visible while body rows scroll, large data tables.",
     vibeTip: "Pair with sticky columns for complex grids.",
     comparison: "Sticky header locks column titles. Card grid is not a table.",
     prompt: {
@@ -623,7 +623,7 @@ export const GLOSSARY_BATCH_2 = {
       ],
       requirements: [
         'Use <table>, <thead>, <tbody>; avoid div tables for data grids',
-        'Sticky works inside a scrolling ancestor — document which element scrolls',
+        'Sticky works inside a scrolling ancestor, document which element scrolls',
         'Do not lose column alignment when fonts scale (zoom test)',
       ],
       scaffolds: {
@@ -635,7 +635,7 @@ export const GLOSSARY_BATCH_2 = {
 
   toolbar: {
     title: "Toolbar",
-    definition: "Row of formatting or action buttons — common above editors or tables.",
+    definition: "Row of formatting or action buttons, common above editors or tables.",
     vibeTip: "Group related tools; support keyboard focus.",
     comparison: "Toolbar clusters actions. Command palette is search-first. Menu bar is app-level.",
     prompt: {
@@ -659,7 +659,7 @@ export const GLOSSARY_BATCH_2 = {
 
   cookieconsent: {
     title: "Cookie Consent Banner",
-    definition: "Banner for analytics/marketing consent — legal copy and accept/decline.",
+    definition: "Banner for analytics/marketing consent, legal copy and accept/decline.",
     vibeTip: "Link to privacy policy; store consent choice.",
     comparison: "Cookie banner is legal notice. Alert is informational. Toast is transient.",
     prompt: {
@@ -683,7 +683,7 @@ export const GLOSSARY_BATCH_2 = {
 
   sharesheet: {
     title: "Share Sheet",
-    definition: "Mobile-style sheet with share targets — OS pattern adapted for web.",
+    definition: "Mobile-style sheet with share targets, OS pattern adapted for web.",
     vibeTip: "Include copy link and native share when available.",
     comparison: "Share sheet offers actions. Drawer is generic panel. Action sheet is iOS choices.",
     prompt: {
@@ -718,7 +718,7 @@ export const GLOSSARY_BATCH_2 = {
         { id: 'opt3', label: 'Screen reader', text: ', including visually hidden text next to the avatar for SR users' },
       ],
       requirements: [
-        'Do not encode meaning by hue alone — add text or pattern',
+        'Do not encode meaning by hue alone, add text or pattern',
         'Dot should not shrink below readable size on dense lists',
         'Tooltip or title describes status for mouse users',
       ],
@@ -731,7 +731,7 @@ export const GLOSSARY_BATCH_2 = {
 
   countdown: {
     title: "Countdown Timer",
-    definition: "Counts down to an event — launches, sales, or OTP expiry.",
+    definition: "Counts down to an event, launches, sales, or OTP expiry.",
     vibeTip: "Specify format and timezone.",
     comparison: "Countdown targets a future. Progress bar shows partial completion.",
     prompt: {
@@ -803,7 +803,7 @@ export const GLOSSARY_BATCH_2 = {
 
   fileuploadrow: {
     title: "File Upload Row",
-    definition: "Row showing selected file name, size, and progress — multi-file flows.",
+    definition: "Row showing selected file name, size, and progress, multi-file flows.",
     vibeTip: "Include remove and retry.",
     comparison: "Upload row tracks one file. Dropzone is the drop target. Progress bar is generic.",
     prompt: {
@@ -828,7 +828,7 @@ export const GLOSSARY_BATCH_2 = {
   searchfield: {
     title: "Search Field",
     definition:
-      "A box just for searching this screen or site — often with a clear button, recent searches, and sometimes a keyboard shortcut to focus it.",
+      "A box just for searching this screen or site, often with a clear button, recent searches, and sometimes a keyboard shortcut to focus it.",
     vibeTip: "Say whether it filters as you type and if screen readers should treat it as a combobox when suggestions appear.",
     comparison: "Search field looks for content. A generic text field accepts any input. Command palette runs actions app-wide.",
     prompt: {
@@ -877,7 +877,7 @@ export const GLOSSARY_BATCH_2 = {
 
   formcolumns: {
     title: "Responsive Form Layout",
-    definition: "Multi-column form on large screens — stacks on mobile.",
+    definition: "Multi-column form on large screens, stacks on mobile.",
     vibeTip: "Use CSS grid and consistent field order.",
     comparison: "Form columns layout fields. Input group is one control.",
     prompt: {
@@ -901,7 +901,7 @@ export const GLOSSARY_BATCH_2 = {
 
   keyvalue: {
     title: "Key-Value List",
-    definition: "Property list — label/value pairs for settings, inspectors, and APIs.",
+    definition: "Property list, label/value pairs for settings, inspectors, and APIs.",
     vibeTip: "Good for read-only metadata; editable rows use inline edit.",
     comparison: "Key-value list shows pairs. Table is tabular. Definition list is semantic HTML.",
     prompt: {
@@ -925,7 +925,7 @@ export const GLOSSARY_BATCH_2 = {
 
   treegrid: {
     title: "Tree Grid",
-    definition: "Hierarchical table — expandable rows with aligned columns.",
+    definition: "Hierarchical table, expandable rows with aligned columns.",
     vibeTip: "Heavier than tree view; use for file managers with metadata.",
     comparison: "Tree grid combines tree and table. Tree view is hierarchy only.",
     prompt: {
@@ -949,7 +949,7 @@ export const GLOSSARY_BATCH_2 = {
 
   kanban: {
     title: "Kanban Board",
-    definition: "Columns of cards with drag-and-drop between stages — workflow boards.",
+    definition: "Columns of cards with drag-and-drop between stages, workflow boards.",
     vibeTip: "Name columns, WIP limits, and card identity.",
     comparison: "Kanban is workflow columns. Table is rows. List is linear.",
     prompt: {
@@ -973,7 +973,7 @@ export const GLOSSARY_BATCH_2 = {
 
   activitystream: {
     title: "Activity Stream",
-    definition: "Chronological feed of events — \"User X did Y\".",
+    definition: "Chronological feed of events, \"User X did Y\".",
     vibeTip: "Include actor, verb, object, and timestamp.",
     comparison: "Activity stream is event log. Chat is conversational. List is generic.",
     prompt: {
@@ -997,14 +997,14 @@ export const GLOSSARY_BATCH_2 = {
 
   filterpanel: {
     title: "Filter Panel",
-    definition: "Sidebar or drawer of filters — often paired with tables or maps.",
+    definition: "Sidebar or drawer of filters, often paired with tables or maps.",
     vibeTip: "Sync filters to URL for shareable views.",
     comparison: "Filter panel is dense filters. Filter bar is horizontal chips.",
     prompt: {
       base: "Add a filter sidebar panel",
       options: [
         { id: 'opt1', label: 'URL sync', text: ', serializing filters to query params for shareable URLs' },
-        { id: 'opt2', label: 'Apply', text: ', using explicit Apply vs instant-apply — pick one and label it' },
+        { id: 'opt2', label: 'Apply', text: ', using explicit Apply vs instant-apply, pick one and label it' },
         { id: 'opt3', label: 'Count', text: ', showing result counts or \"No matches\" before apply when cheap' },
       ],
       requirements: [
@@ -1021,7 +1021,7 @@ export const GLOSSARY_BATCH_2 = {
 
   radiocards: {
     title: "Radio Cards",
-    definition: "Radio choices as large cards — easier to scan than a small list.",
+    definition: "Radio choices as large cards, easier to scan than a small list.",
     vibeTip: "Keep mutually exclusive options visually distinct.",
     comparison: "Radio cards are big radios. Card grid is generic.",
     prompt: {
@@ -1033,7 +1033,7 @@ export const GLOSSARY_BATCH_2 = {
       ],
       requirements: [
         'Native <input type="radio"> remains in DOM for form submission',
-        'Selected card uses aria-checked and border — not color alone',
+        'Selected card uses aria-checked and border, not color alone',
         'Error if none selected on required step',
       ],
       scaffolds: {
@@ -1045,7 +1045,7 @@ export const GLOSSARY_BATCH_2 = {
 
   togglebutton: {
     title: "Toggle Button",
-    definition: "Button that stays pressed or released — bold, italic, or view filters.",
+    definition: "Button that stays pressed or released, bold, italic, or view filters.",
     vibeTip: "Use aria-pressed for state.",
     comparison: "Toggle button is binary. Segmented control picks one of many. Switch is settings.",
     prompt: {
@@ -1069,7 +1069,7 @@ export const GLOSSARY_BATCH_2 = {
 
   actionsheet: {
     title: "Action Sheet",
-    definition: "Bottom sheet of quick actions — mobile pattern for destructive choices.",
+    definition: "Bottom sheet of quick actions, mobile pattern for destructive choices.",
     vibeTip: "Avoid too many actions; group with separators.",
     comparison: "Action sheet is bottom actions. Drawer is generic panel. Modal blocks focus.",
     prompt: {
@@ -1093,7 +1093,7 @@ export const GLOSSARY_BATCH_2 = {
 
   meter: {
     title: "Meter / Gauge",
-    definition: "Shows value within a known range — disk usage, scores, or strength.",
+    definition: "Shows value within a known range, disk usage, scores, or strength.",
     vibeTip: "Use meter element or role=\"progressbar\" with known max.",
     comparison: "Meter shows a level. Progress bar tracks completion. Spinner is indeterminate.",
     prompt: {
@@ -1104,7 +1104,7 @@ export const GLOSSARY_BATCH_2 = {
         { id: 'opt3', label: 'Semantic <meter>', text: ', using the native <meter> element with min/max/low/high/optimum' },
       ],
       requirements: [
-        'Do not use meter for indeterminate loading — that is progress or spinner',
+        'Do not use meter for indeterminate loading, that is progress or spinner',
         'Expose value, min, max to assistive tech',
         'Animate value changes subtly; respect reduced motion',
       ],
@@ -1117,7 +1117,7 @@ export const GLOSSARY_BATCH_2 = {
 
   banner: {
     title: "Site Banner",
-    definition: "Site-wide notice below the header — maintenance, promos, or alerts.",
+    definition: "Site-wide notice below the header, maintenance, promos, or alerts.",
     vibeTip: "Dismissible with localStorage; avoid stacking many banners.",
     comparison: "Banner is site-wide. Alert is inline. Toast is transient.",
     prompt: {
@@ -1141,7 +1141,7 @@ export const GLOSSARY_BATCH_2 = {
 
   hovercard: {
     title: "Hover Card",
-    definition: "Rich preview on hover — user mini-profile, link preview, or definition.",
+    definition: "Rich preview on hover, user mini-profile, link preview, or definition.",
     vibeTip: "Delay open/close to avoid flicker; keyboard accessible.",
     comparison: "Hover card is rich hover content. Tooltip is short text. Popover is click.",
     prompt: {
@@ -1189,7 +1189,7 @@ export const GLOSSARY_BATCH_2 = {
 
   loadingoverlay: {
     title: "Loading Overlay",
-    definition: "Full-screen or section overlay with spinner — blocks interaction while loading.",
+    definition: "Full-screen or section overlay with spinner, blocks interaction while loading.",
     vibeTip: "Pair with aria-busy on the covered region.",
     comparison: "Loading overlay blocks a region. Spinner alone might be inline.",
     prompt: {
@@ -1202,7 +1202,7 @@ export const GLOSSARY_BATCH_2 = {
       requirements: [
         'Set aria-busy on the covered region; remove when done',
         'Avoid infinite loading overlays without cancel or retry',
-        'Maintain minimum display time if needed to avoid flash (<200ms) — document tradeoff',
+        'Maintain minimum display time if needed to avoid flash (<200ms), document tradeoff',
       ],
       scaffolds: {
         shadcn: `<div className="relative"><div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm" aria-busy="true">…</div>…</div>`,

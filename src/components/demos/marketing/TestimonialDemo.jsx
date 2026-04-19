@@ -4,7 +4,7 @@ import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 const TESTIMONIALS = [
   { name: 'Sarah Chen', role: 'CTO at Stackflow', text: 'This component library cut our development time in half. The quality is outstanding and the docs are incredible.', rating: 5, avatar: 'SC' },
   { name: 'Mike Torres', role: 'Lead Designer at Pixel', text: "Best design system I've worked with. Consistent, accessible, and beautifully crafted. Our team loves it.", rating: 5, avatar: 'MT' },
-  { name: 'Ava Patel', role: 'Founder of ShipFast', text: 'Went from idea to production in a weekend. These components just work — no fighting with CSS or accessibility issues.', rating: 4, avatar: 'AP' },
+  { name: 'Ava Patel', role: 'Founder of ShipFast', text: 'Went from idea to production in a weekend. These components just work, no fighting with CSS or accessibility issues.', rating: 4, avatar: 'AP' },
 ];
 
 const COLORS = ['from-violet-400 to-indigo-500', 'from-cyan-400 to-blue-500', 'from-emerald-400 to-teal-500'];

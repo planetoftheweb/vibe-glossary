@@ -1,4 +1,4 @@
-# VibeGlossary — Project Instructions
+# VibeGlossary, Project Instructions
 
 ## Git workflow
 
@@ -9,14 +9,14 @@
 
 ## Deployment
 
-- Firebase project ID: `vibe-glossary` — always use `--project vibe-glossary` flag.
+- Firebase project ID: `vibe-glossary`, always use `--project vibe-glossary` flag.
 - Use `/deploy` for full deploy pipeline (lint → build → version → changelog → commit → push → release → firebase).
 - Site: https://vibe-glossary.web.app
 
 ## Code style
 
-- Big, readable fonts on desktop. Compact on mobile. Fill the viewport — don't leave empty space.
-- **Compact pattern previews** (batch-2 glossary demos): body text at least **`text-sm`**, comfortable row padding (`py-3`+), touch targets **≥44px** where controls exist. Avoid `text-[10px]` / microscopic UI — previews must teach at a glance; illegible stubs are worse than fewer pixels.
+- Big, readable fonts on desktop. Compact on mobile. Fill the viewport, don't leave empty space.
+- **Compact pattern previews** (batch-2 glossary demos): body text at least **`text-sm`**, comfortable row padding (`py-3`+), touch targets **≥44px** where controls exist. Avoid `text-[10px]` / microscopic UI, previews must teach at a glance; illegible stubs are worse than fewer pixels.
 - Always let the user preview locally before deploying to production.
 
 ## Teaching audience (glossary + demos)

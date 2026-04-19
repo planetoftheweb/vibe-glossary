@@ -46,7 +46,7 @@ const cx = {
   bar: 'rounded bg-zinc-200 dark:bg-zinc-700',
 };
 
-/** One centered column for all batch-2 previews — avoids double max-width and uneven padding */
+/** One centered column for all batch-2 previews, avoids double max-width and uneven padding */
 const PREVIEW = {
   scroll: 'flex-1 min-h-0 overflow-y-auto overflow-x-hidden',
   inner: 'mx-auto w-full max-w-xl px-5 py-8 sm:px-8 sm:py-10',
@@ -55,7 +55,7 @@ const PREVIEW = {
   /** Centered form column inside the preview (inputs, search, URL bar, etc.) */
   formNarrow: 'mx-auto flex w-full max-w-md flex-col items-stretch gap-5',
   fieldLabel: 'mb-2 block text-sm font-semibold text-zinc-800 dark:text-zinc-200',
-  /** Large, comfortable text fields — used across interactive + static demos */
+  /** Large, comfortable text fields, used across interactive + static demos */
   input:
     'min-h-[52px] w-full rounded-xl border-2 border-zinc-200 bg-white px-5 py-3.5 text-base leading-snug text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-indigo-400',
 };
@@ -69,13 +69,13 @@ const MULTI_LABELS = {
   pm: 'Product',
 };
 
-/** Months of sample MRR (thousands USD) — smooth upward trend with a believable dip. */
+/** Months of sample MRR (thousands USD), smooth upward trend with a believable dip. */
 const LINE_CHART_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const LINE_CHART_REVENUE_K = [24, 28, 26, 34, 42, 52];
 const LINE_CHART_COST_K = [20, 21, 22, 23, 24, 25];
 const LINE_CHART_Y_MAX = 60;
 
-/** Downtown San Francisco — real tiles via OpenStreetMap embed (no API key). */
+/** Downtown San Francisco, real tiles via OpenStreetMap embed (no API key). */
 const OSM_EMBED_SRC =
   'https://www.openstreetmap.org/export/embed.html?bbox=-122.425%2C37.785%2C-122.395%2C37.805&layer=mapnik';
 
@@ -98,7 +98,7 @@ function MapViewPatternPreview({ o }) {
   const mapFrame = (
     <div className={mapShellClass}>
       <iframe
-        title="Interactive map — downtown San Francisco (OpenStreetMap)"
+        title="Interactive map, downtown San Francisco (OpenStreetMap)"
         src={OSM_EMBED_SRC}
         className="absolute inset-0 h-full w-full rounded-none border-0"
         loading="lazy"
@@ -117,7 +117,7 @@ function MapViewPatternPreview({ o }) {
           <button
             type="button"
             className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-zinc-200 bg-white/95 px-4 text-sm font-semibold text-zinc-800 shadow-md backdrop-blur-sm dark:border-zinc-600 dark:bg-zinc-900/95 dark:text-zinc-100"
-            aria-label="Use my location (demo — requests browser permission in a real app)"
+            aria-label="Use my location (demo, requests browser permission in a real app)"
           >
             <MapPin className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" aria-hidden />
             Use my location
@@ -133,7 +133,7 @@ function MapViewPatternPreview({ o }) {
         <div className="border-b border-zinc-200/90 bg-gradient-to-br from-sky-50/50 via-white to-white px-5 py-4 text-left dark:border-zinc-800 dark:from-sky-950/20 dark:via-zinc-900 dark:to-zinc-900 sm:px-6 sm:py-5">
           <p className={PREVIEW.sectionTitle}>Map embed</p>
           <p className={`mt-1 max-w-prose ${PREVIEW.lede}`}>
-            Live OpenStreetMap tiles in an iframe — same integration shape as Mapbox or Google Maps JS.
+            Live OpenStreetMap tiles in an iframe, same integration shape as Mapbox or Google Maps JS.
           </p>
         </div>
 
@@ -241,7 +241,7 @@ function LineChartPatternPreview({ o }) {
             <div className="text-left">
               <p className={PREVIEW.sectionTitle}>MRR over time</p>
               <p className={`mt-1 max-w-md ${PREVIEW.lede}`}>
-                Continuous time axis — readers follow the slope, not bar-to-bar gaps.
+                Continuous time axis, readers follow the slope, not bar-to-bar gaps.
               </p>
             </div>
             {showSecond && (
@@ -397,7 +397,7 @@ function LineChartPatternPreview({ o }) {
   );
 }
 
-/** Toolbar toggles (aria-pressed) — visually distinct from a settings switch (thumb in a track). */
+/** Toolbar toggles (aria-pressed), visually distinct from a settings switch (thumb in a track). */
 function ToggleButtonPatternPreview({ o }) {
   const syncBoldFromPrompt = o('opt1');
   const withLabels = o('opt2');
@@ -445,7 +445,7 @@ function ToggleButtonPatternPreview({ o }) {
       <div className="w-full">
         <p className={PREVIEW.sectionTitle}>Formatting toolbar</p>
         <p className={`mt-2 max-w-prose mx-auto ${PREVIEW.lede}`}>
-          Each control is an independent pressed button — not an on/off track like a switch.
+          Each control is an independent pressed button, not an on/off track like a switch.
         </p>
       </div>
       <div
@@ -535,7 +535,7 @@ function MultiSelectPatternPreview({ o }) {
 
         <div className="mb-4 flex min-h-[3rem] flex-wrap items-center gap-2">
           {selected.size === 0 ? (
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">No teams selected — tap rows below.</span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">No teams selected, tap rows below.</span>
           ) : (
             [...selected].map((id) => (
               <button
@@ -875,7 +875,7 @@ function ComboboxPatternPreview({ o }) {
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-8">
       <div className="w-full space-y-2 text-center sm:px-4">
         <p className={PREVIEW.lede}>
-          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span> — type to filter a fixed list,
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Combobox</span>, type to filter a fixed list,
           then pick one option (not the same as open search).
         </p>
         {o('opt1') && (
@@ -911,7 +911,7 @@ function ComboboxPatternPreview({ o }) {
         <div role="listbox" aria-label="Matching frameworks" className="max-h-72 overflow-y-auto">
           {loadError && o('opt1') && (
             <div className="px-5 py-6 text-sm text-rose-600 dark:text-rose-400" role="alert">
-              Couldn’t load suggestions. (Demo error — try another query.)
+              Couldn’t load suggestions. (Demo error, try another query.)
             </div>
           )}
           {o('opt1') && loading && q && !loadError && (
@@ -971,7 +971,7 @@ function ComboboxPatternPreview({ o }) {
 
 /**
  * Tree grid: hierarchy + columns. The full “Tree View” demo is hierarchy-only; this preview
- * stresses aligned metadata — at readable sizes (no microscopic type).
+ * stresses aligned metadata, at readable sizes (no microscopic type).
  */
 function TreeGridPatternPreview({ o }) {
   const chevronCol = o('opt1');
@@ -991,7 +991,7 @@ function TreeGridPatternPreview({ o }) {
           <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
             Same hierarchy idea as <span className="font-medium text-zinc-700 dark:text-zinc-200">Tree view</span>, but each
             row lines up with <span className="font-medium text-zinc-700 dark:text-zinc-200">sortable columns</span> (size,
-            dates, etc.) — the table is the teaching surface.
+            dates, etc.), the table is the teaching surface.
           </p>
         </div>
         <div className="overflow-x-auto">
@@ -1041,7 +1041,7 @@ function TreeGridPatternPreview({ o }) {
                     src
                   </span>
                 </td>
-                <td className={`${td} text-zinc-500 dark:text-zinc-400${sizeCell}`}>—</td>
+                <td className={`${td} text-zinc-500 dark:text-zinc-400${sizeCell}`}>, </td>
                 {alignCols && <td className={`${td} text-right text-zinc-500 dark:text-zinc-400`}>Today</td>}
               </tr>
               {showLazy && (
@@ -1104,7 +1104,7 @@ const STICKY_TABLE_SAMPLE = Array.from({ length: 20 }, (_, i) => ({
   owner: ['A. Chen', 'J. Rivera', 'Ops bot'][i % 3],
 }));
 
-/** Sticky only works inside a scrolling box — this preview scrolls the tbody region so the behavior is visible. */
+/** Sticky only works inside a scrolling box, this preview scrolls the tbody region so the behavior is visible. */
 function StickyTableHeaderPatternPreview({ o }) {
   const stickyCorner = o('opt1');
   const strongLayer = o('opt2');
@@ -1131,7 +1131,7 @@ function StickyTableHeaderPatternPreview({ o }) {
         <div className="border-b border-zinc-200/90 bg-gradient-to-br from-white to-zinc-50/90 px-5 py-4 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-950 sm:px-6 sm:py-5">
           <p className={PREVIEW.sectionTitle}>Sticky table header</p>
           <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
-            <span className="font-medium text-zinc-800 dark:text-zinc-100">Scroll inside the frame</span> — the thead row
+            <span className="font-medium text-zinc-800 dark:text-zinc-100">Scroll inside the frame</span>, the thead row
             stays pinned; without a scrolling ancestor, <code className="rounded bg-zinc-200/80 px-1 text-xs font-semibold dark:bg-zinc-800">sticky</code>{' '}
             never “sticks.”
           </p>
@@ -1201,7 +1201,7 @@ function StickyTableHeaderPatternPreview({ o }) {
         </div>
         <p className="border-t border-zinc-100 px-4 py-3 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
           {shadowWhenScrolled
-            ? 'Shadow under the header appears after you scroll — layered above body text.'
+            ? 'Shadow under the header appears after you scroll, layered above body text.'
             : 'Turn on Shadow in the spec to emphasize separation when scrolled.'}
         </p>
       </div>
@@ -1271,7 +1271,7 @@ function ActivityStreamPatternPreview({ o }) {
         <div className="border-b border-zinc-200/90 bg-gradient-to-br from-white to-zinc-50/80 px-6 py-5 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-950 sm:px-7 sm:py-6">
           <p className={PREVIEW.sectionTitle}>Activity</p>
           <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
-            Event log: who did what — large enough to scan without squinting; timestamps stay secondary.
+            Event log: who did what, large enough to scan without squinting; timestamps stay secondary.
           </p>
         </div>
         <ol className="divide-y divide-zinc-100 dark:divide-zinc-800" aria-label="Recent activity">
@@ -1380,7 +1380,7 @@ function LinkCardPatternPreview({ o }) {
             <div className="min-w-0 flex-1">
               <p className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Couldn’t load link preview</p>
               <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                The fetch failed or the page returned an error — you can still open the link below.
+                The fetch failed or the page returned an error, you can still open the link below.
               </p>
               <p className="mt-3 break-all font-mono text-sm font-medium text-indigo-600 dark:text-indigo-400">{LINK_PREVIEW_DEMO_URL}</p>
             </div>
@@ -1399,7 +1399,7 @@ function LinkCardPatternPreview({ o }) {
           <span className="font-medium text-zinc-800 dark:text-zinc-100">Open Graph</span> tags (
           <code className="rounded bg-zinc-200/80 px-1.5 py-0.5 text-xs font-semibold dark:bg-zinc-800">og:title</code>,{' '}
           <code className="rounded bg-zinc-200/80 px-1.5 py-0.5 text-xs font-semibold dark:bg-zinc-800">og:image</code>, etc.) to build
-          this card — <span className="font-medium">it is not a stat tile or a generic “card” pattern</span>.
+          this card, <span className="font-medium">it is not a stat tile or a generic “card” pattern</span>.
         </p>
       </div>
       <article className={`${cx.card} overflow-hidden p-0 shadow-md`}>
@@ -1410,14 +1410,14 @@ function LinkCardPatternPreview({ o }) {
               {LINK_PREVIEW_HOST}
             </span>
             <span className="text-sm font-medium text-amber-900/90 dark:text-amber-200/90">
-              Always show hostname — helps spot look-alike phishing domains.
+              Always show hostname, helps spot look-alike phishing domains.
             </span>
           </div>
         )}
         <a
           href="#link-preview-demo"
           className="group block text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
-          aria-label={`Open preview: VibeGlossary — UI patterns as prompts (${LINK_PREVIEW_HOST})`}
+          aria-label={`Open preview: VibeGlossary, UI patterns as prompts (${LINK_PREVIEW_HOST})`}
         >
           <div
             className="aspect-[1200/630] w-full bg-gradient-to-br from-indigo-600 via-violet-600 to-sky-500"
@@ -1432,7 +1432,7 @@ function LinkCardPatternPreview({ o }) {
               </p>
             )}
             <h3 className="text-lg font-bold leading-snug text-zinc-900 group-hover:underline dark:text-white sm:text-xl">
-              VibeGlossary — UI patterns as prompts
+              VibeGlossary, UI patterns as prompts
             </h3>
             <p className="text-base leading-relaxed text-zinc-600 dark:text-zinc-300">
               Pick a component, copy a structured prompt, and ship UI that matches how your team talks about interface design.
@@ -1475,7 +1475,7 @@ function QrCodePatternPreview({ o }) {
   }, [highEc, quietZone]);
 
   const imgAlt = altAndUrl
-    ? 'QR code that encodes the VibeGlossary site URL — scan with a phone camera to open it'
+    ? 'QR code that encodes the VibeGlossary site URL, scan with a phone camera to open it'
     : 'QR code';
 
   return (
@@ -1483,7 +1483,7 @@ function QrCodePatternPreview({ o }) {
       <div className="text-center sm:text-left">
         <p className={PREVIEW.sectionTitle}>QR code</p>
         <p className={`${PREVIEW.lede} mt-1`}>
-          Encodes a real URL — scan with a camera app. Error correction {highEc ? <strong>H</strong> : <strong>M</strong>}
+          Encodes a real URL, scan with a camera app. Error correction {highEc ? <strong>H</strong> : <strong>M</strong>}
           {quietZone ? '; quiet zone preserved' : '; tight margin (riskier for scanners)'}.
         </p>
       </div>
@@ -1523,7 +1523,7 @@ const RENDER = {
       <div className={`${cx.card} flex min-h-[14rem] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}>
         <p className="text-base font-semibold capitalize text-zinc-800 dark:text-zinc-100">{id.replace(/-/g, ' ')}</p>
         <p className={`${cx.muted} max-w-sm text-sm leading-relaxed`}>
-          Interactive demo coming soon — definition and spec generator are ready.
+          Interactive demo coming soon, definition and spec generator are ready.
         </p>
       </div>
     );
@@ -1572,9 +1572,9 @@ const RENDER = {
           <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Traffic</p>
           {o('opt2') && (
             <ul className="text-xs text-zinc-500 space-y-0.5">
-              <li>Direct — 40%</li>
-              <li>Search — 35%</li>
-              <li>Social — 25%</li>
+              <li>Direct, 40%</li>
+              <li>Search, 35%</li>
+              <li>Social, 25%</li>
             </ul>
           )}
           {o('opt3') && <p className={cx.muted}>+ small slices → “Other”</p>}
@@ -1851,7 +1851,7 @@ const RENDER = {
         </div>
         <div className="flex justify-start">
           <div className="rounded-2xl rounded-bl-md bg-zinc-200 dark:bg-zinc-700 text-xs px-3 py-2 max-w-[85%] text-zinc-800 dark:text-zinc-100">
-            {o('opt1') ? 'On it — ETA EOD.' : 'Yes, rolling out now.'}
+            {o('opt1') ? 'On it, ETA EOD.' : 'Yes, rolling out now.'}
           </div>
         </div>
       </div>
@@ -1943,7 +1943,7 @@ const RENDER = {
       <div className={`${cx.card} p-0`}>
         <div className="max-h-32 overflow-y-auto p-3 text-xs text-zinc-600 dark:text-zinc-300 space-y-2">
           {Array.from({ length: o('opt1') ? 12 : 6 }, (_, i) => (
-            <p key={i}>Section {i + 1} — scroll the pane, not the page.</p>
+            <p key={i}>Section {i + 1}, scroll the pane, not the page.</p>
           ))}
         </div>
       </div>
@@ -2190,7 +2190,7 @@ const RENDER = {
   actionsheet(o) {
     return (
       <div className="flex w-full flex-col overflow-hidden rounded-xl border border-zinc-300/80 bg-zinc-300/30 dark:border-zinc-600 dark:bg-zinc-900/60 min-h-[min(22rem,50vh)] max-h-[min(26rem,58vh)]">
-        {/* In-flow “screen” so height includes the sheet — avoids clipping from overflow-auto ancestors */}
+        {/* In-flow “screen” so height includes the sheet, avoids clipping from overflow-auto ancestors */}
         <div className="flex min-h-[6rem] flex-1 flex-col items-center justify-center px-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
           Page
         </div>
@@ -2357,7 +2357,7 @@ const RENDER = {
           <div className="flex gap-3">
             <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-indigo-500" aria-hidden />
             <div className="min-w-0">
-              <p className="text-sm font-bold text-zinc-900 dark:text-white">Step 1 — Export your work</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-white">Step 1, Export your work</p>
               <p className={`mt-2 ${PREVIEW.lede}`}>
                 This panel is the tour copy for the current step. In a real product it advances with Next / Back.
               </p>

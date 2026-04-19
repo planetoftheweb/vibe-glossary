@@ -410,7 +410,7 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
       {showNext && (
         <div className="mt-6 lg:mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className={`text-base lg:text-lg font-semibold ${isCorrect ? 'text-emerald-500' : 'text-rose-500'}`}>
-            {isCorrect ? 'Correct!' : 'Not quite — see the right answer above.'}
+            {isCorrect ? 'Correct!' : 'Not quite, see the right answer above.'}
           </p>
           <button
             onClick={onNext}

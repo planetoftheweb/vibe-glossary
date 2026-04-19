@@ -1,4 +1,4 @@
-// Curated learning paths — all glossary component ids in 6 themed sequences (99 entries).
+// Curated learning paths, all glossary component ids in 6 themed sequences (99 entries).
 // Each path: id, name, description, items (ordered ids), quiz (5 questions).
 // Quiz answers reference component ids that appear in that path's items list.
 
@@ -26,7 +26,7 @@ export const PATHS = [
     name: 'Surfaces & overlays',
     tagline: 'Dialogs, floating layers, and core controls',
     description:
-      'Modals, drawers, sheets, toasts, and tooltips compete for attention — learn which one blocks the world, which whispers, and which pairs with your first-line inputs.',
+      'Modals, drawers, sheets, toasts, and tooltips compete for attention, learn which one blocks the world, which whispers, and which pairs with your first-line inputs.',
     items: sliceItems(SLICES[0]),
     quiz: [
       {
@@ -61,7 +61,7 @@ export const PATHS = [
     name: 'Inputs & data chrome',
     tagline: 'Rich inputs meet tables and charts',
     description:
-      'Comboboxes, grouped inputs, radio cards, and data tables work together — filters, pagination, and your first chart types show up once lists get real.',
+      'Comboboxes, grouped inputs, radio cards, and data tables work together, filters, pagination, and your first chart types show up once lists get real.',
     items: sliceItems(SLICES[1]),
     quiz: [
       {
@@ -96,11 +96,11 @@ export const PATHS = [
     name: 'Data shapes & flows',
     tagline: 'Visualization, density, and form journeys',
     description:
-      'Line and pie charts, virtualized lists, maps, activity streams, and multi-step forms — pick the shape that matches how dense, hierarchical, or conversational your data is.',
+      'Line and pie charts, virtualized lists, maps, activity streams, and multi-step forms, pick the shape that matches how dense, hierarchical, or conversational your data is.',
     items: sliceItems(SLICES[2]),
     quiz: [
       {
-        q: 'Values plotted over time on a continuous axis — with room for axes and a legend — use a…',
+        q: 'Values plotted over time on a continuous axis, with room for axes and a legend, use a…',
         answerId: 'linechart',
         optionIds: ['linechart', 'piechart', 'treegrid', 'mapview'],
       },
@@ -131,7 +131,7 @@ export const PATHS = [
     name: 'Layout & navigation',
     tagline: 'Structure the page and move between modes',
     description:
-      'Date ranges, split panes, app shells, tabs, mega menus, and disclosures — these patterns decide how users scan, filter, and jump without getting lost.',
+      'Date ranges, split panes, app shells, tabs, mega menus, and disclosures, these patterns decide how users scan, filter, and jump without getting lost.',
     items: sliceItems(SLICES[3]),
     quiz: [
       {
@@ -166,7 +166,7 @@ export const PATHS = [
     name: 'Interactions & status',
     tagline: 'Gestures, overflow, and loading states',
     description:
-      'Context menus, drag-and-drop, lightboxes, kanban boards, alerts, and skeletons — the patterns that make dense apps feel fast, fair, and forgiving.',
+      'Context menus, drag-and-drop, lightboxes, kanban boards, alerts, and skeletons, the patterns that make dense apps feel fast, fair, and forgiving.',
     items: sliceItems(SLICES[4]),
     quiz: [
       {
@@ -201,7 +201,7 @@ export const PATHS = [
     name: 'Polish & marketing',
     tagline: 'Feedback loops and the outer shell',
     description:
-      'Spinners, code blocks, keyboard hints, presence, countdowns, and hero sections — finishing touches that build trust, clarity, and launch-day storytelling.',
+      'Spinners, code blocks, keyboard hints, presence, countdowns, and hero sections, finishing touches that build trust, clarity, and launch-day storytelling.',
     items: sliceItems(SLICES[5]),
     quiz: [
       {

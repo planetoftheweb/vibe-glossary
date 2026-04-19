@@ -8,7 +8,7 @@ import { CATEGORY_COLORS } from '../../data/categories';
 import { BUILD_LITERACY_NAV_COLORS } from '../../data/buildLiteracy';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Generic popover — used by all three dropdowns (category, component, menu)
+// Generic popover, used by all three dropdowns (category, component, menu)
 // ─────────────────────────────────────────────────────────────────────────────
 function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
   const ref = useRef(null);
@@ -82,7 +82,7 @@ function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width,
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Main menu dropdown — absorbs dark mode + ExploreBar features
+// Main menu dropdown, absorbs dark mode + ExploreBar features
 // ─────────────────────────────────────────────────────────────────────────────
 function MainMenu({
   isOpen, onClose,
@@ -159,7 +159,7 @@ function MainMenu({
           </MenuItem>
         )}
       </div>
-      {/* LEARN section — hidden on lg+ where the Learning pill covers it */}
+      {/* LEARN section, hidden on lg+ where the Learning pill covers it */}
       <div className="lg:hidden">
         <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
         <div className="pb-1.5">
@@ -192,7 +192,7 @@ function MainMenu({
         </div>
       </div>
 
-      {/* STATS section — collapsible, hidden on lg+ where the Progress pill covers it */}
+      {/* STATS section, collapsible, hidden on lg+ where the Progress pill covers it */}
       <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
         <button
           onClick={toggleStats}
@@ -212,11 +212,11 @@ function MainMenu({
 
         {statsOpen && (
           <div className="animate-fade-in">
-            {/* Progress header — dual ring: outer = mastered, inner = visited */}
+            {/* Progress header, dual ring: outer = mastered, inner = visited */}
             <div className="px-4 pb-3 flex items-center gap-3">
               <div className="relative w-14 h-14 shrink-0">
                 <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                  {/* Outer ring — mastered (emerald) */}
+                  {/* Outer ring, mastered (emerald) */}
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
                     className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
@@ -224,7 +224,7 @@ function MainMenu({
                     strokeDasharray={`${progress.masteredPercent * 1.0367} 200`}
                     strokeLinecap="round"
                   />
-                  {/* Inner ring — visited (category accent) */}
+                  {/* Inner ring, visited (category accent) */}
                   <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
                     className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
                   <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
@@ -289,7 +289,7 @@ function MainMenu({
         )}
       </div>
 
-      {/* HELP section — hidden on lg+ where the Help pill covers it */}
+      {/* HELP section, hidden on lg+ where the Help pill covers it */}
       <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
         <MenuItem icon={<BookOpen size={18} />} onClick={handleGlossaryIndex}>
@@ -532,7 +532,7 @@ export default function TopNav({
           </div>
           )}
 
-          {/* Supplementary pills — icon-only at md, progressively add text/chevron at lg/xl */}
+          {/* Supplementary pills, icon-only at md, progressively add text/chevron at lg/xl */}
           {siteSection === 'glossary' && (
           <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3">
             {/* Learning */}
@@ -835,7 +835,7 @@ export default function TopNav({
         </div>
       </div>
 
-      {/* Mobile search overlay — underneath the menu on small devices */}
+      {/* Mobile search overlay, underneath the menu on small devices */}
       {siteSection === 'glossary' && searchOpen && (
         <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
           <div className="relative">
@@ -882,7 +882,7 @@ export default function TopNav({
         </div>
       )}
 
-      {/* Mobile nav — icon-only category + component dropdowns */}
+      {/* Mobile nav, icon-only category + component dropdowns */}
       {siteSection === 'glossary' && (
       <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
         <PillDropdown

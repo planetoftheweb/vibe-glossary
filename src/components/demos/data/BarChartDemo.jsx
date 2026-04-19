@@ -8,7 +8,7 @@ const DATA = [
 
 const max = Math.max(...DATA.map(d => d.value), 1);
 
-/** Single row height for the vertical bar plot — tall so relative bar heights read clearly */
+/** Single row height for the vertical bar plot, tall so relative bar heights read clearly */
 const BAR_ROW_HEIGHT = 'h-64 sm:h-72 md:h-80 lg:h-[22rem]';
 
 export default function BarChartDemo({ activeOptions }) {
@@ -50,7 +50,7 @@ export default function BarChartDemo({ activeOptions }) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-6 md:p-10 min-h-0">
-      {/* Values + bars — fixed tall row, vertically centered in preview */}
+      {/* Values + bars, fixed tall row, vertically centered in preview */}
       <div className={`flex items-end justify-center gap-4 sm:gap-5 md:gap-7 w-full max-w-3xl ${BAR_ROW_HEIGHT}`}>
         {DATA.map(row => {
           const pct = (row.value / max) * 100;

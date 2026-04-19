@@ -1,6 +1,7 @@
 import { GLOSSARY_BATCH_2 } from './glossaryBatch2.js';
+import { GLOSSARY_DETAILS } from './glossaryDetails.js';
 
-export const GLOSSARY_DATA = {
+const _RAW_GLOSSARY_DATA = {
   // ─── Overlays ───
   modal: {
     title: 'Modal (Dialog)',
@@ -277,7 +278,7 @@ toast({
     vibeTip:
       'If there are more than about ten choices, or people need to search, ask for a combobox instead of a plain select.',
     comparison:
-      'Select and combobox choose from known options. A popover is a floating container — it can hold forms, not only lists.',
+      'Select and combobox choose from known options. A popover is a floating container, it can hold forms, not only lists.',
     prompt: {
       base: 'Add a form Select component',
       options: [
@@ -916,7 +917,7 @@ toast({
   richtext: {
     title: 'Rich Text Editor',
     definition:
-      'Content editing with formatting controls — bold, italic, lists, links, images — either in a what-you-see-is-what-you-get (WYSIWYG) view or Markdown.',
+      'Content editing with formatting controls, bold, italic, lists, links, images, either in a what-you-see-is-what-you-get (WYSIWYG) view or Markdown.',
     vibeTip: "Use 'Tiptap' or 'Slate' for React. Specify toolbar buttons and output format (HTML vs Markdown).",
     comparison: 'Rich Text for formatted content. Textarea for plain text. Code Editor for code.',
     prompt: {
@@ -1991,7 +1992,7 @@ return (
   pagination: {
     title: 'Pagination',
     definition: 'Controls that split long lists into pages with numbered links, previous/next, and optional page-size selection.',
-    vibeTip: "Say 'Pagination' or 'PaginationControls'. Pair with tables and grids — not the same as infinite scroll.",
+    vibeTip: "Say 'Pagination' or 'PaginationControls'. Pair with tables and grids, not the same as infinite scroll.",
     comparison: 'Pagination shows explicit pages. Infinite scroll loads more as you scroll.',
     prompt: {
       base: 'Add pagination controls below a data table',
@@ -2169,7 +2170,7 @@ return (
         'Provide a text summary or table fallback for accessibility',
         'Label axes and units',
         'Use sufficient contrast for bars in light and dark themes',
-        'Avoid relying on color alone — vary patterns or labels when needed',
+        'Avoid relying on color alone, vary patterns or labels when needed',
       ],
       scaffolds: {
         shadcn: `import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
@@ -2197,3 +2198,15 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 
   ...GLOSSARY_BATCH_2,
 };
+
+/**
+ * Public glossary: each entry has the long-form `details` injected from
+ * `glossaryDetails.js`. Keeping details in a separate file makes the long
+ * copy easier to edit without scrolling past the prompt scaffolding.
+ */
+export const GLOSSARY_DATA = Object.fromEntries(
+  Object.entries(_RAW_GLOSSARY_DATA).map(([id, entry]) => [
+    id,
+    GLOSSARY_DETAILS[id] ? { ...entry, details: GLOSSARY_DETAILS[id] } : entry,
+  ])
+);

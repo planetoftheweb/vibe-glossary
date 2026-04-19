@@ -55,7 +55,13 @@ function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // A clean pill button that opens a dropdown
 // ─────────────────────────────────────────────────────────────────────────────
-function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width, align, iconOnly, ariaLabel }) {
+function PillDropdown({
+  icon, label, isOpen, onToggle, onClose, children, width, align, iconOnly, ariaLabel,
+  // Tailwind max-width class applied to the label span. Caps long labels (like
+  // 60-character build literacy topic titles) so they truncate with an
+  // ellipsis instead of pushing other pills off the bar.
+  labelMaxClass = 'max-w-[12rem] xl:max-w-[18rem]',
+}) {
   const wrapRef = useRef(null);
 
   useEffect(() => {
@@ -68,18 +74,22 @@ function PillDropdown({ icon, label, isOpen, onToggle, onClose, children, width,
   }, [isOpen, onClose]);
 
   return (
-    <div ref={wrapRef} className={`relative ${iconOnly ? '' : 'flex-1 md:flex-none'}`}>
+    <div ref={wrapRef} className={`relative ${iconOnly ? '' : 'flex-1 md:flex-none min-w-0'}`}>
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
-        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 lg:gap-2.5 px-3 lg:px-4 xl:px-5 py-2.5 lg:py-3'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
+        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 lg:gap-2.5 px-3 lg:px-4 xl:px-5 py-2.5 lg:py-3 min-w-0'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
         {icon}
-        {!iconOnly && <span className="hidden lg:inline truncate">{label}</span>}
+        {!iconOnly && (
+          <span className={`hidden lg:inline-block ${labelMaxClass} truncate align-middle`}>
+            {label}
+          </span>
+        )}
         {!iconOnly && (
           <ChevronDown size={18} className={`hidden xl:inline text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         )}

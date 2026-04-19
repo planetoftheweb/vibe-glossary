@@ -17,7 +17,7 @@ import useExploreMode from './hooks/useExploreMode';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
-import { BUILD_LITERACY_NAV_COLORS, BUILD_TOPIC_IDS } from './data/buildLiteracy';
+import { BUILD_LITERACY_NAV_COLORS, BUILD_TOPIC_IDS, BUILD_LITERACY_CLUSTERS } from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
@@ -43,7 +43,7 @@ export default function App() {
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
   const categories = useCategories();
-  const explore = useExploreMode(categories);
+  const explore = useExploreMode(categories, BUILD_LITERACY_CLUSTERS);
   const glossary = useGlossary();
   const [panelWidth, setPanelWidth] = useState(() => {
     const saved = localStorage.getItem('vg-panel-width');
@@ -116,6 +116,14 @@ export default function App() {
       explore.markVisited(activeItem);
     }
   }, [activeItem, showWelcome]);
+
+  // Build literacy: also count time-on-topic toward progress, mirroring how
+  // glossary items get marked visited the moment you land on them.
+  useEffect(() => {
+    if (!showWelcome && siteSection === 'build' && activeBuildTopic) {
+      explore.markVisited(activeBuildTopic);
+    }
+  }, [activeBuildTopic, siteSection, showWelcome]);
 
   const addGlobalToast = (message) => {
     const id = Date.now();

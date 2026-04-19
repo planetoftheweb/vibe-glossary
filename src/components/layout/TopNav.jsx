@@ -124,7 +124,25 @@ function MainMenu({
   };
 
   if (!isOpen) return null;
-  const { progress, surpriseMe, visited, copied, resetProgress } = explore;
+  const { surpriseMe, visited, copied, resetProgress } = explore;
+
+  // Progress UI follows the active section so "Your Progress" always means
+  // "your progress in the thing I am currently looking at".
+  const isBuildSection = siteSection === 'build';
+  const progress = isBuildSection ? explore.buildProgress : explore.progress;
+  const progressSections = isBuildSection
+    ? BUILD_LITERACY_CLUSTERS.map(cluster => ({
+        id: cluster.id,
+        name: cluster.title,
+        items: cluster.topics,
+        colors: BUILD_LITERACY_NAV_COLORS,
+      }))
+    : categories.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        items: cat.items,
+        colors: CATEGORY_COLORS[cat.id],
+      }));
 
   const handleSurprise = () => {
     const id = surpriseMe();
@@ -269,25 +287,25 @@ function MainMenu({
               </div>
             </div>
 
-            {/* Category progress bars */}
+            {/* Per-section progress bars (categories or build clusters) */}
             <div className="px-4 pb-3 space-y-2">
-              {categories.map(cat => {
-                const cc = CATEGORY_COLORS[cat.id];
-                const catVisited = cat.items.filter(i => visited.has(i.id)).length;
-                const catPercent = Math.round((catVisited / cat.items.length) * 100);
-                const isComplete = catVisited === cat.items.length;
+              {progressSections.map(section => {
+                const cc = section.colors;
+                const sectionVisited = section.items.filter(i => visited.has(i.id)).length;
+                const sectionPercent = Math.round((sectionVisited / section.items.length) * 100);
+                const isComplete = sectionVisited === section.items.length;
                 return (
-                  <div key={cat.id}>
+                  <div key={section.id}>
                     <div className="flex items-center gap-2 mb-1">
                       <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
-                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{cat.name}</span>
+                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
                       {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
-                      <span className="ml-auto text-xs text-zinc-400">{catVisited}/{cat.items.length}</span>
+                      <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                     </div>
                     <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full bg-gradient-to-r ${cc.gradient} transition-all duration-500`}
-                        style={{ width: `${catPercent}%` }}
+                        style={{ width: `${sectionPercent}%` }}
                       />
                     </div>
                   </div>
@@ -382,6 +400,26 @@ export default function TopNav({
   const catColors = siteSection === 'build'
     ? BUILD_LITERACY_NAV_COLORS
     : (activeCat ? CATEGORY_COLORS[activeCat.id] : CATEGORY_COLORS.overlays);
+
+  // Progress UI (rings + breakdown) follows the active section.
+  const isBuildSection = siteSection === 'build';
+  const activeProgress = isBuildSection ? explore.buildProgress : explore.progress;
+  const progressRingColor = isBuildSection
+    ? BUILD_LITERACY_NAV_COLORS.accent
+    : activeCatColors.accent;
+  const progressSections = isBuildSection
+    ? BUILD_LITERACY_CLUSTERS.map(cluster => ({
+        id: cluster.id,
+        name: cluster.title,
+        items: cluster.topics,
+        colors: BUILD_LITERACY_NAV_COLORS,
+      }))
+    : categories.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        items: cat.items,
+        colors: CATEGORY_COLORS[cat.id],
+      }));
 
   // Build literacy: active topic and its cluster, mirroring the glossary's
   // category + component pair.
@@ -816,15 +854,15 @@ export default function TopNav({
                     <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="4" />
                     <circle
                       cx="18" cy="18" r="15" fill="none" stroke="currentColor"
-                      className={activeCatColors.accent} strokeWidth="4"
-                      strokeDasharray={`${explore.progress.percent * 0.94} 200`}
+                      className={progressRingColor} strokeWidth="4"
+                      strokeDasharray={`${activeProgress.percent * 0.94} 200`}
                       strokeLinecap="round"
                     />
                   </svg>
                 </div>
               }
               iconOnly
-              ariaLabel={`Progress: ${explore.progress.visited} of ${explore.progress.total}`}
+              ariaLabel={`${isBuildSection ? 'Build literacy' : 'UI glossary'} progress: ${activeProgress.visited} of ${activeProgress.total}`}
               isOpen={openDropdown === 'progress'}
               onToggle={() => setOpenDropdown(openDropdown === 'progress' ? null : 'progress')}
               onClose={() => setOpenDropdown(null)}
@@ -837,52 +875,52 @@ export default function TopNav({
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
                       className="text-emerald-500" strokeWidth="1.5"
-                      strokeDasharray={`${explore.progress.masteredPercent * 1.0367} 200`}
+                      strokeDasharray={`${activeProgress.masteredPercent * 1.0367} 200`}
                       strokeLinecap="round"
                     />
                     <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
                     <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
-                      className={activeCatColors.accent} strokeWidth="2.5"
-                      strokeDasharray={`${explore.progress.percent * 0.7854} 200`}
+                      className={progressRingColor} strokeWidth="2.5"
+                      strokeDasharray={`${activeProgress.percent * 0.7854} 200`}
                       strokeLinecap="round"
                     />
                   </svg>
                   <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-zinc-700 dark:text-zinc-200">
-                    {explore.progress.visited}
+                    {activeProgress.visited}
                   </span>
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">
-                    Your Progress
+                    {isBuildSection ? 'Build literacy progress' : 'UI glossary progress'}
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight mt-0.5">
-                    {explore.progress.visited}/{explore.progress.total} explored · {explore.progress.copied} copied
+                    {activeProgress.visited}/{activeProgress.total} explored · {activeProgress.copied} copied
                   </p>
-                  {explore.progress.mastered > 0 && (
+                  {activeProgress.mastered > 0 && (
                     <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
-                      {explore.progress.mastered} mastered ✓
+                      {activeProgress.mastered} mastered ✓
                     </p>
                   )}
                 </div>
               </div>
               <div className="px-4 pb-3 space-y-2">
-                {categories.map(cat => {
-                  const cc = CATEGORY_COLORS[cat.id];
-                  const catVisited = cat.items.filter(i => explore.visited.has(i.id)).length;
-                  const catPercent = Math.round((catVisited / cat.items.length) * 100);
-                  const isComplete = catVisited === cat.items.length;
+                {progressSections.map(section => {
+                  const cc = section.colors;
+                  const sectionVisited = section.items.filter(i => explore.visited.has(i.id)).length;
+                  const sectionPercent = Math.round((sectionVisited / section.items.length) * 100);
+                  const isComplete = sectionVisited === section.items.length;
                   return (
-                    <div key={cat.id}>
+                    <div key={section.id}>
                       <div className="flex items-center gap-2 mb-1">
                         <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
-                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{cat.name}</span>
+                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
                         {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
-                        <span className="ml-auto text-xs text-zinc-400">{catVisited}/{cat.items.length}</span>
+                        <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                       </div>
                       <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full bg-gradient-to-r ${cc.gradient} transition-all duration-500`}
-                          style={{ width: `${catPercent}%` }}
+                          style={{ width: `${sectionPercent}%` }}
                         />
                       </div>
                     </div>
@@ -915,8 +953,8 @@ export default function TopNav({
                 <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
                   <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-700" strokeWidth="4" />
                   <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor"
-                    className={activeCatColors.accent} strokeWidth="4"
-                    strokeDasharray={`${explore.progress.percent * 0.94} 200`}
+                    className={progressRingColor} strokeWidth="4"
+                    strokeDasharray={`${activeProgress.percent * 0.94} 200`}
                     strokeLinecap="round"
                   />
                 </svg>

@@ -1,227 +1,242 @@
-// Curated learning paths — cover all 49 component entries in 6 themed sequences.
-// Each path has: id, name, description, items (ordered ids), quiz (5 scenario questions).
-// Quiz answers reference component ids that live in the path's items list.
+// Curated learning paths — all glossary component ids in 6 themed sequences (101 entries).
+// Each path: id, name, description, items (ordered ids), quiz (5 questions).
+// Quiz answers reference component ids that appear in that path's items list.
+
+import { CATEGORIES } from './categories.jsx';
+
+const ALL_COMPONENT_IDS = CATEGORIES.flatMap((c) => c.items.map((i) => i.id));
+
+// Six contiguous slices covering every id once: 17+17+17+17+17+16 = 101
+const SLICES = [
+  [0, 17],
+  [17, 34],
+  [34, 51],
+  [51, 68],
+  [68, 85],
+  [85, 101],
+];
+
+function sliceItems([a, b]) {
+  return ALL_COMPONENT_IDS.slice(a, b);
+}
 
 export const PATHS = [
   {
     id: 'overlays',
-    name: 'Overlay Essentials',
-    tagline: 'Things that sit on top of your UI',
+    name: 'Surfaces & overlays',
+    tagline: 'Dialogs, floating layers, and core controls',
     description:
-      'Modals, drawers, popovers, tooltips, and toasts all "float" above your page — but each one behaves differently. Learn when to block the user, when to allow outside clicks, and when to just whisper.',
-    items: ['modal', 'drawer', 'popover', 'tooltip', 'toast'],
+      'Modals, drawers, sheets, toasts, and tooltips compete for attention — learn which one blocks the world, which whispers, and which pairs with your first-line inputs.',
+    items: sliceItems(SLICES[0]),
     quiz: [
       {
-        q: 'A user is about to permanently delete their account. You need a forceful confirmation they can\'t dismiss by clicking outside. Use a…',
+        q: 'A destructive action needs an explicit confirmation; clicking the backdrop should not dismiss it. Use a…',
         answerId: 'modal',
         optionIds: ['modal', 'toast', 'tooltip', 'popover'],
       },
       {
-        q: 'A user hovers a small icon they don\'t recognize. What shows a brief label?',
-        answerId: 'tooltip',
-        optionIds: ['tooltip', 'modal', 'drawer', 'toast'],
-      },
-      {
-        q: '"Item added to cart" appears briefly in the corner and auto-dismisses. That\'s a…',
+        q: 'A short-lived “Saved” message appears in the corner and fades away. That’s a…',
         answerId: 'toast',
-        optionIds: ['toast', 'modal', 'popover', 'tooltip'],
+        optionIds: ['toast', 'modal', 'drawer', 'popover'],
       },
       {
-        q: 'A filter panel slides in from the right edge of the screen. Which component?',
-        answerId: 'drawer',
-        optionIds: ['drawer', 'modal', 'popover', 'toast'],
+        q: 'On mobile, destructive actions appear as a bottom sheet of buttons. That pattern is an…',
+        answerId: 'actionsheet',
+        optionIds: ['actionsheet', 'popover', 'drawer', 'toast'],
       },
       {
-        q: 'Clicking a user\'s avatar opens a small floating card anchored next to it, and clicking outside closes it. That\'s a…',
-        answerId: 'popover',
-        optionIds: ['popover', 'tooltip', 'modal', 'toast'],
+        q: 'A 6-digit verification code with one character per box is an…',
+        answerId: 'otp',
+        optionIds: ['otp', 'radio', 'slider', 'multiselect'],
+      },
+      {
+        q: 'Choosing a brand accent from a spectrum with hex output calls for a…',
+        answerId: 'colorpicker',
+        optionIds: ['colorpicker', 'slider', 'switch', 'select'],
       },
     ],
   },
   {
     id: 'forms',
-    name: 'Form Fundamentals',
-    tagline: 'The everyday form controls',
+    name: 'Inputs & data chrome',
+    tagline: 'Rich inputs meet tables and charts',
     description:
-      'Every form you build will use these. Selects, switches, radios, sliders, pickers, ratings, and multi-step wizards — each one exists because a checkbox alone can\'t do the job.',
-    items: ['select', 'switch', 'radio', 'slider', 'datepicker', 'rating', 'stepper'],
+      'Comboboxes, grouped inputs, radio cards, and data tables work together — filters, pagination, and your first chart types show up once lists get real.',
+    items: sliceItems(SLICES[1]),
     quiz: [
       {
-        q: 'A simple on/off setting like "Email notifications." Best component?',
-        answerId: 'switch',
-        optionIds: ['switch', 'radio', 'select', 'slider'],
+        q: 'Typeahead search with keyboard highlight in a dropdown list is a…',
+        answerId: 'combobox',
+        optionIds: ['combobox', 'searchfield', 'textfield', 'inputgroup'],
       },
       {
-        q: 'Picking a numeric value from a range where the user can feel the scale (e.g. volume). Use a…',
-        answerId: 'slider',
-        optionIds: ['slider', 'select', 'switch', 'rating'],
+        q: 'Mutually exclusive plans shown as large selectable tiles (not a tiny radio dot) are…',
+        answerId: 'radiocards',
+        optionIds: ['radiocards', 'togglebutton', 'table', 'list'],
       },
       {
-        q: 'One answer from a short set of mutually exclusive options, all visible at once. That\'s a…',
-        answerId: 'radio',
-        optionIds: ['radio', 'select', 'switch', 'datepicker'],
+        q: 'Rows of structured, sortable data with columns belongs in a…',
+        answerId: 'table',
+        optionIds: ['table', 'list', 'tree', 'calendar'],
       },
       {
-        q: 'Breaking a long signup form into Step 1 → Step 2 → Review calls for a…',
-        answerId: 'stepper',
-        optionIds: ['stepper', 'select', 'datepicker', 'rating'],
+        q: 'Comparing categories with vertical or stacked bars uses a…',
+        answerId: 'barchart',
+        optionIds: ['barchart', 'linechart', 'carousel', 'tree'],
       },
       {
-        q: 'Letting a user give 4 of 5 stars on a review. Use a…',
-        answerId: 'rating',
-        optionIds: ['rating', 'slider', 'switch', 'radio'],
+        q: 'A KPI tile with a big number and delta vs. last period is a…',
+        answerId: 'statcard',
+        optionIds: ['statcard', 'table', 'calendar', 'barchart'],
       },
     ],
   },
   {
     id: 'data',
-    name: 'Data & Display',
-    tagline: 'Show information at a glance',
+    name: 'Data shapes & flows',
+    tagline: 'Visualization, density, and form journeys',
     description:
-      'Tables, lists, trees, calendars, stat cards, charts, filters, pagination, masonry grids, and carousels — different shapes of data want different containers. Pick the wrong one and your page feels wrong.',
-    items: ['table', 'list', 'tree', 'calendar', 'statcard', 'masonry', 'carousel', 'pagination', 'filterbar', 'barchart'],
+      'Line and pie charts, virtualized lists, maps, activity streams, and multi-step forms — pick the shape that matches how dense, hierarchical, or conversational your data is.',
+    items: sliceItems(SLICES[2]),
     quiz: [
       {
-        q: 'Displaying a single key metric (e.g. "Revenue: $42K, +12%"). That\'s a…',
-        answerId: 'statcard',
-        optionIds: ['statcard', 'table', 'list', 'barchart'],
+        q: 'A thin trend line embedded next to a metric uses a…',
+        answerId: 'sparkline',
+        optionIds: ['sparkline', 'piechart', 'treegrid', 'mapview'],
       },
       {
-        q: 'A hierarchical folder structure where users expand and collapse nodes. Use a…',
-        answerId: 'tree',
-        optionIds: ['tree', 'list', 'table', 'masonry'],
+        q: 'Part-to-whole percentages with a hollow center label is a donut /…',
+        answerId: 'piechart',
+        optionIds: ['piechart', 'sparkline', 'virtuallist', 'mapview'],
       },
       {
-        q: 'Rows of structured data with sortable, comparable columns. That\'s a…',
-        answerId: 'table',
-        optionIds: ['table', 'list', 'calendar', 'tree'],
+        q: 'A long chat history with alternating bubbles is a…',
+        answerId: 'chatthread',
+        optionIds: ['chatthread', 'virtuallist', 'activitystream', 'linkcard'],
       },
       {
-        q: 'Users narrow a long list with removable chips like "Status: Active" and a search field in the toolbar. That\'s a…',
-        answerId: 'filterbar',
-        optionIds: ['filterbar', 'table', 'pagination', 'list'],
+        q: 'Breaking a long wizard into numbered steps uses a…',
+        answerId: 'stepper',
+        optionIds: ['stepper', 'datepicker', 'rating', 'taginput'],
       },
       {
-        q: 'An admin table has 2,000 rows—you show 50 at a time with page numbers and next/previous. That\'s…',
-        answerId: 'pagination',
-        optionIds: ['pagination', 'carousel', 'list', 'barchart'],
+        q: 'Scanning a ticket or deep-linking a device often uses a…',
+        answerId: 'qrcode',
+        optionIds: ['qrcode', 'linkcard', 'mapview', 'sparkline'],
       },
     ],
   },
   {
     id: 'feedback',
-    name: 'Status & Feedback',
-    tagline: 'Telling the user what\'s happening',
+    name: 'Layout & navigation',
+    tagline: 'Structure the page and move between modes',
     description:
-      'Alerts, empty states, badges, avatars, timelines, skeletons, and progress bars. These are the tiny signals that make an interface feel alive, responsive, and trustworthy.',
-    items: ['alert', 'empty', 'badge', 'avatars', 'timeline', 'skeleton', 'progress'],
+      'Date ranges, split panes, app shells, tabs, mega menus, and disclosures — these patterns decide how users scan, filter, and jump without getting lost.',
+    items: sliceItems(SLICES[3]),
     quiz: [
       {
-        q: 'The search returned zero results. What goes in that space?',
-        answerId: 'empty',
-        optionIds: ['empty', 'alert', 'skeleton', 'badge'],
+        q: 'Picking “this week” vs. a custom start/end range needs a…',
+        answerId: 'daterange',
+        optionIds: ['daterange', 'timepicker', 'toolbar', 'filterpanel'],
       },
       {
-        q: 'A placeholder that mimics the shape of content while real data is loading. That\'s a…',
-        answerId: 'skeleton',
-        optionIds: ['skeleton', 'progress', 'empty', 'alert'],
+        q: 'A persistent frame with header, sidebar, and main region is an…',
+        answerId: 'appshell',
+        optionIds: ['appshell', 'sidebar', 'card', 'splitpane'],
       },
       {
-        q: 'A tiny number on a menu icon showing "3 unread." That\'s a…',
-        answerId: 'badge',
-        optionIds: ['badge', 'alert', 'avatars', 'progress'],
+        q: 'Switching between peer sections on one page with a labeled tab strip uses…',
+        answerId: 'tabs',
+        optionIds: ['tabs', 'accordion', 'menubar', 'breadcrumbs'],
       },
       {
-        q: 'A banner at the top of the page warning "Your trial expires in 3 days." Use a…',
-        answerId: 'alert',
-        optionIds: ['alert', 'badge', 'empty', 'timeline'],
+        q: 'Desktop-style menus anchored at the top (File / Edit / Help) use a…',
+        answerId: 'menubar',
+        optionIds: ['menubar', 'dropdownmenu', 'toolbar', 'tabs'],
       },
       {
-        q: 'An ordered visual history: "Ordered → Shipped → Delivered." That\'s a…',
-        answerId: 'timeline',
-        optionIds: ['timeline', 'progress', 'alert', 'avatars'],
+        q: 'Expand-only sections without routing, each with a chevron header, use…',
+        answerId: 'accordion',
+        optionIds: ['accordion', 'tabs', 'scrollarea', 'formcolumns'],
       },
     ],
   },
   {
     id: 'pages',
-    name: 'Pages & Layout',
-    tagline: 'Structure a full page',
+    name: 'Interactions & status',
+    tagline: 'Gestures, overflow, and loading states',
     description:
-      'App shells, sidebars, tabs, dropdown menus, breadcrumbs, accordions, cards, heroes, pricing tables, testimonials, FAQ. These are the big building blocks of a real page — from the persistent chrome to the marketing sections below the fold.',
-    items: ['sidebar', 'appshell', 'tabs', 'dropdownmenu', 'breadcrumbs', 'accordion', 'card', 'hero', 'pricing', 'testimonial', 'faq'],
+      'Context menus, drag-and-drop, lightboxes, kanban boards, alerts, and skeletons — the patterns that make dense apps feel fast, fair, and forgiving.',
+    items: sliceItems(SLICES[4]),
     quiz: [
       {
-        q: 'The big attention-grabbing section at the top of a landing page. That\'s a…',
-        answerId: 'hero',
-        optionIds: ['hero', 'card', 'sidebar', 'accordion'],
+        q: 'Right-clicking a row to expose Cut / Copy / Delete is a…',
+        answerId: 'contextmenu',
+        optionIds: ['contextmenu', 'disclosure', 'megamenu', 'sharesheet'],
       },
       {
-        q: 'Switching between "Overview / Details / Reviews" within the same view. Use…',
-        answerId: 'tabs',
-        optionIds: ['tabs', 'accordion', 'breadcrumbs', 'sidebar'],
+        q: 'Columns of cards moving between “Todo / Doing / Done” describes a…',
+        answerId: 'kanban',
+        optionIds: ['kanban', 'infinitescroll', 'lightbox', 'dragdrop'],
       },
       {
-        q: 'The persistent header, main content region, and navigation frame that wrap every screen in an app. That\'s an…',
-        answerId: 'appshell',
-        optionIds: ['appshell', 'hero', 'sidebar', 'card'],
+        q: 'A neutral inline notice that doesn’t block the page is often an…',
+        answerId: 'alert',
+        optionIds: ['alert', 'empty', 'badge', 'skeleton'],
       },
       {
-        q: 'Clicking "Account" opens a menu with Profile, Billing, and Log out—not picking one value like a form field. That\'s a…',
-        answerId: 'dropdownmenu',
-        optionIds: ['dropdownmenu', 'tabs', 'breadcrumbs', 'sidebar'],
+        q: 'Grey rectangles that mimic final layout while data loads are…',
+        answerId: 'skeleton',
+        optionIds: ['skeleton', 'empty', 'badge', 'avatars'],
       },
       {
-        q: '"Home / Products / Shoes / Running" trail near the top of a page. That\'s…',
-        answerId: 'breadcrumbs',
-        optionIds: ['breadcrumbs', 'tabs', 'dropdownmenu', 'accordion'],
+        q: 'A chronological list of events with icons and timestamps is a…',
+        answerId: 'timeline',
+        optionIds: ['timeline', 'badge', 'avatars', 'alert'],
       },
     ],
   },
   {
     id: 'advanced',
-    name: 'Advanced Patterns',
-    tagline: 'Power-user interactions',
+    name: 'Polish & marketing',
+    tagline: 'Feedback loops and the outer shell',
     description:
-      'OTP fields, file dropzones, tag inputs, rich text editors, command palettes, context menus, drag-and-drop, lightboxes, and infinite scroll. These show up once you move past MVP — they make apps feel fast and fluent.',
-    items: ['otp', 'dropzone', 'taginput', 'richtext', 'command', 'contextmenu', 'dragdrop', 'lightbox', 'infinitescroll'],
+      'Spinners, code blocks, keyboard hints, presence, countdowns, and hero sections — finishing touches that build trust, clarity, and launch-day storytelling.',
+    items: sliceItems(SLICES[5]),
     quiz: [
       {
-        q: 'A 6-digit verification code split across individual boxes. That\'s an…',
-        answerId: 'otp',
-        optionIds: ['otp', 'taginput', 'richtext', 'command'],
+        q: 'Indeterminate work-in-progress with no known percent uses a…',
+        answerId: 'spinner',
+        optionIds: ['spinner', 'progress', 'meter', 'presencedot'],
       },
       {
-        q: 'Pressing ⌘K opens a searchable list to jump anywhere in the app. That\'s a…',
-        answerId: 'command',
-        optionIds: ['command', 'contextmenu', 'dropzone', 'lightbox'],
+        q: 'A dedicated inbox panel listing mentions, deploys, and system notices is a…',
+        answerId: 'notificationcenter',
+        optionIds: ['notificationcenter', 'banner', 'cookieconsent', 'codeblock'],
       },
       {
-        q: 'Dragging files from your desktop onto an area that accepts uploads. That\'s a…',
-        answerId: 'dropzone',
-        optionIds: ['dropzone', 'dragdrop', 'taginput', 'lightbox'],
+        q: 'Syntax-highlighted snippet with copy affordance is a…',
+        answerId: 'codeblock',
+        optionIds: ['codeblock', 'shortcutkeys', 'faq', 'mediaplayer'],
       },
       {
-        q: 'Right-clicking a file in a list opens a small menu of actions. That\'s a…',
-        answerId: 'contextmenu',
-        optionIds: ['contextmenu', 'command', 'dragdrop', 'richtext'],
+        q: '“2h ago” next to a timestamp uses…',
+        answerId: 'relativetime',
+        optionIds: ['relativetime', 'countdown', 'meter', 'presencedot'],
       },
       {
-        q: 'Clicking an image thumbnail expands it to full-screen with prev/next controls. That\'s a…',
-        answerId: 'lightbox',
-        optionIds: ['lightbox', 'carousel', 'dropzone', 'dragdrop'],
+        q: 'Cookie law notice with Accept / Reject across the bottom is…',
+        answerId: 'cookieconsent',
+        optionIds: ['cookieconsent', 'banner', 'faq', 'hero'],
       },
     ],
   },
 ];
 
-export const PATH_IDS = PATHS.map(p => p.id);
+export const PATH_IDS = PATHS.map((p) => p.id);
 
 export function getPath(id) {
-  return PATHS.find(p => p.id === id);
+  return PATHS.find((p) => p.id === id);
 }
 
-// Count of components per path — used for progress bars.
-export const PATH_SIZES = Object.fromEntries(
-  PATHS.map(p => [p.id, p.items.length])
-);
+export const PATH_SIZES = Object.fromEntries(PATHS.map((p) => [p.id, p.items.length]));

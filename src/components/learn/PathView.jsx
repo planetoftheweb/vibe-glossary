@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import {
   X, ChevronLeft, ChevronRight, Check, Lightbulb,
   Trophy, Sparkles, RotateCcw, GraduationCap,
@@ -6,6 +6,7 @@ import {
 import { useGlossary } from '../../hooks/useGlossary';
 import { useCategories } from '../../hooks/useCategories';
 import { CATEGORY_COLORS } from '../../data/categories';
+import { DEMO_REGISTRY } from '../../data/demoRegistry';
 
 const PASS_THRESHOLD = 0.8; // 80% correct to earn badge
 
@@ -262,6 +263,7 @@ function PathProgress({ phase, colors, stepIndex, totalSteps, quizIndex, totalQu
 }
 
 function IntroScreen({ path, colors, onStart, onJump }) {
+  const glossary = useGlossary();
   return (
     <div className="flex-1 p-6 lg:p-10">
       <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-sm lg:text-base font-semibold mb-4`}>
@@ -316,7 +318,9 @@ function IntroScreen({ path, colors, onStart, onJump }) {
 }
 
 function StepScreen({ itemId, data, colors, stepIndex, totalSteps }) {
-  const DemoComponent = data.demo;
+  const categories = useCategories();
+  const categoryFor = (id) => categories.find((c) => c.items.some((i) => i.id === id));
+  const DemoComponent = DEMO_REGISTRY[itemId];
   const cat = categoryFor(itemId);
   return (
     <div className="flex-1 flex flex-col lg:flex-row gap-0 min-h-0">
@@ -348,7 +352,15 @@ function StepScreen({ itemId, data, colors, stepIndex, totalSteps }) {
       </div>
       {/* Right: live demo */}
       <div className="lg:w-[28rem] xl:w-[32rem] shrink-0 bg-zinc-50 dark:bg-zinc-900/60 min-h-[320px] lg:min-h-0 flex items-stretch border-t lg:border-t-0 lg:border-l border-zinc-200 dark:border-zinc-800">
-        {DemoComponent ? <DemoComponent activeOptions={new Set()} /> : null}
+        {DemoComponent ? (
+          <Suspense
+            fallback={
+              <div className="flex-1 flex items-center justify-center text-zinc-400 text-sm">Loading…</div>
+            }
+          >
+            <DemoComponent demoId={itemId} activeOptions={new Set()} />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );

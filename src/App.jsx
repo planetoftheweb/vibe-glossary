@@ -498,7 +498,7 @@ export default function App() {
                   Loading…
                 </div>
               }>
-                <DemoComponent activeOptions={activeOptions} />
+                <DemoComponent demoId={activeItem} activeOptions={activeOptions} />
               </Suspense>
             </div>
           </main>

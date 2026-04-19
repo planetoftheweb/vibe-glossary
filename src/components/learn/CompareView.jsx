@@ -5,6 +5,10 @@ import { useCategories } from '../../hooks/useCategories';
 import { DEMO_REGISTRY } from '../../data/demoRegistry';
 import { CATEGORY_COLORS } from '../../data/categories';
 
+function categoryForItem(itemId, categories) {
+  return categories.find((c) => c.items.some((i) => i.id === itemId));
+}
+
 function ComponentColumn({ itemId, colors }) {
   const glossary = useGlossary();
   const categories = useCategories();
@@ -19,7 +23,7 @@ function ComponentColumn({ itemId, colors }) {
         <div className="flex items-center gap-2 mb-2">
           <div className={`w-2.5 h-2.5 rounded-full ${colors.dot}`} />
           <span className={`text-xs lg:text-sm font-bold uppercase tracking-wider ${colors.accent}`}>
-            {categoryFor(itemId)?.name}
+            {categoryForItem(itemId, categories)?.name}
           </span>
         </div>
         <h3 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-2">
@@ -39,7 +43,7 @@ function ComponentColumn({ itemId, colors }) {
           <Suspense fallback={
             <div className="flex-1 flex items-center justify-center text-zinc-400 text-sm">Loading…</div>
           }>
-            <DemoComponent activeOptions={new Set()} />
+            <DemoComponent demoId={itemId} activeOptions={new Set()} />
           </Suspense>
         ) : null}
       </div>
@@ -49,6 +53,7 @@ function ComponentColumn({ itemId, colors }) {
 
 export default function CompareView({ leftId, rightId, onClose, onSelectItem }) {
   const glossary = useGlossary();
+  const categories = useCategories();
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -61,8 +66,8 @@ export default function CompareView({ leftId, rightId, onClose, onSelectItem }) 
   const right = glossary[rightId];
   if (!left || !right) return null;
 
-  const leftCat = categoryFor(leftId);
-  const rightCat = categoryFor(rightId);
+  const leftCat = categoryForItem(leftId, categories);
+  const rightCat = categoryForItem(rightId, categories);
   const leftColors = leftCat ? CATEGORY_COLORS[leftCat.id] : CATEGORY_COLORS.overlays;
   const rightColors = rightCat ? CATEGORY_COLORS[rightCat.id] : CATEGORY_COLORS.overlays;
 

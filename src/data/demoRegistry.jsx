@@ -1,5 +1,21 @@
 import { lazy } from 'react';
 
+/** Glossary batch 2 — shared compact live preview */
+const CompactPatternDemo = lazy(() => import('../components/demos/CompactPatternDemo'));
+
+const BATCH2_DEMO_IDS = [
+  'actionsheet', 'activitystream', 'banner', 'bottomnav', 'chatthread', 'codeblock', 'colorpicker',
+  'combobox', 'cookieconsent', 'countdown', 'daterange', 'disclosure', 'fileuploadrow', 'filterpanel',
+  'formcolumns', 'hovercard', 'imagecropper', 'inputgroup', 'kanban', 'keyvalue', 'linechart', 'linkcard',
+  'loadingoverlay', 'mapview', 'megamenu', 'menubar', 'meter', 'multiselect', 'notificationcenter',
+  'passwordfield', 'piechart', 'presencedot', 'producttour', 'qrcode', 'radiocards', 'relativetime',
+  'scrollarea', 'searchfield', 'segmented', 'sharesheet', 'shortcutkeys', 'sparkline', 'splitpane',
+  'spinner', 'stickyheader', 'textfield', 'timepicker', 'togglebutton', 'toolbar', 'treegrid',
+  'virtuallist', 'mediaplayer',
+];
+
+const batch2Registry = Object.fromEntries(BATCH2_DEMO_IDS.map((id) => [id, CompactPatternDemo]));
+
 export const DEMO_REGISTRY = {
   // Overlays
   modal:   lazy(() => import('../components/demos/overlays/ModalDemo')),
@@ -59,4 +75,6 @@ export const DEMO_REGISTRY = {
   pricing:     lazy(() => import('../components/demos/marketing/PricingDemo')),
   testimonial: lazy(() => import('../components/demos/marketing/TestimonialDemo')),
   faq:         lazy(() => import('../components/demos/marketing/FaqDemo')),
+
+  ...batch2Registry,
 };

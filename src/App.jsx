@@ -386,8 +386,8 @@ export default function App() {
                       {currentData.title}
                     </h1>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {showQuiz && carouselArrows}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {carouselArrows}
                     <button
                       onClick={() => setInfoOpen(false)}
                       className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -414,38 +414,17 @@ export default function App() {
                       {currentData.definition}
                     </p>
 
-                    {/* Teaching row: sibling compare pills + vibeTip */}
-                    {(siblings.length > 0 || currentData.vibeTip) && (
-                      <div className="flex flex-col gap-3 lg:gap-4 mb-6 lg:mb-10">
-                        {siblings.length > 0 && (
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
-                              Compare
-                            </span>
-                            {siblings.map(sib => (
-                              <button
-                                key={sib.id}
-                                onClick={() => setCompareWith(sib.id)}
-                                className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${activeCat.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
-                              >
-                                vs {sib.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                        {currentData.vibeTip && (
-                          <div className="flex items-start gap-2 text-sm lg:text-base text-zinc-500 dark:text-zinc-400 italic">
-                            <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
-                            <span>{currentData.vibeTip}</span>
-                          </div>
-                        )}
+                    {currentData.vibeTip && (
+                      <div className="flex items-start gap-2 text-sm lg:text-base text-zinc-500 dark:text-zinc-400 italic mb-6 lg:mb-8">
+                        <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
+                        <span>{currentData.vibeTip}</span>
                       </div>
                     )}
                   </>
                 )}
 
-                {/* Prompt Builder with carousel arrows in the top-right — hidden during an active quiz so it doesn't reveal the answer */}
-                <div className={`mb-8 relative ${showQuiz ? 'hidden' : ''}`}>
+                {/* Prompt Builder — hidden during an active quiz so it doesn't reveal the answer */}
+                <div className={`mb-8 ${showQuiz ? 'hidden' : ''}`}>
                   <PromptBuilder
                     data={currentData}
                     activeOptions={activeOptions}
@@ -453,10 +432,25 @@ export default function App() {
                     categoryColors={activeCat}
                     onCopy={handleCopyPrompt}
                   />
-                  <div className="absolute top-3 lg:top-4 right-3 lg:right-4 z-20">
-                    {carouselArrows}
-                  </div>
                 </div>
+
+                {/* Compare — below spec generator */}
+                {!showQuiz && siblings.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+                      Compare
+                    </span>
+                    {siblings.map(sib => (
+                      <button
+                        key={sib.id}
+                        onClick={() => setCompareWith(sib.id)}
+                        className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${activeCat.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
+                      >
+                        vs {sib.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

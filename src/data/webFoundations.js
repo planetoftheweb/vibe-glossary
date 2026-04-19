@@ -5,8 +5,16 @@
  * else assumes you know this stuff.
  *
  * Voice: friend explaining over coffee. Not a textbook. Spell out every
- * acronym the first time. Each `talkToAi` is a real, copyable prompt.
- * Each `mnemonic` is the one line you keep when you forget the rest.
+ * acronym the first time. No em dashes anywhere.
+ *
+ * `talkToAi` shape:
+ *   - starter: generic, fillable prompt with [brackets]. Tells the AI to
+ *     ask the user 3-5 focused questions before doing anything, and to
+ *     push back if a request seems off. THIS is what they copy.
+ *   - example: a worked, real-world version so they see what a
+ *     filled-in starter actually looks like.
+ *
+ * `mnemonic`: the one line they keep when they forget the rest.
  */
 
 export const WEB_FOUNDATIONS_CLUSTER = {
@@ -27,8 +35,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Tag is the label. Element is the label plus what it wraps. Attribute is a setting on the label.',
       vibeTip:
         'When you tell your AI "add an attribute" instead of "add a property", you stop getting JavaScript when you wanted HTML.',
-      talkToAi:
-        'Add a "data-testid" attribute called "submit-button" to the existing <button> element in components/CheckoutForm.jsx. Do not change anything else.',
+      talkToAi: {
+        starter:
+          'I need to add an HTML attribute to an existing element in [file path], and I want to use the right vocabulary so you do not rewrite the whole component. Before you change anything, ask me: 1) which element exactly (tag name plus surrounding context), 2) the attribute name and value I want, 3) whether anything else should be touched. Then make the smallest possible change and show me the diff.',
+        example:
+          'Add a "data-testid" attribute called "submit-button" to the existing <button> element in components/CheckoutForm.jsx. Do not change anything else.',
+      },
       mnemonic:
         'Tag = label. Element = label plus what it wraps. Attribute = setting on the label.',
       relatedGlossaryIds: ['button', 'inputgroup'],
@@ -44,8 +56,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Block elements eat the whole row. Inline elements share the row. inline-block is the polite middle ground.',
       vibeTip:
         'When the AI gives you a layout that looks broken, ask it to check whether each element is block or inline before adding more CSS.',
-      talkToAi:
-        'In the article header, the date should sit on the same line as the author name. Right now it drops to a new line. Likely cause: the date is in a <div>. Change it to a <span> and add a 12px left margin.',
+      talkToAi: {
+        starter:
+          'Something on [page or component] is wrapping or aligning wrong. Before suggesting CSS, ask me: 1) which two or three elements are involved, 2) what I want them to look like (same row, stacked, sharing space), 3) whether any of them are <div>, <span>, <a>, etc. Then explain whether the issue is block vs inline behavior, suggest the smallest fix (changing the tag or the display value), and only add new CSS if there is no semantic fix.',
+        example:
+          'In the article header, the date should sit on the same line as the author name. Right now it drops to a new line. Likely cause: the date is in a <div>. Change it to a <span> and add a 12px left margin.',
+      },
       mnemonic:
         'Block hogs the row. Inline shares it.',
       relatedGlossaryIds: ['card', 'list'],
@@ -61,8 +77,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'A <div> is a wrapper. A <button>, <nav>, or <article> is a wrapper that also tells the browser what it means.',
       vibeTip:
         'Tell your AI "use semantic HTML" once at the start of a project and it will stop building div soup. Your accessibility audits will thank you.',
-      talkToAi:
-        'Refactor this component to use semantic HTML. The "Card" wrapper should stay a <div>, but the title row needs an <h3>, the action row needs a <footer>, and the "Buy" thing that currently is a <div onClick> must become a real <button>.',
+      talkToAi: {
+        starter:
+          'Refactor [component or page] to use semantic HTML. Before you change anything, ask me: 1) the file path and rough purpose of the component, 2) which parts are interactive (buttons, links, form fields) versus structural (headers, sections, navigation), 3) whether I want minimal changes or a full rewrite. Then propose a tag-by-tag replacement plan, flag anywhere you would push back on my current structure, and only write the diff after I confirm the plan.',
+        example:
+          'Refactor this Card component to use semantic HTML. The wrapper should stay a <div>, but the title row needs an <h3>, the action row needs a <footer>, and the "Buy" thing that currently is a <div onClick> must become a real <button>.',
+      },
       mnemonic:
         'If a tag exists for the thing, use that tag.',
       relatedGlossaryIds: ['button', 'card'],
@@ -78,8 +98,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'HTML is for pages and forgives mistakes. XML is for data and is picky. JSON is the modern data format that won.',
       vibeTip:
         'When an AI asks "what format do you want?", say JSON unless you have a specific reason not to. It is what every modern tool understands by default.',
-      talkToAi:
-        'Convert this old XML config into a JSON file with the same structure. Keep the keys lowercase. Show me both files so I can diff them.',
+      talkToAi: {
+        starter:
+          'I have a [source format] file at [path] and I want to convert it to [target format] for [reason]. Before writing any code, ask me: 1) the structure of the source (paste a sample), 2) whether the target needs to match the source one-to-one or be reshaped, 3) any keys I want renamed or dropped. Then show me both files side by side and call out anything you think I should reconsider in the new shape.',
+        example:
+          'Convert this old XML config into a JSON file with the same structure. Keep the keys lowercase. Show me both files so I can diff them.',
+      },
       mnemonic:
         'HTML for pages, JSON for data, XML for legacy.',
       relatedGlossaryIds: ['table'],
@@ -95,8 +119,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'id is unique. class is shared. name is for forms.',
       vibeTip:
         'Tell your AI to use classes for styling and ids only when something really needs to be unique on the page (jump links, form labels, etc.). It will stop generating duplicate-id bugs.',
-      talkToAi:
-        'In the signup form, every input needs a "name" attribute matching its label in snake_case (full_name, email_address, etc.) so our backend can read them. Add a unique "id" only if there is a <label htmlFor> pointing at it.',
+      talkToAi: {
+        starter:
+          'Audit [form or page] and make sure every input has the right id, class, and name attributes. Before changing anything, ask me: 1) what the backend expects each field to be called, 2) whether any inputs need a <label htmlFor> link, 3) which classes are styling versus behavioral. Then propose the changes as a checklist, flag any duplicate ids you find, and only write the diff once I confirm.',
+        example:
+          'In the signup form, every input needs a "name" attribute matching its label in snake_case (full_name, email_address, etc.) so our backend can read them. Add a unique "id" only if there is a <label htmlFor> pointing at it.',
+      },
       mnemonic:
         'id is one. class is many. name is for the server.',
       relatedGlossaryIds: ['textfield', 'inputgroup'],
@@ -112,8 +140,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'HTML is the recipe. The DOM is the dish on the table after the browser cooks it and JavaScript keeps stirring.',
       vibeTip:
         'When something "is in your code but not on the page", say "inspect the DOM" and the AI will check what actually rendered, not what you wrote.',
-      talkToAi:
-        'The Cancel button is in my JSX but missing from the page. Inspect the DOM to confirm it actually rendered, then check whether something is hiding it with display:none or removing it conditionally.',
+      talkToAi: {
+        starter:
+          'I have a "the code is right but the page is wrong" bug in [component]. Before guessing, ask me: 1) what I see vs what I expect, 2) the component file path, 3) any conditional logic that decides whether the element renders. Then walk me through inspecting the live DOM (in DevTools or with a Playwright accessibility snapshot) to confirm whether the element is rendered, hidden, or skipped, and only suggest a fix once we know which.',
+        example:
+          'The Cancel button is in my JSX but missing from the page. Inspect the DOM to confirm it actually rendered, then check whether something is hiding it with display:none or removing it conditionally.',
+      },
       mnemonic:
         'HTML is the recipe. The DOM is the meal.',
       relatedGlossaryIds: ['tree'],
@@ -131,8 +163,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'A selector picks the targets. The cascade picks the winner when targets disagree.',
       vibeTip:
         'When a style is being overridden, ask the AI to inspect computed styles and report which rule wins, instead of layering on more CSS until something sticks.',
-      talkToAi:
-        'My .btn-primary background is not turning blue. Inspect the computed styles in DevTools, find which rule is winning the cascade, and either bump my selector\'s specificity or remove whatever is overriding it. Do not add !important.',
+      talkToAi: {
+        starter:
+          'A style on [element / class] is not applying the way I expect. Before adding any new CSS, ask me: 1) the selector I wrote and the file it lives in, 2) what I expect to see vs what I see, 3) whether I am open to renaming a class or restructuring. Then walk me through DevTools to find the rule that is winning the cascade, explain why it wins, and propose the smallest fix. Do not use !important.',
+        example:
+          'My .btn-primary background is not turning blue. Inspect the computed styles in DevTools, find which rule is winning the cascade, and either bump my selector\'s specificity or remove whatever is overriding it. Do not add !important.',
+      },
       mnemonic:
         'Selectors point. The cascade decides who wins.',
       relatedGlossaryIds: [],
@@ -148,8 +184,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Content is the photo. Padding is the matte. Border is the frame. Margin is the air between frames.',
       vibeTip:
         'Always ask your AI to use box-sizing: border-box. Without it, your widths and paddings constantly fight each other.',
-      talkToAi:
-        'Set box-sizing: border-box on everything (use the universal selector). Then on the .product-card, give the inside 16px of breathing room and 24px of space between cards.',
+      talkToAi: {
+        starter:
+          'Spacing on [component] feels off. Before changing anything, ask me: 1) whether the gap I am unhappy with is INSIDE one element or BETWEEN elements, 2) the current values and what I want instead, 3) whether box-sizing: border-box is already set globally. Then explain which of (padding, margin, border, gap) is the right tool, propose the change, and call out any place I should switch to a flex/grid gap instead of margins.',
+        example:
+          'Set box-sizing: border-box on everything (use the universal selector). Then on the .product-card, give the inside 16px of breathing room and 24px of space between cards.',
+      },
       mnemonic:
         'Content, padding, border, margin: from the inside out.',
       relatedGlossaryIds: ['card'],
@@ -165,8 +205,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Padding is breathing room. Margin is elbow room. Background fills padding, never margin.',
       vibeTip:
         'When you say "give the button more space", be specific: "more padding inside the button" vs "more margin around the button" produce very different layouts.',
-      talkToAi:
-        'In the pricing cards, the price text is touching the card edge. Add 20px of padding inside each card. Separately, the cards themselves are crammed together: add 24px of horizontal margin between them, or switch the parent to display: flex with gap: 24px (preferred).',
+      talkToAi: {
+        starter:
+          'Add or fix spacing on [component]. Before writing CSS, ask me: 1) is the gap I want INSIDE the element (between content and border) or AROUND it (between this and neighbors), 2) the values in pixels or rem, 3) whether the parent uses flex/grid (so we can use gap instead of margins). Then propose the change, prefer gap over margins where the parent is a flex/grid container, and warn me if margin collapse is likely to bite.',
+        example:
+          'In the pricing cards, the price text is touching the card edge. Add 20px of padding inside each card. Separately, the cards themselves are crammed together: add 24px of horizontal margin between them, or switch the parent to display: flex with gap: 24px (preferred).',
+      },
       mnemonic:
         'Padding is for breathing. Margin is for elbows.',
       relatedGlossaryIds: ['card'],
@@ -182,8 +226,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Block stacks. Inline flows. Flex lines things up in a row or column. Grid gives you rows AND columns.',
       vibeTip:
         'Tell your AI which display you want for the parent. "Make this a flex row with 16px gap" beats "put these next to each other" every time.',
-      talkToAi:
-        'The header has a logo on the left and three nav links on the right. Make the <header> display: flex, justify-content: space-between, align-items: center, with 24px horizontal padding. Group the nav links in a <nav> with display: flex, gap: 16px.',
+      talkToAi: {
+        starter:
+          'I want to lay out [a row / a column / a dashboard area] in [component]. Before writing CSS, ask me: 1) the children involved and the visual I am going for, 2) whether things should wrap on small screens, 3) what the gap, alignment, and overflow behavior should be. Then pick the right display value (flex vs grid vs inline-block), explain why, and only write the CSS after I agree on the approach.',
+        example:
+          'The header has a logo on the left and three nav links on the right. Make the <header> display: flex, justify-content: space-between, align-items: center, with 24px horizontal padding. Group the nav links in a <nav> with display: flex, gap: 16px.',
+      },
       mnemonic:
         'When two things will not behave next to each other, the parent probably needs display: flex.',
       relatedGlossaryIds: ['appshell'],
@@ -199,8 +247,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Flex is one-dimensional (row or column). Grid is two-dimensional. Flex inside Grid is normal and good.',
       vibeTip:
         'Ask your AI for "Grid for the page shell, Flex for the rows inside it" and your layout code will read like a sentence.',
-      talkToAi:
-        'Build the dashboard layout with CSS Grid: a 240px sidebar on the left, a 64px header across the top, and a main content area filling the rest. Inside the header, use Flex to put the search bar on the left, spacer in the middle, and avatar on the right.',
+      talkToAi: {
+        starter:
+          'Build the layout for [page or section]. Before writing CSS, ask me: 1) sketch or describe the regions (header, sidebar, main, etc.) and their fixed/fluid sizes, 2) how it should reflow on tablet and mobile, 3) what lives inside each region and how those children should align. Then propose Grid for the page-level skeleton and Flex for the rows inside, explain why for any spot where you would do the opposite, and only write the code after I confirm the plan.',
+        example:
+          'Build the dashboard layout with CSS Grid: a 240px sidebar on the left, a 64px header across the top, and a main content area filling the rest. Inside the header, use Flex to put the search bar on the left, spacer in the middle, and avatar on the right.',
+      },
       mnemonic:
         'Flex for one direction. Grid for two.',
       relatedGlossaryIds: ['appshell', 'sidebar'],
@@ -216,8 +268,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Static is normal. Relative is normal but nudgeable. Absolute is parent-anchored. Fixed is window-anchored. Sticky is "relative until you scroll".',
       vibeTip:
         'When you want something pinned inside a card, set the card to position: relative first, then position: absolute on the child. The AI will forget half the time, so check.',
-      talkToAi:
-        'Pin a small "NEW" badge to the top-right corner of the .product-card. Make the card position: relative, then absolutely position the badge with top: 8px and right: 8px. The badge should sit on top of the image without affecting layout.',
+      talkToAi: {
+        starter:
+          'I want to pin [child element] somewhere on [parent or page]. Before writing CSS, ask me: 1) should it be anchored to a specific parent, to the whole page, or to the viewport (stays put when scrolling), 2) the exact offsets from which edges, 3) whether it should still take up its original space or float over other content. Then choose the right position value, remind me to set position: relative on the parent if needed, and write the CSS.',
+        example:
+          'Pin a small "NEW" badge to the top-right corner of the .product-card. Make the card position: relative, then absolutely position the badge with top: 8px and right: 8px. The badge should sit on top of the image without affecting layout.',
+      },
       mnemonic:
         'Absolute = anchored to nearest positioned parent. Set the parent first.',
       relatedGlossaryIds: ['badge', 'tooltip'],
@@ -233,8 +289,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'px is fixed. rem scales with the user\'s settings. em scales with its parent. % is parent-relative. vh/vw are screen-relative.',
       vibeTip:
         'Default to rem for sizes and spacing. Use px only for borders and shadows. Use vh/vw sparingly because they get weird on mobile keyboards.',
-      talkToAi:
-        'In the design system, replace every fixed pixel font size with rem (16px = 1rem). Keep border widths and shadow blurs in pixels. Convert hero section heights from 600px to a min-height of 80vh with a max of 720px.',
+      talkToAi: {
+        starter:
+          'I want to standardize the units in [stylesheet or design tokens file]. Before changing anything, ask me: 1) what currently uses px, 2) whether I have a root font size convention (default is 16px = 1rem), 3) which things should scale with user font settings vs stay pixel-perfect. Then propose the conversion plan (rem for sizes/spacing, px for borders/shadows, % or vh/vw where appropriate), flag anywhere you would push back, and write the diff after I confirm.',
+        example:
+          'In the design system, replace every fixed pixel font size with rem (16px = 1rem). Keep border widths and shadow blurs in pixels. Convert hero section heights from 600px to a min-height of 80vh with a max of 720px.',
+      },
       mnemonic:
         'rem for sizes, px for borders, % for "share of parent", vh/vw for screen.',
       relatedGlossaryIds: [],
@@ -250,8 +310,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Hex is the default everyone copies. HSL is the friendliest to tweak. OKLCH gives perceptually even palettes. RGB is the polite middle ground.',
       vibeTip:
         'Tell your AI to use HSL or OKLCH for design tokens. You can shift "primary" lighter or darker by changing one number instead of regenerating a whole palette.',
-      talkToAi:
-        'Convert our color tokens from hex to HSL. Keep the name and value mapping the same, but write a comment next to each one explaining what changing the L number would do. Generate a hover variant of --color-primary that is 8% darker.',
+      talkToAi: {
+        starter:
+          'I want to convert our color tokens in [path] to [HSL / OKLCH] so they are easier to tweak. Before changing anything, ask me: 1) the current format and how the tokens are organized, 2) whether I want hover/active variants generated automatically, 3) whether I care about preserving exact visual output or am open to small perceptual shifts. Then show me the conversion table side by side and call out any pair that would be easier to read in a different format.',
+        example:
+          'Convert our color tokens from hex to HSL. Keep the name and value mapping the same, but write a comment next to each one explaining what changing the L number would do. Generate a hover variant of --color-primary that is 8% darker.',
+      },
       mnemonic:
         'Hex to copy, HSL to tweak, OKLCH for palettes that look right.',
       relatedGlossaryIds: ['colorpicker'],
@@ -267,8 +331,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Specificity is the math. !important is the override that breaks the math. Use !important like a parachute, not a ladder.',
       vibeTip:
         'When you ask your AI to fix a style, say "do not add !important". It will instead refactor the conflict, which is the actual fix.',
-      talkToAi:
-        'My .btn--primary background is being overridden by .btn somewhere else. Find the conflicting rule, then either reorder the imports so my custom rule loads last, or bump the selector to .btn.btn--primary so it wins by specificity. Do not use !important.',
+      talkToAi: {
+        starter:
+          'My style on [selector] in [file] is being overridden. Before suggesting a fix, ask me: 1) what is winning the cascade (open DevTools and check), 2) whether I can rename or restructure either selector, 3) whether the conflict is in my code or a third-party stylesheet. Then propose the smallest fix (specificity bump, source-order change, or refactor), explain why, and DO NOT use !important unless I explicitly say it is the only option.',
+        example:
+          'My .btn--primary background is being overridden by .btn somewhere else. Find the conflicting rule, then either reorder the imports so my custom rule loads last, or bump the selector to .btn.btn--primary so it wins by specificity. Do not use !important.',
+      },
       mnemonic:
         '!important is a parachute, not a ladder.',
       relatedGlossaryIds: [],
@@ -286,8 +354,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Accessibility is not "extra work for a few people". It is "good defaults that happen to be required by some, helpful for all".',
       vibeTip:
         'Add "accessible" or "follows WCAG AA" to your prompt early. AIs default to "looks nice" and will skip aria-labels, focus rings, and contrast unless you ask.',
-      talkToAi:
-        'Audit this Login form for accessibility (WCAG AA). Check: every input has an associated <label>, the form is fully usable with Tab and Enter, focus rings are visible, text contrast is at least 4.5:1, and error messages are announced to screen readers. List what is missing and fix it.',
+      talkToAi: {
+        starter:
+          'Audit [page or component] for accessibility against WCAG AA. Before suggesting fixes, ask me: 1) the file path and rough purpose, 2) whether I want the audit done by reading the code, by running an automated tool (axe, Lighthouse), or both, 3) which fixes I want auto-applied vs just listed. Then produce a checklist of issues grouped by severity, propose fixes for each, and call out anywhere I should reconsider the underlying design rather than patch over it.',
+        example:
+          'Audit this Login form for accessibility (WCAG AA). Check: every input has an associated <label>, the form is fully usable with Tab and Enter, focus rings are visible, text contrast is at least 4.5:1, and error messages are announced to screen readers. List what is missing and fix it.',
+      },
       mnemonic:
         'Accessibility is good defaults, not extra work.',
       relatedGlossaryIds: ['button', 'textfield'],
@@ -303,8 +375,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Real semantic HTML beats ARIA. ARIA is the second-best option for the things HTML alone cannot describe.',
       vibeTip:
         'When you ask for an icon button, always ask the AI for an aria-label too. It is one extra word in the prompt and saves a screen reader user from hearing "button button button".',
-      talkToAi:
-        'Every icon-only <button> in this navbar (search, notifications, profile menu) needs an aria-label that describes what it does ("Search", "Open notifications", "Open profile menu"). Do not change the visible icons.',
+      talkToAi: {
+        starter:
+          'Add the ARIA attributes [component] needs to be screen-reader-friendly. Before changing anything, ask me: 1) what the component is and what each interactive piece does, 2) whether any pieces are icon-only or have non-obvious state (open/closed, pressed, busy), 3) whether the underlying HTML is already semantic. Then propose ONLY the ARIA needed (do not add ARIA that real HTML already covers), explain each one in a sentence, and warn me if I am about to add bad ARIA that would be worse than nothing.',
+        example:
+          'Every icon-only <button> in this navbar (search, notifications, profile menu) needs an aria-label that describes what it does ("Search", "Open notifications", "Open profile menu"). Do not change the visible icons.',
+      },
       mnemonic:
         'No ARIA is better than bad ARIA. Real <button> beats <div role="button">.',
       relatedGlossaryIds: ['button', 'tooltip', 'modal'],
@@ -320,8 +396,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'The DOM is what JavaScript sees. The accessibility tree is what screen readers see. They are similar but not the same.',
       vibeTip:
         'Ask the AI to "verify the accessibility tree shows the right roles" when refactoring custom components. It will use DevTools or a Playwright accessibility snapshot.',
-      talkToAi:
-        'Open Chrome DevTools, switch to the Accessibility panel, and confirm that the Save button in the modal appears as { role: "button", name: "Save" }. If it shows as "generic" or has an empty name, fix it before we ship.',
+      talkToAi: {
+        starter:
+          'Verify the accessibility tree for [component or page] shows the roles and names a screen reader needs. Before doing anything, ask me: 1) which interactive elements I most care about, 2) whether I want this checked manually in DevTools, with axe, or via a Playwright snapshot, 3) any custom widgets you should pay extra attention to. Then list each element with its expected { role, name, state } and what the tree actually shows, and propose fixes for any mismatch.',
+        example:
+          'Open Chrome DevTools, switch to the Accessibility panel, and confirm that the Save button in the modal appears as { role: "button", name: "Save" }. If it shows as "generic" or has an empty name, fix it before we ship.',
+      },
       mnemonic:
         'If it is not in the accessibility tree, screen readers do not know it exists.',
       relatedGlossaryIds: ['modal', 'button'],
@@ -337,8 +417,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Focus is the cursor for the keyboard. Remove the focus ring without replacing it and you have removed the cursor.',
       vibeTip:
         'Tell your AI explicitly: "keep visible focus rings" or "use :focus-visible with a clear outline". Otherwise it will copy a CSS reset that removes them.',
-      talkToAi:
-        'Add a global :focus-visible style: a 2px solid indigo outline with 2px offset, and a matching dark-mode color. Make sure no component anywhere uses outline: none without replacing it. When a modal opens, move focus to its first focusable element; when it closes, return focus to the trigger.',
+      talkToAi: {
+        starter:
+          'Make sure focus management on [page or component] is correct for keyboard users. Before changing anything, ask me: 1) the brand color I want for the focus ring (or use my design tokens), 2) whether any modals/drawers/menus exist that need focus trapping and return, 3) whether outline: none lives anywhere in the codebase. Then propose a global :focus-visible style, list every place that needs trap-and-return, and write the changes after I confirm.',
+        example:
+          'Add a global :focus-visible style: a 2px solid indigo outline with 2px offset, and a matching dark-mode color. Make sure no component anywhere uses outline: none without replacing it. When a modal opens, move focus to its first focusable element; when it closes, return focus to the trigger.',
+      },
       mnemonic:
         'Focus ring = the cursor for keyboard users. Never delete it without designing a replacement.',
       relatedGlossaryIds: ['modal', 'drawer', 'popover'],
@@ -354,8 +438,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'AA is "readable for most people". AAA is "readable for most people in worse conditions". Always hit at least AA.',
       vibeTip:
         'When you generate a color palette, ask your AI for the contrast ratio of every text-on-background pair, not just the primary. The hover state usually fails first.',
-      talkToAi:
-        'Audit every color combination in our design tokens for WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Output a table of pairs and their ratios. For each failing pair, suggest the smallest L change in HSL that would make it pass.',
+      talkToAi: {
+        starter:
+          'Audit the color combinations in [design tokens or component] against WCAG AA contrast. Before fixing anything, ask me: 1) the file with the tokens or the page to scan, 2) whether I am targeting AA (4.5:1 normal, 3:1 large) or AAA, 3) whether you should auto-fix or just report. Then output a table of pairs with their ratios, mark passes/fails, and for each fail propose the smallest L (lightness) shift in HSL that would make it pass without breaking the brand.',
+        example:
+          'Audit every color combination in our design tokens for WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Output a table of pairs and their ratios. For each failing pair, suggest the smallest L change in HSL that would make it pass.',
+      },
       mnemonic:
         '4.5 to 1 for normal text. Below that, you are losing readers.',
       relatedGlossaryIds: ['colorpicker', 'badge'],
@@ -371,8 +459,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         '44px minimum. Visual smaller is fine. The hit area is what matters.',
       vibeTip:
         'When you ask for icon buttons, say "44 by 44 minimum hit area". The AI will pad correctly instead of giving you a beautiful 16px icon no one can tap.',
-      talkToAi:
-        'Every interactive icon in the toolbar (close, edit, delete) should look small (16px icon) but have a 44 by 44 pixel hit area. Use padding on the <button>, not margin, so the click target grows. Add 8px gap between adjacent icons so people do not mis-tap.',
+      talkToAi: {
+        starter:
+          'Audit the tap targets on [component or page] for mobile usability. Before changing anything, ask me: 1) which buttons or links you should focus on, 2) whether visuals can grow or must stay the current size, 3) any spacing constraints between adjacent targets. Then list every target smaller than 44 by 44 pixels, propose padding (not margin) to grow the hit area while keeping the visual the same, and call out any spots where two targets are close enough to mis-tap.',
+        example:
+          'Every interactive icon in the toolbar (close, edit, delete) should look small (16px icon) but have a 44 by 44 pixel hit area. Use padding on the <button>, not margin, so the click target grows. Add 8px gap between adjacent icons so people do not mis-tap.',
+      },
       mnemonic:
         '44 by 44, every tap, every time.',
       relatedGlossaryIds: ['button', 'toolbar'],
@@ -388,8 +480,12 @@ export const WEB_FOUNDATIONS_CLUSTER = {
         'Tab moves between widgets. Arrows move within a widget. Space and Enter activate. Escape closes.',
       vibeTip:
         'When you build any custom widget, the first sentence in the prompt should be "support standard keyboard navigation". The AI knows the patterns; it just does not apply them unless asked.',
-      talkToAi:
-        'For the new <Tabs> component: Tab should move focus into the tab list once, then arrow keys (Left/Right) move between tabs, Home and End jump to first/last, and Enter or Space activates the focused tab. Tab again moves out into the panel. Match the WAI-ARIA Authoring Practices.',
+      talkToAi: {
+        starter:
+          'Build [custom widget, e.g. tabs / menu / combobox] with proper keyboard support. Before writing any code, ask me: 1) the visual and behavior I want, 2) whether I follow the WAI-ARIA Authoring Practices for this widget pattern, 3) whether the widget lives inside another focusable area. Then describe the exact key bindings (Tab, arrows, Home/End, Enter, Space, Escape), confirm with me, and only then build it.',
+        example:
+          'For the new <Tabs> component: Tab should move focus into the tab list once, then arrow keys (Left/Right) move between tabs, Home and End jump to first/last, and Enter or Space activates the focused tab. Tab again moves out into the panel. Match the WAI-ARIA Authoring Practices.',
+      },
       mnemonic:
         'Tab between widgets. Arrows within. Space and Enter to act. Escape to close.',
       relatedGlossaryIds: ['tabs', 'dropdownmenu', 'datepicker'],

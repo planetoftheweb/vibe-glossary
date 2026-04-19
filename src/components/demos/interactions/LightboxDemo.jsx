@@ -114,7 +114,7 @@ export default function LightboxDemo({ activeOptions }) {
               </div>
               <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {hasZoom && (
-                  <div className="flex items-center rounded-lg bg-white/10 px-2 py-1 text-[10px] sm:text-xs text-white/90 mr-1">
+                  <div className="flex items-center rounded-lg bg-white/10 px-2 py-1 text-xs sm:text-sm text-white/90 mr-1">
                     <span className="hidden sm:inline mr-2">View</span>
                     <button
                       type="button"
@@ -206,12 +206,12 @@ export default function LightboxDemo({ activeOptions }) {
                     />
                   ))}
                 </div>
-                <p className="text-[10px] sm:text-xs text-white/45">Arrow keys · Esc to close</p>
+                <p className="text-xs sm:text-sm text-white/45">Arrow keys · Esc to close</p>
               </div>
             )}
 
             {hasZoom && !hasGallery && (
-              <p className="pointer-events-none mt-3 text-center text-[10px] sm:text-xs text-white/45">
+              <p className="pointer-events-none mt-3 text-center text-xs sm:text-sm text-white/45">
                 Use <strong className="text-white/70">Fit</strong> vs <strong className="text-white/70">Zoom</strong> or tap the image
               </p>
             )}

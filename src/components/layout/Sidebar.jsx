@@ -42,7 +42,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, mobileMenuOpen, s
           const colors = CATEGORY_COLORS[cat.id] || CATEGORY_COLORS.overlays;
           return (
             <div key={cat.id}>
-              <div className={`flex items-center space-x-2 text-[10px] font-bold uppercase tracking-wider mb-2 px-2 ${colors.text}`}>
+              <div className={`flex items-center space-x-2 text-xs font-bold uppercase tracking-wider mb-2 px-2 ${colors.text}`}>
                 <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
                 {cat.icon}
                 <span>{cat.name}</span>

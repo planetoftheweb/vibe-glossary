@@ -215,7 +215,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
               </div>
             ) : (
               <pre key={i} className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 lg:p-4 overflow-x-auto text-xs lg:text-sm leading-relaxed">
-                <div className="text-zinc-400 text-[10px] lg:text-xs uppercase tracking-wider mb-2 select-none">{seg.lang}</div>
+                <div className="text-zinc-400 text-xs lg:text-sm uppercase tracking-wider mb-2 select-none">{seg.lang}</div>
                 <code className="block whitespace-pre"><HighlightedCode code={seg.value} /></code>
               </pre>
             )

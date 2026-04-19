@@ -27,7 +27,7 @@ export default function CompactPatternDemo({ demoId, activeOptions = new Set() }
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-zinc-50/80 dark:bg-zinc-950/40">
       <div className="shrink-0 border-b border-zinc-200/80 px-4 pb-3 pt-4 dark:border-zinc-800/80 sm:px-6">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Pattern preview
         </p>
         <p className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">{title}</p>
@@ -41,8 +41,8 @@ export default function CompactPatternDemo({ demoId, activeOptions = new Set() }
 
 const cx = {
   card: 'rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/90 shadow-sm',
-  muted: 'text-zinc-500 dark:text-zinc-400 text-xs',
-  pill: 'rounded-full px-2 py-0.5 text-[10px] font-semibold border border-zinc-200 dark:border-zinc-600',
+  muted: 'text-zinc-500 dark:text-zinc-400 text-sm',
+  pill: 'rounded-full px-2 py-0.5 text-xs font-semibold border border-zinc-200 dark:border-zinc-600',
   bar: 'rounded bg-zinc-200 dark:bg-zinc-700',
 };
 
@@ -1538,7 +1538,7 @@ const RENDER = {
           {o('opt1') ? 'Saving…' : 'Loading…'}
         </p>
         {o('opt2') && (
-          <span className={`${cx.pill} text-[10px] border-indigo-300 text-indigo-600 dark:text-indigo-300`}>
+          <span className={`${cx.pill} border-indigo-300 text-indigo-600 dark:text-indigo-300`}>
             aria-live
           </span>
         )}
@@ -1571,7 +1571,7 @@ const RENDER = {
         <div className="text-left space-y-1 max-w-[12rem]">
           <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Traffic</p>
           {o('opt2') && (
-            <ul className="text-[10px] text-zinc-500 space-y-0.5">
+            <ul className="text-xs text-zinc-500 space-y-0.5">
               <li>Direct — 40%</li>
               <li>Search — 35%</li>
               <li>Social — 25%</li>
@@ -1791,7 +1791,7 @@ const RENDER = {
             <button
               key={x}
               type="button"
-              className={`flex flex-col items-center gap-0.5 text-[10px] ${i === 0 ? 'text-indigo-500' : 'text-zinc-400'}`}
+              className={`flex flex-col items-center gap-0.5 text-xs ${i === 0 ? 'text-indigo-500' : 'text-zinc-400'}`}
             >
               <span className="w-5 h-5 rounded-full bg-current opacity-20" />
               {x}
@@ -1825,11 +1825,11 @@ const RENDER = {
   virtuallist(o) {
     return (
       <div className={`${cx.card} p-3`}>
-        <div className="flex justify-between text-[10px] text-zinc-500 mb-2">
+        <div className="flex justify-between text-xs text-zinc-500 mb-2">
           <span>Virtual scroll</span>
           {o('opt1') && <span>10k rows</span>}
         </div>
-        <div className="space-y-1 font-mono text-[10px] text-zinc-600 dark:text-zinc-400 max-h-24 overflow-hidden">
+        <div className="space-y-1 font-mono text-xs text-zinc-600 dark:text-zinc-400 max-h-24 overflow-hidden">
           {Array.from({ length: 6 }, (_, i) => (
             <div key={i} className="flex gap-2">
               <span className="text-zinc-400 w-6">{i + 1}</span>
@@ -1865,7 +1865,7 @@ const RENDER = {
           <span className="text-xs font-bold flex items-center gap-1">
             <Bell className="w-4 h-4" /> Inbox
           </span>
-          {o('opt1') && <span className="text-[10px] text-indigo-500 font-semibold">Mark all read</span>}
+          {o('opt1') && <span className="text-xs text-indigo-500 font-semibold">Mark all read</span>}
         </div>
         <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {['Deploy finished', 'Review assigned'].map((t) => (
@@ -1886,7 +1886,7 @@ const RENDER = {
           <span className="text-indigo-400">return</span>
           {` "ok";\n}`}
         </code>
-        {o('opt1') && <div className="mt-2 text-zinc-500 text-[10px]">Copy · Line wrap</div>}
+        {o('opt1') && <div className="mt-2 text-zinc-500 text-xs">Copy · Line wrap</div>}
       </pre>
     );
   },
@@ -1963,7 +1963,7 @@ const RENDER = {
             {x}
           </button>
         ))}
-        {o('opt1') && <span className="ml-auto text-[10px] text-zinc-400">Saved</span>}
+        {o('opt1') && <span className="ml-auto text-xs text-zinc-400">Saved</span>}
       </div>
     );
   },
@@ -1997,7 +1997,7 @@ const RENDER = {
             { Icon: Link2, label: 'Copy' },
             { Icon: Share2, label: 'More' },
           ].map(({ Icon, label }) => (
-            <button key={label} type="button" className="flex flex-col items-center gap-1 text-[10px] text-zinc-600 dark:text-zinc-400">
+            <button key={label} type="button" className="flex flex-col items-center gap-1 text-xs text-zinc-600 dark:text-zinc-400">
               <span className="w-11 h-11 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                 <Icon className="w-5 h-5" />
               </span>
@@ -2079,16 +2079,16 @@ const RENDER = {
     return (
       <div className={`${cx.card} p-4 grid grid-cols-1 sm:grid-cols-2 gap-4`}>
         <div className="space-y-1">
-          <label className="text-[10px] font-bold text-zinc-500">First</label>
+          <label className="text-xs font-bold text-zinc-500">First</label>
           <div className="h-9 rounded border border-zinc-200 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50" />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] font-bold text-zinc-500">Last</label>
+          <label className="text-xs font-bold text-zinc-500">Last</label>
           <div className="h-9 rounded border border-zinc-200 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50" />
         </div>
         {o('opt1') && (
           <div className="sm:col-span-2 space-y-1">
-            <label className="text-[10px] font-bold text-zinc-500">Notes</label>
+            <label className="text-xs font-bold text-zinc-500">Notes</label>
             <div className="h-16 rounded border border-zinc-200 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50" />
           </div>
         )}
@@ -2122,8 +2122,8 @@ const RENDER = {
       <div className="flex gap-2 overflow-x-auto pb-1">
         {['Todo', 'Doing', 'Done'].map((col) => (
           <div key={col} className={`min-w-[7rem] rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/60 p-2`}>
-            <p className="text-[10px] font-bold text-zinc-500 mb-2">{col}</p>
-            <div className="rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 p-2 text-[10px] shadow-sm">
+            <p className="text-xs font-bold text-zinc-500 mb-2">{col}</p>
+            <div className="rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 p-2 text-xs shadow-sm">
               {col === 'Doing' && o('opt1') ? 'In progress card' : 'Card'}
             </div>
           </div>
@@ -2141,7 +2141,7 @@ const RENDER = {
       <div className={`${cx.card} flex overflow-hidden max-h-44`}>
         <div className="w-28 shrink-0 border-r border-zinc-200 dark:border-zinc-700 p-2 space-y-1">
           {['Status', 'Owner', 'Tag'].map((x) => (
-            <button key={x} type="button" className={`block w-full text-left text-[10px] py-1 px-1 rounded ${x === 'Status' ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700' : 'text-zinc-500'}`}>
+            <button key={x} type="button" className={`block w-full text-left text-xs py-1 px-1 rounded ${x === 'Status' ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700' : 'text-zinc-500'}`}>
               {x}
             </button>
           ))}

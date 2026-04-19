@@ -87,13 +87,13 @@ const TopNav = ({ darkMode, setDarkMode, sidebarOpen, setSidebarOpen, activeFilt
 
 const ConfigToggle = ({ options, value, onChange, label }) => (
   <div className="flex items-center space-x-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm p-1 rounded-lg shadow-sm z-20">
-    {label && <span className="text-[10px] font-bold uppercase text-zinc-400 px-2">{label}</span>}
+    {label && <span className="text-xs font-bold uppercase text-zinc-400 px-2">{label}</span>}
     <div className="flex bg-zinc-100 dark:bg-zinc-950 rounded p-0.5">
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-3 py-1 text-[10px] font-semibold rounded-md transition-all ${
+          className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
             value === opt.value 
               ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm' 
               : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
@@ -135,7 +135,7 @@ const PromptBuilder = ({ data, activeOptions, onOptionToggle }) => {
           <Terminal size={14} /> 
           Spec Generator
         </h3>
-        <span className="text-[10px] bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+        <span className="text-xs bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
           <Zap size={10} className="fill-current" /> Live Updates
         </span>
       </div>
@@ -545,7 +545,7 @@ const GLOSSARY_DATA = {
               {isMulti && !selected.includes('Framework') ? (
                  <div className="flex gap-1 overflow-hidden">
                     {selected.map(s => (
-                        <span key={s} className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[10px] whitespace-nowrap text-zinc-900 dark:text-zinc-200">{s}</span>
+                        <span key={s} className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs whitespace-nowrap text-zinc-900 dark:text-zinc-200">{s}</span>
                     ))}
                  </div>
               ) : (
@@ -1018,7 +1018,7 @@ const GLOSSARY_DATA = {
             <div className="flex flex-col items-center justify-center h-full gap-8 bg-zinc-50 dark:bg-zinc-900/50 w-full">
                 <div className="relative p-3 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700">
                     <Bell size={24} className="text-zinc-600 dark:text-zinc-400"/>
-                    <span className={`absolute -top-1 -right-1 bg-red-500 rounded-full border-2 border-white dark:border-zinc-900 flex items-center justify-center text-[10px] text-white font-bold ${isDot ? 'w-3 h-3' : 'w-5 h-5'}`}>
+                    <span className={`absolute -top-1 -right-1 bg-red-500 rounded-full border-2 border-white dark:border-zinc-900 flex items-center justify-center text-xs text-white font-bold ${isDot ? 'w-3 h-3' : 'w-5 h-5'}`}>
                         {!isDot && "3"}
                         {isPing && <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping"></span>}
                     </span>
@@ -1084,7 +1084,7 @@ const GLOSSARY_DATA = {
                             </div>
                             <div className="pb-6">
                                 <div className="text-xs font-bold text-zinc-900 dark:text-white">Step {i}</div>
-                                <div className="text-[10px] text-zinc-500">Details here</div>
+                                <div className="text-xs text-zinc-500">Details here</div>
                             </div>
                         </div>
                     ))}
@@ -1242,7 +1242,7 @@ const GLOSSARY_DATA = {
                     className="absolute w-4 h-4 bg-white border-2 border-indigo-600 rounded-full shadow transition-transform active:scale-110 pointer-events-none" 
                     style={{ left: `calc(${val}% - 8px)` }}
                   >
-                      {hasTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{val}%</div>}
+                      {hasTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{val}%</div>}
                   </div>
                   {isDual && (
                       <div className="absolute w-4 h-4 bg-white border-2 border-zinc-300 rounded-full shadow pointer-events-none" style={{ left: '20%' }}></div>
@@ -1387,7 +1387,7 @@ export default function VibeCodingGlossary() {
               <nav className="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
                 {filteredCategories.map(cat => (
                   <div key={cat.id}>
-                    <div className="flex items-center space-x-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-2">
+                    <div className="flex items-center space-x-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 px-2">
                       {cat.icon}
                       <span>{cat.name}</span>
                     </div>
@@ -1446,7 +1446,7 @@ export default function VibeCodingGlossary() {
                {/* Definition Header */}
                <div className="flex items-start justify-between mb-6">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500">Definition</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-indigo-500">Definition</span>
                     <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-white mt-1">
                         {currentData.title}
                     </h1>
@@ -1473,7 +1473,7 @@ export default function VibeCodingGlossary() {
                   <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-3 border border-zinc-100 dark:border-zinc-800">
                      <div className="flex items-center gap-2 mb-1.5 text-zinc-500 dark:text-zinc-400">
                         <MessageSquare size={12} />
-                        <span className="text-[10px] font-bold uppercase">Pro Tip</span>
+                        <span className="text-xs font-bold uppercase">Pro Tip</span>
                      </div>
                      <p className="text-xs text-zinc-700 dark:text-zinc-300 italic">
                         "{currentData.vibeTip}"
@@ -1481,7 +1481,7 @@ export default function VibeCodingGlossary() {
                   </div>
 
                   <div>
-                     <h3 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                     <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
                         <ArrowRight size={10} /> Distinction
                      </h3>
                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -1494,7 +1494,7 @@ export default function VibeCodingGlossary() {
 
           {/* Right Column: Live Preview */}
           <div className="flex-1 relative overflow-hidden flex flex-col">
-            <div className="absolute top-4 right-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md px-3 py-1 rounded-full shadow-sm z-20 flex items-center space-x-2 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide pointer-events-none">
+            <div className="absolute top-4 right-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md px-3 py-1 rounded-full shadow-sm z-20 flex items-center space-x-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide pointer-events-none">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                <span>Live Preview</span>
             </div>

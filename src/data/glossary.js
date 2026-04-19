@@ -4,9 +4,12 @@ export const GLOSSARY_DATA = {
   // ─── Overlays ───
   modal: {
     title: 'Modal (Dialog)',
-    definition: 'Overlay window that blocks background interaction.',
-    vibeTip: "Use 'Dialog' for Shadcn. Specify 'Focus Trap' & 'Backdrop'.",
-    comparison: 'Modal blocks. Popover allows outside click.',
+    definition:
+      'A dialog box that appears on top of the page and needs a response before you can use the rest of the screen (the dimmed area behind it is often called the backdrop).',
+    vibeTip:
+      "Many component libraries call this a Dialog. Say whether clicking the backdrop closes it, and that keyboard focus stays inside the dialog until it closes.",
+    comparison:
+      'A modal blocks the page until you finish. A popover is smaller and usually goes away when you click outside.',
     prompt: {
       base: 'Add a centered Dialog modal overlay',
       options: [
@@ -269,9 +272,12 @@ toast({
   // ─── Inputs ───
   select: {
     title: 'Select vs. Combobox',
-    definition: 'Select: Simple dropdown. Combobox: Searchable list.',
-    vibeTip: 'List > 10 items? Use Combobox/Command Palette.',
-    comparison: 'Select is for picking. Popover is for housing UI.',
+    definition:
+      'A select dropdown picks one option from a list you open. A combobox adds typing so you can filter long lists before you choose.',
+    vibeTip:
+      'If there are more than about ten choices, or people need to search, ask for a combobox instead of a plain select.',
+    comparison:
+      'Select and combobox choose from known options. A popover is a floating container — it can hold forms, not only lists.',
     prompt: {
       base: 'Add a form Select component',
       options: [
@@ -820,9 +826,12 @@ toast({
   },
   command: {
     title: 'Command Palette',
-    definition: 'Keyboard-first search interface triggered by Cmd+K. Fuzzy search across actions, navigation, and settings.',
-    vibeTip: "Use 'cmdk' library for React. Group commands by category. Show keyboard shortcuts.",
-    comparison: 'Command Palette is for actions. Search Bar is for content. Select is for simple lists.',
+    definition:
+      'A searchable menu of actions and places, often opened with ⌘K on Mac or Ctrl+K on Windows. Typing narrows the list so you do not hunt through every menu.',
+    vibeTip:
+      'Popular React libraries include cmdk. Group items (for example by area of the app) and show the shortcut beside each action.',
+    comparison:
+      'Command palette runs app actions. A search field usually finds content. A simple select picks one value from a short list.',
     prompt: {
       base: 'Build a command palette (Cmd+K)',
       options: [
@@ -906,7 +915,8 @@ toast({
   },
   richtext: {
     title: 'Rich Text Editor',
-    definition: 'Content editing with formatting controls — bold, italic, lists, links, images. WYSIWYG or Markdown mode.',
+    definition:
+      'Content editing with formatting controls — bold, italic, lists, links, images — either in a what-you-see-is-what-you-get (WYSIWYG) view or Markdown.',
     vibeTip: "Use 'Tiptap' or 'Slate' for React. Specify toolbar buttons and output format (HTML vs Markdown).",
     comparison: 'Rich Text for formatted content. Textarea for plain text. Code Editor for code.',
     prompt: {
@@ -1332,8 +1342,10 @@ toast({
   contextmenu: {
     title: 'Context Menu',
     definition: 'Right-click menu that appears at the cursor position. Shows contextual actions for the clicked element.',
-    vibeTip: "Use 'ContextMenu' for right-click. Specify 'sub-menus', 'icons', and 'keyboard shortcuts'.",
-    comparison: 'Context Menu is on right-click. Dropdown Menu is on left-click. Command Palette is on Cmd+K.',
+    vibeTip:
+      "Many kits call this ContextMenu. Say if actions nest in sub-menus, use icons, and show keyboard shortcuts next to labels.",
+    comparison:
+      'Context menu opens on right-click. Dropdown opens on left-click or tap. Command palette opens from a keyboard shortcut (⌘K / Ctrl+K).',
     prompt: {
       base: 'Add a right-click context menu',
       options: [
@@ -1470,7 +1482,8 @@ toast({
   infinitescroll: {
     title: 'Infinite Scroll',
     definition: 'Automatically loads more content as the user scrolls to the bottom. Alternative to traditional pagination.',
-    vibeTip: "Use 'IntersectionObserver' for detection. Always provide a 'load more' fallback button.",
+    vibeTip:
+      'The browser IntersectionObserver API notices when the user nears the end of the list without constant polling. Always offer a Load more button for people who prefer not to rely on endless scroll.',
     comparison: 'Infinite scroll auto-loads. Pagination uses page numbers. Load-more uses a button.',
     prompt: {
       base: 'Implement infinite scroll loading',

@@ -244,7 +244,7 @@ export default function WelcomeScreen({ onEnter, onSelectCategory }) {
 
         {/* Footer hint */}
         <p className="text-center text-xs text-zinc-600 pb-4">
-          Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono text-[10px]">⌘K</kbd> anytime to search components
+          Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono text-xs">⌘K</kbd> anytime to search components
         </p>
       </div>
     </div>

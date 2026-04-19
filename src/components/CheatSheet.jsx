@@ -88,7 +88,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory }) {
                     <div className={`p-2 rounded-lg bg-gradient-to-br ${meta.color} shadow-md`}>
                       <Icon size={16} className="text-white" />
                     </div>
-                    <span className="text-[10px] font-bold text-zinc-500 bg-zinc-800/80 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-bold text-zinc-500 bg-zinc-800/80 px-2 py-0.5 rounded-full">
                       {cat.items.length}
                     </span>
                   </div>

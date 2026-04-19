@@ -40,7 +40,7 @@ export const GLOSSARY_BATCH_2 = {
       ],
       requirements: [
         'Use a continuous ordered X domain (time or sequence), not categorical bar spacing',
-        'Provide a non-visual fallback: summary, data table, or CSV link — the chart is not sufficient alone for a11y',
+        'Provide a non-visual fallback: summary, data table, or CSV link — the chart alone is not enough for accessibility',
         'Declare units on the Y axis (%, USD, ms) and timezone or format for dates',
       ],
       scaffolds: {
@@ -76,9 +76,10 @@ export const GLOSSARY_BATCH_2 = {
 
   multiselect: {
     title: "Multi-Select",
-    definition: "Pick many values from a list — often a combobox with tags or checkmarks in a dropdown.",
-    vibeTip: "Say \"multi-select\" and \"max selections\". Use for filters and assignees.",
-    comparison: "Multi-select allows many. Single select picks one. Tag input creates freeform tags.",
+    definition:
+      "Choose more than one option from a list — often shown as removable tags or checkmarks inside a dropdown.",
+    vibeTip: "Say how many selections are allowed at most. Common uses: filters, assignees, categories.",
+    comparison: "Multi-select allows many known options. Single select picks one. Tag input lets people type new tags.",
     prompt: {
       base: "Build a multi-select dropdown for tags or filters",
       options: [
@@ -148,7 +149,8 @@ export const GLOSSARY_BATCH_2 = {
 
   colorpicker: {
     title: "Color Picker",
-    definition: "UI for choosing a color — hex, HSL, or swatches.",
+    definition:
+      "Lets someone pick a color — for example by typing a hex code (#RRGGBB), adjusting hue and lightness sliders, or tapping preset swatches.",
     vibeTip: "Mention eyedropper, presets, and alpha channel if needed.",
     comparison: "Color picker sets a color value. Button triggers it. Swatches are quick presets.",
     prompt: {
@@ -172,9 +174,10 @@ export const GLOSSARY_BATCH_2 = {
 
   combobox: {
     title: "Combobox / Autocomplete",
-    definition: "Searchable select: type to filter options; still pick from a controlled list.",
-    vibeTip: "Use \"Combobox\" in Shadcn. Distinguish from free-text search.",
-    comparison: "Combobox filters a list. Command palette runs commands. Plain input accepts any string.",
+    definition:
+      "Like a dropdown, but you can type to narrow the list. You still choose one of the offered options — it is not a general web search box.",
+    vibeTip: "Many kits label this Combobox. Say if results come from an API and how loading or empty states look.",
+    comparison: "Combobox picks from a defined list. Command palette runs actions. A plain text field accepts any string.",
     prompt: {
       base: "Build a combobox with async search",
       options: [
@@ -268,9 +271,10 @@ export const GLOSSARY_BATCH_2 = {
 
   splitpane: {
     title: "Split Pane / Resizable Panels",
-    definition: "Two or more panes with a draggable divider — IDE layouts, preview + code.",
-    vibeTip: "Use \"PanelGroup\" patterns or CSS resize. Mention min sizes.",
-    comparison: "Split pane resizes regions. Sidebar is fixed chrome. Drawer is temporary.",
+    definition:
+      "Two or more panels side by side with a draggable divider between them — common for code next to preview, or two documents at once.",
+    vibeTip: "Say minimum width or height for each pane so nothing collapses to zero. Some libraries call this a panel group or split view.",
+    comparison: "Split pane resizes regions. A sidebar width is usually fixed. A drawer slides over the page temporarily.",
     prompt: {
       base: "Implement split panes with a draggable divider",
       options: [
@@ -388,9 +392,10 @@ export const GLOSSARY_BATCH_2 = {
 
   virtuallist: {
     title: "Virtualized List",
-    definition: "Renders only visible rows for huge lists — keeps scroll smooth.",
-    vibeTip: "Name react-window, TanStack Virtual, or similar.",
-    comparison: "Virtual list handles scale. Plain list is fine for small data.",
+    definition:
+      "For very long lists, only the rows on screen are built in the page. As you scroll, rows swap in and out so the browser stays fast.",
+    vibeTip: "Libraries include react-window and TanStack Virtual — mention row height or dynamic height if rows differ.",
+    comparison: "Virtual list is for thousands of rows. A normal list is fine for tens or a few hundred items.",
     prompt: {
       base: "Add a virtualized list for 10k+ rows",
       options: [
@@ -508,8 +513,9 @@ export const GLOSSARY_BATCH_2 = {
 
   mapview: {
     title: "Map Embed",
-    definition: "Interactive map — markers, clusters, and user location.",
-    vibeTip: "Name Mapbox, Google Maps, or Leaflet. Mention API keys.",
+    definition:
+      "An interactive map you pan and zoom — often with pins, clusters of pins, and sometimes the user’s location (with permission).",
+    vibeTip: "Say which provider you want (for example Mapbox, Google Maps, Leaflet) and that map services need API keys.",
     comparison: "Map shows geography. List shows rows. Tree shows hierarchy.",
     prompt: {
       base: "Embed an interactive map with markers",
@@ -532,9 +538,10 @@ export const GLOSSARY_BATCH_2 = {
 
   shortcutkeys: {
     title: "Keyboard Shortcuts",
-    definition: "Kbd elements and shortcut hints — discoverability for power users.",
-    vibeTip: "List modifiers: ⌘, ⌥, ⇧.",
-    comparison: "Shortcut hints show keys. Command palette executes actions.",
+    definition:
+      "Small labels that show which keys to press (often styled like keys on a keyboard) so people can learn shortcuts without a cheat sheet.",
+    vibeTip: "Spell out modifier keys in words the first time (Command, Option, Shift) — symbols help after that.",
+    comparison: "Shortcut hints teach keys. Command palette runs actions when you pick them.",
     prompt: {
       base: "Display keyboard shortcuts in a help panel",
       options: [
@@ -701,7 +708,7 @@ export const GLOSSARY_BATCH_2 = {
   presencedot: {
     title: "Presence Indicator",
     definition: "Online/away/busy dot on avatars or chat.",
-    vibeTip: "Use color semantics and optional label for a11y.",
+    vibeTip: "Pair color with text or an icon so status is clear for color-blind users and accessibility tools.",
     comparison: "Presence shows status. Badge shows counts. Avatar shows identity.",
     prompt: {
       base: "Add presence indicators on avatars",
@@ -820,9 +827,10 @@ export const GLOSSARY_BATCH_2 = {
 
   searchfield: {
     title: "Search Field",
-    definition: "Dedicated search input — often with ⌘K, clear, and recent queries.",
-    vibeTip: "Use type=search and aria for the combobox pattern.",
-    comparison: "Search field is for queries. Text field is generic. Command palette is global.",
+    definition:
+      "A box just for searching this screen or site — often with a clear button, recent searches, and sometimes a keyboard shortcut to focus it.",
+    vibeTip: "Say whether it filters as you type and if screen readers should treat it as a combobox when suggestions appear.",
+    comparison: "Search field looks for content. A generic text field accepts any input. Command palette runs actions app-wide.",
     prompt: {
       base: "Build a search field with recent queries",
       options: [
@@ -845,9 +853,9 @@ export const GLOSSARY_BATCH_2 = {
   linkcard: {
     title: "Link Preview Card",
     definition:
-      "Rich unfurl when a URL is pasted in chat or social: Open Graph image, title, description, and hostname — not a KPI tile.",
-    vibeTip: "Mention fallbacks when metadata is missing.",
-    comparison: "Link preview summarizes a URL before click-through. Stat card shows metrics; this is metadata from the destination page.",
+      "When you paste a link, show a preview card: image, title, short description, and site name. Sites publish this using standard metadata (often called Open Graph).",
+    vibeTip: "Say what to show if the image or description is missing so broken previews still look intentional.",
+    comparison: "Link preview summarizes a page before you open it. A stat or KPI card shows your own numbers, not the remote site’s metadata.",
     prompt: {
       base: "Add a link preview card component",
       options: [

@@ -17,7 +17,7 @@ import useExploreMode from './hooks/useExploreMode';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
-import { BUILD_LITERACY_NAV_COLORS } from './data/buildLiteracy';
+import { BUILD_LITERACY_NAV_COLORS, BUILD_TOPIC_IDS } from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 
 export default function App() {
@@ -30,6 +30,7 @@ export default function App() {
   const [showPaths, setShowPaths] = useState(false);
   const [activePath, setActivePath] = useState(null);
   const [activeItem, setActiveItem]       = useState('modal');
+  const [activeBuildTopic, setActiveBuildTopic] = useState(() => BUILD_TOPIC_IDS[0] || 'mvp');
   const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
@@ -319,13 +320,19 @@ export default function App() {
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex flex-col pt-36 md:pt-20 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {siteSection === 'build' ? (
           <BuildLiteracyView
+            activeTopicId={activeBuildTopic}
+            setActiveTopicId={setActiveBuildTopic}
             onOpenGlossaryEntry={(id) => {
               setSiteSection('glossary');
               setActiveItem(id);
             }}
+            learnMode={learnMode}
+            toggleLearnMode={toggleLearnMode}
+            mastered={explore.mastered}
+            onMastered={(id) => explore.markMastered(id)}
           />
         ) : (
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">

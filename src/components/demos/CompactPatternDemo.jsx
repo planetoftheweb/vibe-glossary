@@ -1018,18 +1018,36 @@ const RENDER = {
   },
 
   hovercard(o) {
+    const delayClass = o('opt1') ? 'group-hover:delay-[240ms] delay-0' : 'group-hover:delay-0';
+    const focusOpen = o('opt2')
+      ? 'group-focus-within:visible group-focus-within:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0'
+      : '';
+
     return (
-      <div className="flex justify-center pt-6">
-        <div className="relative inline-block">
-          <button type="button" className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 border-b border-dashed border-indigo-400">
+      <div className="flex min-h-[11rem] justify-center pt-6">
+        {/* pb-* extends the group’s hover hit area so the pointer can reach the popover without leaving :hover */}
+        <div className="group relative inline-flex flex-col items-center pb-40">
+          <button
+            type="button"
+            className="rounded-sm text-sm font-semibold text-indigo-600 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/70 dark:text-indigo-400 border-b border-dashed border-indigo-400"
+          >
             @alex
           </button>
-          {o('opt1') && (
-            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl p-3 z-10 text-left">
-              <p className="text-sm font-bold">Alex Rivera</p>
-              <p className={cx.muted}>Design · NYC</p>
-            </div>
-          )}
+          <div
+            className={`absolute left-1/2 top-full z-30 mt-2 w-56 -translate-x-1/2 translate-y-1 rounded-xl border border-zinc-200 bg-white p-3 text-left shadow-xl transition-[opacity,transform] duration-200 ease-out dark:border-zinc-700 dark:bg-zinc-900 ${delayClass} invisible pointer-events-none opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ${focusOpen}`}
+          >
+            <p className="text-sm font-bold text-zinc-900 dark:text-white">Alex Rivera</p>
+            <p className={cx.muted}>Design · NYC</p>
+            {o('opt3') && (
+              <a
+                href="#hover-card-demo"
+                className="mt-2 block text-xs font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-400"
+                onClick={(e) => e.preventDefault()}
+              >
+                Open profile
+              </a>
+            )}
+          </div>
         </div>
       </div>
     );

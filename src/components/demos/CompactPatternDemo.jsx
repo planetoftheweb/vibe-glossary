@@ -56,22 +56,47 @@ const RENDER = {
   },
 
   spinner(o) {
+    const motionClass = o('opt3') ? '' : 'animate-spin';
     return (
       <div className={`${cx.card} p-10 flex flex-col items-center gap-4`} aria-busy="true">
-        <Loader2 className={`w-10 h-10 text-indigo-500 animate-spin ${o('opt1') ? 'text-emerald-500' : ''}`} />
-        <p className={cx.muted}>{o('opt2') ? 'Saving…' : 'Loading…'}</p>
+        <Loader2 className={`w-10 h-10 text-indigo-500 ${motionClass}`} />
+        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
+          {o('opt1') ? 'Saving…' : 'Loading…'}
+        </p>
+        {o('opt2') && (
+          <span className={`${cx.pill} text-[10px] border-indigo-300 text-indigo-600 dark:text-indigo-300`}>
+            aria-live
+          </span>
+        )}
       </div>
     );
   },
 
   linechart(o) {
     return (
-      <div className={`${cx.card} p-4`}>
-        <div className="flex justify-between items-center mb-3">
+      <div className={`${cx.card} p-4 relative`}>
+        <div className="flex justify-between items-center mb-1">
           <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300">Revenue</span>
-          {o('opt1') && <span className={`${cx.pill} text-emerald-600 border-emerald-300`}>+12%</span>}
+          {o('opt2') && (
+            <span className="absolute top-10 left-1/3 z-10 rounded-md border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-2 py-1 text-[10px] shadow-md text-zinc-800 dark:text-zinc-100">
+              Apr 12: $42k
+            </span>
+          )}
         </div>
-        <svg viewBox="0 0 240 80" className="w-full h-20 text-indigo-500">
+        <svg viewBox="0 0 240 80" className="w-full h-24 text-indigo-500">
+          {o('opt1') && (
+            <g className="text-zinc-200 dark:text-zinc-700">
+              {[0, 20, 40, 60, 80].map((y) => (
+                <line key={y} x1="0" x2="240" y1={y} y2={y} stroke="currentColor" strokeWidth="0.5" />
+              ))}
+              <text x="2" y="12" className="text-[8px] fill-zinc-400">
+                $50k
+              </text>
+              <text x="200" y="78" className="text-[8px] fill-zinc-400">
+                Apr
+              </text>
+            </g>
+          )}
           <defs>
             <linearGradient id="lg" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor="currentColor" stopOpacity="0.35" />
@@ -85,29 +110,58 @@ const RENDER = {
             strokeWidth="2.5"
             points="0,60 40,45 80,50 120,25 160,35 200,15 240,20"
           />
+          {o('opt3') && (
+            <polyline
+              fill="none"
+              stroke="#a855f7"
+              strokeWidth="2"
+              strokeDasharray="4 3"
+              points="0,70 40,65 80,55 120,50 160,45 200,40 240,35"
+            />
+          )}
         </svg>
+        {o('opt3') && (
+          <div className="mt-1 flex items-center gap-3 text-[10px] text-zinc-500">
+            <span className="inline-flex items-center gap-1">
+              <span className="h-0.5 w-4 bg-indigo-500" /> Revenue
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <span className="h-0.5 w-4 border-t-2 border-dashed border-violet-500" /> Costs
+            </span>
+          </div>
+        )}
       </div>
     );
   },
 
   piechart(o) {
+    const hole = o('opt1') ? 'inset-6' : 'inset-2';
     return (
-      <div className={`${cx.card} p-6 flex items-center justify-center gap-6`}>
+      <div className={`${cx.card} p-6 flex flex-col sm:flex-row items-center justify-center gap-6`}>
         <div
           className="relative w-28 h-28 rounded-full"
           style={{
-            background: o('opt1')
-              ? 'conic-gradient(#6366f1 0% 40%, #a855f7 40% 70%, #22c55e 70% 100%)'
-              : 'conic-gradient(#6366f1 0% 35%, #94a3b8 35% 60%, #cbd5e1 60% 100%)',
+            background: o('opt3')
+              ? 'conic-gradient(#6366f1 0% 55%, #94a3b8 55% 100%)'
+              : 'conic-gradient(#6366f1 0% 40%, #a855f7 40% 70%, #22c55e 70% 100%)',
           }}
         >
-          <div className="absolute inset-4 rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center text-xs font-bold text-zinc-700 dark:text-zinc-200">
-            100%
+          <div
+            className={`absolute ${hole} rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center text-xs font-bold text-zinc-700 dark:text-zinc-200`}
+          >
+            {o('opt1') ? '42%' : 'Σ'}
           </div>
         </div>
-        <div className="text-left space-y-1">
-          <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Share</p>
-          <p className={cx.muted}>Limit slices; group small as “Other”.</p>
+        <div className="text-left space-y-1 max-w-[12rem]">
+          <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">Traffic</p>
+          {o('opt2') && (
+            <ul className="text-[10px] text-zinc-500 space-y-0.5">
+              <li>Direct — 40%</li>
+              <li>Search — 35%</li>
+              <li>Social — 25%</li>
+            </ul>
+          )}
+          {o('opt3') && <p className={cx.muted}>+ small slices → “Other”</p>}
         </div>
       </div>
     );
@@ -115,11 +169,23 @@ const RENDER = {
 
   sparkline(o) {
     return (
-      <div className="flex items-end gap-2">
-        <span className={`text-lg font-bold text-emerald-500 ${o('opt1') ? 'text-2xl' : ''}`}>+2.4%</span>
-        <svg viewBox="0 0 80 24" className="w-20 h-6 text-emerald-500">
-          <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points="0,20 15,18 30,12 45,14 60,6 80,4" />
-        </svg>
+      <div className="relative flex items-end gap-2">
+        <span
+          className={`text-lg font-bold tabular-nums ${o('opt1') ? 'text-emerald-500' : 'text-zinc-700 dark:text-zinc-200'}`}
+        >
+          +2.4%
+        </span>
+        <div className="relative">
+          <svg viewBox="0 0 80 28" className="w-24 h-8 text-emerald-500">
+            {o('opt2') && <line x1="0" x2="80" y1="22" y2="22" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.75" />}
+            <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points="0,20 15,18 30,12 45,14 60,6 80,4" />
+          </svg>
+          {o('opt3') && (
+            <span className="absolute -top-1 left-6 rounded border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-1 text-[8px] shadow-sm">
+              high 6.2k
+            </span>
+          )}
+        </div>
       </div>
     );
   },
@@ -127,14 +193,19 @@ const RENDER = {
   multiselect(o) {
     return (
       <div className={`${cx.card} p-3 space-y-2`}>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           {['Design', 'Eng'].map((t) => (
             <span key={t} className="inline-flex items-center gap-1 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200 px-2 py-0.5 text-xs font-medium">
               {t} ×
             </span>
           ))}
           {o('opt1') && (
-            <span className="inline-flex items-center rounded-md bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 text-xs">+ Add</span>
+            <span className={`${cx.pill} text-amber-800 border-amber-300 dark:text-amber-200`}>2 / 5 max</span>
+          )}
+          {o('opt2') && (
+            <button type="button" className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
+              Select all
+            </button>
           )}
         </div>
         <div className="rounded-lg border border-zinc-200 dark:border-zinc-600 divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -145,6 +216,9 @@ const RENDER = {
             </div>
           ))}
         </div>
+        {o('opt3') && (
+          <p className="text-[10px] text-zinc-500">↑↓ navigate · Space toggles · Esc closes</p>
+        )}
       </div>
     );
   },
@@ -181,13 +255,26 @@ const RENDER = {
     return (
       <div className={`${cx.card} p-4 space-y-3`}>
         <div className="h-8 rounded-lg bg-gradient-to-r from-rose-400 via-amber-300 to-indigo-500" />
+        {o('opt1') && (
+          <div className="h-2 rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div className="h-2 w-3/5 rounded-full bg-zinc-500" />
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-full border-2 border-white shadow ring-2 ring-zinc-200 dark:ring-zinc-600"
-            style={{ background: o('opt1') ? '#6366f1' : '#22c55e' }}
+            style={{ background: '#6366f1' }}
           />
           <span className="text-xs font-mono text-zinc-600 dark:text-zinc-300">#6366F1</span>
+          {o('opt3') && <span className="text-[10px] text-zinc-400">Eyedropper</span>}
         </div>
+        {o('opt2') && (
+          <div className="flex gap-1.5">
+            {['#6366f1', '#22c55e', '#f59e0b'].map((c) => (
+              <div key={c} className="h-6 w-6 rounded-md border border-zinc-200 dark:border-zinc-600" style={{ background: c }} />
+            ))}
+          </div>
+        )}
       </div>
     );
   },
@@ -200,8 +287,9 @@ const RENDER = {
             className="flex-1 bg-transparent text-sm outline-none"
             placeholder="Search framework…"
             readOnly
-            value={o('opt1') ? 'React' : ''}
+            value={o('opt2') ? 'Rea' : 'React'}
           />
+          {o('opt1') && <span className="text-[10px] text-zinc-400">Loading…</span>}
         </div>
         <div className="py-1 max-h-28 overflow-hidden">
           {['React', 'Vue', 'Svelte'].map((x) => (
@@ -209,9 +297,17 @@ const RENDER = {
               key={x}
               className={`px-3 py-1.5 text-xs cursor-default ${x === 'React' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-200' : 'text-zinc-600 dark:text-zinc-400'}`}
             >
-              {x}
+              {o('opt3') && x === 'React' ? (
+                <>
+                  <mark className="bg-amber-200/80 dark:bg-amber-500/30 px-0.5">Rea</mark>
+                  ct
+                </>
+              ) : (
+                x
+              )}
             </div>
           ))}
+          {o('opt2') && <div className="px-3 py-1.5 text-xs text-indigo-600 dark:text-indigo-400">+ Create &quot;Rea&quot;</div>}
         </div>
       </div>
     );

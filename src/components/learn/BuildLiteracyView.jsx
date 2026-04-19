@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { FileText, Sparkles, GripVertical } from 'lucide-react';
+import { FileText, Sparkles, GripVertical, BookOpen } from 'lucide-react';
 import {
   BUILD_LITERACY_CLUSTERS,
   BUILD_LITERACY_NAV_COLORS,
@@ -31,6 +31,8 @@ export default function BuildLiteracyView({
   panelWidth = 44,
   setPanelWidth,
   isDesktop = true,
+  infoOpen = true,
+  setInfoOpen,
 }) {
   const glossary = useGlossary();
   const [mobileView, setMobileView] = useState('info'); // 'info' | 'preview'
@@ -102,44 +104,49 @@ export default function BuildLiteracyView({
 
       {/* Two-pane body */}
       <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
-        {/* Left: topic info */}
-        <div
-          className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`}
-          style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}
-        >
-          {topic ? (
-            <BuildTopicView
-              topic={topic}
-              cluster={cluster}
-              glossary={glossary}
-              prevTopic={prevTopic}
-              nextTopic={nextTopic}
-              onSelectTopic={setActiveTopicId}
-              onOpenGlossaryEntry={onOpenGlossaryEntry}
-              learnMode={learnMode}
-              toggleLearnMode={toggleLearnMode}
-              isMastered={isMastered}
-              onMastered={onMastered}
-              quizPool={quizPool}
-            />
-          ) : (
-            <div className="p-10 text-zinc-500 dark:text-zinc-400">
-              Pick a topic from the dropdown above to get started.
-            </div>
-          )}
-        </div>
+        {/* Left: topic info, hidden when docked on desktop */}
+        {infoOpen && (
+          <div
+            className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`}
+            style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}
+          >
+            {topic ? (
+              <BuildTopicView
+                topic={topic}
+                cluster={cluster}
+                glossary={glossary}
+                prevTopic={prevTopic}
+                nextTopic={nextTopic}
+                onSelectTopic={setActiveTopicId}
+                onOpenGlossaryEntry={onOpenGlossaryEntry}
+                learnMode={learnMode}
+                toggleLearnMode={toggleLearnMode}
+                isMastered={isMastered}
+                onMastered={onMastered}
+                quizPool={quizPool}
+                onCloseInfo={setInfoOpen ? () => setInfoOpen(false) : undefined}
+              />
+            ) : (
+              <div className="p-10 text-zinc-500 dark:text-zinc-400">
+                Pick a topic from the dropdown above to get started.
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Resize handle, desktop only */}
-        <div
-          onMouseDown={onResizeStart}
-          onTouchStart={onResizeStart}
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Resize panels"
-          className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
-        >
-          <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
-        </div>
+        {/* Resize handle, desktop only, hidden when docked */}
+        {infoOpen && (
+          <div
+            onMouseDown={onResizeStart}
+            onTouchStart={onResizeStart}
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize panels"
+            className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
+          >
+            <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
+          </div>
+        )}
 
         {/* Right: Talk to your AI showpiece */}
         <div
@@ -147,6 +154,19 @@ export default function BuildLiteracyView({
         >
           <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${cc.gradient} opacity-[0.05] blur-3xl pointer-events-none`} />
           <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${cc.gradient} opacity-[0.04] blur-3xl pointer-events-none`} />
+
+          {/* Floating reopen button when the left panel is docked */}
+          {!infoOpen && setInfoOpen && (
+            <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
+              <button
+                onClick={() => setInfoOpen(true)}
+                className="p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
+                title="Open Definition"
+              >
+                <BookOpen size={18} />
+              </button>
+            </div>
+          )}
 
           <div className="relative z-10 flex-1 overflow-y-auto px-5 py-8 lg:px-10 lg:py-12 flex flex-col items-center justify-center">
             {topic && <TalkToAiCard topic={topic} categoryColors={cc} />}

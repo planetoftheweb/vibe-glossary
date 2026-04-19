@@ -50,6 +50,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'MVP (Minimum Viable Product)',
         summary:
           'The tiniest version of your idea you can put in front of real people to learn whether the idea works at all.',
+        details:
+          'Marc Andreessen famously said \'product-market fit is when the dogs eat the dog food\'. An MVP is what you put in front of the dogs to find out. The whole point is to test the riskiest assumption (usually \'will anyone use this?\') with the smallest possible build.\n\nThe trap most people fall into is shipping a \'minimum lovable product\' instead. Adding the third feature, the auth flow, the onboarding wizard, the analytics... and now you have spent two months on something that does not answer the original question any better than a clickable Figma would have.\n\nThe vibe coder advantage: AI lets you ship a real (rough) MVP in days. Use that. The thing should look unfinished on purpose so people give you the harsh feedback you actually need, not the polite kind.',
         comparison:
           'An MVP answers "is anyone interested?". A v1 polishes the bits the MVP proved people care about.',
         vibeTip:
@@ -90,6 +92,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'PRD (Product Requirements Document)',
         summary:
           'A short written description of what a feature should do, who it is for, and how you will know it worked.',
+        details:
+          'A Product Requirements Document is a few pages that capture the answers to "what are we building, who is it for, why, and how will we know it worked". The good ones fit on one or two pages. The bad ones are 30-page Word docs nobody reads.\n\nThe sections that earn their keep: Problem (one paragraph, the user pain we are solving), Audience (who specifically, with a real example user in mind), Success metric (the single number that tells us this worked), Scope (the 3-5 things we are committing to build), Non-goals (the tempting things we are explicitly NOT building this round), Open questions (so they get answered, not skipped).\n\nFor a vibe coder: paste a PRD into your AI before asking for code. It picks better defaults, asks better clarifying questions, and stops inventing features that have nothing to do with the goal.',
         comparison:
           'A PRD says what and why. A spec says how. A user story is one slice of the PRD told from the user\'s side.',
         vibeTip:
@@ -109,6 +113,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'User story',
         summary:
           'One sentence in the user\'s voice: "As a ___, I want ___, so that ___." It keeps you from building things no one asked for.',
+        details:
+          'A user story is one slice of a feature told from the user\'s perspective. The format is so common it is almost a cliche: \'As a [type of user], I want [thing], so that [benefit]\'. The format is not magic. The format forces you to name three things people skip: who, what, and why.\n\nWhy bother with the format? Because \'add a delete button\' tells the AI nothing. \'As a moderator, I want to delete spam comments, so that the discussion stays useful\' tells it the role (moderator, so probably a permissions check), the action (delete comments), and the goal (spam, so maybe undo and bulk-select are relevant too).\n\nA good story is small enough to ship in a few days, has acceptance criteria stapled to it, and reads like something a real user would actually say. If yours sounds like \'as a user I want a button so that I have a button\', try harder.',
         comparison:
           'A user story is the why. Acceptance criteria are the proof it is done. A task is one piece of the work to get there.',
         vibeTip:
@@ -128,6 +134,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Acceptance criteria',
         summary:
           'A short checklist of things that must be true before you can call a feature "done", written so anyone can test them.',
+        details:
+          'Acceptance criteria are the checklist that decides \'is this story actually done?\'. The most common format is the BDD Given/When/Then style: \'Given the user is signed in, When they click Delete on a comment they own, Then the comment is removed and they see a toast confirming it.\' Each criterion is one observable behavior.\n\nThe trap is vague criteria. \'Should work well\' is not a criterion. \'Page loads in under 2 seconds on a 3G connection\' is. The whole point is to remove the \'I thought you meant...\' arguments before the code is written, not after.\n\nFor vibe coders, acceptance criteria are gold for prompts. Hand the AI 4-6 of them as Given/When/Then statements and you get a feature that knows what done looks like. Better still, those same statements become Playwright or Vitest tests with almost no rewriting.',
         comparison:
           'Acceptance criteria are the test. The user story is the goal. A bug report is what happens when you skipped writing them.',
         vibeTip:
@@ -147,6 +155,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Roadmap',
         summary:
           'A picture of what is coming next, in roughly what order, so the team and your users can see the same future.',
+        details:
+          'A product roadmap is a public commitment about direction, not a calendar of dates. Most modern roadmaps use a \'Now / Next / Later\' structure: Now is what is in flight this quarter, Next is what we plan to start once Now ships, Later is the rough direction beyond that.\n\nThe death of a roadmap is when it becomes a Gantt chart with hard dates. Reality changes, dates slip, customers feel betrayed by a date you committed to in March. Direction changes too, but with much less drama, because you never said \'June 14th\'.\n\nFor a vibe coder, the useful version of a roadmap is one sentence per row: the user problem you are solving, the rough size, and what success looks like. Anything more elaborate just becomes a thing to maintain instead of a thing that helps you decide what to build next.',
         comparison:
           'A roadmap shows direction. A sprint plan shows the next two weeks. A backlog is the unsorted pile of ideas behind both.',
         vibeTip:
@@ -278,6 +288,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'TDD (Test-Driven Development)',
         summary:
           'Write a tiny failing test first, then the smallest code that makes it pass, then clean up. Repeat.',
+        details:
+          'Test-Driven Development is a small, weird-feeling habit: write the test before the code. Red (the test fails because the function does not exist), Green (you write the smallest code that makes the test pass), Refactor (you clean up now that there is a safety net). Repeat.\n\nThe value is not the tests themselves, though those are nice. The value is that writing the test first forces you to design the API from the caller\'s side. You end up with simpler, more focused functions because you saw how it felt to use them before you wrote them.\n\nVibe coding angle: AI is great at the green step (make this test pass) and decent at the red step if you describe the behavior. Try this: \'add a function add(a,b) that handles strings and returns a number, and write the failing tests first\'. The AI usually produces cleaner code than if you skip the test step entirely.',
         comparison:
           'TDD writes the test first. "Test after" writes the test once the code already works. Both are better than no tests.',
         vibeTip:
@@ -297,6 +309,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Unit vs integration tests',
         summary:
           'Unit tests check one small piece by itself. Integration tests check that several pieces still talk to each other after you change one.',
+        details:
+          'A unit test exercises one small piece in isolation: one function, one component, one class, with all its dependencies stubbed or mocked. They are fast (milliseconds) and pinpoint exactly where something broke. Most projects have hundreds or thousands of these.\n\nAn integration test exercises several real pieces talking to each other: a route handler hitting a real database, a React component fetching from a real API in a test container. They are slower (seconds), more realistic, and catch the bugs that unit tests miss because they cross boundaries.\n\nThe rule of thumb (the testing pyramid): lots of unit tests, fewer integration tests, even fewer end-to-end tests. The newer \'testing trophy\' from Kent C. Dodds inverts this for frontend code: more integration than unit, because rendering a component with its real children catches more real bugs than unit-testing every prop combination.',
         comparison:
           'Unit tests are fast and pinpoint. Integration tests are slower but catch the "it worked alone, it broke together" bugs.',
         vibeTip:
@@ -316,6 +330,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'CI (Continuous Integration)',
         summary:
           'A robot that runs your tests every time someone pushes code, so broken changes never silently land on the main branch.',
+        details:
+          'Continuous Integration is the habit of merging small changes back to the main branch frequently (often multiple times a day) and running the full test suite automatically on every push. The pipeline catches breakage within minutes instead of weeks.\n\nA modern CI setup runs on every pull request: install dependencies, run lints, run tests, build the app, sometimes deploy a preview environment. If anything fails, the PR cannot merge. This sounds rigid; in practice it removes the \'who broke main?\' meeting from your life.\n\nGitHub Actions, GitLab CI, CircleCI, and Vercel\'s built-in CI are the common platforms. For vibe coders: even a 30-line GitHub Actions workflow that runs \'npm test\' on every PR is enough to start. Add coverage, type-check, and Playwright later as the project grows.',
         comparison:
           'CI checks the code. CD (Continuous Delivery / Deployment) ships it. Most teams say "CI/CD" because they pair so often.',
         vibeTip:
@@ -335,6 +351,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Staging vs production',
         summary:
           'Staging is a copy of your live site you can break safely. Production is the real thing your users hit, so changes there should be careful and watched.',
+        details:
+          'Production is the real environment your real users hit. Staging is a near-identical clone with separate data, used for final testing before a release. Most teams have at least three: development (your laptop), staging (a shared test environment), and production.\n\nThe key word is \'near-identical\'. Staging is useful only if it actually mirrors production: same server config, same database engine and version, same env vars (with test values for secrets). When staging drifts from prod, you start shipping bugs that \'worked in staging\'.\n\nThe modern shortcut: preview environments per pull request. Vercel, Netlify, Render, and Fly all spin one up automatically. Reviewers click a link and try the change live, with its own database branch, instead of pulling the branch and running it locally.',
         comparison:
           'Staging is rehearsal. Production is opening night. "It worked on my machine" is a polite way to say you skipped staging.',
         vibeTip:
@@ -571,6 +589,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'OpenAPI / API contract',
         summary:
           'A machine-readable file that describes every endpoint of your API: the URL, what you send, what you get back. Frontend and backend agree on it before anyone codes.',
+        details:
+          'OpenAPI (formerly Swagger) is a YAML or JSON document that describes your HTTP API: every endpoint, every parameter, every response shape, every status code. It is essentially a contract between client and server, written in a way machines can read.\n\nOnce you have an OpenAPI spec, an army of tools opens up. Generate typed client libraries for every language. Render interactive docs (Swagger UI, Redoc, Stoplight). Validate requests and responses at runtime. Mock the API for frontend development before the backend exists. Lint the spec for breaking changes between versions.\n\nFor a vibe coder, the workflow is usually: define the spec first (with AI help), generate the typed client, then write the server. The spec becomes the source of truth and both sides cannot drift. Tools like Hono, Fastify, and Encore can generate the OpenAPI spec from your route definitions automatically.',
         comparison:
           'OpenAPI is the menu. The implementation is the kitchen. GraphQL schemas serve a similar role for GraphQL APIs.',
         vibeTip:
@@ -590,6 +610,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'ADR (Architecture Decision Record)',
         summary:
           'A short note that captures one big decision: what we picked, what we rejected, and why. So in six months no one has to guess.',
+        details:
+          'An Architecture Decision Record is a one-page document capturing one important technical decision: what we picked, what we considered, why we picked it, and what the trade-offs are. They are dated, numbered, and never edited (only superseded by newer ADRs).\n\nThe format Michael Nygard popularized has four sections: Context (what is going on that needs a decision), Decision (what we picked), Status (proposed, accepted, deprecated, superseded), Consequences (what gets easier, what gets harder, what we are now stuck with).\n\nADRs save the next person from having to ask \'why did we pick Postgres over Mongo?\' for the eighteenth time. They live in the repo (usually docs/adr/0001-use-postgres.md) so they version with the code. Vibe coders love them because future-you reading old ADRs is faster than reverse-engineering decisions from git blame.',
         comparison:
           'An ADR is the why behind a choice. A README is how to use the thing. A changelog is what changed and when.',
         vibeTip:
@@ -609,6 +631,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'RFC (Request for Comments)',
         summary:
           'A proposal you circulate before a big change so teammates can poke holes in it. Common for renames, new APIs, and migrations.',
+        details:
+          'A Request for Comments is a longer document proposing a non-trivial change before it gets built. Bigger than an ADR (which is one decision), smaller than a design doc (which is the full implementation plan). Internet RFCs invented the format in the 1960s; modern tech companies use them for any change that touches multiple teams or systems.\n\nA good RFC has: a clear problem statement, the proposed approach, alternatives considered, open questions, a comment period (usually a week), and an explicit author who will resolve feedback. The point is to get pushback before code is written, when changing your mind is cheap.\n\nVibe coders should write RFCs for anything that would be expensive to undo: major dependency changes, data model rewrites, new services, paid third-party integrations. Even a one-page RFC posted in your team chat for a day catches the \'wait, what about...\' that would otherwise hit you in production.',
         comparison:
           'An RFC asks "should we?". An ADR records "we did, here is why". A PR is the actual change.',
         vibeTip:
@@ -719,6 +743,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'SQL vs NoSQL',
         summary:
           'SQL databases (Postgres, MySQL) store data in strict tables you join together. NoSQL (Mongo, DynamoDB) stores looser documents or key-value pairs.',
+        details:
+          'SQL databases (Postgres, MySQL, SQLite) store data in tables with strict schemas, related by foreign keys, queried with the SQL language. They are great when your data has obvious relationships (users have orders have line items) and you need transactions and joins.\n\nNoSQL covers everything else: document stores like MongoDB and Firestore (flexible JSON-shaped records), key-value stores like Redis and DynamoDB (lookup by id, blazing fast), graph databases like Neo4j (best for highly-connected data like social networks). NoSQL is great when the schema changes a lot, or when you need scale that joins cannot deliver.\n\nFor most vibe-coded apps in 2026, the right answer is Postgres (or its hosted versions: Supabase, Neon, Render Postgres). It is fast, free up to real scale, has JSON columns when you need flexibility, and almost every AI knows it well. Reach for NoSQL only when you have a specific reason.',
         comparison:
           'SQL is a spreadsheet with rules. NoSQL is a folder of sticky notes. Most apps want SQL by default; reach for NoSQL when scale or shape forces your hand.',
         vibeTip:
@@ -738,6 +764,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Schema migration',
         summary:
           'A small script that changes the shape of your database (adds a column, makes a field required, etc.) and ships alongside the app code that needs it.',
+        details:
+          'A database migration is a versioned, reviewable script that changes the database schema (add a column, drop a table, create an index). Migrations live in source control next to the code, run in order, and each one knows how to undo itself.\n\nWhy this matters: without migrations, schema changes happen by someone running ad-hoc SQL on the database, and now production and your laptop drift apart. With migrations, every environment runs the same script in the same order, and the schema is reproducible from scratch on a fresh database.\n\nModern tooling makes this almost invisible: Prisma, Drizzle, Knex, Rails ActiveRecord, and Django all generate migration files when you change your model. The vibe coder rule: never edit a migration that has already run in production. Add a new one that fixes the issue.',
         comparison:
           'A migration changes structure. A seed script fills the structure with starter data. A backup is a copy you can restore from.',
         vibeTip:
@@ -757,6 +785,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'ORM (Object-Relational Mapper)',
         summary:
           'A library that lets you read and write database rows as objects in your language, instead of writing raw SQL strings everywhere.',
+        details:
+          'An Object-Relational Mapper is a layer that lets you write queries in your application language (TypeScript, Python, Ruby) instead of raw SQL. user.findMany({ where: { active: true } }) becomes a real SQL query under the hood. ORMs handle joins, type safety, migrations, and connection pooling.\n\nThe trade-off: ORMs make easy things easier and hard things much harder. Simple CRUD is delightful. Complex multi-join aggregations with window functions become a fight, and you end up dropping to raw SQL anyway. Most projects spend 95% of their time in the easy zone, so ORMs win.\n\nFor TypeScript vibe coders: Prisma is the popular default (great DX, slow at scale), Drizzle is the modern choice (closer to SQL, faster, fully typed), and Kysely is for people who like SQL but want type safety. Pick one early; switching ORMs mid-project is painful.',
         comparison:
           'An ORM (Prisma, Drizzle, ActiveRecord) is the friendly wrapper. Raw SQL is the metal underneath. Both have their place.',
         vibeTip:
@@ -776,6 +806,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'CRUD (Create, Read, Update, Delete)',
         summary:
           'The four basic things you do to stored data. Most app screens are some mix of these four, and most APIs map them to HTTP verbs.',
+        details:
+          'CRUD stands for Create, Read, Update, Delete: the four basic operations on any persistent record. Almost every API endpoint maps to one of them. POST creates, GET reads, PATCH or PUT updates, DELETE deletes.\n\nThe acronym is useful because it forces completeness. When you scaffold a feature, ask: what is the C, R, U, and D for this resource? Sometimes one is intentionally missing (a feed has no Update, an audit log has no Delete). That is fine, but it should be intentional, not a bug you discover when the user complains they cannot edit their post.\n\nMost frameworks and AI tools can scaffold CRUD endpoints in seconds. The real work is the parts CRUD does not name: pagination, sorting, filtering, search, soft-delete, audit logs, optimistic concurrency. CRUD is the skeleton; those are the muscles.',
         comparison:
           'Create = POST. Read = GET. Update = PATCH or PUT. Delete = DELETE. If you remember this map, REST APIs stop feeling mysterious.',
         vibeTip:
@@ -816,6 +848,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Caching',
         summary:
           'Saving a copy of a slow result somewhere fast so you do not have to compute or fetch it again every time.',
+        details:
+          'A cache is a copy of an expensive-to-compute or slow-to-fetch result, stored somewhere fast so the next request can skip the work. Caches live at every layer: browser cache (HTTP headers), CDN edge cache (Cloudflare, Vercel, Fastly), server memory (in-process), shared cache (Redis, Memcached), database query cache.\n\nThe famous Phil Karlton quote: \'There are only two hard things in computer science: cache invalidation and naming things.\' Knowing when to throw away the cached copy is harder than putting it there. Common strategies: time-based (cache for 60 seconds), event-based (clear when the source changes), stale-while-revalidate (serve the stale copy and refresh in the background).\n\nFor vibe coders: do not cache early. Caching adds complexity and bugs. Wait until you have a measured slow request, then cache the smallest thing that fixes it, with clear invalidation. Modern frameworks (Next.js fetch revalidation, React Query) make tactical caching easy.',
         comparison:
           'Caching trades freshness for speed. The hard part is "cache invalidation": knowing when the saved copy is stale.',
         vibeTip:
@@ -948,6 +982,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Session cookies vs JWT',
         summary:
           'Session cookies hold a small id that the server uses to look you up. JWTs (JSON Web Tokens) carry the user info inside the token itself, signed so the server can trust it without a lookup.',
+        details:
+          'Session-cookie auth: when the user signs in, the server stores a session record in a database (or Redis), gives the browser an opaque session id in an HTTP-only cookie, and looks up the session on every request. Logout means deleting the row.\n\nJWT (JSON Web Token) auth: the server issues a signed token containing the user info (id, role, expiry). The client sends the token on every request. The server verifies the signature without a database lookup. There is no logout, only expiry; revocation requires a separate denylist.\n\nThe trade-off in one sentence: sessions need a server but are easy to revoke; JWTs scale stateless but are hard to invalidate before they expire. For most apps, sessions win. Reach for JWTs when you have multiple services or need true stateless auth (some serverless setups). Pick one, never both in the same app.',
         comparison:
           'Sessions need a server to remember you. JWTs let the server forget, but rotating them when something goes wrong is harder.',
         vibeTip:
@@ -967,6 +1003,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'OAuth 2.0',
         summary:
           'A way to let users sign in to your app with Google, GitHub, or Apple, without your app ever seeing their password.',
+        details:
+          'OAuth 2.0 is a protocol that lets a user grant your app limited access to their account on another service (Google, GitHub, Facebook, Twitter) without ever sharing the password. Your app gets an access token; the password stays at the provider.\n\nThe flow most people see: user clicks \'Sign in with Google\', gets redirected to Google, approves the request, gets redirected back to your app with an authorization code, your server exchanges the code for an access token, you call Google APIs with the token. The whole dance takes about five hops in two seconds.\n\nOAuth handles authorization (can this app act on behalf of this user?). OpenID Connect, built on top of OAuth, handles authentication (who is this user?). Most \'Sign in with...\' buttons use both. Use a maintained library (Auth.js, Clerk, Supabase Auth, WorkOS); rolling your own OAuth is a security minefield.',
         comparison:
           'OAuth handles the "let me in" handshake. OpenID Connect (built on top) tells you who the person is. Together they power most "Sign in with..." buttons.',
         vibeTip:
@@ -986,6 +1024,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'SSO (Single Sign-On)',
         summary:
           'One company login that gets you into many apps without typing a password again. Common at work via Okta, Google Workspace, or Azure AD.',
+        details:
+          'Single Sign-On is the enterprise version of social login. One company-managed identity (Okta, Azure AD, Google Workspace, OneLogin) lets employees sign in to dozens of internal and SaaS tools without separate passwords. When IT removes someone, they lose access to everything immediately.\n\nThe two protocols you will hear: SAML (older, XML-based, dominant in enterprise) and OIDC (newer, JSON, built on OAuth, gaining ground). B2B SaaS apps usually need both because every customer is on a different identity provider.\n\nThe vibe coder shortcut: do not implement SSO yourself. Use a hosted layer (BoxyHQ, WorkOS, Stytch, Frontegg) that exposes a single API and handles SAML, OIDC, SCIM provisioning, and the per-tenant configuration UI. Trying to support five identity providers by hand is a six-month side quest.',
         comparison:
           'SSO is for organizations. Social login (Sign in with Google for personal accounts) feels similar but is usually OAuth, not enterprise SSO.',
         vibeTip:
@@ -1005,6 +1045,8 @@ export const BUILD_LITERACY_CLUSTERS = [
         title: 'Refresh token',
         summary:
           'A long-lived credential whose only job is to get you new short-lived access tokens. So if a regular token leaks, the damage window is small.',
+        details:
+          'Access tokens are short-lived (15 minutes to an hour) on purpose: if one leaks, the damage window is small. Refresh tokens are longer-lived (days to months) and have one job: get a new access token without making the user sign in again.\n\nThe pattern: when an access token expires, the client sends the refresh token to a /refresh endpoint, the server validates it and issues a fresh access token (sometimes a fresh refresh token too, called \'rotation\'). The user never sees this; it happens in a fetch interceptor.\n\nWhere to store each: access tokens in memory (lost on reload, fine), refresh tokens in HTTP-only cookies (the browser sends them automatically and JavaScript cannot read them, so XSS attacks cannot steal them). Storing either in localStorage is the classic 2017 mistake; OK for prototypes, dangerous for anything real.',
         comparison:
           'Access tokens are like a day pass: short, used everywhere. Refresh tokens are like the season pass at the front desk: rarely shown, kept safe.',
         vibeTip:

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-  ChevronLeft, ChevronRight, GraduationCap, BookOpen, Lightbulb,
+  ChevronLeft, ChevronRight, GraduationCap, BookOpen, Lightbulb, PanelLeftClose,
 } from 'lucide-react';
 import DefinitionPanel from '../ui/DefinitionPanel';
 import QuizCard from './QuizCard';
@@ -26,6 +26,7 @@ export default function BuildTopicView({
   isMastered,
   onMastered,
   quizPool,
+  onCloseInfo,
 }) {
   const cc = BUILD_LITERACY_NAV_COLORS;
   const showQuiz = learnMode && !isMastered && quizPool.length >= 4;
@@ -101,6 +102,17 @@ export default function BuildTopicView({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {carouselArrows}
+          {onCloseInfo && (
+            <button
+              type="button"
+              onClick={onCloseInfo}
+              className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              title="Close panel"
+              aria-label="Close definition panel"
+            >
+              <PanelLeftClose size={18} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -148,6 +160,29 @@ export default function BuildTopicView({
           <p className="text-base lg:text-lg italic text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {topic.comparison}
           </p>
+        </div>
+      )}
+
+      {/* Sibling chips, hop to other topics in this cluster */}
+      {!showQuiz && cluster?.topics?.length > 1 && (
+        <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+            More in {cluster.title}
+          </span>
+          {cluster.topics
+            .filter(t => t.id !== topic.id)
+            .slice(0, 8)
+            .map(sib => (
+              <button
+                key={sib.id}
+                type="button"
+                onClick={() => onSelectTopic(sib.id)}
+                className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${cc.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
+                title={sib.summary || sib.title}
+              >
+                {sib.title}
+              </button>
+            ))}
         </div>
       )}
 

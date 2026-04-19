@@ -354,6 +354,8 @@ export default function App() {
             panelWidth={panelWidth}
             setPanelWidth={setPanelWidth}
             isDesktop={isDesktop}
+            infoOpen={infoOpen}
+            setInfoOpen={setInfoOpen}
           />
         ) : (
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">

@@ -1,3 +1,5 @@
+import { GLOSSARY_BATCH_2 } from './glossaryBatch2.js';
+
 export const GLOSSARY_DATA = {
   // ─── Overlays ───
   modal: {
@@ -2179,4 +2181,6 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
       },
     },
   },
+
+  ...GLOSSARY_BATCH_2,
 };

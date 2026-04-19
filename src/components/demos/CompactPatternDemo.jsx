@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useState } from 'react';
 import {
   Loader2, Bell, Play, Share2, MapPin, QrCode, GripVertical, Clock, CalendarRange,
   PanelTop, MessageSquare, Activity, Filter, Megaphone,
-  Sparkles, Link2, ChevronDown, Check, X, Pipette,
+  Sparkles, Link2, ChevronDown, ChevronRight, Check, X, Pipette, Folder, FileCode, FileText,
 } from 'lucide-react';
 import { useGlossary } from '../../hooks/useGlossary';
 
@@ -967,6 +967,134 @@ function ComboboxPatternPreview({ o }) {
   );
 }
 
+/**
+ * Tree grid: hierarchy + columns. The full “Tree View” demo is hierarchy-only; this preview
+ * stresses aligned metadata — at readable sizes (no microscopic type).
+ */
+function TreeGridPatternPreview({ o }) {
+  const chevronCol = o('opt1');
+  const showLazy = o('opt2');
+  const alignCols = o('opt3');
+  const colCount = 3 + (alignCols ? 1 : 0);
+
+  const th = 'px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400';
+  const td = 'px-4 py-3.5 align-middle text-sm text-zinc-800 dark:text-zinc-100';
+  const sizeCell = ' text-right tabular-nums';
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      <div className={`${cx.card} overflow-hidden p-0 shadow-md`}>
+        <div className="border-b border-zinc-200/90 bg-gradient-to-br from-zinc-50/90 to-white px-5 py-4 dark:border-zinc-800 dark:from-zinc-900/80 dark:to-zinc-900 sm:px-6 sm:py-5">
+          <p className={PREVIEW.sectionTitle}>Tree grid</p>
+          <p className={`${PREVIEW.lede} mt-1 max-w-prose`}>
+            Same hierarchy idea as <span className="font-medium text-zinc-700 dark:text-zinc-200">Tree view</span>, but each
+            row lines up with <span className="font-medium text-zinc-700 dark:text-zinc-200">sortable columns</span> (size,
+            dates, etc.) — the table is the teaching surface.
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table
+            role="treegrid"
+            aria-label="Project files with metadata"
+            className="w-full min-w-[min(100%,20rem)] border-collapse"
+          >
+            <thead>
+              <tr className="border-b border-zinc-200 bg-zinc-100/80 dark:border-zinc-700 dark:bg-zinc-900/90">
+                <th className={`${th} w-14`} scope="col">
+                  <span className="sr-only">{chevronCol ? 'Expand or collapse' : 'Tree'}</span>
+                </th>
+                <th className={th} scope="col">
+                  Name
+                </th>
+                <th className={`${th} w-[5.5rem] text-right tabular-nums sm:w-24`} scope="col">
+                  Size
+                </th>
+                {alignCols && (
+                  <th className={`${th} w-36 text-right`} scope="col">
+                    Modified
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              <tr role="row" aria-level={1} aria-expanded="true" className="bg-white dark:bg-zinc-950/40">
+                <td className={td}>
+                  {chevronCol ? (
+                    <button
+                      type="button"
+                      className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                      aria-label="Collapse folder src"
+                    >
+                      <ChevronDown className="h-5 w-5 shrink-0" aria-hidden />
+                    </button>
+                  ) : (
+                    <span className="flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-400">
+                      <ChevronRight className="h-5 w-5" aria-hidden />
+                    </span>
+                  )}
+                </td>
+                <td className={`${td} font-semibold`}>
+                  <span className="inline-flex items-center gap-2.5">
+                    <Folder className="h-5 w-5 shrink-0 text-amber-500" aria-hidden />
+                    src
+                  </span>
+                </td>
+                <td className={`${td} text-zinc-500 dark:text-zinc-400${sizeCell}`}>—</td>
+                {alignCols && <td className={`${td} text-right text-zinc-500 dark:text-zinc-400`}>Today</td>}
+              </tr>
+              {showLazy && (
+                <tr role="row">
+                  <td colSpan={colCount} className={`${td} bg-indigo-50/50 py-3 pl-6 text-sm text-indigo-900 dark:bg-indigo-950/30 dark:text-indigo-200`}>
+                    <span className="inline-flex items-center gap-2.5">
+                      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-indigo-600 dark:text-indigo-400" aria-hidden />
+                      Loading children…
+                    </span>
+                  </td>
+                </tr>
+              )}
+              <tr role="row" aria-level={2} className="bg-zinc-50/70 dark:bg-zinc-900/25">
+                <td className={td} />
+                <td className={`${td} pl-6 sm:pl-10`}>
+                  <span className="inline-flex items-center gap-2.5">
+                    <FileCode className="h-5 w-5 shrink-0 text-blue-500" aria-hidden />
+                    App.jsx
+                  </span>
+                </td>
+                <td className={`${td} text-zinc-700 dark:text-zinc-200${sizeCell}`}>12 KB</td>
+                {alignCols && <td className={`${td} text-right tabular-nums text-zinc-500 dark:text-zinc-400`}>2:14 PM</td>}
+              </tr>
+              <tr role="row" aria-level={2} className="bg-zinc-50/70 dark:bg-zinc-900/25">
+                <td className={td} />
+                <td className={`${td} pl-6 sm:pl-10`}>
+                  <span className="inline-flex items-center gap-2.5">
+                    <FileCode className="h-5 w-5 shrink-0 text-blue-500" aria-hidden />
+                    main.jsx
+                  </span>
+                </td>
+                <td className={`${td} text-zinc-700 dark:text-zinc-200${sizeCell}`}>4 KB</td>
+                {alignCols && <td className={`${td} text-right tabular-nums text-zinc-500 dark:text-zinc-400`}>2:02 PM</td>}
+              </tr>
+              <tr role="row" aria-level={1} className="bg-white dark:bg-zinc-950/40">
+                <td className={td}>
+                  <span className="block min-h-[44px] min-w-[44px]" aria-hidden />
+                </td>
+                <td className={td}>
+                  <span className="inline-flex items-center gap-2.5 font-medium">
+                    <FileText className="h-5 w-5 shrink-0 text-zinc-400" aria-hidden />
+                    README.md
+                  </span>
+                </td>
+                <td className={`${td} text-zinc-700 dark:text-zinc-200${sizeCell}`}>2 KB</td>
+                {alignCols && <td className={`${td} text-right tabular-nums text-zinc-500 dark:text-zinc-400`}>Mon</td>}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** @type {Record<string, (o: (id: string) => boolean) => React.ReactNode>} */
 const RENDER = {
   __generic(o, id) {
@@ -1602,26 +1730,7 @@ const RENDER = {
   },
 
   treegrid(o) {
-    return (
-      <div className={`${cx.card} p-2 font-mono text-[10px]`}>
-        <div className="flex gap-2 text-zinc-500 border-b border-zinc-200 dark:border-zinc-700 pb-1 mb-1">
-          <span className="w-4" />
-          <span className="flex-1">Name</span>
-          <span className="w-12">Size</span>
-        </div>
-        <div className="space-y-0.5">
-          <div className="flex gap-2 items-center">
-            <ChevronDown className="w-3 h-3" />
-            <span>src</span>
-          </div>
-          <div className="flex gap-2 pl-4 items-center">
-            <span className="w-3" />
-            <span className="flex-1">App.jsx</span>
-            <span className="text-zinc-400">12k</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <TreeGridPatternPreview o={o} />;
   },
 
   kanban(o) {

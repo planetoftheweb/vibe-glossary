@@ -73,6 +73,124 @@ const LINE_CHART_REVENUE_K = [24, 28, 26, 34, 42, 52];
 const LINE_CHART_COST_K = [20, 21, 22, 23, 24, 25];
 const LINE_CHART_Y_MAX = 60;
 
+/** Downtown San Francisco — real tiles via OpenStreetMap embed (no API key). */
+const OSM_EMBED_SRC =
+  'https://www.openstreetmap.org/export/embed.html?bbox=-122.425%2C37.785%2C-122.395%2C37.805&layer=mapnik';
+
+const MAP_SIDEBAR_PLACES = [
+  { id: 'ferry', name: 'Ferry Building', detail: 'Embarcadero' },
+  { id: 'coit', name: 'Coit Tower', detail: 'Telegraph Hill' },
+  { id: 'mission', name: 'Mission Dolores', detail: 'Mission' },
+];
+
+function MapViewPatternPreview({ o }) {
+  const showClusters = o('opt1');
+  const listSync = o('opt2');
+  const showGeo = o('opt3');
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const mapShellClass = listSync
+    ? 'relative min-h-[220px] w-full md:h-full md:min-h-[min(52vh,26rem)]'
+    : 'relative h-[min(58vh,26rem)] min-h-[260px] w-full sm:min-h-[300px]';
+
+  const mapFrame = (
+    <div className={mapShellClass}>
+      <iframe
+        title="Interactive map — downtown San Francisco (OpenStreetMap)"
+        src={OSM_EMBED_SRC}
+        className="absolute inset-0 h-full w-full rounded-none border-0"
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+      {showClusters && (
+        <div
+          className="pointer-events-none absolute left-[28%] top-[22%] z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-sm font-bold text-white shadow-lg dark:border-zinc-900"
+          aria-hidden
+        >
+          12
+        </div>
+      )}
+      {showGeo && (
+        <div className="absolute bottom-3 right-3 z-10">
+          <button
+            type="button"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-zinc-200 bg-white/95 px-4 text-sm font-semibold text-zinc-800 shadow-md backdrop-blur-sm dark:border-zinc-600 dark:bg-zinc-900/95 dark:text-zinc-100"
+            aria-label="Use my location (demo — requests browser permission in a real app)"
+          >
+            <MapPin className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" aria-hidden />
+            Use my location
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      <figure className={`${cx.card} m-0 overflow-hidden p-0 shadow-md`}>
+        <div className="border-b border-zinc-200/90 bg-gradient-to-br from-sky-50/50 via-white to-white px-5 py-4 text-left dark:border-zinc-800 dark:from-sky-950/20 dark:via-zinc-900 dark:to-zinc-900 sm:px-6 sm:py-5">
+          <p className={PREVIEW.sectionTitle}>Map embed</p>
+          <p className={`mt-1 max-w-prose ${PREVIEW.lede}`}>
+            Live OpenStreetMap tiles in an iframe — same integration shape as Mapbox or Google Maps JS.
+          </p>
+        </div>
+
+        {listSync ? (
+          <div className="grid min-h-[min(62vh,24rem)] grid-cols-1 md:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] md:min-h-[min(52vh,26rem)]">
+            <ul
+              className="flex max-h-48 flex-col divide-y divide-zinc-200 overflow-y-auto border-zinc-200 bg-zinc-50/80 dark:divide-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/50 md:max-h-none md:border-r"
+              aria-label="Locations synced with map"
+            >
+              {MAP_SIDEBAR_PLACES.map((p, i) => {
+                const on = i === selectedIdx;
+                return (
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedIdx(i)}
+                      className={`w-full px-4 py-3.5 text-left text-sm transition ${
+                        on
+                          ? 'bg-indigo-50 font-semibold text-indigo-950 dark:bg-indigo-950/40 dark:text-indigo-100'
+                          : 'text-zinc-700 hover:bg-white dark:text-zinc-300 dark:hover:bg-zinc-800/80'
+                      }`}
+                    >
+                      <span className="block">{p.name}</span>
+                      <span className="mt-0.5 block text-xs font-normal text-zinc-500 dark:text-zinc-400">{p.detail}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            {mapFrame}
+          </div>
+        ) : (
+          mapFrame
+        )}
+
+        <figcaption className="border-t border-zinc-200/80 px-4 py-3 text-left text-[11px] leading-relaxed text-zinc-500 dark:border-zinc-800 dark:text-zinc-400 sm:px-5">
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+          >
+            © OpenStreetMap contributors
+          </a>
+          {' · '}
+          <a
+            href="https://www.openstreetmap.org/#map=15/37.795/-122.41"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-offset-2 hover:underline"
+          >
+            View larger map
+          </a>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
 function LineChartPatternPreview({ o }) {
   const uid = useId().replace(/:/g, '');
   const showAxes = o('opt1');
@@ -1261,15 +1379,7 @@ const RENDER = {
   },
 
   mapview(o) {
-    return (
-      <div className={`${cx.card} relative h-44 overflow-hidden rounded-xl`}>
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#bfdbfe_0%,#e0e7ff_40%,#fef3c7_100%)] dark:opacity-40" />
-        <div className="absolute inset-0 opacity-30 dark:opacity-20 bg-[radial-gradient(circle_at_30%_40%,#64748b_1px,transparent_1px)] bg-[length:12px_12px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <MapPin className={`w-8 h-8 text-rose-500 drop-shadow ${o('opt1') ? 'animate-pulse' : ''}`} />
-        </div>
-      </div>
-    );
+    return <MapViewPatternPreview o={o} />;
   },
 
   shortcutkeys(o) {

@@ -122,6 +122,14 @@ export default function App() {
 
   const handleSelectCategory = (itemId) => {
     setActiveItem(itemId);
+    setSiteSection('glossary');
+    localStorage.setItem('vg-visited', '1');
+    setShowWelcome(false);
+  };
+
+  const handleSelectBuildTopic = (topicId) => {
+    if (topicId) setActiveBuildTopic(topicId);
+    setSiteSection('build');
     localStorage.setItem('vg-visited', '1');
     setShowWelcome(false);
   };
@@ -233,6 +241,7 @@ export default function App() {
         <WelcomeScreen
           onEnter={handleEnterApp}
           onSelectCategory={handleSelectCategory}
+          onSelectBuildTopic={handleSelectBuildTopic}
         />
       )}
 

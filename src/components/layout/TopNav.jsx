@@ -3,7 +3,7 @@ import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
   RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
-  Compass, Lightbulb, Wrench, FileText, Database, KeyRound,
+  Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import {
@@ -17,6 +17,7 @@ import {
 // stays plain JSON-shaped.
 const BUILD_CLUSTER_ICONS = {
   'web-foundations': <Compass size={20} />,
+  'design-language': <Palette size={20} />,
   product: <Lightbulb size={20} />,
   engineering: <Wrench size={20} />,
   'spec-driven': <FileText size={20} />,

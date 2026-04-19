@@ -1054,18 +1054,91 @@ const RENDER = {
   },
 
   producttour(o) {
+    const mask = o('opt2');
+    const tourChrome = o('opt1');
+    const reduced = o('opt3');
+
     return (
-      <div className={`${cx.card} relative p-8 min-h-[11rem]`}>
-        <div className="absolute top-4 right-4 w-10 h-10 rounded-lg bg-indigo-500/20 border-2 border-indigo-500" />
-        {o('opt1') && (
-          <div className="absolute top-12 right-8 max-w-[200px] rounded-lg border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-zinc-900 shadow-lg p-3 text-xs">
-            <p className="font-bold text-indigo-600 dark:text-indigo-300 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5" /> Step 2
+      <div className="w-full space-y-3">
+        <p className="text-[11px] leading-snug text-zinc-600 dark:text-zinc-400">
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">Product tours</span> darken the rest of the
+          screen and leave a bright cut-out over the control you’re explaining, plus a floating panel for copy. Toggle{' '}
+          <span className="font-medium text-zinc-700 dark:text-zinc-300">Spotlight</span> in the spec to switch between
+          that mask and a lighter “ring only” highlight.
+        </p>
+
+        {mask ? (
+          <div
+            className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] grid-rows-[minmax(2rem,auto)_auto_minmax(3rem,1fr)] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700"
+            role="img"
+            aria-label="Spotlight demo: dimmed fake UI with a clear rectangle around the Export button"
+          >
+            <div className="col-span-3 bg-black/72 dark:bg-black/78" />
+            <div className="min-h-[3rem] bg-black/72 dark:bg-black/78" />
+            <div className="flex items-center justify-center px-1 py-1">
+              <button
+                type="button"
+                className={`relative z-10 min-w-[7.5rem] rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg ${reduced ? '' : 'motion-safe:ring-2 motion-safe:ring-white/90'}`}
+              >
+                Export
+              </button>
+            </div>
+            <div className="min-h-[3rem] bg-black/72 dark:bg-black/78" />
+            <div className="col-span-3 min-h-[5rem] bg-black/72 dark:bg-black/78" />
+          </div>
+        ) : (
+          <div
+            className="flex min-h-[11rem] flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-zinc-300 bg-zinc-100/90 p-6 dark:border-zinc-600 dark:bg-zinc-900/50"
+            role="img"
+            aria-label="Tour without full-page mask: only the target is emphasized"
+          >
+            <button
+              type="button"
+              className={`rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md ${
+                reduced ? '' : 'motion-safe:animate-pulse motion-safe:ring-4 motion-safe:ring-amber-400/90 motion-safe:ring-offset-2 motion-safe:ring-offset-zinc-100 dark:motion-safe:ring-offset-zinc-900'
+              }`}
+            >
+              Export
+            </button>
+            <p className="max-w-[15rem] text-center text-[11px] text-zinc-600 dark:text-zinc-400">
+              With <span className="font-medium text-zinc-800 dark:text-zinc-200">Spotlight</span> off, many libraries
+              still pulse or ring the target instead of dimming the whole page.
             </p>
-            <p className="text-zinc-600 dark:text-zinc-300 mt-1">Export your glossary.</p>
           </div>
         )}
-        <p className="text-xs text-zinc-500">Main UI — spotlight optional</p>
+
+        <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+          <div className="flex gap-2">
+            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-zinc-900 dark:text-white">Step 1 — Export your work</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+                This floating panel is the copy for the current step (title + short help). In a real tour it moves when
+                you go Next.
+              </p>
+              {tourChrome && (
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                  <button type="button" className="text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300">
+                    Skip tour
+                  </button>
+                  <span className="text-[10px] font-medium tabular-nums text-zinc-400">1 / 3</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      className="rounded-md border border-zinc-200 px-2 py-1 text-[11px] text-zinc-600 dark:border-zinc-600 dark:text-zinc-300"
+                      aria-label="Previous step"
+                    >
+                      Back
+                    </button>
+                    <button type="button" className="rounded-md bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold text-white">
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   },

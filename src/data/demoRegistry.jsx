@@ -6,7 +6,7 @@ const CompactPatternDemo = lazy(() => import('../components/demos/CompactPattern
 const BATCH2_DEMO_IDS = [
   'actionsheet', 'activitystream', 'banner', 'bottomnav', 'chatthread', 'codeblock', 'colorpicker',
   'combobox', 'cookieconsent', 'countdown', 'daterange', 'disclosure', 'fileuploadrow', 'filterpanel',
-  'formcolumns', 'hovercard', 'imagecropper', 'inputgroup', 'kanban', 'keyvalue', 'linechart', 'linkcard',
+  'formcolumns', 'hovercard', 'inputgroup', 'kanban', 'keyvalue', 'linechart', 'linkcard',
   'loadingoverlay', 'mapview', 'megamenu', 'menubar', 'meter', 'multiselect', 'notificationcenter',
   'passwordfield', 'piechart', 'presencedot', 'producttour', 'qrcode', 'radiocards', 'relativetime',
   'scrollarea', 'searchfield', 'segmented', 'sharesheet', 'shortcutkeys', 'sparkline', 'splitpane',

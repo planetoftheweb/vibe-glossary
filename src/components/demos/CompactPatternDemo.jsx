@@ -562,17 +562,6 @@ const RENDER = {
     );
   },
 
-  imagecropper(o) {
-    return (
-      <div className={`relative ${cx.card} p-2`}>
-        <div className="aspect-video rounded-lg bg-gradient-to-br from-indigo-200 to-rose-200 dark:from-indigo-900 dark:to-rose-900 relative overflow-hidden">
-          <div className="absolute inset-4 border-2 border-white shadow-lg rounded-md" />
-          {o('opt1') && <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-2 py-1 rounded">1:1</div>}
-        </div>
-      </div>
-    );
-  },
-
   mapview(o) {
     return (
       <div className={`${cx.card} relative h-44 overflow-hidden rounded-xl`}>

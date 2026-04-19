@@ -1,4 +1,4 @@
-// Curated learning paths — all glossary component ids in 6 themed sequences (101 entries).
+// Curated learning paths — all glossary component ids in 6 themed sequences (100 entries).
 // Each path: id, name, description, items (ordered ids), quiz (5 questions).
 // Quiz answers reference component ids that appear in that path's items list.
 
@@ -6,14 +6,14 @@ import { CATEGORIES } from './categories.jsx';
 
 const ALL_COMPONENT_IDS = CATEGORIES.flatMap((c) => c.items.map((i) => i.id));
 
-// Six contiguous slices covering every id once: 17+17+17+17+17+16 = 101
+// Six contiguous slices covering every id once: 17+17+17+17+17+15 = 100
 const SLICES = [
   [0, 17],
   [17, 34],
   [34, 51],
   [51, 68],
   [68, 85],
-  [85, 101],
+  [85, 100],
 ];
 
 function sliceItems([a, b]) {

@@ -506,30 +506,6 @@ export const GLOSSARY_BATCH_2 = {
     },
   },
 
-  imagecropper: {
-    title: "Image Cropper",
-    definition: "Lets users frame a region before upload — aspect ratio, zoom, rotate.",
-    vibeTip: "Specify fixed aspect for avatars or banners.",
-    comparison: "Cropper prepares images. Dropzone accepts files. Lightbox previews images.",
-    prompt: {
-      base: "Add an image cropper with aspect ratio presets",
-      options: [
-        { id: 'opt1', label: 'Presets', text: ' with presets: 1:1 avatar, 16:9 cover, freeform' },
-        { id: 'opt2', label: 'Zoom / pan', text: ', allowing pinch or wheel zoom inside the crop box' },
-        { id: 'opt3', label: 'Output', text: ', exporting a downscaled blob under a max file size' },
-      ],
-      requirements: [
-        'Expose crop box with keyboard-adjustable handles or documented limitations',
-        'Preview final crop before upload; show dimensions in px',
-        'Handle HEIC/WebP fallbacks with user-facing errors',
-      ],
-      scaffolds: {
-        shadcn: `<div className="relative h-64">{/* react-easy-crop Cropper */}</div>`,
-        html: `<canvas aria-label="Crop preview"></canvas>`,
-      },
-    },
-  },
-
   mapview: {
     title: "Map Embed",
     definition: "Interactive map — markers, clusters, and user location.",

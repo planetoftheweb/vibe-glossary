@@ -155,7 +155,6 @@ export const CATEGORIES = [
       { id: 'dragdrop',      name: 'Drag & Drop' },
       { id: 'lightbox',      name: 'Lightbox' },
       { id: 'infinitescroll', name: 'Infinite Scroll' },
-      { id: 'imagecropper', name: 'Image Cropper' },
       { id: 'sharesheet', name: 'Share Sheet' },
       { id: 'kanban', name: 'Kanban Board' },
     ],

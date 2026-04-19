@@ -64,9 +64,9 @@ describe('CATEGORIES', () => {
     expect(uniqueIds.size).toBe(allIds.length);
   });
 
-  it('total item count across all categories equals 101', () => {
+  it('total item count across all categories equals 100', () => {
     const total = CATEGORIES.reduce((sum, category) => sum + category.items.length, 0);
-    expect(total).toBe(101);
+    expect(total).toBe(100);
   });
 
   it('category IDs match the known set', () => {

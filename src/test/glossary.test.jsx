@@ -10,8 +10,8 @@ const keys = Object.keys(GLOSSARY_DATA);
 
 describe('GLOSSARY_DATA', () => {
   // 1. Correct number of entries
-  it('has exactly 101 keys', () => {
-    expect(keys).toHaveLength(101);
+  it('has exactly 100 keys', () => {
+    expect(keys).toHaveLength(100);
   });
 
   // 2–7. Per-entry shape tests

@@ -80,7 +80,7 @@ function PillDropdown({
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
-        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 lg:gap-2.5 px-3 lg:px-4 xl:px-5 py-2.5 lg:py-3 min-w-0'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
+        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 xl:gap-2.5 px-3 xl:px-5 py-2.5 xl:py-3 min-w-0'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
@@ -88,12 +88,12 @@ function PillDropdown({
       >
         {icon}
         {!iconOnly && (
-          <span className={`hidden lg:inline-block ${labelMaxClass} truncate align-middle`}>
+          <span className={`hidden xl:inline-block ${labelMaxClass} truncate align-middle`}>
             {label}
           </span>
         )}
         {!iconOnly && (
-          <ChevronDown size={18} className={`hidden xl:inline text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown size={16} className={`text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         )}
         {iconOnly && (
           <ChevronDown size={14} className={`text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
@@ -216,8 +216,8 @@ function MainMenu({
           </MenuItem>
         )}
       </div>
-      {/* LEARN section, hidden on lg+ where the Learning pill covers it */}
-      <div className="lg:hidden">
+      {/* LEARN section, hidden on 2xl+ where the Learning pill covers it */}
+      <div className="2xl:hidden">
         <SectionHeader icon={<GraduationCap size={14} />} label="Learn" />
         <div className="pb-1.5">
           <button
@@ -346,8 +346,8 @@ function MainMenu({
         )}
       </div>
 
-      {/* HELP section, hidden on lg+ where the Help pill covers it */}
-      <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
+      {/* HELP section, hidden on 2xl+ where the Help pill covers it */}
+      <div className="2xl:hidden border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
         <MenuItem
           icon={isBuild ? <BookText size={18} /> : <BookOpen size={18} />}
@@ -799,8 +799,9 @@ export default function TopNav({
 
         {/* Right: Search + Menu */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Learning + Help icon-only pills */}
-          <div className="hidden md:flex items-center">
+          {/* Learning + Help icon-only pills, only at 2xl+ where there's room.
+              Below that they live inside the hamburger menu instead. */}
+          <div className="hidden 2xl:flex items-center">
             <PillDropdown
               icon={<GraduationCap size={22} />}
               iconOnly

@@ -795,18 +795,21 @@ export default function TopNav({
             </div>
           )}
 
-          {/* Supplementary pills, icon-only at md, progressively add text/chevron at lg/xl.
-              Available in both sections; behavior swaps based on siteSection so
-              build literacy gets its own Surprise Me, Paths, and Index. */}
-          <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3">
-            {/* Learning */}
+        </div>
+
+        {/* Right: Search + Menu */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Learning + Help icon-only pills */}
+          <div className="hidden md:flex items-center">
             <PillDropdown
               icon={<GraduationCap size={22} />}
-              label="Learning"
+              iconOnly
+              ariaLabel="Learning"
               isOpen={openDropdown === 'learning'}
               onToggle={() => setOpenDropdown(openDropdown === 'learning' ? null : 'learning')}
               onClose={() => setOpenDropdown(null)}
               width={280}
+              align="right"
             >
               <button
                 onClick={() => { toggleLearnMode(); setOpenDropdown(null); }}
@@ -857,14 +860,15 @@ export default function TopNav({
               </button>
             </PillDropdown>
 
-            {/* Help */}
             <PillDropdown
               icon={<LifeBuoy size={22} />}
-              label="Help"
+              iconOnly
+              ariaLabel="Help"
               isOpen={openDropdown === 'help'}
               onToggle={() => setOpenDropdown(openDropdown === 'help' ? null : 'help')}
               onClose={() => setOpenDropdown(null)}
               width={260}
+              align="right"
             >
               <button
                 onClick={() => {
@@ -896,10 +900,7 @@ export default function TopNav({
               </button>
             </PillDropdown>
           </div>
-        </div>
 
-        {/* Right: Search + Menu */}
-        <div className="flex items-center gap-2 shrink-0">
           {/* Desktop: inline expanding search */}
           {searchOpen ? (
             <div className="hidden md:block relative w-72 lg:w-96">
@@ -932,11 +933,12 @@ export default function TopNav({
           ) : (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
-              className="hidden md:flex p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
               aria-label="Search (⌘K)"
               title="Search (⌘K)"
             >
               <Search size={20} />
+              <kbd className="hidden xl:flex items-center text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 leading-none">⌘K</kbd>
             </button>
           )}
 

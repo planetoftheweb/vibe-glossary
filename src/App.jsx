@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
-import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
+import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, GraduationCap, MousePointerClick } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
@@ -583,6 +583,12 @@ export default function App() {
 
             {/* Demo area, fills available space */}
             <div className="w-full h-full relative z-10 flex flex-col">
+              {/* TRY IT eyebrow, gives the preview pane context so the demo trigger
+                  doesn't float in empty space — especially on mobile */}
+              <div className={`flex items-center gap-2 px-4 lg:px-6 pt-3 lg:pt-4 pb-1 text-xs font-bold uppercase tracking-widest ${navAccentColors.text || 'text-indigo-500 dark:text-indigo-400'}`}>
+                <MousePointerClick size={14} />
+                <span>Try it</span>
+              </div>
               <Suspense fallback={
                 <div className="flex-1 flex items-center justify-center text-zinc-400 dark:text-zinc-600 text-base">
                   Loading…

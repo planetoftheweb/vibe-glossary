@@ -42,7 +42,7 @@ const DEFAULT_VARIANTS = [
     promptPrefix: 'What does a ',
     promptHighlight: '{title}',
     promptSuffix: ' do?',
-    helper: 'Look at the live demo on the right and pick the description that matches.',
+    helper: 'Look at the live demo and pick the description that matches.',
   },
   {
     id: 'default-pick-match',
@@ -54,7 +54,7 @@ const DEFAULT_VARIANTS = [
     id: 'default-which-is',
     type: 'which-is',
     promptText: 'Which of these defines {title}?',
-    helper: 'Read each option carefully. The right one will match the live demo on the right.',
+    helper: 'Read each option carefully. The right one will match the live demo.',
   },
 ];
 
@@ -217,7 +217,7 @@ export default function QuizCard({
           {promptNode}
         </p>
         <p className="text-sm lg:text-base text-zinc-500 dark:text-zinc-400 mb-4 lg:mb-5">
-          {variant.helper || 'Look at the live demo on the right and pick the description that matches.'}
+          {variant.helper || 'Look at the live demo and pick the description that matches.'}
         </p>
 
         <div className="grid grid-cols-1 gap-2.5 lg:gap-3">

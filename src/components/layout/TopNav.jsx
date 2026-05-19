@@ -54,17 +54,45 @@ function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
   );
 }
 
+// Tooltip for nav pills when the label is icon-only. Renders below the trigger
+// (same anchor as dropdowns) so it stays inside the header and readable.
+// When inline label is hidden, tooltip shows on hover. hideFrom must match labelFrom on the pill.
+const LABEL_FROM = {
+  lg: { label: 'hidden lg:inline-block', tooltipHide: 'lg:hidden' },
+  xl: { label: 'hidden xl:inline-block', tooltipHide: 'xl:hidden' },
+};
+
+function NavPillTooltip({ text, align = 'left', hideFrom, hidden }) {
+  if (!text || hidden) return null;
+  const alignClass = align === 'right' ? 'right-0 left-auto' : 'left-1/2 -translate-x-1/2';
+  const hideClass = hideFrom ? LABEL_FROM[hideFrom]?.tooltipHide : '';
+  return (
+    <span
+      role="tooltip"
+      className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} whitespace-nowrap max-w-[min(20rem,calc(100vw-2rem))] truncate px-3 py-2 rounded-lg text-sm font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
+    >
+      {text}
+    </span>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // A clean pill button that opens a dropdown
 // ─────────────────────────────────────────────────────────────────────────────
 function PillDropdown({
   icon, label, isOpen, onToggle, onClose, children, width, align, iconOnly, ariaLabel,
+  // When to show the inline label: 'lg' for the first pill in a pair (category/cluster),
+  // 'xl' for the second (component/topic). Icon-only pills ignore this.
+  labelFrom = 'xl',
   // Tailwind max-width class applied to the label span. Caps long labels (like
   // 60-character build literacy topic titles) so they truncate with an
   // ellipsis instead of pushing other pills off the bar.
   labelMaxClass = 'max-w-[12rem] xl:max-w-[18rem]',
 }) {
   const wrapRef = useRef(null);
+  const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
+  // Tooltip text: use label if provided, otherwise fall back to ariaLabel.
+  const tooltipText = label || ariaLabel;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -80,18 +108,24 @@ function PillDropdown({
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
-        className={`${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : 'w-full flex items-center gap-2 xl:gap-2.5 px-3 xl:px-5 py-2.5 xl:py-3 min-w-0'} rounded-lg text-base md:text-lg font-semibold transition-colors ${
+        className={`group relative ${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : `w-full flex items-center gap-2 min-w-0 px-3 py-2.5 ${labelFrom === 'lg' ? 'lg:gap-2 lg:px-4' : ''} xl:gap-2.5 xl:px-5 xl:py-3`} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
         {icon}
-        {!iconOnly && (
-          <span className={`hidden xl:inline-block ${labelMaxClass} truncate align-middle`}>
+        {!iconOnly && labelBp && (
+          <span className={`${labelBp.label} ${labelMaxClass} truncate align-middle`}>
             {label}
           </span>
         )}
+        <NavPillTooltip
+          text={tooltipText}
+          align={align}
+          hideFrom={iconOnly ? undefined : labelFrom}
+          hidden={isOpen || !tooltipText}
+        />
         {!iconOnly && (
           <ChevronDown size={16} className={`text-zinc-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         )}
@@ -601,40 +635,49 @@ export default function TopNav({
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>
-      <div className="relative flex items-center justify-between px-4 md:px-6 h-20">
+      <div className="relative flex items-center justify-between gap-2 px-3 sm:px-4 md:px-6 h-20">
         {/* Left: Logo + pill dropdowns */}
-        <div className="flex items-center gap-2 md:gap-4 min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0">
           <button
             onClick={onGetStarted}
-            className="flex items-center gap-3 font-bold tracking-tight text-zinc-900 dark:text-white shrink-0"
+            className="flex items-center gap-2 lg:gap-3 font-bold tracking-tight text-zinc-900 dark:text-white shrink-0"
             title="Welcome screen"
+            aria-label="VibeGlossary — welcome screen"
           >
-            <img src="/logo.png" alt="VibeGlossary" className="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover" />
-            <span className="hidden sm:inline text-2xl">VibeGlossary</span>
+            <img src="/logo.png" alt="" className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl object-cover" />
+            <span className="hidden lg:inline text-xl lg:text-2xl">VibeGlossary</span>
           </button>
 
-          <div className="flex shrink-0 items-center rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex shrink-0 items-center rounded-xl bg-zinc-100 dark:bg-zinc-900 p-0.5 sm:p-1 border border-zinc-200 dark:border-zinc-800">
             <button
               type="button"
               onClick={() => setSiteSection('glossary')}
-              className={`px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold min-h-[44px] transition-colors ${
+              title="UI Glossary"
+              aria-label="UI Glossary"
+              aria-current={siteSection === 'glossary' ? 'page' : undefined}
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
                 siteSection === 'glossary'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
-              UI Glossary
+              <BookOpen size={20} className="shrink-0 lg:hidden" aria-hidden />
+              <span className="hidden lg:inline">UI Glossary</span>
             </button>
             <button
               type="button"
               onClick={() => setSiteSection('build')}
-              className={`px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold min-h-[44px] transition-colors ${
+              title="Build literacy"
+              aria-label="Build literacy"
+              aria-current={siteSection === 'build' ? 'page' : undefined}
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
                 siteSection === 'build'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
-              Build literacy
+              <BookText size={20} className="shrink-0 lg:hidden" aria-hidden />
+              <span className="hidden lg:inline">Build literacy</span>
             </button>
           </div>
 
@@ -653,6 +696,8 @@ export default function TopNav({
                 </span>
               }
               label={activeCat?.name || 'Overlays'}
+              labelFrom="lg"
+              labelMaxClass="max-w-[7rem] lg:max-w-[10rem] xl:max-w-[14rem]"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
               onClose={() => setOpenDropdown(null)}
@@ -729,6 +774,8 @@ export default function TopNav({
                   </span>
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
+                labelFrom="lg"
+                labelMaxClass="max-w-[7rem] lg:max-w-[10rem] xl:max-w-[14rem]"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
                 onClose={() => setOpenDropdown(null)}
@@ -805,6 +852,7 @@ export default function TopNav({
             <PillDropdown
               icon={<GraduationCap size={22} />}
               iconOnly
+              label="Learning"
               ariaLabel="Learning"
               isOpen={openDropdown === 'learning'}
               onToggle={() => setOpenDropdown(openDropdown === 'learning' ? null : 'learning')}
@@ -864,6 +912,7 @@ export default function TopNav({
             <PillDropdown
               icon={<LifeBuoy size={22} />}
               iconOnly
+              label="Help"
               ariaLabel="Help"
               isOpen={openDropdown === 'help'}
               onToggle={() => setOpenDropdown(openDropdown === 'help' ? null : 'help')}
@@ -980,6 +1029,7 @@ export default function TopNav({
                 </div>
               }
               iconOnly
+              label="Progress"
               ariaLabel={`${isBuildSection ? 'Build literacy' : 'UI glossary'} progress: ${activeProgress.visited} of ${activeProgress.total}`}
               isOpen={openDropdown === 'progress'}
               onToggle={() => setOpenDropdown(openDropdown === 'progress' ? null : 'progress')}

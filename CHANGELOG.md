@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-05-18
+
+### Changed
+- Top nav responsive polish: logo wordmark hides below `lg`; UI Glossary / Build literacy switcher becomes icon-only below `lg` with accessible labels
+- Category/cluster pill shows its label from `lg` up; component/topic pill from `xl`; tooltips appear below pills (matching dropdown styling) only when inline labels are hidden
+
+### Fixed
+- Nav pill tooltips no longer render above the header where they were clipped and hard to read
+
 ## [0.8.0] - 2026-04-19
 
 ### Added
@@ -190,7 +199,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.5.0...v0.6.0

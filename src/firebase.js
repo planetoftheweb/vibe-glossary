@@ -13,5 +13,10 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+// Analytics requires projectId + a browser environment. Skip it in tests or
+// when env vars are absent so importing this module never throws.
+export const analytics =
+  firebaseConfig.projectId && typeof window !== 'undefined'
+    ? getAnalytics(app)
+    : null;
 export const db = getFirestore(app);

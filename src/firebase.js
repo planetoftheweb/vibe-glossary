@@ -13,5 +13,8 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+// Analytics requires a real measurementId/projectId; skip it in environments
+// (tests, local dev without .env) where Firebase config isn't provided so the
+// module doesn't crash at import time.
+export const analytics = firebaseConfig.measurementId ? getAnalytics(app) : null;
 export const db = getFirestore(app);

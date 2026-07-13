@@ -13,5 +13,7 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+// Analytics needs a real projectId — skip it when env vars are absent
+// (tests, local dev without .env) so it doesn't throw at module load.
+export const analytics = firebaseConfig.projectId ? getAnalytics(app) : null;
 export const db = getFirestore(app);

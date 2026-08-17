@@ -33,7 +33,7 @@ Run the full deploy pipeline for VibeGlossary. Execute each step in order — if
 
 11. **Create a GitHub release** via `gh release create` with release notes summarizing what changed.
 
-12. **Deploy to Firebase Hosting** with `firebase deploy --only hosting --project vibe-glossary`.
+12. **Deploy to Firebase** with `firebase deploy --only hosting,firestore:rules --project vibe-glossary` (rules ship too so the users/{uid} progress-backup collection stays protected and in sync with the app).
 
 Important notes:
 - Always use `--project vibe-glossary` flag with Firebase commands.

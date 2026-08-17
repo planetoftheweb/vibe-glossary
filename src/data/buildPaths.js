@@ -54,7 +54,7 @@ export const BUILD_PATHS = [
     name: 'Design language',
     tagline: 'Tokens, scales, states, variants, contrast, brand: the words designers use',
     description:
-      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, and brand constraints. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
+      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes and semantic roles, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, brand constraints, plus the DESIGN.md contract, rule strengths, page grammar, empty states, loading stability, iconography, and microcopy. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
     quiz: [
       {
         q: 'A named value like "color.primary.500" or "space.4" that stands in for a hard-coded value is a...',
@@ -216,6 +216,40 @@ export const BUILD_PATHS = [
         q: 'Infinite-scroll feeds usually use this pagination style instead of "?page=2&size=20"...',
         answerId: 'pagination',
         optionIds: ['pagination', 'caching', 'orm', 'crud'],
+      },
+    ],
+  },
+  {
+    id: 'protocols',
+    name: 'Protocols and APIs',
+    tagline: 'How computers talk: HTTP, DNS, SMTP, ports, APIs, real-time',
+    description:
+      'What a protocol is, HTTP requests and status codes, DNS lookups, IP addresses and ports, how email really sends (SMTP), what an API actually is, and when you need WebSockets. The plumbing behind every "failed to fetch" error and every integration your AI wires up.',
+    quiz: [
+      {
+        q: 'The agreed set of rules two computers follow so their messages make sense (HTTP for the web, SMTP for email) is a...',
+        answerId: 'what-is-a-protocol',
+        optionIds: ['what-is-a-protocol', 'what-is-an-api', 'dns', 'http-https'],
+      },
+      {
+        q: 'Before your browser can talk to myapp.com, it turns that name into an IP address using...',
+        answerId: 'dns',
+        optionIds: ['dns', 'http-https', 'ip-ports-localhost', 'smtp-email'],
+      },
+      {
+        q: 'Your dev server runs at localhost:3000. The 3000 identifies...',
+        answerId: 'ip-ports-localhost',
+        optionIds: ['ip-ports-localhost', 'dns', 'what-is-a-protocol', 'websockets-realtime'],
+      },
+      {
+        q: 'Your app sends a receipt email. The protocol that moves it between mail servers is...',
+        answerId: 'smtp-email',
+        optionIds: ['smtp-email', 'http-https', 'dns', 'what-is-an-api'],
+      },
+      {
+        q: 'A chat app where the server must push messages instantly, both directions, should use...',
+        answerId: 'websockets-realtime',
+        optionIds: ['websockets-realtime', 'http-https', 'what-is-an-api', 'dns'],
       },
     ],
   },

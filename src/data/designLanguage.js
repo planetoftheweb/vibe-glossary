@@ -422,5 +422,173 @@ export const DESIGN_LANGUAGE_CLUSTER = {
         'Five lines of "we are X, not Y" steer an AI better than a brand book it cannot open.',
       relatedGlossaryIds: ['hero', 'card'],
     },
+    {
+      id: 'semantic-color-roles',
+      title: 'Semantic color roles: bg, surface, border, text',
+      summary:
+        'Name colors by their job, not their hue: bg (the page), surface (cards and panels), border, text-primary, text-secondary, text-muted. Dark mode stops being a rewrite and becomes "same roles, different values".',
+      details:
+        'A color palette tells you which colors exist. Color roles tell you where each one goes. The core cast in almost every design system: bg is the page background, surface is what panels and cards sit on (one step lighter or darker than bg so they read as raised), border separates things quietly, and text comes in three volumes (text-primary for real content, text-secondary for supporting copy, text-muted for timestamps and hints). Add the state colors (success, warning, danger, info) and a cta color for the one loud button, and you have named every job on the screen.\n\nThe payoff is that components stop knowing about hues. A card is "surface with a border and text-primary", never "white with gray-200 and gray-900". So when dark mode arrives, you do not touch a single component. You re-point the roles (bg goes near-black, surface a step lighter, borders get stronger because shadows stop working in the dark) and the whole product follows.\n\nThis is also the fix for the classic AI mistake: hard-coding "bg-white text-gray-900" into every component it generates, which shatters the moment you add a theme. Give the AI the role names up front and dark mode is a config change instead of a two-day find-and-replace.',
+      comparison:
+        'Palette = which colors exist. Roles = which job each color has. "gray-100" is a value; "surface" is a job that can point at different values per theme.',
+      vibeTip:
+        'Tell your AI "use semantic roles (bg, surface, border, text-primary, text-muted) instead of raw colors, and support dark mode by re-mapping the roles". You get themeable components on the first try.',
+      talkToAi: {
+        starter:
+          'Set up semantic color roles for [project]. Before writing code, ask me: 1) whether I need dark mode now or just want to keep it possible, 2) my styling setup (Tailwind, CSS variables, styled-components), 3) my brand colors if any. Then define the roles (bg, surface, border, text-primary, text-secondary, text-muted, cta, success, warning, danger, info) as tokens, map light and dark values for each, and refactor one existing component to use only roles as a demonstration.',
+        example:
+          'Set up semantic color roles for my Tailwind + React app. I need dark mode from day one. Brand color is teal. Define the roles as CSS variables consumed by Tailwind, give me light and dark values that pass WCAG AA, and refactor my Card component to use only the roles.',
+      },
+      mnemonic:
+        'Name the job, not the hue. bg, surface, border, three text volumes. Dark mode is re-mapping roles, not rewriting components.',
+      relatedGlossaryIds: ['card', 'badge'],
+    },
+    {
+      id: 'rule-strengths',
+      title: 'Tripwires vs strong defaults: writing rules an AI can follow',
+      summary:
+        'Good design rules come in strengths. Tripwires (MUST NOT) are never bendable: accessibility floors, data safety. Strong defaults are the intended design, bendable with a written reason. Guidance is advice. Mark which is which, or the AI treats everything as optional.',
+      details:
+        'A pile of design rules where everything sounds equally important gets followed unevenly: the AI (or a teammate) either obeys all of it rigidly in places where it hurts, or treats all of it as vibes. The fix is to declare a strength for every rule. Tripwires are the MUST NOTs that are never worth bending: text below the contrast floor, focus outlines removed, destructive actions without confirmation, layouts that break at 320px. If following any other rule would cross a tripwire, the tripwire wins.\n\nStrong defaults are the intended design: "one primary CTA per view", "skeletons over spinners", "44px touch targets". They carry an intent, and the intent outranks the letter. If following the letter of a rule works against its intent in a specific spot, you implement the intent instead, and you write the deviation down: which rule, why the letter failed here, what you did instead. A reasoned deviation is fine; a silent one is drift.\n\nThe deviation log is the underrated half. A DEVIATIONS.md file (or a comment block) listing every place the product intentionally departs from its own rules turns "the AI keeps changing my design back" into a solved problem: the log is context you paste into the next session, so the exception survives regeneration instead of being "fixed" by a model that never knew it was deliberate.',
+      comparison:
+        'Tripwire = never, no exceptions (accessibility, data safety). Strong default = do this unless you write down why not. Guidance = advice, no paperwork. Unlabeled rules all get treated like guidance.',
+      vibeTip:
+        'In your design doc, tag rules MUST NOT / SHOULD / consider, and tell the AI "tripwires are never bendable; log any deviation from a strong default with a reason". It stops both blind obedience and silent drift.',
+      talkToAi: {
+        starter:
+          'Turn my design preferences for [project] into a rulebook with strengths. Before writing it, ask me: 1) my non-negotiables (accessibility, brand, data safety), 2) the defaults I want followed unless there is a good reason, 3) areas where I am happy for the AI to use judgment. Then produce the rules in three tiers (tripwires, strong defaults with their intent stated, guidance), plus a DEVIATIONS.md template for logging exceptions.',
+        example:
+          'Turn these preferences into a tiered rulebook: WCAG AA always, 4px spacing grid, one primary CTA per view, skeletons for loading, Lucide icons only, playful copy. Accessibility and no-data-loss are non-negotiable; the rest are defaults. Give me the three tiers and a deviation log template.',
+      },
+      mnemonic:
+        'Three strengths: never, default-with-a-reason-to-deviate, and advice. Label every rule or they all become advice.',
+      relatedGlossaryIds: [],
+    },
+    {
+      id: 'design-md-file',
+      title: 'The DESIGN.md file: a visual contract your AI can read',
+      summary:
+        'A DESIGN.md is one markdown file at the root of your repo holding the whole visual contract: philosophy, color roles, type scale, spacing, component rules, do/don\'t tables. Point the AI at it every session and your product stops changing style every time you regenerate a screen.',
+      details:
+        'The biggest visual problem with AI-built apps is not bad taste, it is amnesia. Each session, the model picks fresh defaults, so screen four looks like a different product than screen one. A DESIGN.md fixes that by writing the decisions down once, in a file the AI reads at the start of every conversation: this is the brand personality, these are the color roles and their light and dark values, this is the type scale, this is the spacing grid, buttons look like this, modals behave like that.\n\nA good one reads like a contract, not a mood board. Concrete values (hex codes, font names, the actual scale numbers), rules with strengths (tripwires vs strong defaults vs guidance), and do/don\'t tables that are diffable: "Buttons: outcome-named labels like Save changes; never generic Submit". Vague words like "clean" and "modern" do nothing; a table the AI can check its own output against does everything.\n\nIt also becomes your review tool. When a generated screen looks off, you stop arguing taste and start checking contract: "this violates the spacing scale and uses a second icon set". And it compounds: every refinement you make gets written back into the file, so the next session starts smarter than the last one instead of starting over.',
+      comparison:
+        'No DESIGN.md = every session reinvents the style. DESIGN.md = one contract, every session reads it. Design doc (engineering) = how a feature works. DESIGN.md = how everything looks and behaves.',
+      vibeTip:
+        'Start every UI session with "read DESIGN.md and follow it; flag conflicts instead of silently overriding". When you correct the AI\'s output, have it update DESIGN.md too, so the correction sticks for next time.',
+      talkToAi: {
+        starter:
+          'Create a DESIGN.md for [project]. Before writing it, ask me: 1) the brand personality in a few adjectives (or products whose look I admire), 2) my stack and styling setup, 3) whether dark mode is required, 4) my non-negotiables (accessibility level, fonts, existing brand colors). Then produce a DESIGN.md with: philosophy, semantic color roles with light and dark values, type scale, spacing scale, radius and shadow rules, component do/don\'t tables, and rules tagged by strength (tripwires vs defaults vs guidance).',
+        example:
+          'Create a DESIGN.md for my recipe-sharing app (Next.js + Tailwind). Personality: warm, homey, confident, not cutesy. Think Airbnb, not Pinterest. Dark mode required, WCAG AA non-negotiable. Extract the current colors from my globals.css as the starting palette.',
+      },
+      mnemonic:
+        'Write the design down once, make every session read it. The file is the memory the AI does not have.',
+      relatedGlossaryIds: [],
+    },
+    {
+      id: 'page-grammar',
+      title: 'Page grammar: hero, sections, one idea per screen',
+      summary:
+        'Pages have a grammar: a hero states the one outcome, each section makes one point with one composition, navigation stays put, and the first-run visitor gets a welcome the returning user skips. Screens read as designed instead of stacked.',
+      details:
+        'Most AI-generated pages fail the same way: everything is a stacked list of boxes with equal weight, so nothing leads. Page grammar is the set of composition rules that fix it. The hero comes first: one outcome-named headline (what the user gets, not what the product is), one line of support, one primary call to action. If three things compete at the top, the page has no subject.\n\nThen sections, each making exactly one point with one composition: a feature grid, a testimonial, a stat row, a step-by-step. The rule of thumb is never two of the same composition back to back (two card grids in a row read as one long undifferentiated blur). Navigation is part of the grammar too: it stays put (sticky, or easily reachable), shows where you are, and keeps to about five items.\n\nFirst-run deserves its own sentence in the grammar. A new visitor gets the welcome: the pitch, the promise, one button to start. A returning user skips it entirely (a simple seen-it flag) and lands in the product. Blending those two audiences into one screen serves neither: the newcomer gets no orientation and the regular gets a sales pitch for a thing they already use.',
+      comparison:
+        'Grammar = hero states the outcome, each section makes one point, nav stays put, first-run and returning users get different landings. No grammar = equal-weight boxes stacked until the footer.',
+      vibeTip:
+        'Ask your AI for the outline before the code: "give me the section-by-section plan for this page, one point and one composition per section, no two identical compositions in a row". Fixing the outline is cheap; fixing the built page is not.',
+      talkToAi: {
+        starter:
+          'Design the page structure for [page] before building it. Ask me first: 1) the single outcome a visitor should walk away wanting, 2) the one action I want them to take, 3) what proof I have (numbers, testimonials, logos, screenshots), 4) whether new and returning visitors should see different things. Then give me a section-by-section outline (hero, then each section with its one point and its composition), and only build after I approve the outline.',
+        example:
+          'Design the landing page structure for my study-buddy app for college students. Outcome: "I could pass this class with less stress". Action: start free. Proof: 4,000 students, three testimonials, app screenshots. Returning users should skip straight to their dashboard. Outline first, then build.',
+      },
+      mnemonic:
+        'Hero says the outcome. Each section makes one point. Never two of the same composition in a row.',
+      relatedGlossaryIds: ['hero', 'appshell'],
+    },
+    {
+      id: 'empty-states',
+      title: 'Empty states: no screen is ever just blank',
+      summary:
+        'Every list, table, and search result has a moment with nothing to show. A designed empty state fills it with three things: a small visual, one sentence saying what belongs here, and one button that creates the first item. A blank screen reads as broken.',
+      details:
+        'The first time a user opens your app, most screens are empty: no projects, no messages, no results. An undesigned app renders nothing, and nothing is indistinguishable from a bug. The user\'s actual first experience of your product is this moment, which is why designers treat the empty state as a real screen, not an edge case.\n\nThe recipe is three parts. A small friendly visual (a simple drawn illustration or an outline icon, not a stock photo). One sentence that says what will live here ("Your saved prompts will show up here"). And exactly one primary action that creates the first thing ("Save your first prompt"). Together they turn dead air into a guided next step.\n\nDifferent empties need different words. First-run empty ("nothing here yet") invites creation. Cleared empty ("you did them all") can celebrate. No-results empty is its own species: it must echo what was searched and offer the way out ("No results for \'blue widget\'. Clear filters"), because a bare "no results" strands the user with no idea whether the data is gone or the filter is wrong. Error states are not empty states: "we could not load this" needs a retry, not a cheerful illustration.',
+      comparison:
+        'Blank screen = looks broken. Empty state = visual + one sentence + one CTA. No-results = must echo the query and offer a reset. Error = a different screen with a retry, never disguised as empty.',
+      vibeTip:
+        'AIs build the populated view and forget the empty one. Add "include designed empty states for every list and search (visual, one line, one CTA; no-results states echo the query and offer a clear-filters action)" to your prompt.',
+      talkToAi: {
+        starter:
+          'Audit [my app or page] for missing empty states. Ask me first: 1) which screens have lists, tables, searches, or filters, 2) the tone of the product (playful, calm, professional), 3) whether I have illustrations or should use icons. Then, for each screen, design the first-run empty, the no-results empty (echoing the query with a reset action), and distinguish both from the error state. Implement them as one reusable EmptyState component.',
+        example:
+          'Audit my bookmarks manager for empty states: the all-bookmarks list, the tag-filtered view, and search. Calm professional tone, Lucide icons. Build one reusable EmptyState component and wire up all three, with search echoing the query and offering "Clear search".',
+      },
+      mnemonic:
+        'Visual, one sentence, one button. And a no-results screen always names the search and offers the way out.',
+      relatedGlossaryIds: ['empty'],
+    },
+    {
+      id: 'loading-stability',
+      title: 'Loading and layout stability: skeletons, not jumps',
+      summary:
+        'Two rules make an app feel solid while it loads: reserve the space (content never jumps when images or data arrive), and show skeletons shaped like the coming content instead of a lone spinner. Buttons show their own busy state so nobody double-submits.',
+      details:
+        'Layout shift is the twitch you feel when a page moves under you: an image pops in and shoves the paragraph you were reading, a banner loads late and the button you were about to tap becomes a different button. The fix is to reserve space for everything that arrives late: images get width and height (or an aspect-ratio box), async panels get a min-height. The metric is called CLS (Cumulative Layout Shift), and it is one of the scores Google grades pages on, but the real reason to care is that jumping content makes an app feel flimsy.\n\nFor content areas, skeletons beat spinners. A skeleton is a gray placeholder in the shape of the coming content: bars where text will be, a rectangle where the image goes. It reserves the space (solving the shift problem) and tells the user what kind of thing is coming. A spinner says only "wait", holds no space, and past a couple of seconds reads as "maybe frozen". Keep spinners for tiny, sub-second, control-level waits.\n\nButtons own their wait. When a user clicks Save, the button itself disables and shows its working state ("Saving..."). A clicked button that sits there looking idle earns a second click, and a second click means a double submit, and a double submit means duplicate orders. And anything that takes truly long needs an escape hatch: show progress past half a second, and offer cancel or "we will finish in the background" past ten.',
+      comparison:
+        'Spinner = "wait, something is happening somewhere". Skeleton = "here is the shape of what is coming", and it holds the space. Layout shift = the page moving under the user, the number-one flimsy-app feel.',
+      vibeTip:
+        'Ask for "skeleton states shaped like the real content, explicit dimensions on images so nothing shifts, and disabled buttons with inline busy text on submit". AIs default to a centered spinner unless you say otherwise.',
+      talkToAi: {
+        starter:
+          'Add proper loading states to [my app or page]. Ask me first: 1) which parts load async (lists, images, charts, panels), 2) typical wait times (instant-ish, a second, several seconds), 3) which actions submit data. Then: give every async area a skeleton matching its layout, explicit dimensions or aspect ratios on images so nothing shifts, busy states on submitting buttons that prevent double-submit, and a cancel or background path for anything that can run long.',
+        example:
+          'Add loading states to my photo gallery app: the grid (loads 1 to 3 seconds), the detail pane, and the upload button. Skeleton cards matching the grid layout, aspect-ratio boxes so images never shift the grid, and an upload button that shows progress and prevents double-clicks.',
+      },
+      mnemonic:
+        'Hold the space, shape the wait, and make the button show it is working. Content the user is reading never jumps.',
+      relatedGlossaryIds: ['skeleton', 'spinner', 'progress'],
+    },
+    {
+      id: 'iconography',
+      title: 'Iconography: one set, one stroke, always a label',
+      summary:
+        'Pick one icon library (Lucide is the safe default), use it for every icon, and never mix in a second set. Stick to a size scale, let icons inherit text color, and give every icon-only button an accessible name. Mixed icon sets read as mixed products.',
+      details:
+        'Icons are a place where small inconsistencies scream. Every icon library draws with a personality: a stroke width, a corner style, a level of detail. Mix two sets (or two weights of the same set) on one screen and users cannot say what is wrong, but they feel it, the same way a ransom note of mixed fonts feels wrong. So the first rule is boring and absolute: one library, one stroke weight, everywhere. Lucide (the successor to Feather) is the common default: over a thousand consistent icons, free to use, available for every framework.\n\nSizes come from a small scale just like type does: 16, 20, 24, 32, not 13 and 17. Color should inherit from the surrounding text (currentColor) rather than being hard-coded, so icons automatically match whatever context and theme they land in. And icons are drawn things, not typed things: a real SVG from the set, never a letter x standing in for close or an emoji standing in for a control.\n\nThe accessibility rule is the one AIs skip most: an icon-only button is a mystery to a screen reader unless it carries an accessible name (an aria-label, spoken aloud in place of the icon). If a control is icon-only it also deserves a styled tooltip on hover and keyboard focus, and not the browser\'s native title attribute, which is slow to appear and invisible to keyboard users. When in doubt, put a text label next to the icon; icon-plus-word beats icon-alone almost everywhere.',
+      comparison:
+        'One set, one stroke = one product. Mixed sets = ransom note. Icon-only button without an aria-label = invisible to screen readers. currentColor = icons match their context for free.',
+      vibeTip:
+        'Add "use Lucide for all icons, sizes from 16/20/24/32, color via currentColor, and an aria-label plus tooltip on every icon-only control" to your standing instructions. It ends the icon drift between sessions.',
+      talkToAi: {
+        starter:
+          'Standardize the icons in [my app]. Ask me first: 1) which library I prefer, or recommend one for my stack, 2) where icons currently come from (mixed imports, inline SVGs, emoji), 3) the sizes in use. Then migrate everything to the one library, snap sizes to a scale, switch fills to currentColor, add aria-labels and styled tooltips to every icon-only control, and list any icon the library lacks so we can pick a substitute deliberately.',
+        example:
+          'Standardize icons in my React dashboard: it currently mixes Heroicons, two emoji, and some inline SVGs. Migrate everything to Lucide at 16/20/24, currentColor throughout, aria-labels on the icon-only toolbar buttons, and flag anything without a clean Lucide equivalent.',
+      },
+      mnemonic:
+        'One set, one stroke, sizes from the scale, and every icon-only button says its name out loud.',
+      relatedGlossaryIds: ['tooltip'],
+    },
+    {
+      id: 'microcopy-tone',
+      title: 'Microcopy: buttons name outcomes, errors name fixes',
+      summary:
+        'The tiny words in the interface (buttons, errors, confirmations, empty screens) are microcopy, and they follow rules: buttons say the outcome ("Save changes", not "Submit"), errors say what happened and what to do next, confirmations say what specifically happened. Vague words make a working app feel broken.',
+      details:
+        'Microcopy is every small piece of text the interface speaks: button labels, error messages, confirmations, placeholders, empty screens. It is written, not defaulted, and the rules are concrete. Buttons name the outcome: "Save changes", "Delete draft", "Send invite". A button that says "Submit" or "OK" forces the user to reconstruct from context what is about to happen; the label should carry that answer.\n\nErrors have two mandatory halves: what happened, and what to do about it. "Something went wrong" fails both. "We could not reach the server. Check your connection, then retry" passes. The same shape applies to validation ("That email is already in use. Try signing in instead") and to confirmations of destructive actions, which name the actual stakes ("Delete 12 photos? This cannot be undone"), never a generic "Are you sure?".\n\nTwo more habits finish the job. Confirmations are specific ("Changes saved", "Invite sent to sam@") rather than a mute green checkmark. And the whole product speaks in one voice, which you can define in a sentence and hand to your AI: plain words, active voice, contractions or not, how playful, where the line is. Consistency of voice is like consistency of icons: nobody names it, everybody feels it.',
+      comparison:
+        'Label = what the control is. Microcopy rule = what pressing it will do. "Submit" describes the mechanism; "Save changes" describes the outcome. Errors: what happened + what to do, always both halves.',
+      vibeTip:
+        'Add a voice line to your prompts: "microcopy is plain and warm; buttons name outcomes; errors say what happened and what to do next; no lorem ipsum anywhere, write real words even in v1". AIs write "Submit" and "Something went wrong" until told not to.',
+      talkToAi: {
+        starter:
+          'Audit the microcopy in [my app or page]. Ask me first: 1) the voice (formal, warm, playful, and any products whose tone I admire), 2) my audience, 3) any words we never use (jargon, internal names). Then go screen by screen and rewrite: button labels to outcomes, errors to what-happened-plus-what-to-do, confirmations to specifics, placeholders and empty screens to real sentences. Show each change as a before/after table.',
+        example:
+          'Audit the microcopy in my budgeting app signup and settings screens. Voice: warm and plain, like Notion, never bankspeak. Rewrite the "Submit" buttons, the "Invalid input" errors, and the bare "Saved" confirmation. Before/after table please.',
+      },
+      mnemonic:
+        'Buttons say the outcome. Errors say what happened and what to do. Confirmations say what specifically got done.',
+      relatedGlossaryIds: ['toast', 'alert'],
+    },
   ],
 };

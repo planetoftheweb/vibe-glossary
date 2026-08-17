@@ -1,6 +1,7 @@
 import { WEB_FOUNDATIONS_CLUSTER } from './webFoundations.js';
 import { DESIGN_LANGUAGE_CLUSTER } from './designLanguage.js';
 import { AI_LITERACY_CLUSTER } from './aiLiteracy.js';
+import { PROTOCOLS_CLUSTER } from './protocols.js';
 
 /**
  * Build Literacy: ideas from the rest of the build (planning, tests, specs,
@@ -78,6 +79,12 @@ export const BUILD_CLUSTER_COLORS = {
     active: 'bg-blue-600 text-white', hover: 'hover:bg-blue-500/10',
     dot: 'bg-blue-500', accent: 'text-blue-500',
     gradient: 'from-blue-500 to-indigo-600',
+  },
+  protocols: {
+    text: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30',
+    active: 'bg-orange-600 text-white', hover: 'hover:bg-orange-500/10',
+    dot: 'bg-orange-500', accent: 'text-orange-500',
+    gradient: 'from-orange-500 to-red-600',
   },
   auth: {
     text: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/30',
@@ -1127,6 +1134,7 @@ export const BUILD_LITERACY_CLUSTERS = [
       },
     ],
   },
+  PROTOCOLS_CLUSTER,
   {
     id: 'auth',
     title: 'Authentication and authorization',

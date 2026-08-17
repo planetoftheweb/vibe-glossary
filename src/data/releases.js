@@ -26,6 +26,26 @@ export const RELEASE_ACTION_KINDS = [
 
 export const WHATS_NEW = [
   {
+    id: 'protocols-cluster',
+    version: '0.11.0',
+    date: '2026-08-17',
+    tag: 'module',
+    title: 'New cluster: Protocols and APIs',
+    blurb: 'How computers actually talk: protocols, HTTP, DNS, SMTP and email, ports and localhost, what an API really is, and real-time with WebSockets. With its own learning path and quiz.',
+    image: null,
+    action: { kind: 'build', id: 'what-is-a-protocol' },
+  },
+  {
+    id: 'design-principles',
+    version: '0.11.0',
+    date: '2026-08-17',
+    tag: 'module',
+    title: 'Design Language: 8 new principle topics',
+    blurb: 'Semantic color roles, the DESIGN.md contract, tripwires vs strong defaults, page grammar, empty states, loading stability, iconography, and microcopy. The principles that keep AI-built UIs consistent.',
+    image: null,
+    action: { kind: 'build', id: 'semantic-color-roles' },
+  },
+  {
     id: 'accounts-backup',
     version: '0.10.0',
     date: '2026-08-17',

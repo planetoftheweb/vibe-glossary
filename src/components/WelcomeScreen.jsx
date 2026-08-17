@@ -3,7 +3,7 @@ import {
   Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput,
   MousePointerClick, Megaphone, ArrowRight, BookOpen,
   Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
-  GraduationCap, Sparkles,
+  GraduationCap, Sparkles, Cable,
 } from 'lucide-react';
 import { BUILD_LITERACY_CLUSTERS } from '../data/buildLiteracy';
 
@@ -154,6 +154,13 @@ const BUILD_CLUSTER_VISUALS = {
     border: 'border-blue-500/30',
     blurb: 'CRUD, pagination, transactions. Information done right.',
   },
+  protocols: {
+    icon: Cable,
+    color: 'from-orange-500 to-red-600',
+    glow: 'shadow-orange-500/30',
+    border: 'border-orange-500/30',
+    blurb: 'HTTP, DNS, SMTP, APIs. How computers actually talk.',
+  },
   auth: {
     icon: KeyRound,
     color: 'from-rose-500 to-pink-600',
@@ -289,7 +296,7 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
             <h2 className="text-2xl md:text-3xl font-black text-white mb-2">Talk about building, not just buttons</h2>
             <p className="text-sm text-zinc-400 max-w-xl mx-auto">
               {buildTotal} topics across {BUILD_LITERACY_CLUSTERS.length} clusters. Web foundations,
-              design language, product, engineering, data, auth. The words behind the components.
+              design language, product, engineering, data, protocols, auth. The words behind the components.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Feature tour** for first-time visitors. Data-driven steps walk through the glossary, prompt builder, VibeScore, social share, class proof, search, and learning paths. Versioned in `src/data/tour.js` so returning users get offered new tours once without nagging. Replay anytime from the main menu
+- **"Browse components" hero CTA** replaces the old skip-intro X button, landing users directly in the glossary at the first component
+- **"Take the tour" secondary CTA** in the welcome hero for users who want guidance before diving in
+- **19 new tests** covering WelcomeScreen changes, tour step shape validation, version-bump re-offer logic, and dismiss persistence
+
+### Removed
+- **"How it works" 1-2-3 section** from the welcome screen. The feature cards now follow directly after the hero
+- **Skip intro X button** from the hero top-right corner (replaced by explicit CTA buttons)
+
 ## [0.9.0] - 2026-08-17
 
 ### Added

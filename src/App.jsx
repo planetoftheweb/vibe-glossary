@@ -6,6 +6,7 @@ import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
 import DefinitionPanel from './components/ui/DefinitionPanel';
 import WelcomeScreen from './components/WelcomeScreen';
+import FeatureTour, { useTourOffer } from './components/FeatureTour';
 import CheatSheet    from './components/CheatSheet';
 import CompareView    from './components/learn/CompareView';
 import GlossaryIndex  from './components/learn/GlossaryIndex';
@@ -72,6 +73,8 @@ export default function App() {
     typeof window !== 'undefined' && window.innerWidth >= 1024
   );
   const { containerRef, onResizeStart: handleResizeStart } = usePanelResize(setPanelWidth);
+  const [showTour, setShowTour] = useState(false);
+  const { shouldOffer: shouldOfferTour, dismiss: dismissTourOffer } = useTourOffer();
 
   // Keep isDesktop reactive so inline panel width is removed below lg breakpoint.
   useEffect(() => {
@@ -149,6 +152,13 @@ export default function App() {
   const handleEnterApp = () => {
     localStorage.setItem('vg-visited', '1');
     setShowWelcome(false);
+  };
+
+  const handleStartTour = () => {
+    localStorage.setItem('vg-visited', '1');
+    setShowWelcome(false);
+    dismissTourOffer();
+    setTimeout(() => setShowTour(true), 300);
   };
 
   const handleSelectCategory = (itemId) => {
@@ -304,8 +314,14 @@ export default function App() {
           onEnter={handleEnterApp}
           onSelectCategory={handleSelectCategory}
           onSelectBuildTopic={handleSelectBuildTopic}
+          onStartTour={handleStartTour}
         />
       )}
+
+      <FeatureTour
+        isOpen={showTour}
+        onClose={() => setShowTour(false)}
+      />
 
       <CheatSheet
         isOpen={showCheatSheet && !showWelcome}
@@ -415,6 +431,7 @@ export default function App() {
           onOpenBuildIndex={() => setShowBuildIndex(true)}
           onOpenBuildPaths={() => setShowBuildPaths(true)}
           onOpenScoreBreakdown={() => setShowScoreBreakdown(true)}
+          onStartTour={() => setShowTour(true)}
         />
       )}
 
@@ -484,7 +501,7 @@ export default function App() {
 
           {/* Info & Prompt Panel, always visible on desktop, toggled on mobile */}
           {infoOpen && (
-            <div className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
+            <div data-tour="definition-panel" className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
 
                 {/* Definition Header */}
@@ -550,7 +567,7 @@ export default function App() {
                 )}
 
                 {/* Prompt Builder, hidden during an active quiz so it doesn't reveal the answer */}
-                <div className={`mb-8 ${showQuiz ? 'hidden' : ''}`}>
+                <div data-tour="prompt-builder" className={`mb-8 ${showQuiz ? 'hidden' : ''}`}>
                   <PromptBuilder
                     data={currentData}
                     activeOptions={activeOptions}

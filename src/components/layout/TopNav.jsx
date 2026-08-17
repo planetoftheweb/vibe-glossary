@@ -157,6 +157,7 @@ function MainMenu({
   onOpenBuildIndex, onOpenBuildPaths,
   activeCatColors,
   siteSection, setSiteSection,
+  onStartTour,
 }) {
   const [statsOpen, setStatsOpen] = useState(() => {
     try { return localStorage.getItem('vg-menu-stats-open') === 'true'; }
@@ -233,6 +234,11 @@ function MainMenu({
 
   const handleUiGlossary = () => {
     setSiteSection?.('glossary');
+    onClose();
+  };
+
+  const handleTour = () => {
+    onStartTour?.();
     onClose();
   };
 
@@ -396,9 +402,10 @@ function MainMenu({
           Cheat Sheet
           <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
         </MenuItem>
+        <MenuItem icon={<Compass size={18} />} onClick={handleTour}>
+          Replay Tour
+        </MenuItem>
       </div>
-
-      {/* SETTINGS section */}
       <div className="border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<Settings size={14} />} label="Settings" />
         <button
@@ -505,6 +512,7 @@ export default function TopNav({
   explore, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
   onOpenBuildIndex, onOpenBuildPaths,
   onOpenScoreBreakdown,
+  onStartTour,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -983,6 +991,7 @@ export default function TopNav({
           ) : (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
+              data-tour="search"
               className="hidden md:flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
               aria-label="Search (⌘K)"
               title="Search (⌘K)"
@@ -1003,7 +1012,7 @@ export default function TopNav({
 
           {/* VibeScore pill, opens the breakdown modal */}
           {explore?.score && onOpenScoreBreakdown && (
-            <div className="hidden md:block">
+            <div data-tour="vibe-score" className="hidden md:block">
               <VibeScorePill
                 score={explore.score}
                 level={explore.level}
@@ -1106,7 +1115,7 @@ export default function TopNav({
           </div>
 
           {/* Main menu trigger */}
-          <div className="relative">
+          <div className="relative" data-tour="main-menu">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'menu' ? null : 'menu')}
               className={`flex items-center gap-1.5 pl-2.5 pr-2 py-1.5 rounded-full border transition-colors ${
@@ -1156,6 +1165,7 @@ export default function TopNav({
                   activeCatColors={activeCatColors}
                   siteSection={siteSection}
                   setSiteSection={setSiteSection}
+                  onStartTour={onStartTour}
                 />
               </Popover>
             )}

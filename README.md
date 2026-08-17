@@ -1,6 +1,6 @@
 # VibeGlossary
 
-A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live component demos and 105 plain-language Build Literacy topics, generate AI prompts, take quizzes, and track learning with the VibeScore system.
+A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live component demos and 110 plain-language Build Literacy topics, generate AI prompts, take quizzes, and track learning with the VibeScore system.
 
 ## Features
 
@@ -13,7 +13,7 @@ A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live componen
 - **Long-form details accordion** — a one-line summary with an expandable beginner-friendly explanation for every entry
 
 ### Build Literacy
-- **105 topics across 7 clusters**: Web Foundations, Engineering, Auth & Security, Product, Design Language, Spec & Process, AI Literacy
+- **110 topics across 8 clusters**: Web Foundations, Engineering, Auth & Security, Product, Design Language, Spec & Process, AI Literacy
 - **Two-part Talk-to-AI prompts** — a generic starter that asks the AI to interview you, plus a practical example you can adapt
 - **Mnemonic for every topic** — the "if you remember nothing else" line
 - **Sibling Compare chips** and a Build Literacy Index for fast cross-topic learning
@@ -25,6 +25,8 @@ A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live componen
 - **Learn Mode** for both surfaces — sibling compare pills, demo-to-definition quizzes, mastery tracking, and guided learning paths with end-of-path quizzes (80% to earn the badge)
 - **Score breakdown modal** — UI Glossary vs Build Literacy sub-scores, integrity rules in plain English
 - **Surprise Me** for both UI Glossary and Build Literacy
+- **Class proof** — students can generate a proof URL or copy proof text for Canvas/LMS submissions; instructors open the URL to verify VibeScore, level, badges, and whether the class bar was met
+- **"Vibe prompting for UI" class path** — a cross-cluster learning path covering Design Language, AI Literacy, and Web Foundations topics, designed for classroom assignments
 
 ### Sharing & UX
 - **Social share popover** — share your VibeScore, level, or path badge to X, LinkedIn, Bluesky, Facebook, Reddit, Email, or copy text + link. Falls back to `navigator.share` on mobile
@@ -44,7 +46,7 @@ A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live componen
 - [Vite 5](https://vitejs.dev/)
 - [Tailwind CSS 3](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/)
-- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (952 tests)
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (1026 tests)
 - [Firebase Hosting](https://firebase.google.com/products/hosting) + [Firestore](https://firebase.google.com/products/firestore)
 
 ## Getting Started
@@ -80,6 +82,7 @@ src/
 │   │                   # BuildPathsLauncher, BuildPathView
 │   │                   # TalkToAiCard, TopicTierBadge
 │   │                   # VibeScorePill, ScoreBreakdownModal, ShareAchievement
+│   │                   # ProofView
 │   ├── CheatSheet.jsx
 │   ├── WelcomeScreen.jsx
 │   └── demos/          # One file per UI Glossary component demo
@@ -99,14 +102,15 @@ src/
 ├── lib/
 │   ├── scoring.js            # Pure VibeScore math (POINTS, LEVELS, tiers)
 │   ├── quizIntegrity.js      # Time floor/ceiling, cooldowns, variant rotation
-│   └── share.js              # Share text + platform URL builders
+│   ├── share.js              # Share text + platform URL builders
+│   └── proof.js              # Class proof: bar check, snapshot, URL encode/decode
 ├── hooks/
 │   ├── useExploreMode.js     # Visited/used/attempts state + VibeScore + tiers
 │   ├── usePanelResize.js     # Drag-to-resize split panes (with persistence)
 │   ├── useGlossary.js        # Firestore-backed component reader
 │   └── useCategories.jsx     # Firestore-backed category reader
 ├── firebase.js               # Firebase app + Firestore init
-├── test/                     # Vitest test suite (952 tests)
+├── test/                     # Vitest test suite (1026 tests)
 ├── styles/
 │   └── animations.css
 ├── App.jsx
@@ -121,6 +125,21 @@ Deployed on [Firebase Hosting](https://vibe-glossary.web.app).
 npm run build
 firebase deploy --only hosting --project vibe-glossary
 ```
+
+## For teachers: assigning VibeGlossary as class work
+
+Students visit [vibe-glossary.web.app](https://vibe-glossary.web.app), explore topics, take quizzes, and earn badges. No account is needed; progress is stored in the browser.
+
+**Class bar (minimum for credit):** reach Tinkerer level (200 pts) OR earn the "Vibe prompting for UI" path badge (complete the path and pass the 5-question quiz at 80%).
+
+**How students submit proof:**
+
+1. Open the VibeScore breakdown (click the score pill in the top nav).
+2. Click "Class proof".
+3. Copy the proof link or proof text.
+4. Paste into Canvas, a Google Form, or whatever you use for submissions.
+
+**What you see as an instructor:** open the proof link in your browser. It shows the student's VibeScore, level, badges earned, date, and whether they met the class bar. The score is backed by quiz integrity checks (time floors, cooldowns, variant rotation) so it reflects genuine learning, not speedrunning.
 
 ## Versioning
 

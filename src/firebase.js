@@ -13,5 +13,13 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
 export const db = getFirestore(app);
+
+// Analytics needs projectId + measurementId + a browser. Skip in tests, SSR,
+// or deploys with missing env vars — getAnalytics would throw synchronously.
+export const analytics =
+  typeof window !== 'undefined' &&
+  firebaseConfig.projectId &&
+  firebaseConfig.measurementId
+    ? getAnalytics(app)
+    : null;

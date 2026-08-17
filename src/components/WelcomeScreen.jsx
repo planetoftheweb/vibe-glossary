@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import {
   Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput,
-  MousePointerClick, Megaphone, ArrowRight, BookOpen, Copy, Zap, X,
+  MousePointerClick, Megaphone, ArrowRight, BookOpen,
   Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
-  GraduationCap,
+  GraduationCap, Sparkles,
 } from 'lucide-react';
 import { BUILD_LITERACY_CLUSTERS } from '../data/buildLiteracy';
 
@@ -170,34 +170,7 @@ const BUILD_CLUSTER_VISUALS = {
   },
 };
 
-const HOW_IT_WORKS = [
-  {
-    step: '01',
-    icon: BookOpen,
-    title: 'Browse',
-    description: 'Pick a UI component or a Build Literacy topic from the cards below.',
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10 border-violet-500/20',
-  },
-  {
-    step: '02',
-    icon: Zap,
-    title: 'Read & explore',
-    description: 'Plain-English definitions, examples, comparisons and quizzes when you want them.',
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-500/10 border-cyan-500/20',
-  },
-  {
-    step: '03',
-    icon: Copy,
-    title: 'Copy a prompt',
-    description: 'Grab a generic starter or a real example, paste it into your AI tool, ship.',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20',
-  },
-];
-
-export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuildTopic }) {
+export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuildTopic, onStartTour }) {
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const uiTotal = CATEGORY_CARDS.reduce((sum, c) => sum + c.count, 0);
@@ -225,14 +198,6 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-zinc-950" />
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/60 via-transparent to-zinc-950/60" />
 
-        <button
-          onClick={onEnter}
-          className="absolute top-4 right-4 p-2 rounded-full bg-black/40 backdrop-blur text-white/60 hover:text-white hover:bg-black/60 transition-colors"
-          title="Skip intro"
-        >
-          <X size={18} />
-        </button>
-
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
           <div className="flex items-center gap-3 mb-4">
             <img src="/logo.png" alt="VibeGlossary" className="w-12 h-12 rounded-xl shadow-lg object-cover" />
@@ -240,32 +205,32 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
               VibeGlossary
             </h1>
           </div>
-          <p className="text-lg md:text-xl text-white/80 font-medium max-w-2xl drop-shadow">
+          <p className="text-lg md:text-xl text-white/80 font-medium max-w-2xl drop-shadow mb-6">
             The vocabulary for vibe coders. Browse {uiTotal} UI components or learn {buildTotal} build-literacy
             topics, then copy AI prompts that actually work.
           </p>
+          <div className="flex items-center gap-3 flex-wrap justify-center">
+            <button
+              onClick={() => onSelectCategory(CATEGORY_CARDS[0].firstItem)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-base shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105 transition-all"
+            >
+              <Sparkles size={18} />
+              Browse components
+            </button>
+            {onStartTour && (
+              <button
+                onClick={onStartTour}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 font-semibold text-sm hover:bg-white/20 hover:text-white transition-all"
+              >
+                Take the tour
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Body */}
       <div className="max-w-5xl mx-auto px-6 py-12 space-y-16">
-
-        {/* How it works */}
-        <section>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 text-center">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {HOW_IT_WORKS.map(({ step, icon: Icon, title, description, color, bg }) => (
-              <div key={step} className={`relative p-5 rounded-2xl border ${bg} flex flex-col gap-3`}>
-                <div className="flex items-center gap-3">
-                  <span className={`text-3xl font-black ${color} opacity-40 leading-none`}>{step}</span>
-                  <Icon size={20} className={color} />
-                </div>
-                <h3 className="font-bold text-white text-lg">{title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">{description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* UI Glossary section */}
         <section>

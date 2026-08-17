@@ -275,14 +275,16 @@ function MainMenu({
               <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
             </span>
           </button>
-          <MenuItem icon={<Trophy size={18} />} onClick={handlePaths}>
-            <span className="font-medium">Learning Paths</span>
-            {explore.badges.size > 0 && (
-              <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                {explore.badges.size} <Check size={11} />
-              </span>
-            )}
-          </MenuItem>
+          <div data-tour="learning-paths">
+            <MenuItem icon={<Trophy size={18} />} onClick={handlePaths}>
+              <span className="font-medium">Learning Paths</span>
+              {explore.badges.size > 0 && (
+                <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                  {explore.badges.size} <Check size={11} />
+                </span>
+              )}
+            </MenuItem>
+          </div>
           <MenuItem icon={<Shuffle size={18} />} onClick={handleSurprise}>
             Surprise Me
           </MenuItem>
@@ -513,10 +515,21 @@ export default function TopNav({
   onOpenBuildIndex, onOpenBuildPaths,
   onOpenScoreBreakdown,
   onStartTour,
+  tourForceMenu = false,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const prevTourForceMenu = useRef(false);
+  useEffect(() => {
+    if (tourForceMenu && !prevTourForceMenu.current) {
+      setOpenDropdown('menu');
+    } else if (!tourForceMenu && prevTourForceMenu.current && openDropdown === 'menu') {
+      setOpenDropdown(null);
+    }
+    prevTourForceMenu.current = tourForceMenu;
+  }, [tourForceMenu]);
 
   const activeCat = categories.find(c => c.items.some(i => i.id === activeItem));
   const activeItemData = activeCat?.items.find(i => i.id === activeItem);

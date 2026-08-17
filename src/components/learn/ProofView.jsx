@@ -13,7 +13,6 @@ import {
   CLASS_PATH_ID,
 } from '../../lib/proof';
 import { copyToClipboard } from '../../lib/share';
-import ShareAchievement from './ShareAchievement';
 
 /**
  * Two modes:
@@ -255,17 +254,6 @@ export default function ProofView({
                   <><Copy size={16} /> Copy proof text for Canvas</>
                 )}
               </button>
-              <ShareAchievement
-                achievement={{
-                  kind: 'vibe-score',
-                  score: snapshot?.s ?? 0,
-                  level: lvl?.label || 'Lurker',
-                }}
-                variant="soft"
-                size="sm"
-                align="center"
-                label="Share on social"
-              />
             </div>
           )}
 

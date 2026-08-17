@@ -1,4 +1,4 @@
-export const TOUR_VERSION = 1;
+export const TOUR_VERSION = 2;
 
 export const TOUR_STEPS = [
   {
@@ -22,14 +22,16 @@ export const TOUR_STEPS = [
   {
     id: 'share',
     title: 'Share your progress',
-    body: 'Hit a milestone? Open the score breakdown and share it on social. Bragging rights included.',
-    target: '[data-tour="vibe-score"]',
+    body: 'Hit a milestone? Open the score breakdown and use this button to share it on social. Bragging rights included.',
+    target: '[data-tour="share-score"]',
+    action: 'openScoreBreakdown',
   },
   {
     id: 'proof',
     title: 'Class proof',
-    body: 'Need to show an instructor you did the work? Generate a proof link from the score breakdown. No account needed.',
-    target: '[data-tour="vibe-score"]',
+    body: 'Need to show an instructor you did the work? Click this button to generate a proof link from the score breakdown. No account needed.',
+    target: '[data-tour="class-proof"]',
+    action: 'openScoreBreakdown',
   },
   {
     id: 'search',
@@ -41,7 +43,8 @@ export const TOUR_STEPS = [
     id: 'paths',
     title: 'Learning paths and badges',
     body: 'Open the menu to find curated paths that tie related topics together. Finish one and earn a badge.',
-    target: '[data-tour="main-menu"]',
+    target: '[data-tour="learning-paths"]',
+    action: 'openMenu',
   },
 ];
 

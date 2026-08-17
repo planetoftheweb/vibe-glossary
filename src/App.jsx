@@ -74,7 +74,13 @@ export default function App() {
   );
   const { containerRef, onResizeStart: handleResizeStart } = usePanelResize(setPanelWidth);
   const [showTour, setShowTour] = useState(false);
+  const [tourForceMenu, setTourForceMenu] = useState(false);
   const { shouldOffer: shouldOfferTour, dismiss: dismissTourOffer } = useTourOffer();
+
+  const tourActions = useMemo(() => ({
+    openScoreBreakdown: (open) => setShowScoreBreakdown(open),
+    openMenu: (open) => setTourForceMenu(open),
+  }), []);
 
   // Keep isDesktop reactive so inline panel width is removed below lg breakpoint.
   useEffect(() => {
@@ -320,7 +326,8 @@ export default function App() {
 
       <FeatureTour
         isOpen={showTour}
-        onClose={() => setShowTour(false)}
+        onClose={() => { setShowTour(false); setTourForceMenu(false); }}
+        tourActions={tourActions}
       />
 
       <CheatSheet
@@ -432,6 +439,7 @@ export default function App() {
           onOpenBuildPaths={() => setShowBuildPaths(true)}
           onOpenScoreBreakdown={() => setShowScoreBreakdown(true)}
           onStartTour={() => setShowTour(true)}
+          tourForceMenu={tourForceMenu}
         />
       )}
 

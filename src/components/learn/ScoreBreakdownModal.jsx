@@ -58,6 +58,7 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
               <button
                 type="button"
                 onClick={onOpenProof}
+                data-tour="class-proof"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition-colors"
               >
                 <ShieldCheck size={14} />
@@ -65,16 +66,18 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
               </button>
             )}
             {total > 0 && (
-              <ShareAchievement
-                achievement={{
-                  kind: 'vibe-score',
-                  score: total,
-                  level: level.current.label,
-                }}
-                size="sm"
-                align="right"
-                label="Share score"
-              />
+              <span data-tour="share-score">
+                <ShareAchievement
+                  achievement={{
+                    kind: 'vibe-score',
+                    score: total,
+                    level: level.current.label,
+                  }}
+                  size="sm"
+                  align="right"
+                  label="Share score"
+                />
+              </span>
             )}
             <button
               onClick={onClose}

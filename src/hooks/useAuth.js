@@ -22,6 +22,7 @@ const ERROR_COPY = {
   'auth/popup-closed-by-user': null,
   'auth/cancelled-popup-request': null,
   'auth/operation-not-allowed': "Sign-in isn't enabled yet — try again later.",
+  'auth/configuration-not-found': "Sign-in isn't enabled yet — try again later.",
   'auth/network-request-failed': 'Network hiccup — check your connection and try again.',
 };
 
@@ -47,7 +48,9 @@ export default function useAuth() {
       await action();
       return true;
     } catch (err) {
-      const copy = Object.prototype.hasOwnProperty.call(ERROR_COPY, err?.code)
+      const known = Object.prototype.hasOwnProperty.call(ERROR_COPY, err?.code);
+      if (!known) console.error('[auth] unmapped error:', err?.code, err);
+      const copy = known
         ? ERROR_COPY[err.code]
         : 'Something went wrong — please try again.';
       if (copy) setError(copy);

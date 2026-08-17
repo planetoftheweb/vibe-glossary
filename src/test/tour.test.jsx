@@ -111,6 +111,52 @@ describe('Tour steps data', () => {
       expect(step.body).not.toContain('\u2014');
     }
   });
+
+  it('TOUR_VERSION is at least 2 (bumped for action-aware tour)', () => {
+    expect(TOUR_VERSION).toBeGreaterThanOrEqual(2);
+  });
+
+  it('steps that need an open panel declare an action', () => {
+    const stepsNeedingAction = TOUR_STEPS.filter(s =>
+      ['share', 'proof', 'paths'].includes(s.id)
+    );
+    expect(stepsNeedingAction.length).toBeGreaterThan(0);
+    for (const step of stepsNeedingAction) {
+      expect(step).toHaveProperty('action');
+      expect(typeof step.action).toBe('string');
+      expect(step.action.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('share step targets the share control, not the score pill', () => {
+    const shareStep = TOUR_STEPS.find(s => s.id === 'share');
+    expect(shareStep).toBeDefined();
+    expect(shareStep.target).not.toBe('[data-tour="vibe-score"]');
+    expect(shareStep.target).toMatch(/\[data-tour=/);
+  });
+
+  it('proof step targets the class proof button, not the score pill', () => {
+    const proofStep = TOUR_STEPS.find(s => s.id === 'proof');
+    expect(proofStep).toBeDefined();
+    expect(proofStep.target).not.toBe('[data-tour="vibe-score"]');
+    expect(proofStep.target).toMatch(/\[data-tour=/);
+  });
+
+  it('paths step targets the learning paths item, not the menu wrapper', () => {
+    const pathsStep = TOUR_STEPS.find(s => s.id === 'paths');
+    expect(pathsStep).toBeDefined();
+    expect(pathsStep.target).not.toBe('[data-tour="main-menu"]');
+    expect(pathsStep.target).toMatch(/\[data-tour=/);
+  });
+
+  it('action values are valid action names', () => {
+    const validActions = ['openScoreBreakdown', 'openMenu', 'focusSearch'];
+    for (const step of TOUR_STEPS) {
+      if (step.action) {
+        expect(validActions).toContain(step.action);
+      }
+    }
+  });
 });
 
 // ─── Tour persistence tests ─────────────────────────────────────────────────

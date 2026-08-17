@@ -52,9 +52,9 @@ export const BUILD_PATHS = [
   {
     id: 'design-language',
     name: 'Design language',
-    tagline: 'Tokens, scales, states, variants: the words designers use',
+    tagline: 'Tokens, scales, states, variants, contrast, brand: the words designers use',
     description:
-      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints. The vocabulary that lets you ask an AI for "the secondary button at md size" instead of "make it look better".',
+      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, and brand constraints. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
     quiz: [
       {
         q: 'A named value like "color.primary.500" or "space.4" that stands in for a hard-coded value is a...',
@@ -62,9 +62,9 @@ export const BUILD_PATHS = [
         optionIds: ['design-tokens', 'design-system', 'color-palette', 'spacing-scale'],
       },
       {
-        q: 'Picking 5-8 fixed font sizes and never inventing a one-off is using a...',
-        answerId: 'typography-scale',
-        optionIds: ['typography-scale', 'spacing-scale', 'design-tokens', 'border-radius'],
+        q: 'The minimum contrast ratio WCAG AA requires for normal-size body text is...',
+        answerId: 'contrast-wcag',
+        optionIds: ['contrast-wcag', 'color-palette', 'readable-type', 'design-tokens'],
       },
       {
         q: 'The state most often skipped, the one that breaks accessibility, is the...',
@@ -72,14 +72,14 @@ export const BUILD_PATHS = [
         optionIds: ['component-states', 'variants-sizes', 'density', 'motion'],
       },
       {
-        q: 'A single Button component with `variant="ghost"` and `size="sm"` props is using...',
-        answerId: 'variants-sizes',
-        optionIds: ['variants-sizes', 'design-system', 'atomic-design', 'density'],
+        q: 'A short list of "we are X, not Y" pairs that tells an AI your product personality is a...',
+        answerId: 'brand-constraints',
+        optionIds: ['brand-constraints', 'design-system', 'one-primary-cta', 'design-tokens'],
       },
       {
-        q: 'Writing styles for the smallest screen first and adding `md:` and `lg:` rules on top is...',
-        answerId: 'responsive-breakpoints',
-        optionIds: ['responsive-breakpoints', 'density', 'atomic-design', 'fidelity'],
+        q: 'Every screen should have exactly one loud, filled button for the main action. That button is the...',
+        answerId: 'one-primary-cta',
+        optionIds: ['one-primary-cta', 'variants-sizes', 'component-states', 'brand-constraints'],
       },
     ],
   },
@@ -287,11 +287,64 @@ export const BUILD_PATHS = [
       },
     ],
   },
+  {
+    id: 'vibe-prompting',
+    name: 'Vibe prompting for UI',
+    tagline: 'Learn to talk to an AI about UI so you can ship',
+    description:
+      'A class-ready path that covers the vocabulary and prompting skills you need to describe a user interface to an AI and get back something you would actually ship. Pulls from Design Language, AI Literacy, and Web Foundations so you learn the words, the tools, and the building blocks together.',
+    isCrossCluster: true,
+    items: [
+      'prompts-roles',
+      'design-system',
+      'design-tokens',
+      'typography-scale',
+      'readable-type',
+      'contrast-wcag',
+      'color-palette',
+      'one-primary-cta',
+      'brand-constraints',
+      'design-contract',
+      'component-states',
+      'responsive-breakpoints',
+      'llm',
+      'tokens',
+      'tool-calling',
+    ],
+    quiz: [
+      {
+        q: 'Putting format rules in the system message (not the user message) so they stick better is using the...',
+        answerId: 'prompts-roles',
+        optionIds: ['prompts-roles', 'llm', 'tokens', 'sampling'],
+      },
+      {
+        q: 'The minimum contrast ratio WCAG AA requires for normal-size body text is...',
+        answerId: 'contrast-wcag',
+        optionIds: ['contrast-wcag', 'color-palette', 'readable-type', 'design-tokens'],
+      },
+      {
+        q: 'A short "we are X, not Y" list you paste into a system prompt to steer the AI toward your brand is a...',
+        answerId: 'brand-constraints',
+        optionIds: ['brand-constraints', 'design-system', 'design-tokens', 'one-primary-cta'],
+      },
+      {
+        q: 'Telling the AI "use only the tokens in tailwind.config.js" instead of letting it invent arbitrary values is enforcing the...',
+        answerId: 'design-contract',
+        optionIds: ['design-contract', 'design-tokens', 'design-system', 'typography-scale'],
+      },
+      {
+        q: 'Every screen should have exactly one loud, filled button for the main action. That principle is called...',
+        answerId: 'one-primary-cta',
+        optionIds: ['one-primary-cta', 'component-states', 'variants-sizes', 'brand-constraints'],
+      },
+    ],
+  },
 ];
 
 // Inject the topic ids from each matching cluster into path.items so the path
 // stays in sync with the data (no need to repeat ids by hand).
 for (const path of BUILD_PATHS) {
+  if (path.isCrossCluster) continue;
   const cluster = BUILD_LITERACY_CLUSTERS.find(c => c.id === path.id);
   path.items = cluster ? cluster.topics.map(t => t.id) : [];
 }

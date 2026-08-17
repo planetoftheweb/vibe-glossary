@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { CATEGORIES } from '../data/categories';
 import { buildTiers, vibeScore, levelFor } from '../lib/scoring';
 import { newSessionId } from '../lib/quizIntegrity';
+import { BUILD_PATH_IDS } from '../data/buildPaths';
 
 const STORAGE_KEY = 'vg-explored';
 const COPIED_KEY = 'vg-copied';
@@ -248,6 +249,7 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
   // cluster id; otherwise it is a glossary path. (Matches buildPaths.js.)
   const buildPathIdSet = useMemo(() => {
     const set = new Set(buildClusters.map(c => c.id));
+    BUILD_PATH_IDS.forEach(id => set.add(id));
     return set;
   }, [buildClusters]);
 

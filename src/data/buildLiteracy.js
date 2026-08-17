@@ -91,6 +91,12 @@ export const BUILD_CLUSTER_COLORS = {
     dot: 'bg-purple-500', accent: 'text-purple-500',
     gradient: 'from-purple-600 to-violet-700',
   },
+  'vibe-prompting': {
+    text: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/30',
+    active: 'bg-teal-600 text-white', hover: 'hover:bg-teal-500/10',
+    dot: 'bg-teal-500', accent: 'text-teal-500',
+    gradient: 'from-teal-500 to-cyan-600',
+  },
 };
 
 export function getBuildClusterColors(clusterId) {

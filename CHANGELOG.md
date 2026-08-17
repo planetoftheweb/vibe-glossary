@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-17
+
+### Added
+- **Class proof system** for submitting learning progress as class work. Students open the score breakdown, click "Class proof", and copy a proof link or proof text for Canvas/LMS submissions. Instructors open the proof URL to see VibeScore, level, badges, date, and whether the class bar was met. No accounts required; proof is a base64url-encoded snapshot of the student's local progress
+- **Class bar**: reach Tinkerer (200 pts) OR earn the "Vibe prompting for UI" path badge
+- **"Vibe prompting for UI" learning path**: a cross-cluster class path pulling from Design Language, AI Literacy, and Web Foundations (15 topics, 5-question end-of-path quiz at 80%)
+- **5 new Design Language topics** from practical prompting rules: Color contrast and WCAG, Readable type (base size/line-height), Use existing tokens (design contract), One primary CTA per view, Brand is/is not constraints
+- **ProofView component** with live mode (generate proof) and verify mode (instructor opens link)
+- **Hash routing** for `#proof=...` URLs so proof links work as direct-open verification
+- **101 new tests** covering proof system, design language topic shape, and class path quiz validation (total: 1026 tests)
+
+### Changed
+- Design Language cluster expanded from 14 to 19 topics
+- Design Language path quiz updated with new topic questions (contrast, brand, CTA)
+- Build Literacy topic count updated from 105 to 110
+- Score breakdown modal now includes a "Class proof" button
+- Build path badge classification fixed to include cross-cluster paths (not just cluster-matched ids)
+- README updated with "For teachers" section explaining the class bar and proof workflow
+
 ## [0.8.1] - 2026-05-18
 
 ### Changed

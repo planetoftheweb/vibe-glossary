@@ -17,6 +17,7 @@ import BuildLiteracyIndex from './components/learn/BuildLiteracyIndex';
 import BuildPathsLauncher from './components/learn/BuildPathsLauncher';
 import BuildPathView from './components/learn/BuildPathView';
 import ScoreBreakdownModal from './components/learn/ScoreBreakdownModal';
+import ProofView from './components/learn/ProofView';
 import TopicTierBadge from './components/learn/TopicTierBadge';
 import useExploreMode from './hooks/useExploreMode';
 import usePanelResize from './hooks/usePanelResize';
@@ -30,6 +31,7 @@ import {
   getBuildClusterColors,
 } from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
+import { decodeProof } from './lib/proof';
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(() => {
@@ -44,6 +46,8 @@ export default function App() {
   const [showBuildPaths, setShowBuildPaths] = useState(false);
   const [activeBuildPath, setActiveBuildPath] = useState(null);
   const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
+  const [showProof, setShowProof] = useState(false);
+  const [proofSnapshot, setProofSnapshot] = useState(null);
   const [activeItem, setActiveItem]       = useState('modal');
   const [activeBuildTopic, setActiveBuildTopic] = useState(() => BUILD_TOPIC_IDS[0] || 'mvp');
   const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
@@ -92,6 +96,25 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+
+  // Handle #proof=... URLs so instructors can verify a student's proof
+  useEffect(() => {
+    function checkHash() {
+      const hash = window.location.hash;
+      const match = hash.match(/^#proof=(.+)$/);
+      if (match) {
+        const snap = decodeProof(match[1]);
+        if (snap) {
+          setProofSnapshot(snap);
+          setShowProof(true);
+          setShowWelcome(false);
+        }
+      }
+    }
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
   }, []);
 
   // Reset options when switching components & track visit
@@ -356,6 +379,16 @@ export default function App() {
         onClose={() => setShowScoreBreakdown(false)}
         score={explore.score}
         level={explore.level}
+        onOpenProof={() => { setShowScoreBreakdown(false); setProofSnapshot(null); setShowProof(true); }}
+      />
+
+      <ProofView
+        isOpen={showProof}
+        onClose={() => { setShowProof(false); setProofSnapshot(null); if (window.location.hash.startsWith('#proof=')) window.history.replaceState(null, '', window.location.pathname); }}
+        score={explore.score}
+        level={explore.level}
+        badges={explore.badges}
+        proofSnapshot={proofSnapshot}
       />
 
       {/* Top Navigation */}

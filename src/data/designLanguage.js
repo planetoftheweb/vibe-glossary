@@ -317,5 +317,110 @@ export const DESIGN_LANGUAGE_CLUSTER = {
         'Mobile-first: write the small layout, add bigger rules on top. Touch targets at least 44 by 44.',
       relatedGlossaryIds: ['appshell', 'card', 'pricing'],
     },
+    {
+      id: 'contrast-wcag',
+      title: 'Color contrast and WCAG',
+      summary:
+        'Every text/background pair needs enough contrast for people to read it. WCAG (Web Content Accessibility Guidelines) sets the bar: at least 4.5:1 for body text, 3:1 for large text. "Make it pop" is not a contrast ratio.',
+      details:
+        'Contrast ratio is a number that describes how far apart two colors are in lightness. White text on a white background is 1:1 (invisible). Black text on a white background is 21:1 (maximum). WCAG AA, the standard almost every product should meet, requires 4.5:1 for normal-size text and 3:1 for text that is at least 18pt (or 14pt bold). WCAG AAA raises those to 7:1 and 4.5:1, which is harder to hit with brand colors but great for long-form reading.\n\nThe most common failures are light gray text on white, colored text on a colored background, and text over images without an overlay. Tools like the WebAIM Contrast Checker, Figma plugins like Stark, and browser DevTools (Inspect, Accessibility tab) all show the ratio instantly. Tailwind does not enforce contrast on its own, so you need to check.\n\nWhen you are prompting an AI, the words "meet WCAG AA contrast" are worth more than "make sure people can read it". The AI knows the spec and will pick colors that pass. Without the spec name, it guesses, and light-gray-on-white keeps showing up.',
+      comparison:
+        'AA = 4.5:1 for body text, 3:1 for large text. AAA = 7:1 and 4.5:1. Ratio, not vibes.',
+      vibeTip:
+        'Always say "WCAG AA contrast" in your prompt. The AI knows the numbers and will pick passing colors instead of guessing "readable enough".',
+      talkToAi: {
+        starter:
+          'Audit color contrast across [project or page]. Before changing anything, ask me: 1) the pages or components to check, 2) whether we target WCAG AA or AAA, 3) whether dark mode needs its own audit. Then list every text/background pair that fails, show the current ratio vs the required ratio, and propose replacement colors that pass while staying close to our palette.',
+        example:
+          'Audit contrast on the landing page. Target WCAG AA. Check both light and dark mode. List every failing pair, show the ratio, and suggest the closest passing color from our Tailwind palette.',
+      },
+      mnemonic:
+        '4.5:1 for body text, 3:1 for large text. Say "WCAG AA" and the AI handles the math.',
+      relatedGlossaryIds: ['badge', 'button'],
+    },
+    {
+      id: 'readable-type',
+      title: 'Readable type: base size, line-height, do not shrink body text',
+      summary:
+        'Body text should be at least 16px (1rem). Line-height for paragraphs should be 1.4 to 1.6. Shrinking body text below 14px to fit more on screen trades readability for density, and readability always wins.',
+      details:
+        'Three rules cover 90% of type readability. First, set a base size of at least 16px (Tailwind text-base). Browsers default to 16px for a reason: it is the smallest size most people can read comfortably on a phone at arm\'s length. Going to 14px (text-sm) for secondary labels and metadata is fine. Going below that for body paragraphs is not.\n\nSecond, set line-height (the vertical space between lines, sometimes called "leading") to 1.4 to 1.6 for body copy. Tailwind\'s text-base ships with leading-6 (1.5), which is right in the sweet spot. Headings can be tighter (1.1 to 1.3) because they are short and big. Code blocks can be tighter too (1.4).\n\nThird, ask for a type scale instead of picking sizes ad hoc. A scale is a small ladder of sizes (like Tailwind\'s xs, sm, base, lg, xl, 2xl) with line-heights already paired. When you tell an AI "use a type scale with a 16px base, 1.5 line-height for body, and 1.2 for headings", it stops inventing text-[13px] or leading-[17px] on every component.',
+      comparison:
+        'Body at 16px with 1.5 line-height = comfortable. Body at 12px with 1.2 line-height = squinting. Use the scale, not one-off sizes.',
+      vibeTip:
+        'Tell your AI "body text must be at least text-sm (14px), prefer text-base (16px), line-height 1.5". It stops shrinking text to fit layouts.',
+      talkToAi: {
+        starter:
+          'Set up readable typography for [project]. Before suggesting anything, ask me: 1) the type of content (long articles, dashboards, marketing pages), 2) the smallest text we allow (captions, footnotes), 3) the font family (or "pick one"), 4) whether we need a code font. Then propose a scale (xs through 2xl) with base size, line-heights for each use (body, heading, code, label), and show an example paragraph at each rung so I can feel the difference.',
+        example:
+          'Set up readable typography for a learning site with long explanations. Inter for body, minimum text size is text-xs for fine print only. Paragraphs use text-base/leading-relaxed. Headings use text-xl through text-3xl with tight leading. Show an example card with a heading, a two-paragraph body, and a caption.',
+      },
+      mnemonic:
+        '16px base, 1.5 line-height, never shrink body text. Read it on your phone before you ship.',
+      relatedGlossaryIds: ['hero', 'card'],
+    },
+    {
+      id: 'design-contract',
+      title: 'Use the tokens that already exist: do not invent new ones',
+      summary:
+        'If your design system (or Tailwind config) already has names for colors, spacing, and radii, use those names. Inventing new values ("just this once, 13px") breaks the contract that makes everything consistent.',
+      details:
+        'A design contract is the agreement that everyone (including the AI) uses the same named values. When a Tailwind config says primary-500 is #4F46E5 and spacing goes in 4px steps, those are the contract. Every component built on those tokens looks like it belongs.\n\nThe contract breaks when someone introduces a value that is not in the system. A "gap-[13px]" here, a "#5B21B6" there, a "rounded-[7px]" somewhere else. Each one is small. Together they make the product feel like five different designers worked on it without talking to each other.\n\nThe fix is simple: before adding a new value, check whether the system already has one close enough. If spacing-3 (12px) or spacing-4 (16px) exists, do not invent 13px. If the system truly needs a new token, add it to the config so everyone gets it, do not hard-code it in one component. When prompting an AI, the phrase "use only existing tokens from our config" stops it from inventing arbitrary values on every generation.',
+      comparison:
+        'Using existing tokens = cohesion. Inventing values = drift. If you need a new value, add it to the system, not inline.',
+      vibeTip:
+        'Tell your AI "use only the tokens in tailwind.config.js, do not add arbitrary values". It stops generating px overrides that drift from the system.',
+      talkToAi: {
+        starter:
+          'Audit [component or page] for off-system values. Before changing anything, ask me: 1) where the design tokens live (tailwind.config.js, CSS variables, a tokens file), 2) which categories to audit (color, spacing, radius, shadow, font), 3) whether I want you to fix or just report. Then list every hard-coded or arbitrary value, show what system token it should use instead, and flag any case where no close token exists (those might need a new token added to the config).',
+        example:
+          'Audit src/components/Card.tsx for off-system values. Our tokens are in tailwind.config.js. Report every arbitrary value (gap-[13px], text-[#333], rounded-[5px]) and replace each with the closest Tailwind default. If nothing is close, propose a new token.',
+      },
+      mnemonic:
+        'If the system has a name for it, use the name. If it does not, add one. Never hard-code in one place.',
+      relatedGlossaryIds: ['card', 'button'],
+    },
+    {
+      id: 'one-primary-cta',
+      title: 'One primary call to action per view',
+      summary:
+        'Every screen should have one obvious "do this next" button. If three buttons are all loud and colorful, none of them stands out, and the user freezes. Primary is for the main action. Everything else is secondary, ghost, or a link.',
+      details:
+        'A call to action (CTA) is the button (or link) you most want the user to press. "Sign up", "Save", "Submit order", "Start free trial". Making it primary means giving it the strongest visual treatment: filled with the brand color, large enough to find instantly, and usually positioned at the bottom or top-right of the form.\n\nThe mistake is making everything primary. When the "Save" button, the "Cancel" button, and the "Delete account" link are all big, bright, and filled, the user has to read every label to figure out which one to press. That cognitive load (the tiny pause while they parse labels) is the difference between a product that feels fast and one that feels uncertain.\n\nThe hierarchy: one primary button (the action you want), one or two secondary buttons (alternatives like "Cancel" or "Save as draft"), and everything else as ghost or text links. Destructive actions (delete, disconnect, revoke) get a destructive variant (red/danger) but should still be visually quieter than the primary unless the whole screen exists to confirm a delete.',
+      comparison:
+        'One primary = clear next step. Three primaries = decision fatigue. Use secondary, ghost, or link for the rest.',
+      vibeTip:
+        'Tell your AI "one primary CTA per view, secondary for alternatives, ghost or link for the rest". It stops painting every button in brand purple.',
+      talkToAi: {
+        starter:
+          'Audit the button hierarchy on [page or form]. Before changing anything, ask me: 1) the main action the user should take, 2) the secondary actions (save draft, cancel, go back), 3) any destructive actions (delete, disconnect). Then propose which button gets primary, which gets secondary, and which gets ghost or link treatment. Show the updated layout with Tailwind classes.',
+        example:
+          'Audit the checkout page. Main action: "Place order" (primary). Secondary: "Back to cart" (ghost). Destructive: "Remove item" (small ghost text, not a big button). Update the JSX with the right variant classes.',
+      },
+      mnemonic:
+        'One loud button per screen. If everything is primary, nothing is.',
+      relatedGlossaryIds: ['button', 'hero'],
+    },
+    {
+      id: 'brand-constraints',
+      title: 'Brand is / is not: giving an AI taste without a 20-page brand book',
+      summary:
+        'A short "brand is / is not" list tells the AI the personality of your product in a few lines. "We are calm and confident, not playful or loud." That single sentence steers color, typography, copy tone, and illustration style better than a 50-slide deck the AI cannot read.',
+      details:
+        'Most projects do not have a brand book, and you do not need one to give an AI useful taste constraints. A brand is/is not list is a handful of pairs that describe what the product should feel like and what it should not. "Calm, not sterile. Confident, not aggressive. Friendly, not childish. Technical, not intimidating." Each pair narrows the design space so the AI picks appropriate options instead of defaulting to generic.\n\nThe list works because it is short enough to paste into a system prompt and specific enough to resolve ambiguity. When an AI picks a font, "friendly but not childish" steers it toward Inter or DM Sans and away from Comic Sans or Papyrus. When it picks colors, "calm and confident" steers it toward muted blues and neutrals, not neon gradients.\n\nYou can extend the pattern with a few concrete references: "Think Linear, not MySpace. Think Stripe, not a county fair poster." Product references are the fastest shorthand because the AI already knows what those products look like. Three constraints and two references give the AI more useful guidance than a brand deck it was not trained on.',
+      comparison:
+        'Brand book = 50 pages the AI cannot read. Is/is-not list = 5 lines that fit in a system prompt and actually steer output.',
+      vibeTip:
+        'Put your "brand is / is not" list and 2 to 3 product references in the system prompt of every design conversation. The AI will stay on-brand without a Figma file.',
+      talkToAi: {
+        starter:
+          'Help me write a brand is/is not list for [project]. Before suggesting anything, ask me: 1) what the product does in one sentence, 2) the audience (developers, consumers, enterprise, students), 3) two or three products whose vibe I admire, 4) anything I definitely do NOT want (playful, corporate, dark, loud). Then propose 4 to 6 is/is-not pairs with a short explanation of how each one would affect color, type, and tone. Include 2 to 3 product references I can paste into AI prompts.',
+        example:
+          'Write a brand is/is not list for a developer documentation site. Audience: intermediate developers. I admire the tone of Stripe Docs and Linear. I do not want corporate or playful. Propose is/is-not pairs and show how they map to Tailwind choices (palette, font, radius).',
+      },
+      mnemonic:
+        'Five lines of "we are X, not Y" steer an AI better than a brand book it cannot open.',
+      relatedGlossaryIds: ['hero', 'card'],
+    },
   ],
 };

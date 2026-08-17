@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import {
   X, Sparkles, Eye, ClipboardCopy, GraduationCap, Award, Repeat, Trophy, Info,
+  ShieldCheck,
 } from 'lucide-react';
 import { POINTS, LEVELS } from '../../lib/scoring';
 import ShareAchievement from './ShareAchievement';
@@ -12,7 +13,7 @@ import ShareAchievement from './ShareAchievement';
  * make the deep-learning points visible: "1pt for visiting is small, 10pts
  * for mastering is big."
  */
-export default function ScoreBreakdownModal({ isOpen, onClose, score, level }) {
+export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onOpenProof }) {
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -53,6 +54,16 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level }) {
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            {onOpenProof && (
+              <button
+                type="button"
+                onClick={onOpenProof}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition-colors"
+              >
+                <ShieldCheck size={14} />
+                Class proof
+              </button>
+            )}
             {total > 0 && (
               <ShareAchievement
                 achievement={{

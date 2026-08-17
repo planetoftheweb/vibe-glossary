@@ -22,6 +22,8 @@ import ProofView from './components/learn/ProofView';
 import TopicTierBadge from './components/learn/TopicTierBadge';
 import useExploreMode from './hooks/useExploreMode';
 import usePanelResize from './hooks/usePanelResize';
+import useAuth from './hooks/useAuth';
+import useCloudSync from './hooks/useCloudSync';
 import { useGlossary } from './hooks/useGlossary';
 import { useCategories } from './hooks/useCategories';
 import { CATEGORY_COLORS } from './data/categories';
@@ -65,6 +67,9 @@ export default function App() {
   const categories = useCategories();
   const explore = useExploreMode(categories, BUILD_LITERACY_CLUSTERS);
   const glossary = useGlossary();
+  // Optional accounts: sign in only to back up progress/badges to the cloud.
+  const authState = useAuth();
+  const cloudSync = useCloudSync(authState.user, explore.snapshot, explore.importSnapshot);
   const [panelWidth, setPanelWidth] = useState(() => {
     const saved = localStorage.getItem('vg-panel-width');
     return saved ? Number(saved) : 40; // percent
@@ -440,6 +445,9 @@ export default function App() {
           onOpenScoreBreakdown={() => setShowScoreBreakdown(true)}
           onStartTour={() => setShowTour(true)}
           tourForceMenu={tourForceMenu}
+          authState={authState}
+          syncStatus={cloudSync.status}
+          onOpenProof={() => { setProofSnapshot(null); setShowProof(true); }}
         />
       )}
 

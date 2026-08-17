@@ -3,6 +3,7 @@ import { CATEGORIES } from '../data/categories';
 import { buildTiers, vibeScore, levelFor } from '../lib/scoring';
 import { newSessionId } from '../lib/quizIntegrity';
 import { BUILD_PATH_IDS } from '../data/buildPaths';
+import { makeSnapshot, mergeAttemptMaps, mergeRetentionMaps } from '../lib/cloudSync';
 
 const STORAGE_KEY = 'vg-explored';
 const COPIED_KEY = 'vg-copied';
@@ -293,6 +294,44 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tiers]);
 
+  // JSON-safe copy of everything worth backing up (used by useCloudSync).
+  const snapshot = useMemo(
+    () => makeSnapshot({ visited, copied, mastered, badges, attempts, retention }),
+    [visited, copied, mastered, badges, attempts, retention]
+  );
+
+  // Union a cloud snapshot into local state. Additive only — restoring a
+  // backup never removes progress earned on this device.
+  const importSnapshot = useCallback((remote) => {
+    if (!remote || typeof remote !== 'object') return;
+    const importSet = (setter, key, ids) => {
+      if (!Array.isArray(ids) || !ids.length) return;
+      setter(prev => {
+        const next = new Set([...prev, ...ids]);
+        saveSet(key, next);
+        return next;
+      });
+    };
+    importSet(setVisited, STORAGE_KEY, remote.visited);
+    importSet(setCopied, COPIED_KEY, remote.copied);
+    importSet(setMastered, MASTERED_KEY, remote.mastered);
+    importSet(setBadges, BADGES_KEY, remote.badges);
+    if (remote.attempts && Object.keys(remote.attempts).length) {
+      setAttempts(prev => {
+        const next = mergeAttemptMaps(prev, remote.attempts);
+        saveMap(ATTEMPTS_KEY, next);
+        return next;
+      });
+    }
+    if (remote.retention && Object.keys(remote.retention).length) {
+      setRetention(prev => {
+        const next = mergeRetentionMaps(prev, remote.retention);
+        saveMap(RETENTION_KEY, next);
+        return next;
+      });
+    }
+  }, []);
+
   const resetProgress = useCallback(() => {
     [STORAGE_KEY, COPIED_KEY, MASTERED_KEY, BADGES_KEY, ATTEMPTS_KEY, RETENTION_KEY]
       .forEach(k => localStorage.removeItem(k));
@@ -328,5 +367,7 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
     score,
     level,
     resetProgress,
+    snapshot,
+    importSnapshot,
   };
 }

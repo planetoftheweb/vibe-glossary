@@ -2,11 +2,13 @@ import { useState, useRef, useEffect, cloneElement } from 'react';
 import {
   Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
-  RotateCcw, Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
+  Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
   Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette, Bot,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import VibeScorePill from '../learn/VibeScorePill';
+import UserMenu from './UserMenu';
+import WhatsNewMenu, { WhatsNewMenuSection } from './WhatsNewMenu';
 import {
   getBuildClusterColors,
   BUILD_LITERACY_CLUSTERS,
@@ -158,6 +160,7 @@ function MainMenu({
   activeCatColors,
   siteSection, setSiteSection,
   onStartTour,
+  onReleaseAction,
 }) {
   const [statsOpen, setStatsOpen] = useState(() => {
     try { return localStorage.getItem('vg-menu-stats-open') === 'true'; }
@@ -173,7 +176,7 @@ function MainMenu({
   };
 
   if (!isOpen) return null;
-  const { surpriseMe, surpriseMeBuild, visited, copied, resetProgress } = explore;
+  const { surpriseMe, surpriseMeBuild, visited } = explore;
   const isBuild = siteSection === 'build';
 
   // Progress UI follows the active section so "Your Progress" always means
@@ -243,7 +246,7 @@ function MainMenu({
   };
 
   return (
-    <div className="w-[340px] text-zinc-700 dark:text-zinc-200">
+    <div className="w-[340px] max-w-[calc(100vw-64px)] text-zinc-700 dark:text-zinc-200">
       <div className="border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-2">
         <SectionHeader icon={<BookText size={14} />} label="Content" />
         {siteSection === 'glossary' ? (
@@ -377,16 +380,12 @@ function MainMenu({
               })}
             </div>
 
-            <button
-              onClick={() => { resetProgress(); onClose(); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
-            >
-              <RotateCcw size={16} />
-              <span className="font-medium">Reset Progress</span>
-            </button>
           </div>
         )}
       </div>
+
+      {/* WHAT'S NEW, only below sm where the sparkles pill doesn't fit */}
+      <WhatsNewMenuSection onAction={onReleaseAction} />
 
       {/* HELP section, hidden on 2xl+ where the Help pill covers it */}
       <div className="2xl:hidden border-t border-zinc-100 dark:border-zinc-800">
@@ -516,6 +515,9 @@ export default function TopNav({
   onOpenScoreBreakdown,
   onStartTour,
   tourForceMenu = false,
+  authState,
+  syncStatus = 'idle',
+  onOpenProof,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -621,6 +623,29 @@ export default function TopNav({
   const handleSelectComponent = (itemId) => {
     setActiveItem(itemId);
     setOpenDropdown(null);
+  };
+
+  // Deep links from What's New entries into the feature they showcase.
+  const handleReleaseAction = (action) => {
+    if (!action) return;
+    setOpenDropdown(null);
+    switch (action.kind) {
+      case 'glossary':
+        setSiteSection('glossary');
+        if (action.id) setActiveItem(action.id);
+        break;
+      case 'build':
+        setSiteSection('build');
+        if (action.id) setActiveBuildTopic(action.id);
+        break;
+      case 'tour': onStartTour?.(); break;
+      case 'paths': onOpenPaths?.(); break;
+      case 'build-paths': onOpenBuildPaths?.(); break;
+      case 'proof': onOpenProof?.(); break;
+      case 'score': onOpenScoreBreakdown?.(); break;
+      case 'account': setOpenDropdown('user'); break;
+      default: break;
+    }
   };
 
   const handleSearchSelect = (result) => {
@@ -1023,6 +1048,16 @@ export default function TopNav({
             <Search size={20} />
           </button>
 
+          {/* What's New, sparkles pill with unseen dot (main menu covers < sm) */}
+          <div className="hidden sm:block">
+            <WhatsNewMenu
+              isOpen={openDropdown === 'whatsnew'}
+              onToggle={() => setOpenDropdown(openDropdown === 'whatsnew' ? null : 'whatsnew')}
+              onClose={() => setOpenDropdown(null)}
+              onAction={handleReleaseAction}
+            />
+          </div>
+
           {/* VibeScore pill, opens the breakdown modal */}
           {explore?.score && onOpenScoreBreakdown && (
             <div data-tour="vibe-score" className="hidden md:block">
@@ -1117,13 +1152,6 @@ export default function TopNav({
                   );
                 })}
               </div>
-              <button
-                onClick={() => { explore.resetProgress(); setOpenDropdown(null); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors border-t border-zinc-100 dark:border-zinc-800"
-              >
-                <RotateCcw size={16} />
-                <span className="font-medium">Reset Progress</span>
-              </button>
             </PillDropdown>
           </div>
 
@@ -1179,10 +1207,24 @@ export default function TopNav({
                   siteSection={siteSection}
                   setSiteSection={setSiteSection}
                   onStartTour={onStartTour}
+                  onReleaseAction={handleReleaseAction}
                 />
               </Popover>
             )}
           </div>
+
+          {/* Account, optional sign-in that backs up progress and badges */}
+          <UserMenu
+            isOpen={openDropdown === 'user'}
+            onToggle={() => setOpenDropdown(openDropdown === 'user' ? null : 'user')}
+            onClose={() => setOpenDropdown(null)}
+            auth={authState}
+            syncStatus={syncStatus}
+            score={explore?.score}
+            onOpenScoreBreakdown={onOpenScoreBreakdown}
+            onOpenProof={onOpenProof}
+            onResetProgress={explore?.resetProgress}
+          />
         </div>
       </div>
 

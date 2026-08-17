@@ -1,6 +1,25 @@
 import { render, screen, act } from '@testing-library/react';
 import App from '../App';
 
+// ─── Mock auth/cloud sync so tests never touch Firebase ─────────────────────
+vi.mock('../hooks/useAuth', () => ({
+  default: () => ({
+    user: null,
+    authReady: true,
+    busy: false,
+    error: null,
+    clearError: () => {},
+    signInWithGoogle: async () => false,
+    signInWithEmail: async () => false,
+    registerWithEmail: async () => false,
+    signOut: async () => false,
+  }),
+}));
+
+vi.mock('../hooks/useCloudSync', () => ({
+  default: () => ({ status: 'idle' }),
+}));
+
 // ─── Mock heavy child components ────────────────────────────────────────────
 vi.mock('../components/layout/TopNav', () => ({
   default: () => <div data-testid="top-nav" />,

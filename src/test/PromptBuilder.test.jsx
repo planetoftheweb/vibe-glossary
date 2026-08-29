@@ -215,7 +215,7 @@ describe('PromptBuilder', () => {
       />
     );
 
-    await user.click(screen.getByTitle('Copy to clipboard (markdown)'));
+    await user.click(screen.getByRole('button', { name: 'Copy to clipboard (markdown)' }));
 
     expect(writeTextSpy).toHaveBeenCalledWith(
       expect.stringContaining('Add a centered Dialog modal overlay')
@@ -233,7 +233,7 @@ describe('PromptBuilder', () => {
       />
     );
 
-    await user.click(screen.getByTitle('Copy to clipboard (markdown)'));
+    await user.click(screen.getByRole('button', { name: 'Copy to clipboard (markdown)' }));
     expect(onCopy).toHaveBeenCalledTimes(1);
   });
 });

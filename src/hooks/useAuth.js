@@ -7,24 +7,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
-
-// Friendly copy for the Firebase error codes users can actually hit.
-// A `null` value means "stay silent" (e.g. they closed the popup on purpose).
-const ERROR_COPY = {
-  'auth/invalid-credential': 'Wrong email or password.',
-  'auth/user-not-found': 'No account with that email — try "Create an account".',
-  'auth/wrong-password': 'Wrong email or password.',
-  'auth/email-already-in-use': 'That email already has an account — sign in instead.',
-  'auth/weak-password': 'Password needs at least 6 characters.',
-  'auth/invalid-email': "That doesn't look like a valid email.",
-  'auth/too-many-requests': 'Too many tries — wait a minute and try again.',
-  'auth/popup-blocked': 'Your browser blocked the popup — allow popups and try again.',
-  'auth/popup-closed-by-user': null,
-  'auth/cancelled-popup-request': null,
-  'auth/operation-not-allowed': "Sign-in isn't enabled yet — try again later.",
-  'auth/configuration-not-found': "Sign-in isn't enabled yet — try again later.",
-  'auth/network-request-failed': 'Network hiccup — check your connection and try again.',
-};
+import { AUTH_ERROR_COPY, AUTH_ERROR_FALLBACK } from '../lib/authErrors';
 
 /**
  * Optional account state. Signing in is never required — it only exists so
@@ -48,11 +31,11 @@ export default function useAuth() {
       await action();
       return true;
     } catch (err) {
-      const known = Object.prototype.hasOwnProperty.call(ERROR_COPY, err?.code);
+      const known = Object.prototype.hasOwnProperty.call(AUTH_ERROR_COPY, err?.code);
       if (!known) console.error('[auth] unmapped error:', err?.code, err);
       const copy = known
-        ? ERROR_COPY[err.code]
-        : 'Something went wrong — please try again.';
+        ? AUTH_ERROR_COPY[err.code]
+        : AUTH_ERROR_FALLBACK;
       if (copy) setError(copy);
       return false;
     } finally {

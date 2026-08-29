@@ -573,17 +573,22 @@ export default function App() {
                         {showQuiz ? 'Learn Mode' : 'Definition'}
                       </span>
                       <button
+                        type="button"
                         onClick={toggleLearnMode}
                         aria-pressed={learnMode}
                         aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
-                        className={`group relative ml-1 inline-flex items-center gap-1.5 px-2.5 py-1 before:absolute before:inset-y-[-8px] before:inset-x-[-4px] before:content-[''] rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
-                          learnMode
-                            ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-500'
-                            : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-                        }`}
+                        className="group relative ml-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent"
                       >
-                        <GraduationCap size={13} />
-                        {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
+                            learnMode
+                              ? 'bg-indigo-600 border-indigo-600 text-white group-hover:bg-indigo-500'
+                              : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800'
+                          }`}
+                        >
+                          <GraduationCap size={13} />
+                          {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                        </span>
                         <HoverTip text={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'} />
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />

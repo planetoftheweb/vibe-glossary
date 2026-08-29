@@ -270,6 +270,18 @@ describe('#25 motion pattern previews are real', () => {
     }
   });
 
+  it('#48 reduce-on teaching line says travel is off, not 200ms', () => {
+    mockMotion(true);
+    render(<MotionPatternDemo demoId="stagger" />);
+    const teach = document.querySelector('[data-stagger-teach]');
+    expect(teach).toBeTruthy();
+    expect(teach.textContent).toMatch(/Travel is off/i);
+    expect(teach.textContent).not.toMatch(/waits 200ms/);
+    expect(teach.textContent).not.toMatch(/waits 400ms/);
+    expect(teach.textContent).not.toMatch(/slides 80px first/);
+    expect([...document.querySelectorAll('[data-stagger-row]')].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '0ms', '0ms']);
+  });
+
   it('#44 reduce-off cascade is unchanged: 80px, 900ms, 200ms steps', () => {
     mockMotion(false);
     expect(STAGGER_TRAVEL_PX).toBe(80);

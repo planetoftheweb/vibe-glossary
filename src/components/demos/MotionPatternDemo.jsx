@@ -284,9 +284,11 @@ function StaggerPreview({ reduced: reducedProp }) {
         data-stagger-teach=""
         className="whitespace-normal break-words text-sm leading-relaxed text-zinc-600 dark:text-zinc-300"
       >
-        {mode === 'together'
-          ? `All at once: Inbox, Drafts, and Sent slide ${STAGGER_TRAVEL_PX}px together. No waiting.`
-          : `200ms stagger: Inbox slides ${STAGGER_TRAVEL_PX}px first. Drafts waits 200ms. Sent waits 400ms. Watch Inbox, then Drafts, then Sent.`}
+        {reduced
+          ? 'Reduced motion: Inbox, Drafts, and Sent are already in place. Travel is off.'
+          : mode === 'together'
+            ? `All at once: Inbox, Drafts, and Sent slide ${STAGGER_TRAVEL_PX}px together. No waiting.`
+            : `200ms stagger: Inbox slides ${STAGGER_TRAVEL_PX}px first. Drafts waits 200ms. Sent waits 400ms. Watch Inbox, then Drafts, then Sent.`}
       </p>
       <ul
         ref={wellRef}

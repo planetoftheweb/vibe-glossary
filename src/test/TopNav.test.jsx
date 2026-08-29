@@ -125,9 +125,10 @@ describe('#33 header topic pill shows a real word', () => {
     const label = [...pill.querySelectorAll('span')].find((el) => el.textContent === 'Easing');
     expect(label).toBeTruthy();
     expect(label.className).not.toMatch(/\btruncate\b/);
-    expect(label.className).toMatch(/break-words/);
+    expect(label.className).toMatch(/break-keep/);
+    expect(label.className).not.toMatch(/break-words/);
     expect(label.className).toMatch(/whitespace-normal/);
-    expect(label.className).toMatch(/min-w-\[5\.5rem\]/);
+    expect(label.className).toMatch(/min-w-\[max\(5.5rem,min-content\)\]/);
     expect(label.className).toMatch(/hidden lg:inline-block/);
   });
 
@@ -143,5 +144,87 @@ describe('#33 header topic pill shows a real word', () => {
     expect(right.className).toMatch(/shrink-0/);
     expect(screen.getByRole('button', { name: /What'?s new/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /VibeScore/i })).toBeInTheDocument();
+  });
+});
+
+describe('#42 header topic pill wraps on spaces, not mid-word', () => {
+  const assertWrapAtSpaces = (label) => {
+    expect(label).toBeTruthy();
+    expect(label.className).toMatch(/whitespace-normal/);
+    expect(label.className).toMatch(/break-keep/);
+    expect(label.className).not.toMatch(/break-words/);
+    expect(label.className).not.toMatch(/break-all/);
+    expect(label.className).not.toMatch(/\btruncate\b/);
+    expect(label.className).toMatch(/min-w-\[max\(5.5rem,min-content\)\]/);
+  };
+
+  it('keeps Overlays as a whole word and still wraps Modal / Dialog at the space', () => {
+    render(<TopNav {...defaultProps()} activeItem="modal" />);
+
+    const overlaysPill = screen.getByRole('button', { name: 'Overlays' });
+    expect(overlaysPill).toHaveTextContent('Overlays');
+    const overlaysLabel = [...overlaysPill.querySelectorAll('span')].find((el) => el.textContent === 'Overlays');
+    assertWrapAtSpaces(overlaysLabel);
+
+    const topicPill = screen.getByRole('button', { name: 'Modal / Dialog' });
+    expect(topicPill).toHaveTextContent('Modal / Dialog');
+    const topicLabel = [...topicPill.querySelectorAll('span')].find((el) => el.textContent === 'Modal / Dialog');
+    assertWrapAtSpaces(topicLabel);
+    expect(topicPill.className).toMatch(/text-base/);
+    expect(topicPill.className).not.toMatch(/text-\[10px\]/);
+    expect(topicPill.className).not.toMatch(/text-\[8px\]/);
+  });
+
+  it('keeps Celebration as a whole word on Confetti / Celebration', () => {
+    render(<TopNav {...defaultProps()} activeItem="confetti" activeCatColors={CATEGORY_COLORS.motion} />);
+
+    const topicPill = screen.getByRole('button', { name: 'Confetti / Celebration' });
+    expect(topicPill).toHaveTextContent('Confetti / Celebration');
+    expect(topicPill.textContent).toMatch(/Celebration/);
+    expect(topicPill.textContent).not.toMatch(/Celebrat(?!ion)/);
+    const topicLabel = [...topicPill.querySelectorAll('span')].find((el) => el.textContent === 'Confetti / Celebration');
+    assertWrapAtSpaces(topicLabel);
+    expect(topicPill.className).toMatch(/text-base/);
+    expect(topicPill.className).toMatch(/md:text-lg/);
+  });
+
+  it('does not cover What\'s New / VibeScore when long labels wrap', () => {
+    render(<TopNav {...defaultProps()} activeItem="confetti" activeCatColors={CATEGORY_COLORS.motion} />);
+
+    const left = screen.getByTestId('nav-left-cluster');
+    expect(left.className).toMatch(/min-w-0/);
+    expect(left.className).toMatch(/flex-1/);
+    expect(left.className).toMatch(/overflow-visible/);
+    expect(left.className).not.toMatch(/overflow-hidden/);
+
+    const right = screen.getByTestId('nav-right-cluster');
+    expect(right.className).toMatch(/shrink-0/);
+    expect(screen.getByRole('button', { name: /What'?s new/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /VibeScore/i })).toBeInTheDocument();
+  });
+});
+
+describe('#43 wrapped header stays in flow above the panes', () => {
+  it('keeps min-h-20 and does not pin or clip the header over the Try It pane', () => {
+    const { container } = render(
+      <TopNav {...defaultProps()} activeItem="confetti" activeCatColors={CATEGORY_COLORS.motion} />
+    );
+
+    const header = container.querySelector('header');
+    expect(header).toBeTruthy();
+    expect(header.className).toMatch(/shrink-0/);
+    expect(header.className).toMatch(/\brelative\b/);
+    expect(header.className).not.toMatch(/\bfixed\b/);
+    expect(header.className).not.toMatch(/\babsolute\b/);
+    expect(header.className).not.toMatch(/overflow-hidden/);
+
+    const bar = header.querySelector('[class*="min-h-20"]');
+    expect(bar).toBeTruthy();
+    expect(bar.className).toMatch(/min-h-20/);
+    expect(bar.className).not.toMatch(/(?:^|\s)h-20(?:\s|$)/);
+
+    const topicLabel = [...container.querySelectorAll('span')].find((el) => el.textContent === 'Confetti / Celebration');
+    expect(topicLabel.className).toMatch(/break-keep/);
+    expect(topicLabel.className).not.toMatch(/break-words/);
   });
 });

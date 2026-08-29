@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 function prefersReducedMotion() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
@@ -57,7 +58,28 @@ function kick(setGo) {
 // measurable in px, not a 2-4px fade stub. DESIGN.md: readable at a glance.
 export const STAGGER_TRAVEL_PX = 80;
 export const STAGGER_DURATION_MS = 900;
-export const STAGGER_STEP_MS = 50;
+export const STAGGER_STEP_MS = 200;
+
+/**
+ * Tess #34: snap to translateX(start), let that frame paint, then play to 0.
+ * Replay must do this or the start never commits (2-5px cancel, empty getAnimations).
+ */
+export function commitStartThenPlay(setPhase, flushRoot) {
+  let cancelled = false;
+  flushSync(() => setPhase('start'));
+  if (flushRoot) void flushRoot.offsetWidth;
+  requestAnimationFrame(() => {
+    if (cancelled) return;
+    if (flushRoot) void flushRoot.offsetWidth;
+    requestAnimationFrame(() => {
+      if (cancelled) return;
+      setPhase('end');
+    });
+  });
+  return () => {
+    cancelled = true;
+  };
+}
 
 export const CONFETTI_COUNT = 28;
 export const CONFETTI_SIZE_PX = 22;
@@ -198,38 +220,65 @@ function StaggerPreview({ reduced }) {
     { label: 'Sent', delay: STAGGER_STEP_MS * 2, bar: 'bg-sky-500', well: 'bg-sky-50 dark:bg-sky-950/40' },
   ];
   const [mode, setMode] = useState('stagger');
-  const [go, setGo] = useState(false);
-  const replay = useCallback(() => kick(setGo), []);
-  useEffect(() => { replay(); }, [replay, mode]);
+  const [phase, setPhase] = useState('start');
+  const wellRef = useRef(null);
+  const cancelRef = useRef(null);
+
+  const replay = useCallback(() => {
+    if (cancelRef.current) cancelRef.current();
+    if (reduced) {
+      setPhase('end');
+      return;
+    }
+    cancelRef.current = commitStartThenPlay(setPhase, wellRef.current);
+  }, [reduced]);
+
+  useEffect(() => {
+    replay();
+    return () => {
+      if (cancelRef.current) cancelRef.current();
+    };
+  }, [replay, mode]);
 
   const fromX = `${STAGGER_TRAVEL_PX}px`;
   const toX = '0px';
+  const atStart = phase === 'start' && !reduced;
 
   return (
-    <div className="w-full max-w-lg space-y-4">
+    <div className="min-w-0 w-full max-w-lg space-y-4">
       <div className="flex flex-wrap items-center gap-1">
         <ChipButton onClick={() => setMode('together')} pressed={mode === 'together'} label="Play all at once">
           All at once
         </ChipButton>
-        <ChipButton onClick={() => setMode('stagger')} pressed={mode === 'stagger'} label="Play 50 millisecond stagger">
-          50ms stagger
+        <ChipButton onClick={() => setMode('stagger')} pressed={mode === 'stagger'} label="Play 200 millisecond stagger">
+          200ms stagger
         </ChipButton>
         <button type="button" onClick={replay} aria-label="Replay stagger" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-500">Replay</button>
       </div>
-      <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+      <p
+        data-stagger-teach=""
+        className="whitespace-normal break-words text-sm leading-relaxed text-zinc-600 dark:text-zinc-300"
+      >
         {mode === 'together'
           ? `All at once: Inbox, Drafts, and Sent slide ${STAGGER_TRAVEL_PX}px together. No waiting.`
-          : `50ms stagger: Inbox slides ${STAGGER_TRAVEL_PX}px first. Drafts waits 50ms. Sent waits 100ms. Watch the color bars travel.`}
+          : `200ms stagger: Inbox slides ${STAGGER_TRAVEL_PX}px first. Drafts waits 200ms. Sent waits 400ms. Watch Inbox, then Drafts, then Sent.`}
       </p>
-      <ul data-stagger-mode={mode} data-stagger-well="" className="space-y-3">
+      <ul
+        ref={wellRef}
+        data-stagger-mode={mode}
+        data-stagger-well=""
+        data-stagger-phase={atStart ? 'start' : 'end'}
+        className="space-y-3"
+      >
         {items.map((row) => {
-          const delay = mode === 'stagger' && !reduced ? row.delay : 0;
-          const x = go ? toX : fromX;
+          const shownDelay = mode === 'stagger' && !reduced ? row.delay : 0;
+          const playDelay = atStart ? 0 : shownDelay;
+          const x = atStart ? fromX : toX;
           return (
             <li
               key={row.label}
               data-stagger-row={row.label}
-              data-stagger-delay={`${delay}ms`}
+              data-stagger-delay={`${shownDelay}ms`}
               className={`rounded-xl border border-zinc-200 ${row.well} text-base font-semibold text-zinc-900 shadow-sm dark:border-zinc-700 dark:text-zinc-50`}
             >
               <div
@@ -237,22 +286,23 @@ function StaggerPreview({ reduced }) {
                 data-stagger-travel={String(STAGGER_TRAVEL_PX)}
                 data-stagger-from={`translateX(${fromX})`}
                 data-stagger-to={`translateX(${toX})`}
+                data-stagger-phase={atStart ? 'start' : 'end'}
                 className="flex items-center justify-between"
                 style={{
                   width: `calc(100% - ${STAGGER_TRAVEL_PX}px)`,
                   opacity: 1,
                   transform: `translateX(${x})`,
-                  transitionProperty: 'transform',
+                  transitionProperty: atStart ? 'none' : 'transform',
                   transitionDuration: reduced ? '0ms' : `${STAGGER_DURATION_MS}ms`,
                   transitionTimingFunction: 'ease-out',
-                  transitionDelay: `${delay}ms`,
+                  transitionDelay: `${playDelay}ms`,
                 }}
               >
                 <span className="inline-flex min-h-[52px] items-center gap-3 px-4">
                   <span className={`h-8 w-1.5 rounded-full ${row.bar}`} aria-hidden />
                   {row.label}
                 </span>
-                <span className="mr-3 rounded-full bg-zinc-900 px-2.5 py-1 text-sm font-bold tabular-nums text-white dark:bg-white dark:text-zinc-900">{delay}ms</span>
+                <span className="mr-3 rounded-full bg-zinc-900 px-2.5 py-1 text-sm font-bold tabular-nums text-white dark:bg-white dark:text-zinc-900">{shownDelay}ms</span>
               </div>
             </li>
           );

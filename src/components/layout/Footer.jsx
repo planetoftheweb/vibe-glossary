@@ -24,7 +24,7 @@ export default function Footer() {
           href={CHANGELOG_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:text-zinc-900 dark:hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
           <FileText size={18} />
           Changelog
@@ -33,7 +33,7 @@ export default function Footer() {
           href={REPO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:text-zinc-900 dark:hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
           <Github size={18} />
           GitHub

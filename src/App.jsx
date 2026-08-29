@@ -577,7 +577,7 @@ export default function App() {
                         onClick={toggleLearnMode}
                         aria-pressed={learnMode}
                         aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
-                        className="group relative ml-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent"
+                        className="group relative ml-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] h-11 shrink-0 bg-transparent"
                       >
                         <span
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${

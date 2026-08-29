@@ -93,10 +93,10 @@ function PillDropdown({
   // Icon-only pills ignore this.
   labelFrom = 'lg',
   // DESIGN.md Layout: titles and tags wrap. Do not clip to half a word.
-  // min-content grows the pill to a whole word (Overlays, Celebration);
+  // min-w-0 stops the pill before the search chip (#47);
   // 5.5rem keeps short labels like Easing from collapsing. max-w wraps
   // multi-word titles at spaces so the left cluster cannot cover What's New / VibeScore.
-  labelMaxClass = 'min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]',
+  labelMaxClass = 'min-w-0 max-w-full',
 }) {
   const wrapRef = useRef(null);
   const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
@@ -118,7 +118,7 @@ function PillDropdown({
   }, [isOpen, onClose]);
 
   return (
-    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-[max(5.5rem,min-content)] max-w-full'}`}>
+    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-0 max-w-full'}`}>
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
@@ -696,7 +696,7 @@ export default function TopNav({
       </div>
       <div className="relative flex items-center justify-between gap-2 px-3 sm:px-4 md:px-6 min-h-20">
         {/* Left: Logo + pills. min-w-0 flex-1 keeps this cluster from covering Whats New / VibeScore. Do not overflow-hidden this ancestor: category dropdowns are absolute and would clip. Titles wrap on spaces (DESIGN.md). min-h-20 grows with a wrapped label so the panes below stay visible (#43). */}
-        <div data-testid="nav-left-cluster" className="flex items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-visible pr-2">
+        <div data-testid="nav-left-cluster" className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-visible pr-2">
           <button
             onClick={onGetStarted}
             className="group relative flex items-center gap-2 lg:gap-3 font-bold tracking-tight text-zinc-900 dark:text-white shrink-0"
@@ -744,7 +744,7 @@ export default function TopNav({
 
           {/* Category */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-[max(5.5rem,min-content)]">
+          <div className="hidden md:block min-w-0">
             <PillDropdown
               icon={
                 <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
@@ -754,7 +754,7 @@ export default function TopNav({
               }
               label={activeCat?.name || 'Overlays'}
               labelFrom="lg"
-              labelMaxClass="min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]"
+              labelMaxClass="min-w-0 max-w-full"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
               onClose={() => setOpenDropdown(null)}
@@ -786,7 +786,7 @@ export default function TopNav({
 
           {/* Component */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-[max(5.5rem,min-content)]">
+          <div className="hidden md:block min-w-0">
             <PillDropdown
               icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
               label={activeItemData?.name || 'Modal'}
@@ -822,7 +822,7 @@ export default function TopNav({
 
           {/* Build literacy: Cluster pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-[max(5.5rem,min-content)]">
+            <div className="hidden md:block min-w-0">
               <PillDropdown
                 icon={
                   <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
@@ -832,7 +832,7 @@ export default function TopNav({
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
                 labelFrom="lg"
-                labelMaxClass="min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]"
+                labelMaxClass="min-w-0 max-w-full"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
                 onClose={() => setOpenDropdown(null)}
@@ -866,7 +866,7 @@ export default function TopNav({
 
           {/* Build literacy: Topic pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-[max(5.5rem,min-content)]">
+            <div className="hidden md:block min-w-0">
               <PillDropdown
                 icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
                 label={activeBuildTopicData?.title || 'Pick a topic'}

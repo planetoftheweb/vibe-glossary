@@ -128,7 +128,9 @@ describe('#33 header topic pill shows a real word', () => {
     expect(label.className).toMatch(/break-keep/);
     expect(label.className).not.toMatch(/break-words/);
     expect(label.className).toMatch(/whitespace-normal/);
-    expect(label.className).toMatch(/min-w-\[max\(5.5rem,min-content\)\]/);
+    expect(label.className).toMatch(/min-w-0/);
+    expect(label.className).toMatch(/max-w-full/);
+    expect(label.className).not.toMatch(/min-content/);
     expect(label.className).toMatch(/hidden lg:inline-block/);
   });
 
@@ -155,7 +157,9 @@ describe('#42 header topic pill wraps on spaces, not mid-word', () => {
     expect(label.className).not.toMatch(/break-words/);
     expect(label.className).not.toMatch(/break-all/);
     expect(label.className).not.toMatch(/\btruncate\b/);
-    expect(label.className).toMatch(/min-w-\[max\(5.5rem,min-content\)\]/);
+    expect(label.className).toMatch(/min-w-0/);
+    expect(label.className).toMatch(/max-w-full/);
+    expect(label.className).not.toMatch(/min-content/);
   };
 
   it('keeps Overlays as a whole word and still wraps Modal / Dialog at the space', () => {
@@ -226,5 +230,33 @@ describe('#43 wrapped header stays in flow above the panes', () => {
     const topicLabel = [...container.querySelectorAll('span')].find((el) => el.textContent === 'Confetti / Celebration');
     expect(topicLabel.className).toMatch(/break-keep/);
     expect(topicLabel.className).not.toMatch(/break-words/);
+  });
+});
+
+describe('#47 topic pill does not share pixels with search', () => {
+  it('keeps Easing a whole word and parks search in the shrink-wrapped right cluster', () => {
+    render(<TopNav {...defaultProps()} activeItem="easing" activeCatColors={CATEGORY_COLORS.motion} />);
+
+    const topicPill = screen.getByRole('button', { name: 'Easing' });
+    expect(topicPill).toHaveTextContent('Easing');
+    expect(topicPill.textContent).not.toMatch(/Easi(?!ng)/);
+    const topicLabel = [...topicPill.querySelectorAll('span')].find((el) => el.textContent === 'Easing');
+    expect(topicLabel.className).toMatch(/break-keep/);
+    expect(topicLabel.className).toMatch(/min-w-0/);
+    expect(topicLabel.className).not.toMatch(/min-content/);
+    expect(topicLabel.className).not.toMatch(/\btruncate\b/);
+
+    const left = screen.getByTestId('nav-left-cluster');
+    expect(left.className).toMatch(/flex-wrap/);
+    expect(left.className).toMatch(/min-w-0/);
+    expect(left.className).toMatch(/overflow-visible/);
+    expect(left.className).not.toMatch(/overflow-hidden/);
+    expect(left.contains(topicPill)).toBe(true);
+
+    const right = screen.getByTestId('nav-right-cluster');
+    expect(right.className).toMatch(/shrink-0/);
+    const search = screen.getByRole('button', { name: 'Search (⌘K)' });
+    expect(right.contains(search)).toBe(true);
+    expect(left.contains(search)).toBe(false);
   });
 });

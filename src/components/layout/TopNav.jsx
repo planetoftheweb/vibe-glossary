@@ -694,8 +694,8 @@ export default function TopNav({
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>
       <div className="relative flex items-center justify-between gap-2 px-3 sm:px-4 md:px-6 h-20">
-        {/* Left: Logo + pills. Overflow so long titles cannot cover chrome. */}
-        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-hidden pr-2">
+        {/* Left: Logo + pills. min-w-0 flex-1 keeps this cluster from covering Whats New / VibeScore. Do not overflow-hidden this ancestor: category dropdowns are absolute and would clip. Titles truncate on the label spans. */}
+        <div data-testid="nav-left-cluster" className="flex items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-visible pr-2">
           <button
             onClick={onGetStarted}
             className="group relative flex items-center gap-2 lg:gap-3 font-bold tracking-tight text-zinc-900 dark:text-white shrink-0"

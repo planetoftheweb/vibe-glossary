@@ -17,11 +17,13 @@
  * `mnemonic`: the one line they keep when they forget the rest.
  */
 
+import { MOTION_TOPICS } from './motionTopics.js';
+
 export const DESIGN_LANGUAGE_CLUSTER = {
   id: 'design-language',
   title: 'Design language',
   summary:
-    'Tokens, scales, states, variants, densities. The vocabulary that lets you ask an AI for "the secondary button at md size" instead of "make it look better".',
+    'Tokens, scales, states, variants, densities, plus motion tokens, particle fields, and scroll-linked motion. The vocabulary that lets you ask an AI for "the secondary button at md size" instead of "make it look better".',
   topics: [
     {
       id: 'design-system',
@@ -254,6 +256,7 @@ export const DESIGN_LANGUAGE_CLUSTER = {
         'Duration short, easing curved, choreography ordered, motion reduced for those who need it.',
       relatedGlossaryIds: ['modal', 'toast'],
     },
+    ...MOTION_TOPICS,
     {
       id: 'fidelity',
       title: 'Wireframe vs mockup vs prototype',

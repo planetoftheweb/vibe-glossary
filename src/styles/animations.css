@@ -90,3 +90,145 @@
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+/* Motion extras for the VibeGlossary welcome overlay. Append to the existing stylesheet. */
+
+.vg-text-pool {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgb(9 9 11 / 0.18) 0%, rgb(9 9 11 / 0.55) 48%, rgb(9 9 11 / 0.88) 100%),
+    linear-gradient(180deg, rgb(9 9 11 / 0.25) 0%, rgb(9 9 11 / 0.7) 70%, rgb(9 9 11 / 0.95) 100%);
+}
+
+.vg-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.vg-reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vg-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.vg-word > span {
+  display: inline-block;
+  animation: vg-word-up 700ms ease both;
+}
+
+@keyframes vg-word-up {
+  from {
+    transform: translateY(110%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.vg-bob {
+  animation: vg-bob-float var(--bob-d, 4.6s) ease-in-out infinite;
+  animation-delay: var(--bob, 0s);
+}
+
+@keyframes vg-bob-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.vg-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: vg-marquee 32s linear infinite;
+}
+
+.vg-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes vg-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.vg-scroll-cue {
+  animation: vg-bounce 2s ease-in-out infinite;
+}
+
+@keyframes vg-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.vg-hero-fallback {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vg-text-pool {
+    background: rgb(9 9 11 / 0.72);
+  }
+
+  .vg-reveal,
+  .vg-reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .vg-word > span {
+    animation: none;
+  }
+
+  .vg-bob {
+    animation: none;
+  }
+
+  .vg-marquee-track {
+    animation: none;
+  }
+
+  .vg-scroll-cue {
+    animation: none;
+  }
+
+  .vg-hero-fallback {
+    display: block;
+  }
+}
+
+
+.vg-scroll-card {
+  transform: translate3d(0, var(--sy, 0px), 0) rotate(var(--rot, 0deg)) scale(var(--sc, 1));
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vg-scroll-card {
+    transform: none;
+    will-change: auto;
+  }
+}

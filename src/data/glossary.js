@@ -1,5 +1,6 @@
 import { GLOSSARY_BATCH_2 } from './glossaryBatch2.js';
 import { GLOSSARY_DETAILS } from './glossaryDetails.js';
+import { GLOSSARY_MOTION } from './glossaryMotion.js';
 
 const _RAW_GLOSSARY_DATA = {
   // ─── Overlays ───
@@ -2197,6 +2198,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
   },
 
   ...GLOSSARY_BATCH_2,
+  ...GLOSSARY_MOTION,
 };
 
 /**

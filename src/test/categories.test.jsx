@@ -1,12 +1,12 @@
 import { CATEGORIES, CATEGORY_COLORS } from '../data/categories';
 
 const REQUIRED_COLOR_KEYS = ['text', 'bg', 'border', 'active', 'hover', 'dot', 'accent', 'gradient'];
-const KNOWN_CATEGORY_IDS = ['overlays', 'inputs', 'data', 'forms', 'layout', 'navigation', 'interactions', 'feedback', 'marketing'];
+const KNOWN_CATEGORY_IDS = ['overlays', 'inputs', 'data', 'forms', 'layout', 'navigation', 'interactions', 'motion', 'feedback', 'marketing'];
 
 describe('CATEGORIES', () => {
-  it('is an array with 9 items', () => {
+  it('is an array with 10 items', () => {
     expect(Array.isArray(CATEGORIES)).toBe(true);
-    expect(CATEGORIES).toHaveLength(9);
+    expect(CATEGORIES).toHaveLength(10);
   });
 
   it('each category has required properties: id, name, type, icon, items', () => {
@@ -64,9 +64,9 @@ describe('CATEGORIES', () => {
     expect(uniqueIds.size).toBe(allIds.length);
   });
 
-  it('total item count across all categories equals 98', () => {
+  it('total item count across all categories equals 111', () => {
     const total = CATEGORIES.reduce((sum, category) => sum + category.items.length, 0);
-    expect(total).toBe(98);
+    expect(total).toBe(111);
   });
 
   it('category IDs match the known set', () => {

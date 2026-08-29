@@ -26,6 +26,16 @@ export const RELEASE_ACTION_KINDS = [
 
 export const WHATS_NEW = [
   {
+    id: 'motion-language',
+    version: '0.12.0',
+    date: '2026-08-18',
+    tag: 'module',
+    title: 'Motion language and a scroll landing',
+    blurb: 'Five new Design Language topics: motion tokens, particle fields, scroll-linked motion, reduced motion, and infinite scroll vs pages. The homepage now morphs a particle field as you scroll.',
+    image: null,
+    action: { kind: 'build', id: 'particle-field' },
+  },
+  {
     id: 'protocols-cluster',
     version: '0.11.0',
     date: '2026-08-17',

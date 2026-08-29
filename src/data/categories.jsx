@@ -1,4 +1,4 @@
-import { Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput, MousePointerClick, Megaphone } from 'lucide-react';
+import { Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput, MousePointerClick, Megaphone, Wind } from 'lucide-react';
 
 export const CATEGORY_ICON_REGISTRY = {
   overlays:     Layers,
@@ -10,6 +10,7 @@ export const CATEGORY_ICON_REGISTRY = {
   interactions: MousePointerClick,
   feedback:     MessageSquare,
   marketing:    Megaphone,
+  motion:       Wind,
 };
 
 export const CATEGORY_COLORS = {
@@ -22,6 +23,7 @@ export const CATEGORY_COLORS = {
   forms:        { text: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30', active: 'bg-purple-600 text-white', hover: 'hover:bg-purple-500/10', dot: 'bg-purple-500', accent: 'text-purple-500', gradient: 'from-purple-500 to-fuchsia-600' },
   interactions: { text: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30', active: 'bg-orange-600 text-white', hover: 'hover:bg-orange-500/10', dot: 'bg-orange-500', accent: 'text-orange-500', gradient: 'from-orange-500 to-red-600' },
   marketing:    { text: 'text-pink-400',   bg: 'bg-pink-500/10',   border: 'border-pink-500/30',   active: 'bg-pink-600 text-white',   hover: 'hover:bg-pink-500/10',   dot: 'bg-pink-500',   accent: 'text-pink-500',   gradient: 'from-pink-500 to-rose-600' },
+  motion:       { text: 'text-lime-400',   bg: 'bg-lime-500/10',   border: 'border-lime-500/30',   active: 'bg-lime-600 text-white',   hover: 'hover:bg-lime-500/10',   dot: 'bg-lime-500',   accent: 'text-lime-500',   gradient: 'from-lime-500 to-emerald-600' },
 };
 
 export const CATEGORIES = [
@@ -152,9 +154,30 @@ export const CATEGORIES = [
       { id: 'contextmenu',   name: 'Context Menu' },
       { id: 'dragdrop',      name: 'Drag & Drop' },
       { id: 'lightbox',      name: 'Lightbox' },
-      { id: 'infinitescroll', name: 'Infinite Scroll' },
       { id: 'sharesheet', name: 'Share Sheet' },
       { id: 'kanban', name: 'Kanban Board' },
+    ],
+  },
+  {
+    id: 'motion',
+    name: 'Motion',
+    type: 'Patterns',
+    icon: <Wind size={14} />,
+    items: [
+      { id: 'infinitescroll', name: 'Infinite Scroll' },
+      { id: 'particlefield', name: 'Particle Field' },
+      { id: 'easing', name: 'Easing' },
+      { id: 'parallax', name: 'Parallax' },
+      { id: 'stagger', name: 'Stagger' },
+      { id: 'scrollreveal', name: 'Scroll Reveal' },
+      { id: 'reducedmotion', name: 'Reduced Motion' },
+      { id: 'pagetransition', name: 'Page Transition' },
+      { id: 'spring', name: 'Spring / Bounce' },
+      { id: 'hovermicro', name: 'Hover Micro-interaction' },
+      { id: 'confetti', name: 'Confetti / Celebration' },
+      { id: 'countup', name: 'Count-up / Ticker' },
+      { id: 'sharedmorph', name: 'Shared-element Morph' },
+      { id: 'marquee', name: 'Marquee' },
     ],
   },
   {

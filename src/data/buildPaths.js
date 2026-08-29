@@ -54,7 +54,7 @@ export const BUILD_PATHS = [
     name: 'Design language',
     tagline: 'Tokens, scales, states, variants, contrast, brand: the words designers use',
     description:
-      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes and semantic roles, component states, variants and sizes, density, elevation, radius, motion, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, brand constraints, plus the DESIGN.md contract, rule strengths, page grammar, empty states, loading stability, iconography, and microcopy. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
+      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes and semantic roles, component states, variants and sizes, density, elevation, radius, motion, motion tokens, particle fields, scroll-linked motion, reduced motion, infinite scroll vs pages, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, brand constraints, plus the DESIGN.md contract, rule strengths, page grammar, empty states, loading stability, iconography, and microcopy. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
     quiz: [
       {
         q: 'A named value like "color.primary.500" or "space.4" that stands in for a hard-coded value is a...',
@@ -67,9 +67,9 @@ export const BUILD_PATHS = [
         optionIds: ['contrast-wcag', 'color-palette', 'readable-type', 'design-tokens'],
       },
       {
-        q: 'The state most often skipped, the one that breaks accessibility, is the...',
-        answerId: 'component-states',
-        optionIds: ['component-states', 'variants-sizes', 'density', 'motion'],
+        q: 'An OS setting that means keep the information and drop the spectacle (omit particle fields, do not just shorten loops) is...',
+        answerId: 'reduced-motion',
+        optionIds: ['reduced-motion', 'motion-tokens', 'particle-field', 'motion'],
       },
       {
         q: 'A short list of "we are X, not Y" pairs that tells an AI your product personality is a...',
@@ -290,7 +290,7 @@ export const BUILD_PATHS = [
   {
     id: 'ai-literacy',
     name: 'AI literacy',
-    tagline: 'LLMs, tokens, agents, RAG, MCP: the words behind the magic',
+    tagline: 'LLMs, agents, harnesses, graphs, loops, goals, schedules',
     description:
       'What an LLM actually does, why tokens matter, how the system/user/assistant roles shape behavior, what agents and tool calling really are, and when to reach for RAG vs fine-tuning. The vocabulary that lets you read any AI release post and tell your AI exactly how to behave.',
     quiz: [
@@ -318,6 +318,21 @@ export const BUILD_PATHS = [
         q: 'Searching your own documents, pasting the relevant chunks into the prompt, and asking the model to answer using only that context is...',
         answerId: 'rag',
         optionIds: ['rag', 'fine-tuning', 'tool-calling', 'mcp'],
+      },
+      {
+        q: 'The outer shell around the model (tools, budget, stop, a place to land) is the...',
+        answerId: 'harness',
+        optionIds: ['harness', 'agents', 'prompts-roles', 'mcp'],
+      },
+      {
+        q: 'Designing work as nodes and handoffs, not one wandering agent, is...',
+        answerId: 'graph-engineering',
+        optionIds: ['graph-engineering', 'agents', 'rag', 'tool-calling'],
+      },
+      {
+        q: 'Think, act, observe, repeat is the inner..., and the weekday cron that starts the next run is the outer...',
+        answerId: 'agent-loop',
+        optionIds: ['agent-loop', 'agent-schedules', 'harness', 'agents'],
       },
     ],
   },

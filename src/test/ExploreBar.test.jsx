@@ -166,7 +166,7 @@ describe('expanded panel — category names', () => {
 
     await user.click(screen.getByTitle('View progress'));
 
-    expect(CATEGORIES).toHaveLength(9);
+    expect(CATEGORIES).toHaveLength(10);
 
     for (const cat of CATEGORIES) {
       expect(screen.getByText(cat.name)).toBeInTheDocument();

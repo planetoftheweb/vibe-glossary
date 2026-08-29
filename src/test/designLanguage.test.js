@@ -14,8 +14,8 @@ describe('DESIGN_LANGUAGE_CLUSTER', () => {
     expect(DESIGN_LANGUAGE_CLUSTER.title.length).toBeGreaterThan(0);
   });
 
-  it('has at least 18 topics (13 original + 5 new)', () => {
-    expect(topics.length).toBeGreaterThanOrEqual(18);
+  it('has at least 23 topics (18 prior + 5 motion)', () => {
+    expect(topics.length).toBeGreaterThanOrEqual(23);
   });
 
   it('has unique topic ids', () => {
@@ -62,7 +62,7 @@ describe('Design Language topic shape', () => {
 });
 
 describe('New topics exist', () => {
-  const newTopicIds = ['contrast-wcag', 'readable-type', 'design-contract', 'one-primary-cta', 'brand-constraints'];
+  const newTopicIds = ['contrast-wcag', 'readable-type', 'design-contract', 'one-primary-cta', 'brand-constraints', 'motion-tokens', 'particle-field', 'scroll-linked-motion', 'reduced-motion', 'infinite-vs-pages'];
 
   it.each(newTopicIds)('%s is present in the cluster', (id) => {
     expect(topics.find(t => t.id === id)).toBeDefined();

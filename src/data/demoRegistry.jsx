@@ -2,6 +2,13 @@ import { lazy } from 'react';
 
 /** Glossary batch 2, shared compact live preview */
 const CompactPatternDemo = lazy(() => import('../components/demos/CompactPatternDemo'));
+const MotionPatternDemo = lazy(() => import('../components/demos/MotionPatternDemo'));
+
+const MOTION_DEMO_IDS = [
+  'particlefield', 'easing', 'parallax', 'stagger', 'scrollreveal',
+  'reducedmotion', 'pagetransition', 'spring', 'hovermicro', 'confetti',
+  'countup', 'sharedmorph', 'marquee',
+];
 
 const BATCH2_DEMO_IDS = [
   'activitystream', 'banner', 'bottomnav', 'chatthread', 'codeblock', 'colorpicker',
@@ -15,6 +22,7 @@ const BATCH2_DEMO_IDS = [
 ];
 
 const batch2Registry = Object.fromEntries(BATCH2_DEMO_IDS.map((id) => [id, CompactPatternDemo]));
+const motionRegistry = Object.fromEntries(MOTION_DEMO_IDS.map((id) => [id, MotionPatternDemo]));
 
 export const DEMO_REGISTRY = {
   // Overlays
@@ -77,4 +85,5 @@ export const DEMO_REGISTRY = {
   faq:         lazy(() => import('../components/demos/marketing/FaqDemo')),
 
   ...batch2Registry,
+  ...motionRegistry,
 };

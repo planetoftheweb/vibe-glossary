@@ -35,5 +35,25 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      (function () {
+        var shown = false;
+        function showRefresh() {
+          if (shown) return;
+          var root = document.getElementById('root');
+          if (root && root.childElementCount) return;
+          shown = true;
+          var wrap = document.createElement('div');
+          wrap.setAttribute('data-boot-fallback', '');
+          wrap.style.cssText = 'font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;background:#09090b;color:#f4f4f5;text-align:center';
+          wrap.innerHTML = '<p style="font-size:16px;max-width:28rem;line-height:1.5">This page needs a refresh to load the latest version.</p><button type="button" style="min-height:44px;padding:0 20px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font-size:14px;font-weight:600;cursor:pointer">Refresh</button>';
+          wrap.querySelector('button').onclick = function () { location.reload(); };
+          document.body.appendChild(wrap);
+        }
+        var mod = document.querySelector('script[type="module"]');
+        if (mod) mod.addEventListener('error', showRefresh);
+        window.setTimeout(showRefresh, 6000);
+      })();
+    </script>
   </body>
 </html>

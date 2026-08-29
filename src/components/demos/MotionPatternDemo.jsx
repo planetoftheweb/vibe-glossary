@@ -9,7 +9,7 @@ function prefersReducedMotion() {
   }
 }
 
-function Frame({ title, children, fill = false }) {
+function Frame({ title, children, fill = false, clip = true }) {
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-zinc-50/80 dark:bg-zinc-950/40">
       <div className="shrink-0 border-b border-zinc-200/80 px-4 pb-3 pt-4 dark:border-zinc-800/80 sm:px-6">
@@ -18,7 +18,7 @@ function Frame({ title, children, fill = false }) {
         </p>
         <p className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">{title}</p>
       </div>
-      <div className={`flex min-h-0 flex-1 overflow-auto p-4 sm:p-6 ${fill ? 'items-stretch' : 'items-center justify-center'}`}>
+      <div className={`flex min-h-0 flex-1 ${clip ? 'overflow-auto' : 'overflow-visible'} p-4 sm:p-6 ${fill ? 'items-stretch' : 'items-center justify-center'}`}>
         {children}
       </div>
     </div>
@@ -52,6 +52,19 @@ function kick(setGo) {
     requestAnimationFrame(() => setGo(true));
   });
 }
+
+// Glanceable motion constants. Tess #34/#35: travel and pieces must be
+// measurable in px, not a 2-4px fade stub. DESIGN.md: readable at a glance.
+export const STAGGER_TRAVEL_PX = 80;
+export const STAGGER_DURATION_MS = 900;
+export const STAGGER_STEP_MS = 50;
+
+export const CONFETTI_COUNT = 28;
+export const CONFETTI_SIZE_PX = 22;
+export const CONFETTI_SPREAD_PX = 200;
+export const CONFETTI_FLY_MS = 2000;
+export const CONFETTI_FADE_DELAY_MS = 1600;
+export const CONFETTI_FADE_MS = 700;
 
 const EASING_TRAVELERS = [
   { id: 'ease-out', label: 'Ease-out', timing: 'ease-out' },
@@ -181,13 +194,16 @@ function ParallaxPreview({ reduced }) {
 function StaggerPreview({ reduced }) {
   const items = [
     { label: 'Inbox', delay: 0, bar: 'bg-indigo-600', well: 'bg-white dark:bg-zinc-900' },
-    { label: 'Drafts', delay: 50, bar: 'bg-indigo-500', well: 'bg-indigo-50 dark:bg-indigo-950/60' },
-    { label: 'Sent', delay: 100, bar: 'bg-sky-500', well: 'bg-sky-50 dark:bg-sky-950/40' },
+    { label: 'Drafts', delay: STAGGER_STEP_MS, bar: 'bg-indigo-500', well: 'bg-indigo-50 dark:bg-indigo-950/60' },
+    { label: 'Sent', delay: STAGGER_STEP_MS * 2, bar: 'bg-sky-500', well: 'bg-sky-50 dark:bg-sky-950/40' },
   ];
   const [mode, setMode] = useState('stagger');
   const [go, setGo] = useState(false);
   const replay = useCallback(() => kick(setGo), []);
   useEffect(() => { replay(); }, [replay, mode]);
+
+  const fromX = `${STAGGER_TRAVEL_PX}px`;
+  const toX = '0px';
 
   return (
     <div className="w-full max-w-lg space-y-4">
@@ -201,18 +217,43 @@ function StaggerPreview({ reduced }) {
         <button type="button" onClick={replay} aria-label="Replay stagger" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-500">Replay</button>
       </div>
       <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-        {mode === 'together' ? 'All at once: Inbox, Drafts, and Sent rise together. No waiting.' : '50ms stagger: Inbox moves first. Drafts waits 50ms. Sent waits 100ms.'}
+        {mode === 'together'
+          ? `All at once: Inbox, Drafts, and Sent slide ${STAGGER_TRAVEL_PX}px together. No waiting.`
+          : `50ms stagger: Inbox slides ${STAGGER_TRAVEL_PX}px first. Drafts waits 50ms. Sent waits 100ms. Watch the color bars travel.`}
       </p>
-      <ul data-stagger-mode={mode} className="space-y-3">
+      <ul data-stagger-mode={mode} data-stagger-well="" className="space-y-3">
         {items.map((row) => {
           const delay = mode === 'stagger' && !reduced ? row.delay : 0;
+          const x = go ? toX : fromX;
           return (
-            <li key={row.label} data-stagger-row={row.label} data-stagger-delay={`${delay}ms`} className={`flex items-center justify-between overflow-hidden rounded-xl border border-zinc-200 ${row.well} text-base font-semibold text-zinc-900 shadow-sm dark:border-zinc-700 dark:text-zinc-50`} style={{ opacity: go ? 1 : 0, transform: go ? 'translateX(0)' : 'translateX(-36px)', transitionProperty: 'opacity, transform', transitionDuration: reduced ? '0ms' : '520ms', transitionTimingFunction: 'ease-out', transitionDelay: `${delay}ms` }}>
-              <span className="inline-flex min-h-[52px] items-center gap-3 px-4">
-                <span className={`h-8 w-1.5 rounded-full ${row.bar}`} aria-hidden />
-                {row.label}
-              </span>
-              <span className="mr-3 rounded-full bg-zinc-900 px-2.5 py-1 text-sm font-bold tabular-nums text-white dark:bg-white dark:text-zinc-900">{delay}ms</span>
+            <li
+              key={row.label}
+              data-stagger-row={row.label}
+              data-stagger-delay={`${delay}ms`}
+              className={`rounded-xl border border-zinc-200 ${row.well} text-base font-semibold text-zinc-900 shadow-sm dark:border-zinc-700 dark:text-zinc-50`}
+            >
+              <div
+                data-stagger-mover=""
+                data-stagger-travel={String(STAGGER_TRAVEL_PX)}
+                data-stagger-from={`translateX(${fromX})`}
+                data-stagger-to={`translateX(${toX})`}
+                className="flex items-center justify-between"
+                style={{
+                  width: `calc(100% - ${STAGGER_TRAVEL_PX}px)`,
+                  opacity: 1,
+                  transform: `translateX(${x})`,
+                  transitionProperty: 'transform',
+                  transitionDuration: reduced ? '0ms' : `${STAGGER_DURATION_MS}ms`,
+                  transitionTimingFunction: 'ease-out',
+                  transitionDelay: `${delay}ms`,
+                }}
+              >
+                <span className="inline-flex min-h-[52px] items-center gap-3 px-4">
+                  <span className={`h-8 w-1.5 rounded-full ${row.bar}`} aria-hidden />
+                  {row.label}
+                </span>
+                <span className="mr-3 rounded-full bg-zinc-900 px-2.5 py-1 text-sm font-bold tabular-nums text-white dark:bg-white dark:text-zinc-900">{delay}ms</span>
+              </div>
             </li>
           );
         })}
@@ -469,8 +510,8 @@ function ConfettiPreview({ reduced }) {
   const [burst, setBurst] = useState(false);
   const [toast, setToast] = useState(false);
   const [fly, setFly] = useState(false);
-  const colors = ['bg-indigo-500', 'bg-amber-400', 'bg-emerald-400', 'bg-rose-500', 'bg-sky-400', 'bg-violet-500'];
-  const bits = Array.from({ length: 36 }, (_, i) => i);
+  const colors = ['bg-indigo-400', 'bg-amber-300', 'bg-emerald-300', 'bg-rose-400', 'bg-sky-300', 'bg-white'];
+  const bits = Array.from({ length: CONFETTI_COUNT }, (_, i) => i);
 
   useEffect(() => {
     if (!burst || reduced) {
@@ -505,22 +546,34 @@ function ConfettiPreview({ reduced }) {
       <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
         Tap Complete order for a bright burst. Replay to arm it again.
       </p>
-      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-950 px-5 py-12 dark:border-zinc-700" data-confetti-stage="">
+      <div
+        className="relative flex min-h-[24rem] items-center justify-center overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-950 px-5 py-10 dark:border-zinc-700"
+        data-confetti-stage=""
+        data-confetti-spread={String(CONFETTI_SPREAD_PX)}
+        data-confetti-count={String(CONFETTI_COUNT)}
+      >
         {burst && !reduced && bits.map((i) => {
-          const angle = (i / 36) * Math.PI * 2;
-          const dist = 88 + (i % 5) * 14;
-          const wide = i % 3 === 1;
+          const angle = (i / CONFETTI_COUNT) * Math.PI * 2;
+          const dist = CONFETTI_SPREAD_PX + (i % 5) * 16;
+          const size = i % 3 === 0 ? CONFETTI_SIZE_PX + 6 : CONFETTI_SIZE_PX;
+          const tall = i % 2 === 0 ? size : Math.round(size * 0.55);
           return (
             <span
               key={i}
               data-confetti-bit=""
               data-confetti-color={colors[i % colors.length]}
+              data-confetti-size={String(size)}
+              data-confetti-duration={String(CONFETTI_FLY_MS + CONFETTI_FADE_MS)}
               aria-hidden
-              className={`pointer-events-none absolute left-1/2 top-1/2 ${wide ? 'h-3 w-5' : 'h-3.5 w-3.5'} ${i % 2 === 0 ? 'rounded-full' : 'rounded-sm'} ${colors[i % colors.length]}`}
+              className={`pointer-events-none absolute left-1/2 top-1/2 ${i % 2 === 0 ? 'rounded-full' : 'rounded-sm'} ${colors[i % colors.length]}`}
               style={{
-                transform: fly ? `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist - 28}px) rotate(${i * 24}deg)` : 'translate(-50%, -50%)',
+                width: `${size}px`,
+                height: `${tall}px`,
+                transform: fly
+                  ? `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist - 36}px) rotate(${i * 28}deg)`
+                  : 'translate(-50%, -50%)',
                 opacity: fly ? 0 : 1,
-                transition: 'transform 900ms ease-out, opacity 900ms ease-out',
+                transition: `transform ${CONFETTI_FLY_MS}ms ease-out, opacity ${CONFETTI_FADE_MS}ms linear ${CONFETTI_FADE_DELAY_MS}ms`,
               }}
             />
           );
@@ -656,7 +709,8 @@ export default function MotionPatternDemo({ demoId }) {
   }
 
   const fill = demoId === 'parallax' || demoId === 'scrollreveal';
-  return <Frame title={title} fill={fill}>{body}</Frame>;
+  const clip = demoId !== 'stagger';
+  return <Frame title={title} fill={fill} clip={clip}>{body}</Frame>;
 }
 
 export { EASING_TRAVELERS };

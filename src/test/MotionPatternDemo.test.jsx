@@ -1,6 +1,17 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MotionPatternDemo, { EASING_TRAVELERS } from '../components/demos/MotionPatternDemo';
+import MotionPatternDemo, {
+  EASING_TRAVELERS,
+  STAGGER_TRAVEL_PX,
+  STAGGER_DURATION_MS,
+  STAGGER_STEP_MS,
+  CONFETTI_COUNT,
+  CONFETTI_SIZE_PX,
+  CONFETTI_SPREAD_PX,
+  CONFETTI_FLY_MS,
+  CONFETTI_FADE_DELAY_MS,
+  CONFETTI_FADE_MS,
+} from '../components/demos/MotionPatternDemo';
 
 function mockMotion(reduce) {
   window.matchMedia = vi.fn().mockImplementation((query) => ({
@@ -67,10 +78,34 @@ describe('#25 motion pattern previews are real', () => {
     expect([...rows].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '50ms', '100ms']);
     expect(new Set([...rows].map((r) => r.getAttribute('data-stagger-delay'))).size).toBe(3);
     expect(document.querySelector('[data-stagger-mode="stagger"]')).toBeTruthy();
-    expect(screen.getByText(/Inbox moves first/i)).toBeInTheDocument();
+    expect(screen.getByText(/Inbox slides 80px first/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Play all at once/i }));
     expect([...document.querySelectorAll('[data-stagger-row]')].every((r) => r.getAttribute('data-stagger-delay') === '0ms')).toBe(true);
     expect(screen.getByRole('button', { name: /Replay stagger/i })).toBeInTheDocument();
+  });
+
+  it('#34 stagger travel is a large measurable px slide, list stays visible', () => {
+    expect(STAGGER_TRAVEL_PX).toBeGreaterThanOrEqual(24);
+    expect(STAGGER_DURATION_MS).toBeGreaterThanOrEqual(700);
+    expect(STAGGER_STEP_MS).toBe(50);
+    render(<MotionPatternDemo demoId="stagger" />);
+    expect(screen.getByText('Inbox')).toBeVisible();
+    expect(screen.getByText('Drafts')).toBeVisible();
+    expect(screen.getByText('Sent')).toBeVisible();
+    const movers = document.querySelectorAll('[data-stagger-mover]');
+    expect(movers).toHaveLength(3);
+    movers.forEach((el) => {
+      const travel = Number(el.getAttribute('data-stagger-travel'));
+      expect(travel).toBeGreaterThanOrEqual(24);
+      expect(travel).toBe(STAGGER_TRAVEL_PX);
+      expect(el.style.opacity).toBe('1');
+      expect(el.style.transform).toMatch(/translateX\((\d+)px\)/);
+      const px = Number(el.style.transform.match(/translateX\((\d+)px\)/)[1]);
+      expect(px === 0 || px >= 24).toBe(true);
+      expect(el.getAttribute('data-stagger-from')).toBe(`translateX(${STAGGER_TRAVEL_PX}px)`);
+      expect(el.getAttribute('data-stagger-to')).toBe('translateX(0px)');
+      expect(el.style.transitionDuration).toBe(`${STAGGER_DURATION_MS}ms`);
+    });
   });
 
   it('Scroll Reveal is its own scroll panel with Reset', () => {
@@ -115,11 +150,34 @@ describe('#25 motion pattern previews are real', () => {
     expect(screen.queryByText('Order complete')).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Complete order' }));
     expect(screen.getByText('Order complete')).toBeInTheDocument();
-    expect(document.querySelectorAll('[data-confetti-bit]').length).toBeGreaterThanOrEqual(24);
+    expect(document.querySelectorAll('[data-confetti-bit]').length).toBe(CONFETTI_COUNT);
     const burstColors = new Set([...document.querySelectorAll('[data-confetti-color]')].map((el) => el.getAttribute('data-confetti-color')));
     expect(burstColors.size).toBeGreaterThanOrEqual(4);
     expect(screen.getByRole('button', { name: /Replay confetti/i })).toBeInTheDocument();
     expect(screen.getByText(/Fires once on a real win/i)).toBeInTheDocument();
+  });
+
+  it('#35 confetti pieces are large, wide, and stay on screen', async () => {
+    const user = userEvent.setup();
+    expect(CONFETTI_COUNT).toBeGreaterThanOrEqual(20);
+    expect(CONFETTI_SIZE_PX).toBeGreaterThanOrEqual(16);
+    expect(CONFETTI_SPREAD_PX).toBeGreaterThanOrEqual(120);
+    expect(CONFETTI_FLY_MS).toBeGreaterThanOrEqual(1600);
+    expect(CONFETTI_FADE_DELAY_MS).toBeGreaterThanOrEqual(1000);
+    expect(CONFETTI_FADE_MS).toBeGreaterThanOrEqual(400);
+    render(<MotionPatternDemo demoId="confetti" />);
+    await user.click(screen.getByRole('button', { name: 'Complete order' }));
+    const stage = document.querySelector('[data-confetti-stage]');
+    expect(Number(stage.getAttribute('data-confetti-spread'))).toBeGreaterThanOrEqual(120);
+    expect(Number(stage.getAttribute('data-confetti-count'))).toBe(CONFETTI_COUNT);
+    const bits = [...document.querySelectorAll('[data-confetti-bit]')];
+    expect(bits.length).toBeGreaterThanOrEqual(20);
+    bits.forEach((el) => {
+      expect(Number(el.getAttribute('data-confetti-size'))).toBeGreaterThanOrEqual(16);
+      expect(parseInt(el.style.width, 10)).toBeGreaterThanOrEqual(16);
+      expect(Number(el.getAttribute('data-confetti-duration'))).toBeGreaterThanOrEqual(1600);
+      expect(el.style.transition).toMatch(/1600ms/);
+    });
   });
 
   it('Hover Micro still lifts on hover', () => {

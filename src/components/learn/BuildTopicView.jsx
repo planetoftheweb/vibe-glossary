@@ -5,6 +5,7 @@ import {
 import DefinitionPanel from '../ui/DefinitionPanel';
 import QuizCard from './QuizCard';
 import TopicTierBadge from './TopicTierBadge';
+import HoverTip from '../ui/HoverTip';
 import { getBuildClusterColors } from '../../data/buildLiteracy';
 import { tierFor } from '../../lib/scoring';
 
@@ -50,10 +51,12 @@ export default function BuildTopicView({
       {prevTopic && (
         <button
           onClick={() => onSelectTopic(prevTopic.id)}
-          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
           aria-label={`Previous topic: ${prevTopic.title}`}
         >
-          <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
+            <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+          </span>
           <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
             <span className="block text-lg font-semibold text-white">{prevTopic.title}</span>
@@ -63,10 +66,12 @@ export default function BuildTopicView({
       {nextTopic && (
         <button
           onClick={() => onSelectTopic(nextTopic.id)}
-          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
           aria-label={`Next topic: ${nextTopic.title}`}
         >
-          <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
+            <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+          </span>
           <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
             <span className="block text-lg font-semibold text-white">{nextTopic.title}</span>
@@ -94,8 +99,8 @@ export default function BuildTopicView({
               type="button"
               onClick={toggleLearnMode}
               aria-pressed={learnMode}
-              title={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each topic)'}
-              className={`ml-1 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
+              aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each topic)'}
+              className={`group relative ml-1 inline-flex items-center gap-1.5 px-2.5 py-1 before:absolute before:inset-y-[-8px] before:inset-x-[-4px] before:content-[''] rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
                 learnMode
                   ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-500'
                   : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -103,6 +108,7 @@ export default function BuildTopicView({
             >
               <GraduationCap size={13} />
               {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+              <HoverTip text={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each topic)'} />
             </button>
             <TopicTierBadge
               tier={topicTier || tierFor({ visited: true, attempts: pastAttempts })}
@@ -119,11 +125,11 @@ export default function BuildTopicView({
             <button
               type="button"
               onClick={onCloseInfo}
-              className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-              title="Close panel"
+              className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               aria-label="Close definition panel"
             >
               <PanelLeftClose size={18} />
+              <HoverTip text="Close panel" align="right" />
             </button>
           )}
         </div>
@@ -197,8 +203,7 @@ export default function BuildTopicView({
                 key={sib.id}
                 type="button"
                 onClick={() => onSelectTopic(sib.id)}
-                className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${cc.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
-                title={sib.summary || sib.title}
+                className={`relative px-3 py-1 min-h-[44px] rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${cc.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
               >
                 {sib.title}
               </button>

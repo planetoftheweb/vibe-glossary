@@ -38,7 +38,7 @@ export default function DefinitionPanel({
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="definition-details"
-            className={`mt-3 inline-flex items-center gap-1.5 text-sm lg:text-base font-semibold ${accent} hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900 ${categoryColors?.ring || 'focus-visible:ring-indigo-500'} rounded`}
+            className={`relative mt-3 inline-flex items-center gap-1.5 min-h-[44px] text-sm lg:text-base font-semibold ${accent} hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900 ${categoryColors?.ring || 'focus-visible:ring-indigo-500'} rounded`}
           >
             <span>{open ? 'Show less' : 'Read more about when to use this'}</span>
             <ChevronDown

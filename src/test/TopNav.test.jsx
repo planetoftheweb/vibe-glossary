@@ -109,3 +109,39 @@ describe('settings menu (#14)', () => {
     expect(screen.queryByText('Dark Mode')).toBeNull();
   });
 });
+
+describe('#33 header topic pill shows a real word', () => {
+  it('renders Easing in full, wraps instead of truncating to E.., and stays at text-base', () => {
+    render(<TopNav {...defaultProps()} activeItem="easing" activeCatColors={CATEGORY_COLORS.motion} />);
+
+    const pill = screen.getByRole('button', { name: 'Easing' });
+    expect(pill).toHaveTextContent('Easing');
+    expect(pill.textContent).not.toMatch(/E\.\./);
+    expect(pill.className).toMatch(/text-base/);
+    expect(pill.className).toMatch(/md:text-lg/);
+    expect(pill.className).not.toMatch(/text-\[10px\]/);
+    expect(pill.className).not.toMatch(/text-\[8px\]/);
+
+    const label = [...pill.querySelectorAll('span')].find((el) => el.textContent === 'Easing');
+    expect(label).toBeTruthy();
+    expect(label.className).not.toMatch(/\btruncate\b/);
+    expect(label.className).toMatch(/break-words/);
+    expect(label.className).toMatch(/whitespace-normal/);
+    expect(label.className).toMatch(/min-w-\[5\.5rem\]/);
+    expect(label.className).toMatch(/hidden lg:inline-block/);
+  });
+
+  it('does not cover What\'s New / VibeScore: left cluster still shrinks, right cluster does not', () => {
+    render(<TopNav {...defaultProps()} activeItem="easing" activeCatColors={CATEGORY_COLORS.motion} />);
+
+    const left = screen.getByTestId('nav-left-cluster');
+    expect(left.className).toMatch(/min-w-0/);
+    expect(left.className).toMatch(/flex-1/);
+    expect(left.className).not.toMatch(/overflow-hidden/);
+
+    const right = screen.getByTestId('nav-right-cluster');
+    expect(right.className).toMatch(/shrink-0/);
+    expect(screen.getByRole('button', { name: /What'?s new/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /VibeScore/i })).toBeInTheDocument();
+  });
+});

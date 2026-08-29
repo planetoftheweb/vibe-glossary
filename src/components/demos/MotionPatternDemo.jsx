@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 
 function prefersReducedMotion() {
@@ -8,6 +8,27 @@ function prefersReducedMotion() {
   } catch {
     return false;
   }
+}
+
+function subscribeReducedMotion(onStoreChange) {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return () => {};
+  try {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = () => onStoreChange();
+    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', handler);
+    else if (typeof mq.addListener === 'function') mq.addListener(handler);
+    return () => {
+      if (typeof mq.removeEventListener === 'function') mq.removeEventListener('change', handler);
+      else if (typeof mq.removeListener === 'function') mq.removeListener(handler);
+    };
+  } catch {
+    return () => {};
+  }
+}
+
+/** Live OS preference. Replay must not close over a stale first-paint value. */
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
 }
 
 function Frame({ title, children, fill = false, clip = true }) {
@@ -213,7 +234,7 @@ function ParallaxPreview({ reduced }) {
   );
 }
 
-function StaggerPreview({ reduced }) {
+function StaggerPreview({ reduced: reducedProp }) {
   const items = [
     { label: 'Inbox', delay: 0, bar: 'bg-indigo-600', well: 'bg-white dark:bg-zinc-900' },
     { label: 'Drafts', delay: STAGGER_STEP_MS, bar: 'bg-indigo-500', well: 'bg-indigo-50 dark:bg-indigo-950/60' },
@@ -223,10 +244,14 @@ function StaggerPreview({ reduced }) {
   const [phase, setPhase] = useState('start');
   const wellRef = useRef(null);
   const cancelRef = useRef(null);
+  // Re-read matchMedia here. A first-paint `reduced` prop is not enough:
+  // DevTools / OS can flip prefers-reduced-motion after mount (#44).
+  const reduced = usePrefersReducedMotion() || reducedProp;
 
   const replay = useCallback(() => {
     if (cancelRef.current) cancelRef.current();
-    if (reduced) {
+    // Honor the live OS preference on Replay, not a stale render-time flag.
+    if (prefersReducedMotion() || reduced) {
       setPhase('end');
       return;
     }
@@ -292,7 +317,7 @@ function StaggerPreview({ reduced }) {
                   width: `calc(100% - ${STAGGER_TRAVEL_PX}px)`,
                   opacity: 1,
                   transform: `translateX(${x})`,
-                  transitionProperty: atStart ? 'none' : 'transform',
+                  transitionProperty: (atStart || reduced) ? 'none' : 'transform',
                   transitionDuration: reduced ? '0ms' : `${STAGGER_DURATION_MS}ms`,
                   transitionTimingFunction: 'ease-out',
                   transitionDelay: `${playDelay}ms`,

@@ -93,10 +93,10 @@ function PillDropdown({
   // Icon-only pills ignore this.
   labelFrom = 'lg',
   // DESIGN.md Layout: titles and tags wrap. Do not clip to half a word.
-  // min-w-0 stops the pill before the search chip (#47);
+  // min-content grows the pill to a whole word (Overlays, Celebration);
   // 5.5rem keeps short labels like Easing from collapsing. max-w wraps
-  // multi-word titles at spaces so the left cluster cannot cover What's New / VibeScore.
-  labelMaxClass = 'min-w-0 max-w-full',
+  // multi-word titles at spaces. The left cluster flex-wraps leftover pills onto the next header row so this min-content cannot paint over Search (#47).
+  labelMaxClass = 'min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]',
 }) {
   const wrapRef = useRef(null);
   const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
@@ -118,7 +118,7 @@ function PillDropdown({
   }, [isOpen, onClose]);
 
   return (
-    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-0 max-w-full'}`}>
+    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-[max(5.5rem,min-content)] max-w-full'}`}>
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
@@ -695,7 +695,7 @@ export default function TopNav({
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>
       <div className="relative flex items-center justify-between gap-2 px-3 sm:px-4 md:px-6 min-h-20">
-        {/* Left: Logo + pills. min-w-0 flex-1 keeps this cluster from covering Whats New / VibeScore. Do not overflow-hidden this ancestor: category dropdowns are absolute and would clip. Titles wrap on spaces (DESIGN.md). min-h-20 grows with a wrapped label so the panes below stay visible (#43). */}
+        {/* Left: Logo + pills. min-w-0 flex-1 stops this cluster before Search so the pill cannot share pixels with the chip (#47). flex-wrap sends extra pills to the next header row; extra height stays in-flow and pushes panes down (#43). overflow-visible so category dropdowns do not clip. Titles wrap on spaces, not mid-word (DESIGN.md Layout). */}
         <div data-testid="nav-left-cluster" className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-visible pr-2">
           <button
             onClick={onGetStarted}
@@ -744,7 +744,7 @@ export default function TopNav({
 
           {/* Category */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-0">
+          <div className="hidden md:block min-w-[max(5.5rem,min-content)] max-w-full">
             <PillDropdown
               icon={
                 <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
@@ -754,7 +754,7 @@ export default function TopNav({
               }
               label={activeCat?.name || 'Overlays'}
               labelFrom="lg"
-              labelMaxClass="min-w-0 max-w-full"
+              labelMaxClass="min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
               onClose={() => setOpenDropdown(null)}
@@ -786,7 +786,7 @@ export default function TopNav({
 
           {/* Component */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-0">
+          <div className="hidden md:block min-w-[max(5.5rem,min-content)] max-w-full">
             <PillDropdown
               icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
               label={activeItemData?.name || 'Modal'}
@@ -822,7 +822,7 @@ export default function TopNav({
 
           {/* Build literacy: Cluster pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-0">
+            <div className="hidden md:block min-w-[max(5.5rem,min-content)] max-w-full">
               <PillDropdown
                 icon={
                   <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
@@ -832,7 +832,7 @@ export default function TopNav({
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
                 labelFrom="lg"
-                labelMaxClass="min-w-0 max-w-full"
+                labelMaxClass="min-w-[max(5.5rem,min-content)] max-w-[12rem] lg:max-w-[14rem] xl:max-w-[16rem]"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
                 onClose={() => setOpenDropdown(null)}
@@ -866,7 +866,7 @@ export default function TopNav({
 
           {/* Build literacy: Topic pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-0">
+            <div className="hidden md:block min-w-[max(5.5rem,min-content)] max-w-full">
               <PillDropdown
                 icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
                 label={activeBuildTopicData?.title || 'Pick a topic'}
@@ -901,7 +901,7 @@ export default function TopNav({
 
         </div>
 
-        {/* Right: Search + Menu. shrink-0 + z-20 so What's New / VibeScore stay visible (#15). */}
+        {/* Right: Search + Menu. shrink-0 + z-20 so Search, What's New, and VibeScore keep their own pixels (#15, #47). */}
         <div data-testid="nav-right-cluster" className="flex items-center gap-2 shrink-0 relative z-20">
           {/* Learning + Help icon-only pills, only at 2xl+ where there's room.
               Below that they live inside the hamburger menu instead. */}
@@ -1041,7 +1041,7 @@ export default function TopNav({
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
               data-tour="search"
-              className="group relative hidden md:flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-2.5 py-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+              className="group relative hidden md:flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] shrink-0 px-2.5 py-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
               aria-label="Search (⌘K)"
             >
               <Search size={20} />

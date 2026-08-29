@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import HoverTip from '../ui/HoverTip';
 
 /**
  * Compact VibeScore pill for the top nav. Shows the running total + the
@@ -28,22 +29,22 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel }) {
       type="button"
       onClick={onClick}
       aria-label={ariaLabel || `VibeScore ${total}, level ${level?.current?.label || ''}`}
-      title="See your VibeScore breakdown"
-      className="relative inline-flex items-center gap-2 px-3 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+      className="group relative inline-flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
     >
       <Sparkles size={16} className="text-amber-500 shrink-0" />
       <span className="flex flex-col items-start leading-tight">
         <span className="text-sm font-bold text-zinc-900 dark:text-white tabular-nums">
           {total}
         </span>
-        <span className="hidden xl:inline text-[11px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-semibold">
+        <span className="hidden xl:inline text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-semibold">
           {level?.current?.label || 'Lurker'}
         </span>
       </span>
+      <HoverTip text="See your VibeScore breakdown" align="right" />
       {delta != null && (
         <span
           aria-hidden
-          className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-500 text-white shadow animate-fade-in"
+          className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500 text-white shadow animate-fade-in"
         >
           +{delta}
         </span>

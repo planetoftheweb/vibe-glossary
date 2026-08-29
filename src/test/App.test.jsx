@@ -101,6 +101,7 @@ const clampPanelWidth = (x, width) =>
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.classList.remove('dark');
+  window.history.replaceState(null, '', '/');
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -183,5 +184,25 @@ describe('App smoke test', () => {
         render(<App />);
       })
     ).resolves.not.toThrow();
+  });
+});
+
+describe('shareable topic URLs', () => {
+  it('skips WelcomeScreen when the URL names a build topic', async () => {
+    window.history.replaceState(null, '', '/build/particle-field');
+    await act(async () => {
+      render(<App />);
+    });
+    expect(screen.queryByTestId('welcome-screen')).toBeNull();
+    expect(screen.getByTestId('top-nav')).toBeInTheDocument();
+  });
+
+  it('skips WelcomeScreen for /glossary/modal', async () => {
+    window.history.replaceState(null, '', '/glossary/modal');
+    await act(async () => {
+      render(<App />);
+    });
+    expect(screen.queryByTestId('welcome-screen')).toBeNull();
+    expect(screen.getByTestId('top-nav')).toBeInTheDocument();
   });
 });

@@ -53,4 +53,11 @@ describe('What\'s New feed', () => {
   it('exposes the newest entry id for seen-state tracking', () => {
     expect(latestReleaseId()).toBe(WHATS_NEW[0].id);
   });
+
+  it('user-facing titles and blurbs have no em dashes', () => {
+    WHATS_NEW.forEach(entry => {
+      expect(entry.title, `${entry.id} title`).not.toMatch(/\u2014/);
+      expect(entry.blurb, `${entry.id} blurb`).not.toMatch(/\u2014/);
+    });
+  });
 });

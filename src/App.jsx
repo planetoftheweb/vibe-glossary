@@ -35,9 +35,12 @@ import {
 } from './data/buildLiteracy';
 import { DEMO_REGISTRY } from './data/demoRegistry';
 import { decodeProof } from './lib/proof';
+import { topicFromWindow, syncTopicUrl } from './lib/topicUrl';
+import HoverTip from './components/ui/HoverTip';
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(() => {
+    if (topicFromWindow()) return false;
     return !localStorage.getItem('vg-visited');
   });
   const [showCheatSheet, setShowCheatSheet] = useState(false);
@@ -51,9 +54,15 @@ export default function App() {
   const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
   const [showProof, setShowProof] = useState(false);
   const [proofSnapshot, setProofSnapshot] = useState(null);
-  const [activeItem, setActiveItem]       = useState('modal');
-  const [activeBuildTopic, setActiveBuildTopic] = useState(() => BUILD_TOPIC_IDS[0] || 'mvp');
-  const [siteSection, setSiteSection]     = useState('glossary'); // 'glossary' | 'build'
+  const [activeItem, setActiveItem]       = useState(() => {
+    const boot = topicFromWindow();
+    return boot?.section === 'glossary' ? boot.id : 'modal';
+  });
+  const [activeBuildTopic, setActiveBuildTopic] = useState(() => {
+    const boot = topicFromWindow();
+    return boot?.section === 'build' ? boot.id : (BUILD_TOPIC_IDS[0] || 'mvp');
+  });
+  const [siteSection, setSiteSection]     = useState(() => topicFromWindow()?.section || 'glossary');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const [darkMode, setDarkMode]           = useState(true);
@@ -129,6 +138,37 @@ export default function App() {
     checkHash();
     window.addEventListener('hashchange', checkHash);
     return () => window.removeEventListener('hashchange', checkHash);
+  }, []);
+
+  // Shareable topic URLs. A teaching topic has an address that reloads to
+  // the same topic (CLAUDE.md: a glossary you cannot link is not teachable).
+  const urlReady = useRef(false);
+  useEffect(() => {
+    if (showWelcome) return;
+    const id = siteSection === 'build' ? activeBuildTopic : activeItem;
+    syncTopicUrl(siteSection, id, { replace: !urlReady.current });
+    urlReady.current = true;
+  }, [showWelcome, siteSection, activeItem, activeBuildTopic]);
+
+  useEffect(() => {
+    function applyLocation() {
+      const next = topicFromWindow();
+      if (!next) return;
+      if (next.section === 'build') {
+        setSiteSection('build');
+        setActiveBuildTopic(next.id);
+      } else {
+        setSiteSection('glossary');
+        setActiveItem(next.id);
+      }
+      setShowWelcome(false);
+    }
+    window.addEventListener('popstate', applyLocation);
+    window.addEventListener('hashchange', applyLocation);
+    return () => {
+      window.removeEventListener('popstate', applyLocation);
+      window.removeEventListener('hashchange', applyLocation);
+    };
   }, []);
 
   // Reset options when switching components & track visit
@@ -292,10 +332,12 @@ export default function App() {
       {prevItem && (
         <button
           onClick={() => setActiveItem(prevItem)}
-          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
           aria-label={`Previous: ${prevData?.title}`}
         >
-          <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
+            <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
+          </span>
           <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
             <span className="block text-lg font-semibold text-white">{prevData?.title}</span>
@@ -305,10 +347,12 @@ export default function App() {
       {nextItem && (
         <button
           onClick={() => setActiveItem(nextItem)}
-          className="group relative w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center"
+          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
           aria-label={`Next: ${nextData?.title}`}
         >
-          <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
+            <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
+          </span>
           <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
             <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
             <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
@@ -531,8 +575,8 @@ export default function App() {
                       <button
                         onClick={toggleLearnMode}
                         aria-pressed={learnMode}
-                        title={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
-                        className={`ml-1 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
+                        aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
+                        className={`group relative ml-1 inline-flex items-center gap-1.5 px-2.5 py-1 before:absolute before:inset-y-[-8px] before:inset-x-[-4px] before:content-[''] rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
                           learnMode
                             ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-500'
                             : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
@@ -540,6 +584,7 @@ export default function App() {
                       >
                         <GraduationCap size={13} />
                         {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                        <HoverTip text={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'} />
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
@@ -551,10 +596,11 @@ export default function App() {
                     {carouselArrows}
                     <button
                       onClick={() => setInfoOpen(false)}
-                      className="hidden lg:block p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                      title="Close panel"
+                      className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      aria-label="Close panel"
                     >
                       <PanelLeftClose size={18} />
+                      <HoverTip text="Close panel" align="right" />
                     </button>
                   </div>
                 </div>
@@ -603,7 +649,7 @@ export default function App() {
                       <button
                         key={sib.id}
                         onClick={() => setCompareWith(sib.id)}
-                        className={`px-3 py-1 rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${activeCat.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
+                        className={`relative px-3 py-1 min-h-[44px] rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${activeCat.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
                       >
                         vs {sib.name}
                       </button>
@@ -639,10 +685,11 @@ export default function App() {
               {!infoOpen && (
                 <button
                   onClick={() => setInfoOpen(true)}
-                  className="p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
-                  title="Open Definition"
+                  className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
+                  aria-label="Open Definition"
                 >
                   <BookOpen size={18} />
+                  <HoverTip text="Open Definition" />
                 </button>
               )}
             </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import HoverTip from './HoverTip';
 import { Shuffle, Calendar, Trophy, ChevronDown, ChevronUp, RotateCcw, Check, Copy, Eye } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import { useCategories } from '../../hooks/useCategories';
@@ -76,10 +77,12 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
 
           <button
             onClick={() => setExpanded(!expanded)}
-            className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-            title="View progress"
+            className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+            aria-label="View progress"
+            aria-expanded={expanded}
           >
             {expanded ? <ChevronUp size={16} /> : <Trophy size={16} />}
+            <HoverTip text="View progress" align="right" />
           </button>
         </div>
       </div>
@@ -143,7 +146,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
                                 ? `${cc.bg} ${cc.text} ${cc.border} border`
                                 : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border border-transparent hover:bg-zinc-200 dark:hover:bg-zinc-700'
                             }`}
-                            title={isCopied ? 'Visited & copied' : isVisited ? 'Visited' : 'Not yet explored'}
+                            aria-label={`${item.name}, ${isCopied ? 'visited and copied' : isVisited ? 'visited' : 'not yet explored'}`}
                           >
                             {isCopied ? <Copy size={8} /> : isVisited ? <Eye size={8} /> : null}
                             {item.name}

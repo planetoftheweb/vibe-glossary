@@ -11,6 +11,7 @@ import { useGlossary } from '../../hooks/useGlossary';
 import usePanelResize from '../../hooks/usePanelResize';
 import BuildTopicView from './BuildTopicView';
 import TalkToAiCard from './TalkToAiCard';
+import HoverTip from '../ui/HoverTip';
 
 /**
  * Build Literacy section: two-pane body that mirrors the UI Glossary.
@@ -166,10 +167,11 @@ export default function BuildLiteracyView({
             <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
               <button
                 onClick={() => setInfoOpen(true)}
-                className="p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
-                title="Open Definition"
+                className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
+                aria-label="Open Definition"
               >
                 <BookOpen size={18} />
+                <HoverTip text="Open Definition" />
               </button>
             </div>
           )}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import HoverTip from '../ui/HoverTip';
 import {
   UserRound, LogOut, Trophy, FileCheck2, RotateCcw, Loader2, CloudUpload, CloudOff, Check,
 } from 'lucide-react';
@@ -10,7 +11,7 @@ const SYNC_LINES = {
   restoring: { icon: Loader2, spin: true, text: 'Restoring your backup…', tone: 'text-zinc-500 dark:text-zinc-400' },
   saving: { icon: CloudUpload, text: 'Backing up…', tone: 'text-zinc-500 dark:text-zinc-400' },
   saved: { icon: Check, text: 'Progress backed up', tone: 'text-emerald-600 dark:text-emerald-400' },
-  error: { icon: CloudOff, text: 'Backup failed — retries on your next change', tone: 'text-amber-600 dark:text-amber-400' },
+  error: { icon: CloudOff, text: 'Backup failed. Retries on your next change', tone: 'text-amber-600 dark:text-amber-400' },
   idle: { icon: CloudUpload, text: 'Backup on', tone: 'text-zinc-500 dark:text-zinc-400' },
 };
 
@@ -83,8 +84,15 @@ export default function UserMenu({
     const handleClick = (e) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target)) onClose();
     };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleKey);
+    };
   }, [isOpen, onClose]);
 
   const handleEmailSubmit = async (e) => {
@@ -116,9 +124,8 @@ export default function UserMenu({
     <div ref={wrapRef} className="relative" data-tour="user-menu">
       <button
         onClick={() => { clearError?.(); onToggle(); }}
-        aria-label={user ? `Account: ${user.displayName || user.email}` : 'Sign in'}
-        title={user ? 'Account' : 'Sign in — back up your progress (optional)'}
-        className={`flex items-center justify-center w-10 h-10 rounded-full border transition-colors ${
+        aria-label={user ? `Account: ${user.displayName || user.email}` : 'Sign in. Back up your progress (optional)'}
+        className={`group relative flex items-center justify-center min-w-[44px] min-h-[44px] w-10 h-10 rounded-full border transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-600'
             : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
@@ -127,11 +134,16 @@ export default function UserMenu({
         {user
           ? <Avatar user={user} />
           : <UserRound size={20} className="text-zinc-600 dark:text-zinc-300" />}
+        <HoverTip
+          text={user ? 'Account' : 'Sign in. Back up your progress (optional)'}
+          align="right"
+          hidden={isOpen}
+        />
       </button>
 
       {isOpen && (
         <div
-          className="absolute top-full mt-2 right-0 bg-white dark:bg-zinc-900 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 rounded-xl shadow-2xl z-50 py-1.5 animate-fade-in max-h-[75vh] overflow-y-auto"
+          className="absolute top-full mt-2 right-0 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 rounded-xl shadow-2xl z-50 py-1.5 animate-fade-in max-h-[75vh] overflow-y-auto opacity-100"
           style={{ width: 'min(340px, calc(100vw - 16px))' }}
         >
           {user ? (
@@ -175,7 +187,7 @@ export default function UserMenu({
                   Back up your progress
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 leading-snug">
-                  Totally optional — everything saves on this device either way.
+                  Totally optional. Everything saves on this device either way.
                   Sign in to keep your score and badges safe and use them on any device.
                 </p>
               </div>

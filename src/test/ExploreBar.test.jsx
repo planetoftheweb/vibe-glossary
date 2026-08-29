@@ -137,7 +137,7 @@ describe('expand/collapse progress panel', () => {
     const props = defaultProps();
     render(<ExploreBar {...props} />);
 
-    await user.click(screen.getByTitle('View progress'));
+    await user.click(screen.getByRole('button', { name: 'View progress' }));
 
     expect(screen.getByText('Your Progress')).toBeInTheDocument();
   });
@@ -147,7 +147,7 @@ describe('expand/collapse progress panel', () => {
     const props = defaultProps();
     render(<ExploreBar {...props} />);
 
-    const expandBtn = screen.getByTitle('View progress');
+    const expandBtn = screen.getByRole('button', { name: 'View progress' });
     await user.click(expandBtn);
     await user.click(expandBtn);
 
@@ -164,7 +164,7 @@ describe('expanded panel — category names', () => {
     const props = defaultProps();
     render(<ExploreBar {...props} />);
 
-    await user.click(screen.getByTitle('View progress'));
+    await user.click(screen.getByRole('button', { name: 'View progress' }));
 
     expect(CATEGORIES).toHaveLength(10);
 
@@ -184,7 +184,7 @@ describe('item pill clicks', () => {
     render(<ExploreBar {...props} />);
 
     // Expand the panel
-    await user.click(screen.getByTitle('View progress'));
+    await user.click(screen.getByRole('button', { name: 'View progress' }));
 
     // Find the "Popover" pill (it's in overlays, id = 'popover')
     const popoverPill = screen.getByRole('button', { name: /popover/i });
@@ -198,7 +198,7 @@ describe('item pill clicks', () => {
     const props = defaultProps();
     render(<ExploreBar {...props} />);
 
-    await user.click(screen.getByTitle('View progress'));
+    await user.click(screen.getByRole('button', { name: 'View progress' }));
 
     // "Tabs vs. Segments" is in navigation with id = 'tabs'
     const tabsPill = screen.getByRole('button', { name: /tabs vs\. segments/i });
@@ -218,7 +218,7 @@ describe('Reset button', () => {
     render(<ExploreBar {...props} />);
 
     // Expand to reveal the Reset button
-    await user.click(screen.getByTitle('View progress'));
+    await user.click(screen.getByRole('button', { name: 'View progress' }));
 
     await user.click(screen.getByRole('button', { name: /reset/i }));
 

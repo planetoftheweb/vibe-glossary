@@ -60,7 +60,7 @@ export const WHATS_NEW = [
     version: '0.10.0',
     date: '2026-08-17',
     tag: 'feature',
-    title: 'Optional accounts — back up your progress',
+    title: 'Optional accounts, back up your progress',
     blurb: 'Sign in with Google or email to keep your VibeScore, badges, and progress safe across devices. No account needed to use the site.',
     image: null,
     action: { kind: 'account' },

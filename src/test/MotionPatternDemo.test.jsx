@@ -1,10 +1,11 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MotionPatternDemo, {
   EASING_TRAVELERS,
   STAGGER_TRAVEL_PX,
   STAGGER_DURATION_MS,
   STAGGER_STEP_MS,
+  commitStartThenPlay,
   CONFETTI_COUNT,
   CONFETTI_SIZE_PX,
   CONFETTI_SPREAD_PX,
@@ -75,7 +76,7 @@ describe('#25 motion pattern previews are real', () => {
     render(<MotionPatternDemo demoId="stagger" />);
     const rows = document.querySelectorAll('[data-stagger-row]');
     expect(rows).toHaveLength(3);
-    expect([...rows].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '50ms', '100ms']);
+    expect([...rows].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '200ms', '400ms']);
     expect(new Set([...rows].map((r) => r.getAttribute('data-stagger-delay'))).size).toBe(3);
     expect(document.querySelector('[data-stagger-mode="stagger"]')).toBeTruthy();
     expect(screen.getByText(/Inbox slides 80px first/i)).toBeInTheDocument();
@@ -87,7 +88,7 @@ describe('#25 motion pattern previews are real', () => {
   it('#34 stagger travel is a large measurable px slide, list stays visible', () => {
     expect(STAGGER_TRAVEL_PX).toBeGreaterThanOrEqual(24);
     expect(STAGGER_DURATION_MS).toBeGreaterThanOrEqual(700);
-    expect(STAGGER_STEP_MS).toBe(50);
+    expect(STAGGER_STEP_MS).toBeGreaterThanOrEqual(150);
     render(<MotionPatternDemo demoId="stagger" />);
     expect(screen.getByText('Inbox')).toBeVisible();
     expect(screen.getByText('Drafts')).toBeVisible();
@@ -106,6 +107,84 @@ describe('#25 motion pattern previews are real', () => {
       expect(el.getAttribute('data-stagger-to')).toBe('translateX(0px)');
       expect(el.style.transitionDuration).toBe(`${STAGGER_DURATION_MS}ms`);
     });
+  });
+
+  it('#34 Replay applies start translate before end', async () => {
+    const pending = [];
+    const origRaf = window.requestAnimationFrame;
+    window.requestAnimationFrame = (cb) => {
+      pending.push(cb);
+      return pending.length;
+    };
+
+    try {
+      render(<MotionPatternDemo demoId="stagger" />);
+      const movers = () => [...document.querySelectorAll('[data-stagger-mover]')];
+      movers().forEach((el) => {
+        expect(el.style.transform).toBe(`translateX(${STAGGER_TRAVEL_PX}px)`);
+        expect(el.getAttribute('data-stagger-phase')).toBe('start');
+        expect(el.style.transitionProperty).toBe('none');
+      });
+
+      await act(async () => {
+        const first = pending.splice(0);
+        first.forEach((cb) => cb(0));
+      });
+      await act(async () => {
+        const second = pending.splice(0);
+        second.forEach((cb) => cb(0));
+      });
+
+      movers().forEach((el) => {
+        expect(el.style.transform).toBe('translateX(0px)');
+        expect(el.getAttribute('data-stagger-phase')).toBe('end');
+        expect(el.style.transitionProperty).toBe('transform');
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /Replay stagger/i }));
+      movers().forEach((el) => {
+        expect(el.style.transform).toBe(`translateX(${STAGGER_TRAVEL_PX}px)`);
+        expect(el.getAttribute('data-stagger-phase')).toBe('start');
+        expect(el.style.transitionProperty).toBe('none');
+      });
+    } finally {
+      window.requestAnimationFrame = origRaf;
+    }
+  });
+
+  it('#34 stagger delays are at least 150ms apart on the stagger path', () => {
+    expect(STAGGER_STEP_MS).toBeGreaterThanOrEqual(150);
+    expect(STAGGER_DURATION_MS).toBeGreaterThanOrEqual(800);
+    render(<MotionPatternDemo demoId="stagger" />);
+    const delays = [...document.querySelectorAll('[data-stagger-row]')].map((r) =>
+      parseInt(r.getAttribute('data-stagger-delay'), 10),
+    );
+    expect(delays).toEqual([0, STAGGER_STEP_MS, STAGGER_STEP_MS * 2]);
+    expect(delays[1] - delays[0]).toBeGreaterThanOrEqual(150);
+    expect(delays[2] - delays[1]).toBeGreaterThanOrEqual(150);
+    const teach = document.querySelector('[data-stagger-teach]');
+    expect(teach.className).toMatch(/break-words/);
+    expect(teach.className).not.toMatch(/truncate|whitespace-nowrap/);
+  });
+
+  it('#34 commitStartThenPlay paints start before end', () => {
+    const phases = [];
+    const pending = [];
+    const origRaf = window.requestAnimationFrame;
+    window.requestAnimationFrame = (cb) => {
+      pending.push(cb);
+      return pending.length;
+    };
+    try {
+      commitStartThenPlay((p) => phases.push(p), null);
+      expect(phases).toEqual(['start']);
+      pending.shift()(0);
+      expect(phases).toEqual(['start']);
+      pending.shift()(0);
+      expect(phases).toEqual(['start', 'end']);
+    } finally {
+      window.requestAnimationFrame = origRaf;
+    }
   });
 
   it('Scroll Reveal is its own scroll panel with Reset', () => {

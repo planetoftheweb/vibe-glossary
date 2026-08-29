@@ -206,3 +206,22 @@ describe('shareable topic URLs', () => {
     expect(screen.getByTestId('top-nav')).toBeInTheDocument();
   });
 });
+
+describe('#29 glossary Quiz me uses a 44px hit box', () => {
+  it('Learn Mode control on /glossary/modal is 44px with compact paint', async () => {
+    localStorage.setItem('vg-visited', '1');
+    window.history.replaceState(null, '', '/glossary/modal');
+    await act(async () => {
+      render(<App />);
+    });
+    const btn = screen.getByRole('button', { name: /Turn on Learn Mode \(quiz each component\)/i });
+    expect(btn.className).toMatch(/min-h-\[44px\]/);
+    expect(btn.className).toMatch(/h-11/);
+    expect(btn.className).not.toMatch(/bg-indigo-600/);
+    const paint = btn.querySelector('span.rounded-full');
+    expect(paint).toBeTruthy();
+    expect(paint.className).toMatch(/py-1/);
+    expect(paint.className).not.toMatch(/min-h-\[44px\]/);
+    expect(paint.textContent).toMatch(/Quiz me/);
+  });
+});

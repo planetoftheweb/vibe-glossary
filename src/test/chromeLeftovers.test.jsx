@@ -3,9 +3,14 @@ import TopicTierBadge from '../components/learn/TopicTierBadge';
 import TalkToAiCard from '../components/learn/TalkToAiCard';
 import PromptBuilder from '../components/ui/PromptBuilder';
 import ScoreBreakdownModal from '../components/learn/ScoreBreakdownModal';
+import Footer from '../components/layout/Footer';
 import BuildTopicView from '../components/learn/BuildTopicView';
 import { AUTH_ERROR_COPY, AUTH_ERROR_FALLBACK } from '../lib/authErrors';
 import { levelFor } from '../lib/scoring';
+
+vi.mock('../hooks/useCategories', () => ({
+  useCategories: () => [{ id: 'overlays', items: [{ id: 'modal' }] }],
+}));
 
 const topic = {
   id: 'particle-field',
@@ -66,6 +71,9 @@ describe('#21 Quiz me and Copy keep compact paint and a 44px hit box', () => {
     const btn = screen.getByRole('button', { name: 'Copy to clipboard (markdown)' });
     expect(btn).not.toHaveAttribute('title');
     expect(btn.className).toMatch(/min-h-\[44px\]/);
+    expect(btn.className).toMatch(/min-w-\[44px\]/);
+    expect(btn.className).not.toMatch(/opacity-0/);
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Copy to clipboard');
   });
 });
 
@@ -105,5 +113,52 @@ describe('#23 Visited badge uses HoverTip, not title=', () => {
     expect(badge).not.toHaveAttribute('title');
     expect(badge.getAttribute('aria-label')).toMatch(/Copy a prompt to reach Used/);
     expect(screen.getByRole('tooltip')).toHaveTextContent('Copy a prompt to reach Used.');
+  });
+});
+
+describe('#32 VibeScore modal hit boxes and no title= on level chips', () => {
+  const score = {
+    total: 12,
+    glossary: { total: 12, visited: 12, used: 0, passed: 0, mastered: 0, retained: 0, pathBonus: 0 },
+    build: { total: 0, visited: 0, used: 0, passed: 0, mastered: 0, retained: 0, pathBonus: 0 },
+  };
+
+  it('Class proof, Share score, and Close are 44px', () => {
+    render(
+      <ScoreBreakdownModal
+        isOpen
+        onClose={() => {}}
+        onOpenProof={() => {}}
+        score={score}
+        level={levelFor(12)}
+      />
+    );
+    expect(screen.getByRole('button', { name: /Class proof/i }).className).toMatch(/min-h-\[44px\]/);
+    expect(screen.getByRole('button', { name: /Share score/i }).className).toMatch(/min-h-\[44px\]/);
+    expect(screen.getByRole('button', { name: /Close score breakdown/i }).className).toMatch(/min-h-\[44px\]/);
+  });
+
+  it('level chips use HoverTip and aria-label, not title=', () => {
+    const { container } = render(
+      <ScoreBreakdownModal
+        isOpen
+        onClose={() => {}}
+        score={score}
+        level={levelFor(12)}
+      />
+    );
+    expect(container.querySelector('[title]')).toBeNull();
+    const lurker = screen.getByLabelText(/Lurker/);
+    expect(lurker).not.toHaveAttribute('title');
+    expect(lurker.getAttribute('aria-label')).toMatch(/Just looking around/);
+    expect(lurker.className).toMatch(/min-h-\[44px\]/);
+  });
+});
+
+describe('#32 footer Changelog and GitHub are 44px', () => {
+  it('Changelog and GitHub links use a 44px hit box', () => {
+    render(<Footer />);
+    expect(screen.getByRole('link', { name: /Changelog/i }).className).toMatch(/min-h-\[44px\]/);
+    expect(screen.getByRole('link', { name: /GitHub/i }).className).toMatch(/min-h-\[44px\]/);
   });
 });

@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { POINTS, LEVELS } from '../../lib/scoring';
 import ShareAchievement from './ShareAchievement';
+import HoverTip from '../ui/HoverTip';
 
 /**
  * Modal that shows where the learner's VibeScore came from. Splits the total
@@ -59,7 +60,7 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
                 type="button"
                 onClick={onOpenProof}
                 data-tour="class-proof"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition-colors"
               >
                 <ShieldCheck size={14} />
                 Class proof
@@ -81,7 +82,7 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
             )}
             <button
               onClick={onClose}
-              className="p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               aria-label="Close score breakdown"
             >
               <X size={20} />
@@ -117,16 +118,20 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
                 return (
                   <span
                     key={l.id}
-                    className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors ${
+                    tabIndex={0}
+                    className="group relative inline-flex items-center justify-center min-h-[44px] min-w-[44px]"
+                    aria-label={`${l.label}. ${l.blurb}`}
+                  >
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors ${
                       isCurrent
                         ? 'bg-amber-500 text-white border-amber-500'
                         : reached
                           ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700/40'
                           : 'bg-transparent text-zinc-400 dark:text-zinc-500 border-zinc-200 dark:border-zinc-700'
-                    }`}
-                    title={l.blurb}
-                  >
-                    {l.label}
+                    }`}>
+                      {l.label}
+                    </span>
+                    <HoverTip text={l.blurb} />
                   </span>
                 );
               })}

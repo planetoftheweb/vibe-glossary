@@ -225,7 +225,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
         <button
           type="button"
           onClick={handleCopy}
-          className="group absolute top-1 right-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent text-zinc-500 opacity-0 group-hover/code:opacity-100 focus-visible:opacity-100"
+          className="group absolute top-1 right-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           aria-label="Copy to clipboard (markdown)"
         >
           <span className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 group-hover:bg-zinc-200 dark:group-hover:bg-zinc-700">

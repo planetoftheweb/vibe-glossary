@@ -65,6 +65,9 @@ describe('#25 motion pattern previews are real', () => {
     const rows = document.querySelectorAll('[data-stagger-row]');
     expect(rows).toHaveLength(3);
     expect([...rows].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '50ms', '100ms']);
+    expect(new Set([...rows].map((r) => r.getAttribute('data-stagger-delay'))).size).toBe(3);
+    expect(document.querySelector('[data-stagger-mode="stagger"]')).toBeTruthy();
+    expect(screen.getByText(/Inbox moves first/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Play all at once/i }));
     expect([...document.querySelectorAll('[data-stagger-row]')].every((r) => r.getAttribute('data-stagger-delay') === '0ms')).toBe(true);
     expect(screen.getByRole('button', { name: /Replay stagger/i })).toBeInTheDocument();
@@ -112,7 +115,10 @@ describe('#25 motion pattern previews are real', () => {
     expect(screen.queryByText('Order complete')).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Complete order' }));
     expect(screen.getByText('Order complete')).toBeInTheDocument();
-    expect(document.querySelectorAll('[data-confetti-bit]').length).toBeGreaterThan(0);
+    expect(document.querySelectorAll('[data-confetti-bit]').length).toBeGreaterThanOrEqual(24);
+    const burstColors = new Set([...document.querySelectorAll('[data-confetti-color]')].map((el) => el.getAttribute('data-confetti-color')));
+    expect(burstColors.size).toBeGreaterThanOrEqual(4);
+    expect(screen.getByRole('button', { name: /Replay confetti/i })).toBeInTheDocument();
     expect(screen.getByText(/Fires once on a real win/i)).toBeInTheDocument();
   });
 

@@ -180,9 +180,9 @@ function ParallaxPreview({ reduced }) {
 
 function StaggerPreview({ reduced }) {
   const items = [
-    { label: 'Inbox', delay: 0 },
-    { label: 'Drafts', delay: 50 },
-    { label: 'Sent', delay: 100 },
+    { label: 'Inbox', delay: 0, bar: 'bg-indigo-600', well: 'bg-white dark:bg-zinc-900' },
+    { label: 'Drafts', delay: 50, bar: 'bg-indigo-500', well: 'bg-indigo-50 dark:bg-indigo-950/60' },
+    { label: 'Sent', delay: 100, bar: 'bg-sky-500', well: 'bg-sky-50 dark:bg-sky-950/40' },
   ];
   const [mode, setMode] = useState('stagger');
   const [go, setGo] = useState(false);
@@ -190,7 +190,7 @@ function StaggerPreview({ reduced }) {
   useEffect(() => { replay(); }, [replay, mode]);
 
   return (
-    <div className="w-full max-w-sm space-y-3">
+    <div className="w-full max-w-lg space-y-4">
       <div className="flex flex-wrap items-center gap-1">
         <ChipButton onClick={() => setMode('together')} pressed={mode === 'together'} label="Play all at once">
           All at once
@@ -198,28 +198,21 @@ function StaggerPreview({ reduced }) {
         <ChipButton onClick={() => setMode('stagger')} pressed={mode === 'stagger'} label="Play 50 millisecond stagger">
           50ms stagger
         </ChipButton>
-        <ChipButton onClick={replay} label="Replay stagger">Replay</ChipButton>
+        <button type="button" onClick={replay} aria-label="Replay stagger" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-500">Replay</button>
       </div>
-      <ul className="space-y-2">
+      <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+        {mode === 'together' ? 'All at once: Inbox, Drafts, and Sent rise together. No waiting.' : '50ms stagger: Inbox moves first. Drafts waits 50ms. Sent waits 100ms.'}
+      </p>
+      <ul data-stagger-mode={mode} className="space-y-3">
         {items.map((row) => {
           const delay = mode === 'stagger' && !reduced ? row.delay : 0;
           return (
-            <li
-              key={row.label}
-              data-stagger-row={row.label}
-              data-stagger-delay={`${delay}ms`}
-              className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-800 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-              style={{
-                opacity: go ? 1 : 0,
-                transform: go ? 'translateY(0)' : 'translateY(12px)',
-                transitionProperty: 'opacity, transform',
-                transitionDuration: reduced ? '0ms' : '300ms',
-                transitionTimingFunction: 'ease-out',
-                transitionDelay: `${delay}ms`,
-              }}
-            >
-              <span>{row.label}</span>
-              <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{delay}ms</span>
+            <li key={row.label} data-stagger-row={row.label} data-stagger-delay={`${delay}ms`} className={`flex items-center justify-between overflow-hidden rounded-xl border border-zinc-200 ${row.well} text-base font-semibold text-zinc-900 shadow-sm dark:border-zinc-700 dark:text-zinc-50`} style={{ opacity: go ? 1 : 0, transform: go ? 'translateX(0)' : 'translateX(-36px)', transitionProperty: 'opacity, transform', transitionDuration: reduced ? '0ms' : '520ms', transitionTimingFunction: 'ease-out', transitionDelay: `${delay}ms` }}>
+              <span className="inline-flex min-h-[52px] items-center gap-3 px-4">
+                <span className={`h-8 w-1.5 rounded-full ${row.bar}`} aria-hidden />
+                {row.label}
+              </span>
+              <span className="mr-3 rounded-full bg-zinc-900 px-2.5 py-1 text-sm font-bold tabular-nums text-white dark:bg-white dark:text-zinc-900">{delay}ms</span>
             </li>
           );
         })}
@@ -476,7 +469,8 @@ function ConfettiPreview({ reduced }) {
   const [burst, setBurst] = useState(false);
   const [toast, setToast] = useState(false);
   const [fly, setFly] = useState(false);
-  const bits = Array.from({ length: 18 }, (_, i) => i);
+  const colors = ['bg-indigo-500', 'bg-amber-400', 'bg-emerald-400', 'bg-rose-500', 'bg-sky-400', 'bg-violet-500'];
+  const bits = Array.from({ length: 36 }, (_, i) => i);
 
   useEffect(() => {
     if (!burst || reduced) {
@@ -503,35 +497,39 @@ function ConfettiPreview({ reduced }) {
   }
 
   return (
-    <div className="relative w-full max-w-sm space-y-3">
+    <div className="relative w-full max-w-lg space-y-3">
       <div className="flex flex-wrap items-center gap-1">
-        <ChipButton onClick={complete} label="Complete order">Complete order</ChipButton>
-        <ChipButton onClick={replay} label="Replay confetti">Replay</ChipButton>
+        <button type="button" onClick={complete} aria-label="Complete order" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-500">Complete order</button>
+        <button type="button" onClick={replay} aria-label="Replay confetti" className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">Replay</button>
       </div>
-      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white px-5 py-8 dark:border-zinc-700 dark:bg-zinc-900">
-        {burst && !reduced && bits.map((i) => (
-          <span
-            key={i}
-            data-confetti-bit=""
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-2 w-2 rounded-full bg-indigo-500"
-            style={{
-              transform: fly
-                ? `translate(${Math.cos((i / 18) * Math.PI * 2) * 72}px, ${Math.sin((i / 18) * Math.PI * 2) * 48 - 24}px)`
-                : 'translate(-50%, -50%)',
-              opacity: fly ? 0 : 1,
-              transition: 'transform 700ms ease-out, opacity 700ms ease-out',
-            }}
-          />
-        ))}
-        <p className="relative z-10 text-center text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+      <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+        Tap Complete order for a bright burst. Replay to arm it again.
+      </p>
+      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-950 px-5 py-12 dark:border-zinc-700" data-confetti-stage="">
+        {burst && !reduced && bits.map((i) => {
+          const angle = (i / 36) * Math.PI * 2;
+          const dist = 88 + (i % 5) * 14;
+          const wide = i % 3 === 1;
+          return (
+            <span
+              key={i}
+              data-confetti-bit=""
+              data-confetti-color={colors[i % colors.length]}
+              aria-hidden
+              className={`pointer-events-none absolute left-1/2 top-1/2 ${wide ? 'h-3 w-5' : 'h-3.5 w-3.5'} ${i % 2 === 0 ? 'rounded-full' : 'rounded-sm'} ${colors[i % colors.length]}`}
+              style={{
+                transform: fly ? `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist - 28}px) rotate(${i * 24}deg)` : 'translate(-50%, -50%)',
+                opacity: fly ? 0 : 1,
+                transition: 'transform 900ms ease-out, opacity 900ms ease-out',
+              }}
+            />
+          );
+        })}
+        <p className="relative z-10 text-center text-base font-semibold text-white">
           Fires once on a real win. Then it is gone.
         </p>
         {toast && (
-          <p
-            data-confetti-toast=""
-            className="relative z-10 mt-3 rounded-lg bg-zinc-900 px-3 py-2 text-center text-sm font-semibold text-white"
-          >
+          <p data-confetti-toast="" className="relative z-10 mt-4 rounded-lg bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white">
             Order complete
           </p>
         )}

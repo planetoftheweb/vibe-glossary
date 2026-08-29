@@ -139,7 +139,7 @@ export default function ShareAchievement({
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={popoverId}
-        className={`inline-flex items-center gap-2 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50 ${triggerSize} ${triggerStyle}`}
+        className={`inline-flex items-center justify-center gap-2 min-h-[44px] rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50 ${triggerSize} ${triggerStyle}`}
       >
         <Share2 size={size === 'sm' ? 14 : 16} />
         {label}

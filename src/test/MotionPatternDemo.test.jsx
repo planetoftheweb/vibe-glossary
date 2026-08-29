@@ -15,14 +15,31 @@ import MotionPatternDemo, {
 } from '../components/demos/MotionPatternDemo';
 
 function mockMotion(reduce) {
-  window.matchMedia = vi.fn().mockImplementation((query) => ({
-    matches: reduce && String(query).includes('prefers-reduced-motion'),
-    media: query,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-  }));
+  let matchesReduce = !!reduce;
+  const listeners = new Set();
+  window.matchMedia = vi.fn().mockImplementation((query) => {
+    const isReduceQuery = String(query).includes('prefers-reduced-motion');
+    return {
+      get matches() {
+        return isReduceQuery && matchesReduce;
+      },
+      media: query,
+      addEventListener: (event, cb) => {
+        if (event === 'change') listeners.add(cb);
+      },
+      removeEventListener: (event, cb) => {
+        if (event === 'change') listeners.delete(cb);
+      },
+      addListener: (cb) => listeners.add(cb),
+      removeListener: (cb) => listeners.delete(cb),
+    };
+  });
+  return {
+    setReduce(next) {
+      matchesReduce = !!next;
+      listeners.forEach((cb) => cb({ matches: matchesReduce }));
+    },
+  };
 }
 
 beforeEach(() => {
@@ -185,6 +202,89 @@ describe('#25 motion pattern previews are real', () => {
     } finally {
       window.requestAnimationFrame = origRaf;
     }
+  });
+
+  it('#44 reduce-on Replay skips the 80px/900ms cascade and keeps rows visible', () => {
+    mockMotion(true);
+    render(<MotionPatternDemo demoId="stagger" />);
+    expect(screen.getByText('Inbox')).toBeVisible();
+    expect(screen.getByText('Drafts')).toBeVisible();
+    expect(screen.getByText('Sent')).toBeVisible();
+    const movers = () => [...document.querySelectorAll('[data-stagger-mover]')];
+    movers().forEach((el) => {
+      expect(el.style.opacity).toBe('1');
+      expect(el.style.transform).toBe('translateX(0px)');
+      expect(el.style.transitionDuration).toBe('0ms');
+      expect(el.getAttribute('data-stagger-phase')).toBe('end');
+    });
+    expect([...document.querySelectorAll('[data-stagger-row]')].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '0ms', '0ms']);
+
+    fireEvent.click(screen.getByRole('button', { name: /Replay stagger/i }));
+
+    movers().forEach((el) => {
+      expect(el.style.transform).toBe('translateX(0px)');
+      expect(el.style.transform).not.toBe(`translateX(${STAGGER_TRAVEL_PX}px)`);
+      expect(el.style.transitionDuration).toBe('0ms');
+      expect(el.style.transitionDuration).not.toBe(`${STAGGER_DURATION_MS}ms`);
+      expect(el.style.opacity).toBe('1');
+      expect(el.getAttribute('data-stagger-phase')).toBe('end');
+    });
+    expect([...document.querySelectorAll('[data-stagger-row]')].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '0ms', '0ms']);
+  });
+
+  it('#44 Replay re-reads matchMedia so a late reduce skips the cascade', async () => {
+    const pending = [];
+    const origRaf = window.requestAnimationFrame;
+    window.requestAnimationFrame = (cb) => {
+      pending.push(cb);
+      return pending.length;
+    };
+    try {
+      const media = mockMotion(false);
+      render(<MotionPatternDemo demoId="stagger" />);
+      await act(async () => {
+        pending.splice(0).forEach((cb) => cb(0));
+      });
+      await act(async () => {
+        pending.splice(0).forEach((cb) => cb(0));
+      });
+
+      await act(async () => {
+        media.setReduce(true);
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /Replay stagger/i }));
+
+      const movers = [...document.querySelectorAll('[data-stagger-mover]')];
+      movers.forEach((el) => {
+        expect(el.style.transform).toBe('translateX(0px)');
+        expect(el.style.transitionDuration).toBe('0ms');
+        expect(el.style.opacity).toBe('1');
+        expect(el.getAttribute('data-stagger-phase')).toBe('end');
+      });
+      expect([...document.querySelectorAll('[data-stagger-row]')].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '0ms', '0ms']);
+      // Replay must not have queued the start-then-play cascade.
+      expect(pending.length).toBe(0);
+    } finally {
+      window.requestAnimationFrame = origRaf;
+    }
+  });
+
+  it('#44 reduce-off cascade is unchanged: 80px, 900ms, 200ms steps', () => {
+    mockMotion(false);
+    expect(STAGGER_TRAVEL_PX).toBe(80);
+    expect(STAGGER_DURATION_MS).toBe(900);
+    expect(STAGGER_STEP_MS).toBe(200);
+    render(<MotionPatternDemo demoId="stagger" />);
+    const movers = document.querySelectorAll('[data-stagger-mover]');
+    expect(movers).toHaveLength(3);
+    movers.forEach((el) => {
+      expect(el.getAttribute('data-stagger-from')).toBe('translateX(80px)');
+      expect(el.getAttribute('data-stagger-to')).toBe('translateX(0px)');
+      expect(el.style.transitionDuration).toBe('900ms');
+      expect(el.style.opacity).toBe('1');
+    });
+    expect([...document.querySelectorAll('[data-stagger-row]')].map((r) => r.getAttribute('data-stagger-delay'))).toEqual(['0ms', '200ms', '400ms']);
   });
 
   it('Scroll Reveal is its own scroll panel with Reset', () => {

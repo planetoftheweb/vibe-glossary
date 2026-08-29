@@ -138,18 +138,20 @@ function PromptPanel({ kind, label, sub, icon, text, cc, divider }) {
           type="button"
           onClick={handleCopy}
           disabled={!text}
-          className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-300 bg-zinc-800 hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="group relative shrink-0 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
           aria-label={`Copy ${label}`}
         >
-          {copied ? (
-            <>
-              <Check size={14} className="text-emerald-400" /> Copied
-            </>
-          ) : (
-            <>
-              <Copy size={14} /> Copy
-            </>
-          )}
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-300 bg-zinc-800 group-hover:bg-zinc-700 transition-colors">
+            {copied ? (
+              <>
+                <Check size={14} className="text-emerald-400" /> Copied
+              </>
+            ) : (
+              <>
+                <Copy size={14} /> Copy
+              </>
+            )}
+          </span>
         </button>
       </div>
 

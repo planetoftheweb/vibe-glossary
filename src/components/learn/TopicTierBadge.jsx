@@ -1,4 +1,5 @@
 import { Eye, ClipboardCopy, GraduationCap, Award, Repeat } from 'lucide-react';
+import HoverTip from '../ui/HoverTip';
 
 /**
  * Tiered status pill for a single topic. Replaces the binary "Mastered"
@@ -45,11 +46,15 @@ export default function TopicTierBadge({ tier, className = '' }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${meta.classes} ${className}`}
-      title={meta.next}
+      tabIndex={0}
+      className={`group relative inline-flex items-center ${className}`}
+      aria-label={`${labelText}. ${meta.next}`}
     >
-      <Icon size={11} className="shrink-0" />
-      {labelText}
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${meta.classes}`}>
+        <Icon size={11} className="shrink-0" aria-hidden />
+        {labelText}
+      </span>
+      <HoverTip text={meta.next} />
     </span>
   );
 }

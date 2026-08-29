@@ -101,7 +101,7 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
                 {next
                   ? `${level.pointsToNext} pts to ${next.label}`
-                  : 'Top rung — keep retaining what you know.'}
+                  : 'Top rung. Keep retaining what you know.'}
               </span>
             </div>
             <div className="h-2.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">

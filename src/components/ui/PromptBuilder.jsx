@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Terminal, Zap, CheckSquare, Square, Check, Copy, Code2, ShieldCheck, ChevronDown } from 'lucide-react';
+import HoverTip from './HoverTip';
 
 const FRAMEWORKS = [
   { id: 'shadcn', label: 'shadcn/ui' },
@@ -222,11 +223,15 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
           ))}
         </div>
         <button
+          type="button"
           onClick={handleCopy}
-          className="absolute top-2.5 right-2.5 p-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg text-zinc-500 transition-colors opacity-0 group-hover/code:opacity-100"
-          title="Copy to clipboard (markdown)"
+          className="group absolute top-1 right-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent text-zinc-500 opacity-0 group-hover/code:opacity-100 focus-visible:opacity-100"
+          aria-label="Copy to clipboard (markdown)"
         >
-          {copied ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
+          <span className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 group-hover:bg-zinc-200 dark:group-hover:bg-zinc-700">
+            {copied ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
+          </span>
+          <HoverTip text="Copy to clipboard" align="right" />
         </button>
       </div>
     </div>

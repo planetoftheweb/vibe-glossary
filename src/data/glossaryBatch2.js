@@ -1117,24 +1117,38 @@ export const GLOSSARY_BATCH_2 = {
 
   hovercard: {
     title: "Hover Card",
-    definition: "Rich preview on hover, user mini-profile, link preview, or definition.",
-    vibeTip: "Delay open/close to avoid flicker; keyboard accessible.",
-    comparison: "Hover card is rich hover content. Tooltip is short text. Popover is click.",
+    definition: "A small preview card that appears when someone hovers over or focuses a name, link, or other trigger.",
+    vibeTip: "Say what opens it, how long it waits, whether people can move into it, and what touch users should do.",
+    comparison: "A hover card previews richer content on hover or focus. A tooltip is a short label. A popover opens on click and supports heavier interaction.",
     prompt: {
-      base: "Add a hover card for user profile preview",
+      base: "Add an accessible hover card that previews a user profile when someone hovers over or focuses the trigger",
       options: [
-        { id: 'opt1', label: 'Open delay', text: ', using ~200–300ms open delay to avoid accidental triggers' },
-        { id: 'opt2', label: 'Focus', text: ', opening on keyboard focus of the trigger, not only hover' },
-        { id: 'opt3', label: 'Interactive content', text: ', allowing links inside the card without the card closing instantly' },
+        { id: 'opt1', label: 'Open delay', text: ', waiting 200 to 300 milliseconds before opening and briefly delaying close to prevent flicker' },
+        { id: 'opt2', label: 'Focus', text: ', opening the same card when the trigger receives keyboard focus' },
+        { id: 'opt3', label: 'Interactive content', text: ', keeping it open while people move into the card to use its links' },
       ],
       requirements: [
-        'Pointer must be able to move into the card (safe triangle / delay)',
-        'Escape closes popover; focus returns to trigger',
-        'Do not put essential info only in hover-only content',
+        'Open on pointer hover and keyboard focus, with a tap or click fallback for touch screens',
+        'Keep the card open while pointer or focus is inside it, then use a short close delay',
+        'Escape closes the card; moving focus away closes it without trapping focus',
+        'Keep essential information available outside the hover-only content',
       ],
       scaffolds: {
-        shadcn: `<HoverCard><HoverCardTrigger>@alex</HoverCardTrigger><HoverCardContent>…</HoverCardContent></HoverCard>`,
-        html: `<button popovertarget="hc">@alex</button><div id="hc" popover>…</div>`,
+        shadcn: `<HoverCard openDelay={250} closeDelay={150}>
+  <HoverCardTrigger asChild>
+    <a href="/people/alex">@alex</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <p className="font-semibold">Alex Rivera</p>
+    <p className="text-sm text-muted-foreground">Product designer in NYC</p>
+    <a href="/people/alex">View profile</a>
+  </HoverCardContent>
+</HoverCard>`,
+        html: `<a href="/people/alex" aria-controls="alex-preview">@alex</a>
+<div id="alex-preview" hidden>
+  <strong>Alex Rivera</strong>
+  <p>Product designer in NYC</p>
+</div>`,
       },
     },
   },

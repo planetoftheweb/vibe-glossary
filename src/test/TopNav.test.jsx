@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
-import TopNav from '../components/layout/TopNav';
+import TopNav, {
+  SCORE_STORAGE_PROMPT_AFTER_VIEWS,
+  SCORE_STORAGE_PROMPT_SNOOZE_KEY,
+} from '../components/layout/TopNav';
 import { CATEGORIES, CATEGORY_COLORS } from '../data/categories';
 
 const makeExplore = () => ({
@@ -11,8 +14,6 @@ const makeExplore = () => ({
   copied: new Set(),
   mastered: new Set(),
   badges: new Set(),
-  surpriseMe: vi.fn().mockReturnValue('tooltip'),
-  surpriseMeBuild: vi.fn().mockReturnValue('mvp'),
   resetProgress: vi.fn(),
   score: { total: 12 },
   level: { name: 'Lurker' },
@@ -23,6 +24,7 @@ const defaultProps = () => ({
   setDarkMode: vi.fn(),
   learnMode: false,
   toggleLearnMode: vi.fn(),
+  learningProgress: { count: 0, total: 5, checkpointReady: false },
   activeItem: 'tooltip',
   setActiveItem: vi.fn(),
   activeBuildTopic: 'mvp',
@@ -36,12 +38,14 @@ const defaultProps = () => ({
   explore: makeExplore(),
   onOpenCheatSheet: vi.fn(),
   onOpenGlossaryIndex: vi.fn(),
-  onOpenPaths: vi.fn(),
   onOpenBuildIndex: vi.fn(),
-  onOpenBuildPaths: vi.fn(),
   onOpenScoreBreakdown: vi.fn(),
   onStartTour: vi.fn(),
   authState: { user: null, authReady: true, busy: false, error: null, clearError: vi.fn() },
+});
+
+beforeEach(() => {
+  localStorage.removeItem(SCORE_STORAGE_PROMPT_SNOOZE_KEY);
 });
 
 describe('category dropdown panel', () => {
@@ -76,12 +80,22 @@ describe('category dropdown panel', () => {
   });
 });
 
-describe('settings menu (#14)', () => {
-  it('closes on Escape and stays opaque in light mode', async () => {
+describe('account appearance setting', () => {
+  it('keeps Dark Mode out of the hamburger menu', async () => {
     const user = userEvent.setup();
-    render(<TopNav {...defaultProps()} darkMode={false} />);
+    render(<TopNav {...defaultProps()} />);
 
     await user.click(screen.getByRole('button', { name: 'Open menu' }));
+
+    expect(screen.queryByText('Dark Mode')).toBeNull();
+  });
+
+  it('shows Dark Mode for signed-out visitors and keeps the menu opaque', async () => {
+    const user = userEvent.setup();
+    const props = defaultProps();
+    render(<TopNav {...props} darkMode={false} />);
+
+    await user.click(screen.getByRole('button', { name: 'Sign in. Back up your progress (optional)' }));
     expect(screen.getByText('Dark Mode')).toBeInTheDocument();
 
     const menu = screen.getByText('Dark Mode').closest('[class*="bg-white"]');
@@ -89,11 +103,30 @@ describe('settings menu (#14)', () => {
     expect(menu.className).not.toMatch(/opacity-0/);
     expect(menu.className).not.toMatch(/bg-white\/\d/);
 
+    await user.click(screen.getByRole('button', { name: 'Dark Mode' }));
+    expect(props.setDarkMode).toHaveBeenCalledWith(true);
+    expect(screen.getByText('Dark Mode')).toBeInTheDocument();
+
     await user.keyboard('{Escape}');
     expect(screen.queryByText('Dark Mode')).toBeNull();
   });
 
-  it('closes on outside click', async () => {
+  it('also shows Dark Mode for a signed-in user', async () => {
+    const user = userEvent.setup();
+    const props = defaultProps();
+    props.authState = {
+      ...props.authState,
+      user: { displayName: 'Ray', email: 'ray@example.com' },
+      signOut: vi.fn(),
+    };
+    render(<TopNav {...props} />);
+
+    await user.click(screen.getByRole('button', { name: 'Account: Ray' }));
+
+    expect(screen.getByText('Dark Mode')).toBeInTheDocument();
+  });
+
+  it('closes the signed-out user menu on an outside click', async () => {
     const user = userEvent.setup();
     render(
       <div>
@@ -102,11 +135,92 @@ describe('settings menu (#14)', () => {
       </div>
     );
 
-    await user.click(screen.getByRole('button', { name: 'Open menu' }));
+    await user.click(screen.getByRole('button', { name: 'Sign in. Back up your progress (optional)' }));
     expect(screen.getByText('Dark Mode')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'outside' }));
     expect(screen.queryByText('Dark Mode')).toBeNull();
+  });
+});
+
+describe('score storage prompt', () => {
+  const usageIds = CATEGORIES.flatMap((category) => category.items.map((item) => item.id))
+    .slice(0, SCORE_STORAGE_PROMPT_AFTER_VIEWS);
+
+  it('asks after several signed-out topic views, then opens registration', async () => {
+    const user = userEvent.setup();
+    const props = defaultProps();
+    const { rerender } = render(<TopNav {...props} activeItem={usageIds[0]} />);
+
+    usageIds.slice(1, -1).forEach((activeItem) => {
+      rerender(<TopNav {...props} activeItem={activeItem} />);
+    });
+    expect(screen.queryByRole('dialog', { name: /store your VibeScore/i })).toBeNull();
+
+    rerender(<TopNav {...props} activeItem={usageIds.at(-1)} />);
+    expect(await screen.findByRole('dialog', { name: /store your VibeScore/i }))
+      .toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Store my score' }));
+
+    expect(screen.queryByRole('dialog', { name: /store your VibeScore/i })).toBeNull();
+    expect(await screen.findByRole('button', { name: 'Create account' })).toBeInTheDocument();
+    expect(screen.getByText('Already have an account? Sign in')).toBeInTheDocument();
+  });
+
+  it('waits while a learning checkpoint is ready', async () => {
+    const props = defaultProps();
+    props.learningProgress = { count: 5, total: 5, checkpointReady: true };
+    const { rerender } = render(<TopNav {...props} activeItem={usageIds[0]} />);
+
+    usageIds.slice(1).forEach((activeItem) => {
+      rerender(<TopNav {...props} activeItem={activeItem} />);
+    });
+    expect(screen.queryByRole('dialog', { name: /store your VibeScore/i })).toBeNull();
+
+    rerender(
+      <TopNav
+        {...props}
+        activeItem={usageIds.at(-1)}
+        learningProgress={{ count: 0, total: 5, checkpointReady: false }}
+      />
+    );
+    expect(await screen.findByRole('dialog', { name: /store your VibeScore/i }))
+      .toBeInTheDocument();
+  });
+
+  it('does not ask a signed-in learner', () => {
+    const props = defaultProps();
+    props.authState = {
+      ...props.authState,
+      user: { displayName: 'Ray', email: 'ray@example.com' },
+    };
+    const { rerender } = render(<TopNav {...props} activeItem={usageIds[0]} />);
+
+    usageIds.slice(1).forEach((activeItem) => {
+      rerender(<TopNav {...props} activeItem={activeItem} />);
+    });
+    expect(screen.queryByRole('dialog', { name: /store your VibeScore/i })).toBeNull();
+  });
+
+  it('snoozes the prompt for thirty days after Not now', async () => {
+    const user = userEvent.setup();
+    const props = defaultProps();
+    const first = render(<TopNav {...props} activeItem={usageIds[0]} />);
+    usageIds.slice(1).forEach((activeItem) => {
+      first.rerender(<TopNav {...props} activeItem={activeItem} />);
+    });
+
+    await user.click(await screen.findByRole('button', { name: 'Not now' }));
+    expect(Number(localStorage.getItem(SCORE_STORAGE_PROMPT_SNOOZE_KEY)))
+      .toBeGreaterThan(0);
+    first.unmount();
+
+    const second = render(<TopNav {...props} activeItem={usageIds[0]} />);
+    usageIds.slice(1).forEach((activeItem) => {
+      second.rerender(<TopNav {...props} activeItem={activeItem} />);
+    });
+    expect(screen.queryByRole('dialog', { name: /store your VibeScore/i })).toBeNull();
   });
 });
 
@@ -146,6 +260,36 @@ describe('#33 header topic pill shows a real word', () => {
     expect(right.className).toMatch(/shrink-0/);
     expect(screen.getByRole('button', { name: /What'?s new/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /VibeScore/i })).toBeInTheDocument();
+  });
+});
+
+describe('top-nav utility icons', () => {
+  it('uses an announcement icon for What\'s New and reserves sparkles for VibeScore', () => {
+    render(<TopNav {...defaultProps()} />);
+
+    const whatsNewIcon = screen
+      .getByRole('button', { name: /What'?s new/i })
+      .querySelector('svg');
+    const vibeScoreIcon = screen
+      .getByRole('button', { name: /VibeScore/i })
+      .querySelector('svg');
+
+    expect(whatsNewIcon).toHaveClass('lucide-megaphone');
+    expect(whatsNewIcon).not.toHaveClass('lucide-sparkles');
+    expect(vibeScoreIcon).toHaveClass('lucide-sparkles');
+  });
+});
+
+describe('Learning menu', () => {
+  it('only offers five-item Learning Mode, without paths or Surprise Me', async () => {
+    const user = userEvent.setup();
+    render(<TopNav {...defaultProps()} />);
+
+    await user.click(screen.getByRole('button', { name: 'Learning' }));
+
+    expect(screen.getByText('Quiz after every five items')).toBeInTheDocument();
+    expect(screen.queryByText('Learning Paths')).toBeNull();
+    expect(screen.queryByText('Surprise Me')).toBeNull();
   });
 });
 

@@ -52,7 +52,7 @@ export default function TestimonialDemo({ activeOptions }) {
                 <p className="text-sm text-zinc-400">{t.role}</p>
               </div>
             </div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">"{t.text}"</p>
+            <p className="text-base text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">"{t.text}"</p>
             {hasRating && (
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map(n => <Star key={n} size={16} className={n <= t.rating ? 'text-amber-400 fill-amber-400' : 'text-zinc-300'} />)}

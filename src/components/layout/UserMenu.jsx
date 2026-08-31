@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import HoverTip from '../ui/HoverTip';
 import {
   UserRound, LogOut, Trophy, FileCheck2, RotateCcw, Loader2, CloudUpload, CloudOff, Check,
+  Moon, Sun,
 } from 'lucide-react';
 
 // Signing in is completely optional — progress always lives on the device.
@@ -52,6 +53,23 @@ function MenuRow({ icon: Icon, onClick, children, tone = 'text-zinc-700 dark:tex
   );
 }
 
+function ThemeRow({ darkMode, setDarkMode }) {
+  return (
+    <button
+      type="button"
+      onClick={() => setDarkMode?.(!darkMode)}
+      aria-pressed={darkMode}
+      className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+    >
+      {darkMode ? <Moon size={18} aria-hidden="true" /> : <Sun size={18} aria-hidden="true" />}
+      <span className="font-medium">Dark Mode</span>
+      <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
+        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-1'}`} />
+      </span>
+    </button>
+  );
+}
+
 // Google "G" mark, inlined so we don't ship an icon set for one logo.
 function GoogleMark() {
   return (
@@ -68,6 +86,8 @@ export default function UserMenu({
   isOpen, onToggle, onClose,
   auth = {}, syncStatus = 'idle',
   score,
+  darkMode, setDarkMode,
+  preferredMode,
   onOpenScoreBreakdown, onOpenProof, onResetProgress,
 }) {
   const wrapRef = useRef(null);
@@ -78,6 +98,10 @@ export default function UserMenu({
   const [mode, setMode] = useState('signin'); // 'signin' | 'register'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (isOpen && preferredMode === 'register') setMode('register');
+  }, [isOpen, preferredMode]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -173,6 +197,8 @@ export default function UserMenu({
                 <span className="font-medium">Class proof</span>
               </MenuRow>
               <div className="my-1.5 border-t border-zinc-100 dark:border-zinc-800" />
+              <ThemeRow darkMode={darkMode} setDarkMode={setDarkMode} />
+              <div className="my-1.5 border-t border-zinc-100 dark:border-zinc-800" />
               <MenuRow icon={RotateCcw} onClick={handleReset} tone="text-zinc-500 dark:text-zinc-400">
                 <span className="font-medium text-sm">Reset progress</span>
               </MenuRow>
@@ -244,6 +270,9 @@ export default function UserMenu({
                 </button>
               </div>
               <div className="mt-1 border-t border-zinc-100 dark:border-zinc-800">
+                <ThemeRow darkMode={darkMode} setDarkMode={setDarkMode} />
+              </div>
+              <div className="border-t border-zinc-100 dark:border-zinc-800">
                 <MenuRow icon={RotateCcw} onClick={handleReset} tone="text-zinc-500 dark:text-zinc-400">
                   <span className="font-medium text-sm">Reset progress on this device</span>
                 </MenuRow>

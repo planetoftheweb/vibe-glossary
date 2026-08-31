@@ -311,7 +311,7 @@ describe('#25 motion pattern previews are real', () => {
     render(<MotionPatternDemo demoId="reducedmotion" />);
     expect(document.querySelector('[data-motion-panel="motion"]')).toBeTruthy();
     expect(document.querySelector('[data-motion-panel="reduced"]')).toBeTruthy();
-    expect(screen.getByText(/Do not just shorten the same loop/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Do not just shorten the same loop/i)).toHaveLength(1);
   });
 
   it('Page Transition has List to Detail with Navigate and Replay', async () => {

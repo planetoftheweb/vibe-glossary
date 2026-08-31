@@ -20,8 +20,8 @@ const topic = {
   talkToAi: { starter: 'Hello starter', example: 'Hello example' },
 };
 
-describe('#21 Quiz me and Copy keep compact paint and a 44px hit box', () => {
-  it('Quiz me button is 44px tall while the chip stays compact', () => {
+describe('#21 Learning Mode and Copy keep compact paint and a 44px hit box', () => {
+  it('Learning Mode button is 44px tall while the chip stays compact', () => {
     render(
       <BuildTopicView
         topic={topic}
@@ -32,14 +32,14 @@ describe('#21 Quiz me and Copy keep compact paint and a 44px hit box', () => {
         quizPool={[]}
       />
     );
-    const btn = screen.getByRole('button', { name: /Turn on Learn Mode/i });
+    const btn = screen.getByRole('button', { name: 'Turn on Learning Mode' });
     expect(btn.className).toMatch(/min-h-\[44px\]/);
     expect(btn.className).not.toMatch(/bg-indigo-600/);
     const paint = btn.querySelector('span.rounded-full');
     expect(paint).toBeTruthy();
     expect(paint.className).toMatch(/py-1/);
     expect(paint.className).not.toMatch(/min-h-\[44px\]/);
-    expect(paint.textContent).toMatch(/Quiz me/);
+    expect(paint.textContent).toMatch(/Learning off/);
   });
 
   it('Talk to AI Copy chip sits in a 44px hit box', () => {

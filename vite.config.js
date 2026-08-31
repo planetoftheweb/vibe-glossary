@@ -14,6 +14,17 @@ function requireFirebaseEnv() {
 
 export default defineConfig({
   plugins: [requireFirebaseEnv(), react()],
+  // Stay off Vite default 5173 so this app cannot steal VibeIt's reserved port.
+  server: {
+    host: '127.0.0.1',
+    port: 5215,
+    strictPort: true,
+  },
+  preview: {
+    host: '127.0.0.1',
+    port: 5215,
+    strictPort: true,
+  },
   test: {
     environment: 'jsdom',
     globals: true,

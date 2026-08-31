@@ -118,7 +118,7 @@ describe('Tour steps data', () => {
 
   it('steps that need an open panel declare an action', () => {
     const stepsNeedingAction = TOUR_STEPS.filter(s =>
-      ['share', 'proof', 'paths'].includes(s.id)
+      ['share', 'proof', 'checkpoint'].includes(s.id)
     );
     expect(stepsNeedingAction.length).toBeGreaterThan(0);
     for (const step of stepsNeedingAction) {
@@ -142,11 +142,10 @@ describe('Tour steps data', () => {
     expect(proofStep.target).toMatch(/\[data-tour=/);
   });
 
-  it('paths step targets the learning paths item, not the menu wrapper', () => {
-    const pathsStep = TOUR_STEPS.find(s => s.id === 'paths');
-    expect(pathsStep).toBeDefined();
-    expect(pathsStep.target).not.toBe('[data-tour="main-menu"]');
-    expect(pathsStep.target).toMatch(/\[data-tour=/);
+  it('checkpoint step targets the Learning Mode control, not the menu wrapper', () => {
+    const checkpointStep = TOUR_STEPS.find(s => s.id === 'checkpoint');
+    expect(checkpointStep).toBeDefined();
+    expect(checkpointStep.target).toBe('[data-tour="learning-checkpoint"]');
   });
 
   it('action values are valid action names', () => {

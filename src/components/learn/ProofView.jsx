@@ -10,8 +10,8 @@ import {
   buildProofUrl,
   buildProofText,
   CLASS_BAR_POINTS,
-  CLASS_PATH_ID,
 } from '../../lib/proof';
+import { goalProgress, reviewsCopy } from '../../lib/progressCoaching';
 import { copyToClipboard } from '../../lib/share';
 
 /**
@@ -31,6 +31,7 @@ export default function ProofView({
   level,
   badges,
   proofSnapshot = null,
+  onContinueLearning,
 }) {
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [copiedText, setCopiedText] = useState(false);
@@ -71,6 +72,11 @@ export default function ProofView({
     if (!snapshot) return null;
     return LEVELS.find(l => l.id === snapshot.l) || null;
   }, [snapshot]);
+
+  const classGoal = useMemo(
+    () => goalProgress(snapshot?.s || 0, CLASS_BAR_POINTS),
+    [snapshot?.s]
+  );
 
   const proofDate = useMemo(() => {
     if (!snapshot?.d) return null;
@@ -158,9 +164,33 @@ export default function ProofView({
                 {bar.reasons.join('. ')}.
               </p>
             ) : (
-              <p className="text-sm text-amber-700 dark:text-amber-300 leading-snug">
-                Reach Tinkerer ({CLASS_BAR_POINTS} pts) or complete the &quot;Vibe prompting for UI&quot; learning path.
-              </p>
+              <div>
+                <p className="text-base font-extrabold text-amber-900 dark:text-amber-100">
+                  {classGoal.remaining} points left to meet the class requirement
+                </p>
+                <p className="mt-1 text-sm text-amber-700 dark:text-amber-300 leading-snug">
+                  {reviewsCopy(classGoal.reviewRounds)}. Open five different items to unlock each review, then answer its five questions.
+                </p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-amber-200/70 dark:bg-amber-950">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-700"
+                    style={{ width: `${classGoal.percent}%` }}
+                  />
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs font-semibold text-amber-700 dark:text-amber-300">
+                  <span>{snapshot?.s || 0} earned</span>
+                  <span>{CLASS_BAR_POINTS} required</span>
+                </div>
+                {!isVerifyMode && onContinueLearning && (
+                  <button
+                    type="button"
+                    onClick={onContinueLearning}
+                    className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-500"
+                  >
+                    Keep working toward Tinkerer
+                  </button>
+                )}
+              </div>
             )}
           </div>
 
@@ -264,7 +294,7 @@ export default function ProofView({
                 This proof was generated from the student&apos;s local learning progress
                 on VibeGlossary. Scores come from quizzes with integrity checks (time
                 floors, cooldowns, variant rotation). The class bar requires reaching
-                Tinkerer (200 pts) or completing the &quot;Vibe prompting for UI&quot; path badge.
+                Tinkerer ({CLASS_BAR_POINTS} pts).
               </p>
             </div>
           )}

@@ -39,17 +39,17 @@ export default function ListDemo({ activeOptions }) {
                     <span className="font-semibold text-base text-zinc-900 dark:text-white">{item.author}</span>
                     <span className="text-sm text-zinc-400">{item.time}</span>
                   </div>
-                  <button className="text-zinc-400 hover:text-zinc-600"><MoreHorizontal size={20} /></button>
+                  <button type="button" aria-label={`More actions for ${item.author}`} className="text-zinc-400 hover:text-zinc-600"><MoreHorizontal size={20} /></button>
                 </div>
                 <p className="text-base text-zinc-700 dark:text-zinc-300 mt-2 leading-relaxed">{item.text}</p>
                 <div className="flex items-center gap-5 mt-4">
-                  <button onClick={() => toggleLike(item.id)} className={`flex items-center gap-1.5 text-sm transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
+                  <button type="button" aria-label={`${liked.has(item.id) ? 'Unlike' : 'Like'} post by ${item.author}`} onClick={() => toggleLike(item.id)} className={`flex items-center gap-1.5 text-sm transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
                     <Heart size={18} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
                   </button>
-                  <button className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
+                  <button type="button" aria-label={`Read ${item.comments} comments on ${item.author}'s post`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
                     <MessageCircle size={18} /> {item.comments}
                   </button>
-                  <button className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-emerald-500 transition-colors">
+                  <button type="button" aria-label={`Share post by ${item.author}`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-emerald-500 transition-colors">
                     <Share2 size={18} />
                   </button>
                 </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import HoverTip from './HoverTip';
-import { Shuffle, Calendar, Trophy, ChevronDown, ChevronUp, RotateCcw, Check, Copy, Eye } from 'lucide-react';
+import { Calendar, Trophy, ChevronDown, ChevronUp, RotateCcw, Check, Copy, Eye } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import { useCategories } from '../../hooks/useCategories';
 import { useGlossary } from '../../hooks/useGlossary';
@@ -9,17 +9,12 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
   const categories = useCategories();
   const glossary = useGlossary();
   const [expanded, setExpanded] = useState(false);
-  const { componentOfTheDay, progress, visited, copied, surpriseMe } = explore;
+  const { componentOfTheDay, progress, visited, copied } = explore;
 
   const cotdData = glossary[componentOfTheDay];
   const cotdCat = categories.find(c => c.items.some(i => i.id === componentOfTheDay));
   const cotdColors = cotdCat ? CATEGORY_COLORS[cotdCat.id] : CATEGORY_COLORS.overlays;
   const isCotdActive = activeItem === componentOfTheDay;
-
-  const handleSurprise = () => {
-    const id = surpriseMe();
-    onSelectItem(id);
-  };
 
   return (
     <div className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/50">
@@ -67,14 +62,6 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleSurprise}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-base font-semibold transition-all ${activeCatColors.bg} ${activeCatColors.text} ${activeCatColors.border} border hover:opacity-80`}
-          >
-            <Shuffle size={17} />
-            <span className="hidden sm:inline">Surprise Me</span>
-          </button>
-
           <button
             onClick={() => setExpanded(!expanded)}
             className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
@@ -160,18 +147,12 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
             </div>
 
             {/* Summary */}
-            <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+            <div className="mt-4 border-t border-zinc-100 pt-3 dark:border-zinc-800">
               <p className="text-sm text-zinc-400">
                 {progress.percent === 100
                   ? 'You\'ve explored every component!'
                   : `${progress.total - progress.visited} components left to discover`}
               </p>
-              <button
-                onClick={handleSurprise}
-                className={`text-sm font-semibold ${activeCatColors.accent} hover:opacity-80 transition-opacity flex items-center gap-1`}
-              >
-                <Shuffle size={11} /> Explore next
-              </button>
             </div>
           </div>
         </div>

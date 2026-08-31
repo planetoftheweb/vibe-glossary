@@ -7,7 +7,6 @@ import {
   buildProofUrl,
   buildProofText,
   CLASS_BAR_POINTS,
-  CLASS_PATH_ID,
 } from '../lib/proof';
 
 describe('classBar', () => {
@@ -30,16 +29,15 @@ describe('classBar', () => {
     expect(result.reasons[0]).toContain('Shipper');
   });
 
-  it('is met when class path badge is earned even with low score', () => {
-    const result = classBar({ score: 10, badges: new Set([CLASS_PATH_ID]) });
-    expect(result.met).toBe(true);
-    expect(result.reasons.some(r => r.includes('Vibe prompting'))).toBe(true);
+  it('is not met by a legacy badge without enough points', () => {
+    const result = classBar({ score: 10, badges: new Set(['vibe-prompting']) });
+    expect(result.met).toBe(false);
   });
 
-  it('is met with both criteria (two reasons)', () => {
-    const result = classBar({ score: 300, badges: new Set([CLASS_PATH_ID]) });
+  it('uses the score as the single class-bar criterion', () => {
+    const result = classBar({ score: 300, badges: new Set(['vibe-prompting']) });
     expect(result.met).toBe(true);
-    expect(result.reasons).toHaveLength(2);
+    expect(result.reasons).toHaveLength(1);
   });
 
   it('is not met at 199 pts without the class path badge', () => {

@@ -130,7 +130,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         summary:
           'The tiniest version of your idea you can put in front of real people to learn whether the idea works at all.',
         details:
-          'Marc Andreessen famously said \'product-market fit is when the dogs eat the dog food\'. An MVP is what you put in front of the dogs to find out. The whole point is to test the riskiest assumption (usually \'will anyone use this?\') with the smallest possible build.\n\nThe trap most people fall into is shipping a \'minimum lovable product\' instead. Adding the third feature, the auth flow, the onboarding wizard, the analytics... and now you have spent two months on something that does not answer the original question any better than a clickable Figma would have.\n\nThe vibe coder advantage: AI lets you ship a real (rough) MVP in days. Use that. The thing should look unfinished on purpose so people give you the harsh feedback you actually need, not the polite kind.',
+          'An MVP helps you answer one risky question with the smallest useful build. For a recipe app, that question might be: will people post a recipe and return to read another one? Build only the posting and reading flow first.\n\nIt is easy to add sign-in choices, profiles, ratings, search, and analytics before you know whether the main idea matters. Those features take time but do not answer the first question. Write them down for later and leave them out of this test.\n\nAI can help you build a rough test quickly. Show it to a few real people, watch where they get stuck, and use what you learn to decide what to build next.',
         comparison:
           'An MVP answers "is anyone interested?". A v1 polishes the bits the MVP proved people care about.',
         vibeTip:
@@ -660,7 +660,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'secrets',
         title: 'Environment variables and secrets',
         summary:
-          'Config that changes per environment (dev, staging, prod) lives in environment variables. Secrets (API keys, passwords) are env vars that must NEVER end up in your repo or your client bundle.',
+          'Environment variables store settings that change between development, testing, and production. Secrets are private values such as passwords and application programming interface keys. Never put secrets in public code or send them to the browser.',
         details:
           'Environment variables let the same code behave differently in different places. Database URL is different in dev vs production. Stripe is in test mode locally and live mode in prod. The convention is a .env file for local development, a managed config in production (Vercel env vars, Render env groups, Fly secrets).\n\nSecrets are env vars that are dangerous if leaked. The two rules: never commit them to git (.env is in .gitignore, .env.example is checked in with empty values), and never expose them to the client (anything prefixed with NEXT_PUBLIC_, VITE_, REACT_APP_ ends up in the browser bundle, where any visitor can read it). If a key starts with sk_ or has "secret" in the name, it lives on the server only.\n\nLayered above raw env vars are secret managers (1Password Secrets Automation, Doppler, AWS Secrets Manager, Infisical). They give you rotation, audit, and shared access for teams. For a solo project, .env + your hosting provider\'s env panel is enough.',
         comparison:
@@ -749,9 +749,9 @@ export const BUILD_LITERACY_CLUSTERS = [
       },
       {
         id: 'openapi',
-        title: 'OpenAPI / API contract',
+        title: 'OpenAPI (an API contract)',
         summary:
-          'A machine-readable file that describes every endpoint of your API: the URL, what you send, what you get back. Frontend and backend agree on it before anyone codes.',
+          'OpenAPI is a file that describes how one program can talk to another. It lists each address, what information to send, and what comes back. The screen code and server code can agree on that file before either side is built.',
         details:
           'OpenAPI (formerly Swagger) is a YAML or JSON document that describes your HTTP API: every endpoint, every parameter, every response shape, every status code. It is essentially a contract between client and server, written in a way machines can read.\n\nOnce you have an OpenAPI spec, an army of tools opens up. Generate typed client libraries for every language. Render interactive docs (Swagger UI, Redoc, Stoplight). Validate requests and responses at runtime. Mock the API for frontend development before the backend exists. Lint the spec for breaking changes between versions.\n\nFor a vibe coder, the workflow is usually: define the spec first (with AI help), generate the typed client, then write the server. The spec becomes the source of truth and both sides cannot drift. Tools like Hono, Fastify, and Encore can generate the OpenAPI spec from your route definitions automatically.',
         comparison:
@@ -856,7 +856,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'contract-testing',
         title: 'Contract testing',
         summary:
-          'Tests that verify two services agree on the API between them. The frontend\'s "shape it expects" matches the backend\'s "shape it returns", checked automatically on every change.',
+          'Contract tests check that two parts of a system still agree. They confirm that the screen receives the fields it expects and the server returns those fields after every change.',
         details:
           'When two services talk to each other (frontend ↔ API, service A ↔ service B), they share a contract: this endpoint accepts these fields and returns this shape. Contract tests pin that contract down so it cannot drift silently.\n\nThe simplest version: the API publishes an OpenAPI spec, and every service that calls it generates a typed client from that spec. The compiler tells you when the contract changes. This is the "free" version, just from using OpenAPI plus codegen.\n\nThe heavy version: tools like Pact let consumers (frontend) write a "pact" describing what they call and expect, and providers (backend) verify their service matches every consumer\'s pact in CI. Useful at company scale where many teams own different services.\n\nFor a vibe coder, contract tests are usually overkill. OpenAPI plus generated types is enough until you have multiple services owned by different people. Then contract tests pay for themselves the first time someone changes a response shape and breaks a service they did not know existed.',
         comparison:
@@ -947,7 +947,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'orm',
         title: 'ORM (Object-Relational Mapper)',
         summary:
-          'A library that lets you read and write database rows as objects in your language, instead of writing raw SQL strings everywhere.',
+          'An Object-Relational Mapper is a library that turns database rows into objects your code can use. It handles common database work without making you write Structured Query Language (SQL) for every request.',
         details:
           'An Object-Relational Mapper is a layer that lets you write queries in your application language (TypeScript, Python, Ruby) instead of raw SQL. user.findMany({ where: { active: true } }) becomes a real SQL query under the hood. ORMs handle joins, type safety, migrations, and connection pooling.\n\nThe trade-off: ORMs make easy things easier and hard things much harder. Simple CRUD is delightful. Complex multi-join aggregations with window functions become a fight, and you end up dropping to raw SQL anyway. Most projects spend 95% of their time in the easy zone, so ORMs win.\n\nFor TypeScript vibe coders: Prisma is the popular default (great DX, slow at scale), Drizzle is the modern choice (closer to SQL, faster, fully typed), and Kysely is for people who like SQL but want type safety. Pick one early; switching ORMs mid-project is painful.',
         comparison:
@@ -968,7 +968,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'crud',
         title: 'CRUD (Create, Read, Update, Delete)',
         summary:
-          'The four basic things you do to stored data. Most app screens are some mix of these four, and most APIs map them to HTTP verbs.',
+          'Create, Read, Update, and Delete are the four basic actions an app performs on saved information. Most forms, lists, and detail screens use one or more of them.',
         details:
           'CRUD stands for Create, Read, Update, Delete: the four basic operations on any persistent record. Almost every API endpoint maps to one of them. POST creates, GET reads, PATCH or PUT updates, DELETE deletes.\n\nThe acronym is useful because it forces completeness. When you scaffold a feature, ask: what is the C, R, U, and D for this resource? Sometimes one is intentionally missing (a feed has no Update, an audit log has no Delete). That is fine, but it should be intentional, not a bug you discover when the user complains they cannot edit their post.\n\nMost frameworks and AI tools can scaffold CRUD endpoints in seconds. The real work is the parts CRUD does not name: pagination, sorting, filtering, search, soft-delete, audit logs, optimistic concurrency. CRUD is the skeleton; those are the muscles.',
         comparison:
@@ -1031,7 +1031,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'api-styles',
         title: 'API styles: REST vs GraphQL vs RPC',
         summary:
-          'Three flavors of "how clients talk to a server". REST = nouns and HTTP verbs. GraphQL = one endpoint, you ask for the shape you want. RPC = call a remote function (tRPC, gRPC).',
+          'These are three ways an app can ask a server for work. REST uses named web addresses and request types. GraphQL lets the app request exact fields. Remote Procedure Call (RPC) makes a server action look like a local function call.',
         details:
           'REST is the default for most web APIs. Each resource has a URL (/products, /products/42), HTTP verbs map to actions (GET reads, POST creates, PATCH updates, DELETE removes). It is simple to understand, easy to cache, and every tool speaks it. The pain shows up when one screen needs data from 4 endpoints, or when you keep changing the response shape.\n\nGraphQL flips it. One endpoint, the client sends a query that says "give me this user, plus their last 5 orders, plus the product name on each, but only the fields I name". The server resolves it. Great for complex client needs (mobile apps with limited bandwidth, dashboards with many panels). Trade-off: harder to cache, easier to write expensive queries by accident, schema becomes a coordination point.\n\nRPC (tRPC, gRPC) is "call a function on the server like it is local". tRPC is the typescript-everywhere version: define functions on the server, call them with full type safety on the client, no schemas, no codegen if you control both sides. gRPC is the binary, polyglot, microservices-y version. RPC wins when one team owns both ends.\n\nFor a vibe-coded fullstack app, the right answer is usually tRPC if you are all-TypeScript, REST otherwise.',
         comparison:
@@ -1052,7 +1052,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'webhooks',
         title: 'Webhooks',
         summary:
-          'A reverse API: instead of you polling another service ("anything new?"), it POSTs to a URL on your server when something happens. Stripe, GitHub, and Slack run on these.',
+          'A webhook lets another service notify your app when something happens. Instead of asking Stripe or GitHub for updates over and over, your app gives the service an address where it can send the new event.',
         details:
           'A webhook is the other service\'s way of telling you something happened. You give Stripe a URL (https://yourapp.com/webhooks/stripe). When a charge succeeds, Stripe POSTs to that URL with a JSON payload. Your server processes it. No polling, near-instant updates.\n\nThree gotchas trip everyone. First, webhooks come from the public internet, so they need to work locally during development. Tools like ngrok, Cloudflare Tunnel, or Stripe CLI\'s "stripe listen" forward them to your dev server. Second, webhooks must be idempotent (see the next topic): the same event might arrive twice if the network blinked. Third, webhooks must be verified (every provider signs the payload with a secret), or anyone on the internet can post fake events to your endpoint and create chaos.\n\nThe right shape for a webhook handler: verify signature → respond 200 immediately → enqueue the actual work in a background job. Doing the work synchronously means a slow handler causes the provider to retry, and now you have duplicates.',
         comparison:
@@ -1145,7 +1145,7 @@ export const BUILD_LITERACY_CLUSTERS = [
         id: 'session-vs-jwt',
         title: 'Session cookies vs JWT',
         summary:
-          'Session cookies hold a small id that the server uses to look you up. JWTs (JSON Web Tokens) carry the user info inside the token itself, signed so the server can trust it without a lookup.',
+          'A session cookie stores a small identifier that the server uses to find your sign-in record. A JSON Web Token (JWT) carries signed user information inside the token, so the server can verify it without that lookup.',
         details:
           'Session-cookie auth: when the user signs in, the server stores a session record in a database (or Redis), gives the browser an opaque session id in an HTTP-only cookie, and looks up the session on every request. Logout means deleting the row.\n\nJWT (JSON Web Token) auth: the server issues a signed token containing the user info (id, role, expiry). The client sends the token on every request. The server verifies the signature without a database lookup. There is no logout, only expiry; revocation requires a separate denylist.\n\nThe trade-off in one sentence: sessions need a server but are easy to revoke; JWTs scale stateless but are hard to invalidate before they expire. For most apps, sessions win. Reach for JWTs when you have multiple services or need true stateless auth (some serverless setups). Pick one, never both in the same app.',
         comparison:
@@ -1290,9 +1290,9 @@ export const BUILD_LITERACY_CLUSTERS = [
       },
       {
         id: 'csrf-cors',
-        title: 'CSRF and CORS',
+        title: 'CSRF (request forgery) and CORS (cross-origin sharing)',
         summary:
-          'Two browser security rules that confuse everyone. CORS controls which origins can call your API from a browser. CSRF prevents another site from making your logged-in user submit something they did not mean to.',
+          'These browser protections solve different problems. Cross-Origin Resource Sharing controls which websites may read your server\'s responses. Cross-Site Request Forgery protection stops another site from submitting an unwanted action through a person who is already signed in.',
         details:
           'CORS (Cross-Origin Resource Sharing) is the browser asking your server "is it ok if a script on https://other-site.com calls you?". The server answers with Access-Control-Allow-Origin headers. If the headers say no, the browser blocks the response. CORS is about which sites can read responses from your API.\n\nCSRF (Cross-Site Request Forgery) is the other direction: a malicious page tricks the user\'s browser into submitting a form to your site, using the user\'s logged-in cookies. Defenses: SameSite=lax cookies (the modern default, blocks cross-site cookie sending for top-level navigations), and CSRF tokens (a hidden value the server checks on form submits). If you use SameSite=lax or strict on session cookies and check the Origin header on state-changing requests, you have covered most cases.\n\nThe shortcut for vibe coders: use a modern auth library, default cookies to SameSite=lax, lock CORS down to your own origins (not "*"), and use POST/PATCH/DELETE for any write that matters. The library defaults usually do the right thing; the bugs come from people loosening the defaults to "make CORS work" without understanding what they turned off.',
         comparison:

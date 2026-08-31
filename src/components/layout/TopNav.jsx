@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect, cloneElement } from 'react';
+import { useState, useRef, useEffect, useCallback, cloneElement } from 'react';
 import HoverTip from '../ui/HoverTip';
 import {
-  Sun, Moon, Search, ChevronDown, ChevronRight, X, Home,
-  Menu as MenuIcon, Shuffle, Trophy, GraduationCap,
-  Keyboard, Check, Eye, Copy, Settings, LifeBuoy, BookOpen, List, BookText,
+  Search, ChevronDown, ChevronRight, X, Home,
+  Menu as MenuIcon, Trophy, GraduationCap,
+  Keyboard, Check, Eye, Copy, LifeBuoy, BookOpen, List, BookText,
   Compass, Lightbulb, Wrench, FileText, Database, KeyRound, Palette, Bot,
 } from 'lucide-react';
 import { CATEGORY_COLORS } from '../../data/categories';
 import VibeScorePill from '../learn/VibeScorePill';
+import ScoreStoragePrompt from '../learn/ScoreStoragePrompt';
 import UserMenu from './UserMenu';
 import WhatsNewMenu, { WhatsNewMenuSection } from './WhatsNewMenu';
 import {
@@ -29,6 +30,10 @@ const BUILD_CLUSTER_ICONS = {
   auth: <KeyRound size={20} />,
   'ai-literacy': <Bot size={20} />,
 };
+
+export const SCORE_STORAGE_PROMPT_AFTER_VIEWS = 7;
+export const SCORE_STORAGE_PROMPT_SNOOZE_KEY = 'vg-score-storage-prompt-snoozed-at';
+const SCORE_STORAGE_PROMPT_SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Generic popover, used by all three dropdowns (category, component, menu)
@@ -160,15 +165,14 @@ function PillDropdown({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Main menu dropdown, absorbs dark mode + ExploreBar features
+// Main menu dropdown for content, learning, progress, and help.
 // ─────────────────────────────────────────────────────────────────────────────
 function MainMenu({
   isOpen, onClose,
-  darkMode, setDarkMode,
-  learnMode, toggleLearnMode,
-  explore, categories, onSelectItem, onSelectBuildTopic,
-  onGetStarted, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
-  onOpenBuildIndex, onOpenBuildPaths,
+  learnMode, toggleLearnMode, learningProgress,
+  explore, categories,
+  onGetStarted, onOpenCheatSheet, onOpenGlossaryIndex,
+  onOpenBuildIndex,
   activeCatColors,
   siteSection, setSiteSection,
   onStartTour,
@@ -188,7 +192,7 @@ function MainMenu({
   };
 
   if (!isOpen) return null;
-  const { surpriseMe, surpriseMeBuild, visited } = explore;
+  const { visited } = explore;
   const isBuild = siteSection === 'build';
 
   // Progress UI follows the active section so "Your Progress" always means
@@ -209,17 +213,6 @@ function MainMenu({
         colors: CATEGORY_COLORS[cat.id],
       }));
 
-  const handleSurprise = () => {
-    if (isBuild) {
-      const id = surpriseMeBuild?.();
-      if (id) onSelectBuildTopic?.(id);
-    } else {
-      const id = surpriseMe();
-      onSelectItem(id);
-    }
-    onClose();
-  };
-
   const handleWelcome = () => {
     onGetStarted();
     onClose();
@@ -233,12 +226,6 @@ function MainMenu({
   const handleGlossaryIndex = () => {
     if (isBuild) onOpenBuildIndex?.();
     else onOpenGlossaryIndex?.();
-    onClose();
-  };
-
-  const handlePaths = () => {
-    if (isBuild) onOpenBuildPaths?.();
-    else onOpenPaths?.();
     onClose();
   };
 
@@ -277,32 +264,24 @@ function MainMenu({
         <div className="pb-1.5">
           <button
             onClick={toggleLearnMode}
+            data-tour="learning-checkpoint"
             className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
           >
             <GraduationCap size={18} />
             <div className="flex flex-col items-start min-w-0 text-left">
-              <span className="font-medium">Learn Mode</span>
+              <span className="font-medium">Learning Mode</span>
               <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
-                Quiz me on each component
+                {learnMode
+                  ? (learningProgress?.checkpointReady
+                    ? 'Five-item quiz ready'
+                    : `${learningProgress?.count || 0} of ${learningProgress?.total || 5} items until your quiz`)
+                  : 'Quiz after every five items'}
               </span>
             </div>
             <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
               <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
             </span>
           </button>
-          <div data-tour="learning-paths">
-            <MenuItem icon={<Trophy size={18} />} onClick={handlePaths}>
-              <span className="font-medium">Learning Paths</span>
-              {explore.badges.size > 0 && (
-                <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                  {explore.badges.size} <Check size={11} />
-                </span>
-              )}
-            </MenuItem>
-          </div>
-          <MenuItem icon={<Shuffle size={18} />} onClick={handleSurprise}>
-            Surprise Me
-          </MenuItem>
         </div>
       </div>
 
@@ -419,19 +398,6 @@ function MainMenu({
           Replay Tour
         </MenuItem>
       </div>
-      <div className="border-t border-zinc-100 dark:border-zinc-800">
-        <SectionHeader icon={<Settings size={14} />} label="Settings" />
-        <button
-          onClick={() => { setDarkMode(!darkMode); onClose(); }}
-          className="w-full flex items-center gap-3 px-4 py-2.5 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
-        >
-          {darkMode ? <Moon size={18} /> : <Sun size={18} />}
-          <span className="font-medium">Dark Mode</span>
-          <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-1'}`} />
-          </span>
-        </button>
-      </div>
     </div>
   );
 }
@@ -516,24 +482,28 @@ function SearchResultsList({ results, onSelect, maxHeight = 'max-h-80' }) {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function TopNav({
   darkMode, setDarkMode,
-  learnMode, toggleLearnMode,
+  learnMode, toggleLearnMode, learningProgress,
   activeItem, setActiveItem,
   activeBuildTopic, setActiveBuildTopic = () => {},
   categories, activeCatColors,
   siteSection = 'glossary', setSiteSection = () => {},
   onGetStarted, searchInputRef,
-  explore, onOpenCheatSheet, onOpenGlossaryIndex, onOpenPaths,
-  onOpenBuildIndex, onOpenBuildPaths,
+  explore, onOpenCheatSheet, onOpenGlossaryIndex,
+  onOpenBuildIndex,
   onOpenScoreBreakdown,
   onStartTour,
   tourForceMenu = false,
   authState,
   syncStatus = 'idle',
   onOpenProof,
+  showLearningControls = true,
 }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showScoreStoragePrompt, setShowScoreStoragePrompt] = useState(false);
+  const [userMenuPreferredMode, setUserMenuPreferredMode] = useState(null);
+  const scoreStorageUsage = useRef({ lastKey: null, count: 0 });
 
   const prevTourForceMenu = useRef(false);
   useEffect(() => {
@@ -544,6 +514,57 @@ export default function TopNav({
     }
     prevTourForceMenu.current = tourForceMenu;
   }, [tourForceMenu]);
+
+  useEffect(() => {
+    if (authState?.user) {
+      setShowScoreStoragePrompt(false);
+      return;
+    }
+    if (authState?.authReady === false) return;
+
+    const activeId = siteSection === 'build' ? activeBuildTopic : activeItem;
+    const usageKey = `${siteSection}:${activeId || ''}`;
+    if (activeId && scoreStorageUsage.current.lastKey !== usageKey) {
+      scoreStorageUsage.current.lastKey = usageKey;
+      scoreStorageUsage.current.count += 1;
+    }
+
+    if (
+      scoreStorageUsage.current.count < SCORE_STORAGE_PROMPT_AFTER_VIEWS ||
+      !explore?.score?.total ||
+      learningProgress?.checkpointReady ||
+      openDropdown
+    ) return;
+
+    try {
+      const snoozedAt = Number(localStorage.getItem(SCORE_STORAGE_PROMPT_SNOOZE_KEY));
+      if (snoozedAt && Date.now() - snoozedAt < SCORE_STORAGE_PROMPT_SNOOZE_MS) return;
+    } catch {}
+
+    setShowScoreStoragePrompt(true);
+  }, [
+    activeItem,
+    activeBuildTopic,
+    siteSection,
+    authState?.user,
+    authState?.authReady,
+    explore?.score?.total,
+    learningProgress?.checkpointReady,
+    openDropdown,
+  ]);
+
+  const snoozeScoreStoragePrompt = useCallback(() => {
+    try {
+      localStorage.setItem(SCORE_STORAGE_PROMPT_SNOOZE_KEY, String(Date.now()));
+    } catch {}
+    setShowScoreStoragePrompt(false);
+  }, []);
+
+  const handleStoreScore = useCallback(() => {
+    snoozeScoreStoragePrompt();
+    setUserMenuPreferredMode('register');
+    setOpenDropdown('user');
+  }, [snoozeScoreStoragePrompt]);
 
   const activeCat = categories.find(c => c.items.some(i => i.id === activeItem));
   const activeItemData = activeCat?.items.find(i => i.id === activeItem);
@@ -651,8 +672,6 @@ export default function TopNav({
         if (action.id) setActiveBuildTopic(action.id);
         break;
       case 'tour': onStartTour?.(); break;
-      case 'paths': onOpenPaths?.(); break;
-      case 'build-paths': onOpenBuildPaths?.(); break;
       case 'proof': onOpenProof?.(); break;
       case 'score': onOpenScoreBreakdown?.(); break;
       case 'account': setOpenDropdown('user'); break;
@@ -919,50 +938,23 @@ export default function TopNav({
             >
               <button
                 onClick={() => { toggleLearnMode(); setOpenDropdown(null); }}
+                data-tour="learning-checkpoint"
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
                 <GraduationCap size={18} />
                 <div className="flex flex-col items-start min-w-0 text-left">
-                  <span className="font-medium">Learn Mode</span>
+                  <span className="font-medium">Learning Mode</span>
                   <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
-                    {siteSection === 'build' ? 'Quiz me on each topic' : 'Quiz me on each component'}
+                    {learnMode
+                      ? (learningProgress?.checkpointReady
+                        ? 'Five-item quiz ready'
+                        : `${learningProgress?.count || 0} of ${learningProgress?.total || 5} items until your quiz`)
+                      : 'Quiz after every five items'}
                   </span>
                 </div>
                 <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${learnMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${learnMode ? 'translate-x-6' : 'translate-x-1'}`} />
                 </span>
-              </button>
-              <button
-                onClick={() => {
-                  if (siteSection === 'build') onOpenBuildPaths?.();
-                  else onOpenPaths?.();
-                  setOpenDropdown(null);
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
-              >
-                <Trophy size={18} />
-                <span className="font-medium">Learning Paths</span>
-                {explore.badges.size > 0 && (
-                  <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                    {explore.badges.size} <Check size={11} />
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={() => {
-                  if (siteSection === 'build') {
-                    const id = explore.surpriseMeBuild?.();
-                    if (id) setActiveBuildTopic(id);
-                  } else {
-                    const id = explore.surpriseMe();
-                    setActiveItem(id);
-                  }
-                  setOpenDropdown(null);
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
-              >
-                <Shuffle size={18} />
-                <span className="font-medium">Surprise Me</span>
               </button>
             </PillDropdown>
 
@@ -1070,7 +1062,7 @@ export default function TopNav({
           </div>
 
           {/* VibeScore pill, opens the breakdown modal */}
-          {explore?.score && onOpenScoreBreakdown && (
+          {showLearningControls && explore?.score && onOpenScoreBreakdown && (
             <div data-tour="vibe-score" className="hidden md:block">
               <VibeScorePill
                 score={explore.score}
@@ -1081,7 +1073,7 @@ export default function TopNav({
           )}
 
           {/* Your Progress pill between search and hamburger */}
-          <div className="hidden md:block min-w-0">
+          {showLearningControls && <div className="hidden md:block min-w-0">
             <PillDropdown
               icon={
                 <div className="relative w-7 h-7 shrink-0">
@@ -1164,7 +1156,7 @@ export default function TopNav({
                 })}
               </div>
             </PillDropdown>
-          </div>
+          </div>}
 
           {/* Main menu trigger */}
           <div className="relative" data-tour="main-menu">
@@ -1201,20 +1193,15 @@ export default function TopNav({
                 <MainMenu
                   isOpen
                   onClose={() => setOpenDropdown(null)}
-                  darkMode={darkMode}
-                  setDarkMode={setDarkMode}
                   explore={explore}
                   categories={categories}
-                  onSelectItem={setActiveItem}
-                  onSelectBuildTopic={setActiveBuildTopic}
                   onGetStarted={onGetStarted}
                   onOpenCheatSheet={onOpenCheatSheet}
                   onOpenGlossaryIndex={onOpenGlossaryIndex}
-                  onOpenPaths={onOpenPaths}
                   onOpenBuildIndex={onOpenBuildIndex}
-                  onOpenBuildPaths={onOpenBuildPaths}
                   learnMode={learnMode}
                   toggleLearnMode={toggleLearnMode}
+                  learningProgress={learningProgress}
                   activeCatColors={activeCatColors}
                   siteSection={siteSection}
                   setSiteSection={setSiteSection}
@@ -1228,11 +1215,20 @@ export default function TopNav({
           {/* Account, optional sign-in that backs up progress and badges */}
           <UserMenu
             isOpen={openDropdown === 'user'}
-            onToggle={() => setOpenDropdown(openDropdown === 'user' ? null : 'user')}
-            onClose={() => setOpenDropdown(null)}
+            onToggle={() => {
+              setUserMenuPreferredMode(null);
+              setOpenDropdown(openDropdown === 'user' ? null : 'user');
+            }}
+            onClose={() => {
+              setOpenDropdown(null);
+              setUserMenuPreferredMode(null);
+            }}
             auth={authState}
             syncStatus={syncStatus}
             score={explore?.score}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            preferredMode={userMenuPreferredMode}
             onOpenScoreBreakdown={onOpenScoreBreakdown}
             onOpenProof={onOpenProof}
             onResetProgress={explore?.resetProgress}
@@ -1270,6 +1266,14 @@ export default function TopNav({
             )}
           </div>
         </div>
+      )}
+
+      {showScoreStoragePrompt && (
+        <ScoreStoragePrompt
+          score={explore?.score?.total || 0}
+          onStore={handleStoreScore}
+          onLater={snoozeScoreStoragePrompt}
+        />
       )}
 
       {/* Mobile nav, icon-only cluster + topic dropdowns for Build literacy */}

@@ -1,4 +1,4 @@
-// What's New feed — powers the sparkles dropdown in the top nav (and the
+// What's New feed powers the announcement dropdown in the top nav (and the
 // collapsible section in the main menu on phones). Newest entries first.
 //
 // Add an entry here for every release with user-facing features so new
@@ -13,7 +13,7 @@
 //   blurb    1–2 plain-language sentences
 //   image    optional path under /public (e.g. '/releases/accounts.png')
 //   action   optional deep link: { kind, id? } where kind is one of
-//            'glossary' | 'build' | 'tour' | 'paths' | 'build-paths' |
+//            'glossary' | 'build' | 'tour' |
 //            'proof' | 'score' | 'account'
 import { version as APP_VERSION } from '../../package.json';
 
@@ -21,7 +21,7 @@ export { APP_VERSION };
 
 export const RELEASE_TAGS = ['module', 'feature', 'improvement'];
 export const RELEASE_ACTION_KINDS = [
-  'glossary', 'build', 'tour', 'paths', 'build-paths', 'proof', 'score', 'account',
+  'glossary', 'build', 'tour', 'proof', 'score', 'account',
 ];
 
 export const WHATS_NEW = [
@@ -41,7 +41,7 @@ export const WHATS_NEW = [
     date: '2026-08-17',
     tag: 'module',
     title: 'New cluster: Protocols and APIs',
-    blurb: 'How computers actually talk: protocols, HTTP, DNS, SMTP and email, ports and localhost, what an API really is, and real-time with WebSockets. With its own learning path and quiz.',
+    blurb: 'How computers actually talk: protocols, HTTP, DNS, SMTP and email, ports and localhost, what an API really is, and real-time with WebSockets. These topics now feed the five-item checkpoint quizzes.',
     image: null,
     action: { kind: 'build', id: 'what-is-a-protocol' },
   },
@@ -71,7 +71,7 @@ export const WHATS_NEW = [
     date: '2026-08-17',
     tag: 'feature',
     title: 'Guided feature tour',
-    blurb: 'A quick walkthrough of the glossary, prompt builder, VibeScore, and learning paths. Replay it any time from here.',
+    blurb: 'A quick walkthrough of the glossary, prompt builder, VibeScore, and five-item learning checkpoints. Replay it any time from here.',
     image: null,
     action: { kind: 'tour' },
   },
@@ -80,10 +80,10 @@ export const WHATS_NEW = [
     version: '0.9.0',
     date: '2026-08-17',
     tag: 'module',
-    title: 'New path: Vibe prompting for UI',
-    blurb: '15 topics across Design Language, AI Literacy, and Web Foundations with an end-of-path quiz. Earn the badge to meet the class bar.',
+    title: 'Vibe prompting for UI',
+    blurb: '15 topics across Design Language, AI Literacy, and Web Foundations, now included in the five-item checkpoint flow.',
     image: null,
-    action: { kind: 'build-paths' },
+    action: { kind: 'build', id: 'prompts-roles' },
   },
   {
     id: 'class-proof',

@@ -40,7 +40,7 @@ export default function ContextMenuDemo({ activeOptions }) {
       >
         <MoreHorizontal size={40} className="text-zinc-300 dark:text-zinc-600 mb-3" />
         <p className="text-lg text-zinc-500 dark:text-zinc-400 font-medium">Right-click anywhere here</p>
-        <p className="text-sm text-zinc-400 mt-2">or long-press on mobile</p>
+        <p className="text-base text-zinc-400 mt-2">On a phone or tablet, touch and hold instead.</p>
 
         {selected && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in">

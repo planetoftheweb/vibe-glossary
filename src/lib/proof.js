@@ -5,16 +5,14 @@
  * and whether they met the class bar. An instructor opens the link and sees a
  * read-only proof card. No backend, no accounts.
  *
- * The class bar (the minimum an instructor should expect):
- *   - Reach Tinkerer (200 pts), OR
- *   - Complete the "Vibe prompting for UI" learning path (earn the badge).
+ * The class bar is the minimum an instructor should expect:
+ * reach Tinkerer at 200 points through exploration and checkpoint quizzes.
  *
  * Everything here is pure (no React, no DOM, no localStorage).
  */
 
 import { LEVELS, levelFor } from './scoring.js';
 
-export const CLASS_PATH_ID = 'vibe-prompting';
 export const CLASS_BAR_LEVEL_ID = 'tinkerer';
 export const CLASS_BAR_POINTS = LEVELS.find(l => l.id === CLASS_BAR_LEVEL_ID)?.min ?? 200;
 
@@ -24,17 +22,13 @@ export const CLASS_BAR_POINTS = LEVELS.find(l => l.id === CLASS_BAR_LEVEL_ID)?.m
  * Returns { met: bool, reasons: string[] }.
  * `reasons` lists each criterion that passed (useful for proof text).
  */
-export function classBar({ score = 0, badges = new Set() } = {}) {
+export function classBar({ score = 0 } = {}) {
   const reasons = [];
   const level = levelFor(score);
 
   if (score >= CLASS_BAR_POINTS) {
     reasons.push(`Reached ${level.current.label} (${score} pts)`);
   }
-  if (badges.has(CLASS_PATH_ID)) {
-    reasons.push('Completed "Vibe prompting for UI" path');
-  }
-
   return { met: reasons.length > 0, reasons };
 }
 

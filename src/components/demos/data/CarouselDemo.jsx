@@ -43,10 +43,10 @@ export default function CarouselDemo({ activeOptions }) {
             </div>
           ))}
 
-          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
+          <button type="button" aria-label="Previous slide" onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
             <ChevronLeft size={28} />
           </button>
-          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
+          <button type="button" aria-label="Next slide" onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors">
             <ChevronRight size={28} />
           </button>
         </div>
@@ -54,7 +54,7 @@ export default function CarouselDemo({ activeOptions }) {
         {hasDots && (
           <div className="flex justify-center gap-2.5 mt-5">
             {SLIDES.map((_, i) => (
-              <button key={i} onClick={() => goTo(i)} className={`w-3 h-3 rounded-full transition-all ${i === current ? 'bg-zinc-900 dark:bg-white scale-125' : 'bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'}`} />
+              <button type="button" aria-label={`Go to slide ${i + 1}: ${SLIDES[i].title}`} aria-current={i === current ? 'true' : undefined} key={i} onClick={() => goTo(i)} className={`w-3 h-3 rounded-full transition-all ${i === current ? 'bg-zinc-900 dark:bg-white scale-125' : 'bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'}`} />
             ))}
           </div>
         )}

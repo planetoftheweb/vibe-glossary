@@ -21,6 +21,9 @@ const BATCH2_DEMO_IDS = [
   'virtuallist', 'mediaplayer',
 ];
 
+export const COMPACT_PATTERN_DEMO_IDS = new Set(BATCH2_DEMO_IDS);
+export const MOTION_PATTERN_DEMO_IDS = new Set(MOTION_DEMO_IDS);
+
 const batch2Registry = Object.fromEntries(BATCH2_DEMO_IDS.map((id) => [id, CompactPatternDemo]));
 const motionRegistry = Object.fromEntries(MOTION_DEMO_IDS.map((id) => [id, MotionPatternDemo]));
 

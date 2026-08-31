@@ -74,7 +74,7 @@ When you prompt, say what stays and what goes. "Hide the particle field, keep th
   {
     id: 'infinite-vs-pages',
     title: 'Infinite scroll vs pages vs Load more',
-    summary: 'Infinite scroll is a motion and UX choice, not just an API. Feeds and chat: load on scroll. Admin tables people skim: pages. Always offer a Load more escape hatch.',
+    summary: 'Infinite scroll loads more items as you move down. Numbered pages make it easy to return to a known place. A visible Load more button gives people control. Choose the pattern that matches the task.',
     details: `Infinite scroll is not "the API returns the next cursor." It is a motion and UX choice about how people travel a list. Feeds and chat want load-on-scroll. Admin tables people skim want pages, so they can say "I am on page 3 of 12." Always offer a Load more escape hatch. Some people cannot or will not ride an endless river.
 
 Cursor pagination is the right fetch for feeds. It stays stable when new items arrive at the top. Offset pages are right when the person wants a numbered place. IntersectionObserver is how you notice the end of the list without a scroll math hobby.

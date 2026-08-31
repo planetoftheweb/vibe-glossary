@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
-import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, ChevronLeft, ChevronRight, GraduationCap, MousePointerClick } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from 'react';
+import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, GraduationCap, MousePointerClick } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
 import Footer        from './components/layout/Footer';
@@ -10,17 +10,17 @@ import FeatureTour, { useTourOffer } from './components/FeatureTour';
 import CheatSheet    from './components/CheatSheet';
 import CompareView    from './components/learn/CompareView';
 import GlossaryIndex  from './components/learn/GlossaryIndex';
-import QuizCard       from './components/learn/QuizCard';
-import PathsLauncher  from './components/learn/PathsLauncher';
-import PathView       from './components/learn/PathView';
+import LearningCheckpointModal from './components/learn/LearningCheckpointModal';
 import BuildLiteracyView from './components/learn/BuildLiteracyView';
 import BuildLiteracyIndex from './components/learn/BuildLiteracyIndex';
-import BuildPathsLauncher from './components/learn/BuildPathsLauncher';
-import BuildPathView from './components/learn/BuildPathView';
 import ScoreBreakdownModal from './components/learn/ScoreBreakdownModal';
 import ProofView from './components/learn/ProofView';
 import TopicTierBadge from './components/learn/TopicTierBadge';
+import ProgressToast from './components/learn/ProgressToast';
+import FloatingLearningHud from './components/learn/FloatingLearningHud';
+import PatternStudioFrame from './components/demos/PatternStudioFrame';
 import useExploreMode from './hooks/useExploreMode';
+import useLearningCheckpoints from './hooks/useLearningCheckpoints';
 import usePanelResize from './hooks/usePanelResize';
 import useAuth from './hooks/useAuth';
 import useCloudSync from './hooks/useCloudSync';
@@ -33,8 +33,14 @@ import {
   getBuildTopic,
   getBuildClusterColors,
 } from './data/buildLiteracy';
-import { DEMO_REGISTRY } from './data/demoRegistry';
+import {
+  COMPACT_PATTERN_DEMO_IDS,
+  DEMO_REGISTRY,
+  MOTION_PATTERN_DEMO_IDS,
+} from './data/demoRegistry';
 import { decodeProof } from './lib/proof';
+import { levelFor } from './lib/scoring';
+import { goalProgress, reviewsCopy } from './lib/progressCoaching';
 import { topicFromWindow, syncTopicUrl } from './lib/topicUrl';
 import HoverTip from './components/ui/HoverTip';
 
@@ -46,11 +52,7 @@ export default function App() {
   const [showCheatSheet, setShowCheatSheet] = useState(false);
   const [compareWith, setCompareWith]     = useState(null);
   const [showGlossaryIndex, setShowGlossaryIndex] = useState(false);
-  const [showPaths, setShowPaths] = useState(false);
-  const [activePath, setActivePath] = useState(null);
   const [showBuildIndex, setShowBuildIndex] = useState(false);
-  const [showBuildPaths, setShowBuildPaths] = useState(false);
-  const [activeBuildPath, setActiveBuildPath] = useState(null);
   const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
   const [showProof, setShowProof] = useState(false);
   const [proofSnapshot, setProofSnapshot] = useState(null);
@@ -67,14 +69,28 @@ export default function App() {
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const [darkMode, setDarkMode]           = useState(true);
   const [learnMode, setLearnMode]         = useState(() => {
-    try { return localStorage.getItem('vg-learn-mode') === 'true'; }
-    catch { return false; }
+    try {
+      const saved = localStorage.getItem('vg-learn-mode');
+      return saved === null ? true : saved === 'true';
+    } catch {
+      return true;
+    }
   });
   const [toasts, setToasts]               = useState([]);
   const [activeOptions, setActiveOptions] = useState(new Set());
   const searchInputRef = useRef(null);
   const categories = useCategories();
   const explore = useExploreMode(categories, BUILD_LITERACY_CLUSTERS);
+  const previousScoreRef = useRef(explore.score.total);
+  const pendingScoreEventRef = useRef(null);
+  const toastSequenceRef = useRef(0);
+  const lastLearningCueRef = useRef('');
+  const learning = useLearningCheckpoints({
+    enabled: learnMode && !showWelcome,
+    section: siteSection,
+    activeGlossaryId: activeItem,
+    activeBuildId: activeBuildTopic,
+  });
   const glossary = useGlossary();
   // Optional accounts: sign in only to back up progress/badges to the cloud.
   const authState = useAuth();
@@ -187,15 +203,32 @@ export default function App() {
     }
   }, [activeBuildTopic, siteSection, showWelcome]);
 
-  const addGlobalToast = (message) => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
-  };
+  const dismissGlobalToast = useCallback((id) => {
+    setToasts((previous) => previous.filter((toast) => toast.id !== id));
+  }, []);
 
-  const toggleOption = (id) => {
+  const addGlobalToast = useCallback((toast, timeout = 6500) => {
+    toastSequenceRef.current += 1;
+    const id = `${Date.now()}-${toastSequenceRef.current}`;
+    const nextToast = typeof toast === 'string'
+      ? { id, kind: 'progress', title: toast }
+      : { ...toast, id };
+    setToasts((previous) => {
+      const withoutGroup = nextToast.group
+        ? previous.filter((item) => item.group !== nextToast.group)
+        : previous;
+      return [...withoutGroup.slice(-2), nextToast];
+    });
+    window.setTimeout(() => dismissGlobalToast(id), timeout);
+    return id;
+  }, [dismissGlobalToast]);
+
+  const toggleOption = (id, exclusiveIds = []) => {
     const next = new Set(activeOptions);
-    if (next.has(id)) next.delete(id);
+    if (exclusiveIds.length > 0) {
+      exclusiveIds.forEach((optionId) => next.delete(optionId));
+      next.add(id);
+    } else if (next.has(id)) next.delete(id);
     else next.add(id);
     setActiveOptions(next);
   };
@@ -230,8 +263,10 @@ export default function App() {
     setShowWelcome(true);
   };
 
-  const handleCopyPrompt = () => {
-    explore.markCopied(activeItem);
+  const handleCopyPrompt = (topicId = activeItem) => {
+    if (!topicId || explore.copied.has(topicId)) return;
+    pendingScoreEventRef.current = { kind: 'prompt' };
+    explore.markCopied(topicId);
   };
 
   const toggleLearnMode = () => {
@@ -242,35 +277,27 @@ export default function App() {
     });
   };
 
-  const handleQuizCorrect = () => {
-    // Intentionally a no-op: mastery now flows through `recordQuizAttempt`
-    // and the auto-promote effect inside useExploreMode. Calling
-    // `markMastered` here would short-circuit the second-session pass
-    // required to actually master the topic.
-  };
-
-  const handleQuizAttempt = (attempt) => {
-    explore.recordQuizAttempt(activeItem, attempt);
-  };
-
-  // Latest valid+correct attempt timestamp for the active topic, used to
-  // enforce the 30-minute counted-pass cooldown without re-scanning history
-  // inside QuizCard.
-  const cooldownLastTs = useMemo(() => {
-    const list = explore.attempts?.[activeItem] || [];
-    for (let i = list.length - 1; i >= 0; i--) {
-      if (list[i].valid && list[i].correct) return list[i].ts;
+  const continueLearning = useCallback(() => {
+    if (!learnMode) {
+      setLearnMode(true);
+      try { localStorage.setItem('vg-learn-mode', 'true'); } catch {}
     }
-    return null;
-  }, [explore.attempts, activeItem]);
+    setShowScoreBreakdown(false);
+    setShowProof(false);
+    setInfoOpen(true);
+    setMobileView('info');
+  }, [learnMode]);
 
-  const pastAttempts = explore.attempts?.[activeItem] || [];
+  const handleQuizRecorded = ({ count = 0 } = {}) => {
+    pendingScoreEventRef.current = { kind: 'review', count };
+  };
 
   const currentData  = glossary[activeItem] || glossary['modal'];
   const DemoComponent = DEMO_REGISTRY[activeItem] || DEMO_REGISTRY['modal'];
+  const demoOwnsStudio = COMPACT_PATTERN_DEMO_IDS.has(activeItem) || MOTION_PATTERN_DEMO_IDS.has(activeItem);
 
   // Flat list of all component IDs for prev/next navigation
-  const allItems = useMemo(() => categories.flatMap(c => c.items.map(i => i.id)), []);
+  const allItems = useMemo(() => categories.flatMap(c => c.items.map(i => i.id)), [categories]);
   const currentIndex = allItems.indexOf(activeItem);
   const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
   const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
@@ -278,9 +305,70 @@ export default function App() {
   const prevData = prevItem ? glossary[prevItem] : null;
   const nextData = nextItem ? glossary[nextItem] : null;
 
+  const activeBuildIndex = BUILD_TOPIC_IDS.indexOf(activeBuildTopic);
+  const prevBuildTopic = activeBuildIndex > 0 ? BUILD_TOPIC_IDS[activeBuildIndex - 1] : null;
+  const nextBuildTopic = activeBuildIndex < BUILD_TOPIC_IDS.length - 1
+    ? BUILD_TOPIC_IDS[activeBuildIndex + 1]
+    : null;
+  const sequenceNavigationBlocked = Boolean(
+    showCheatSheet ||
+    compareWith ||
+    showGlossaryIndex ||
+    showBuildIndex ||
+    showScoreBreakdown ||
+    showProof ||
+    showTour
+  );
+
+  // Left/right moves through the teaching sequence. Inputs and widgets that
+  // use arrow keys keep ownership of them, and open dialogs pause navigation.
+  useEffect(() => {
+    const handleSequenceKey = (event) => {
+      if (
+        showWelcome ||
+        sequenceNavigationBlocked ||
+        event.defaultPrevented ||
+        event.repeat ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        event.shiftKey ||
+        (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
+      ) return;
+
+      const target = event.target;
+      const arrowOwnedByControl = target?.closest?.(
+        'input, textarea, select, [contenteditable="true"], [role="slider"], [role="spinbutton"], [role="listbox"], [role="menu"], [role="menubar"], [role="tablist"], [role="grid"], [role="tree"]'
+      );
+      const blockingLayerOpen = document.querySelector('[role="dialog"]');
+      if (arrowOwnedByControl || blockingLayerOpen) return;
+
+      const movingBackward = event.key === 'ArrowLeft';
+      const destination = siteSection === 'build'
+        ? (movingBackward ? prevBuildTopic : nextBuildTopic)
+        : (movingBackward ? prevItem : nextItem);
+
+      if (!destination) return;
+      event.preventDefault();
+      if (siteSection === 'build') setActiveBuildTopic(destination);
+      else setActiveItem(destination);
+    };
+
+    window.addEventListener('keydown', handleSequenceKey);
+    return () => window.removeEventListener('keydown', handleSequenceKey);
+  }, [
+    showWelcome,
+    sequenceNavigationBlocked,
+    siteSection,
+    prevItem,
+    nextItem,
+    prevBuildTopic,
+    nextBuildTopic,
+  ]);
+
   const activeCategory = useMemo(() =>
     categories.find(c => c.items.some(i => i.id === activeItem)),
-    [activeItem]
+    [activeItem, categories]
   );
 
   const activeCat = useMemo(() =>
@@ -318,52 +406,173 @@ export default function App() {
       .flatMap(c => c.items)
       .map(mapItem);
     return [...inCat, ...others];
-  }, [activeCategory]);
+  }, [activeCategory, categories, glossary]);
 
-  const isMastered = explore.mastered.has(activeItem);
-  // Quiz stays available even after the topic is "mastered" so a learner can
-  // come back, take a fresh variant, and rack up retention points later.
-  // Hiding the quiz on mastery would also block the second-session pass
-  // required for full mastery in the first place.
-  const showQuiz = learnMode;
-
-  const carouselArrows = (
-    <div className="flex items-center gap-1.5">
-      {prevItem && (
-        <button
-          onClick={() => setActiveItem(prevItem)}
-          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
-          aria-label={`Previous: ${prevData?.title}`}
-        >
-          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
-            <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
-          </span>
-          <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
-            <span className="block text-lg font-semibold text-white">{prevData?.title}</span>
-          </span>
-        </button>
-      )}
-      {nextItem && (
-        <button
-          onClick={() => setActiveItem(nextItem)}
-          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
-          aria-label={`Next: ${nextData?.title}`}
-        >
-          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
-            <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
-          </span>
-          <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
-            <span className="block text-lg font-semibold text-white">{nextData?.title}</span>
-          </span>
-        </button>
-      )}
-    </div>
+  const glossaryCheckpointItems = useMemo(
+    () => (learning.sections.glossary.checkpoint || [])
+      .map((id) => {
+        const data = glossary[id];
+        if (!data) return null;
+        return {
+          id,
+          title: data.title || id,
+          definition: data.definition || '',
+        };
+      })
+      .filter(Boolean),
+    [learning.sections.glossary.checkpoint, glossary]
   );
+  const showCheckpoint = learnMode && glossaryCheckpointItems.length === learning.size;
+  const learningProgress = {
+    count: learning.current.checkpoint ? learning.size : learning.current.seen.length,
+    total: learning.size,
+    checkpointReady: !!learning.current.checkpoint,
+  };
+
+  // Turn point changes into useful coaching. Ordinary visits stay quiet, while
+  // meaningful actions explain what they earned and where the learner stands.
+  useEffect(() => {
+    const previous = previousScoreRef.current;
+    const total = explore.score.total;
+    if (total <= previous) {
+      previousScoreRef.current = total;
+      return;
+    }
+
+    const gained = total - previous;
+    const previousLevel = levelFor(previous);
+    const currentLevel = levelFor(total);
+    const pending = pendingScoreEventRef.current;
+    const next = currentLevel.next;
+    const nextGoal = next ? goalProgress(total, next.min) : null;
+    const target = next && nextGoal
+      ? { label: next.label, remaining: nextGoal.remaining, percent: nextGoal.percent }
+      : null;
+
+    previousScoreRef.current = total;
+    pendingScoreEventRef.current = null;
+
+    if (currentLevel.current.id !== previousLevel.current.id) {
+      addGlobalToast({
+        kind: 'level',
+        title: `${currentLevel.current.label} unlocked`,
+        points: gained,
+        message: currentLevel.current.id === 'tinkerer'
+          ? 'You reached the class requirement. Your proof is ready whenever you are.'
+          : currentLevel.current.blurb,
+        target,
+        actionLabel: 'See the next mission',
+        onAction: () => setShowScoreBreakdown(true),
+      }, 9000);
+      return;
+    }
+
+    if (pending?.kind === 'review') {
+      addGlobalToast({
+        group: 'learning-cue',
+        kind: 'review',
+        title: 'Review complete',
+        points: gained,
+        message: `${pending.count || 5} answers recorded. ${nextGoal ? reviewsCopy(nextGoal.reviewRounds) + ` can reach ${next.label}.` : 'Keep revisiting what you know.'}`,
+        target,
+        actionLabel: 'See my progress',
+        onAction: () => setShowScoreBreakdown(true),
+      }, 8500);
+      return;
+    }
+
+    if (pending?.kind === 'prompt') {
+      addGlobalToast({
+        kind: 'progress',
+        title: 'Prompt marked Used',
+        points: gained,
+        message: nextGoal
+          ? `${nextGoal.remaining} points left to ${next.label}. Try the prompt, then keep moving.`
+          : 'You turned the vocabulary into something you can use.',
+        target,
+      });
+    }
+  }, [addGlobalToast, explore.score.total]);
+
+  // Coach the five-item learning rhythm without interrupting every page.
+  useEffect(() => {
+    if (!learnMode || showWelcome) return;
+    const current = learning.current;
+    const checkpointKey = current.checkpoint?.join('|') || '';
+    const count = current.checkpoint ? learning.size : current.seen.length;
+    const cue = checkpointKey ? 'ready' : (count === 3 || count === 4 ? `count-${count}` : null);
+    if (!cue) return;
+
+    const cueKey = `${siteSection}-${current.completed}-${cue}`;
+    if (lastLearningCueRef.current === cueKey) return;
+    lastLearningCueRef.current = cueKey;
+
+    const next = explore.level.next;
+    const nextGoal = next ? goalProgress(explore.score.total, next.min) : null;
+    const target = next && nextGoal
+      ? { label: next.label, remaining: nextGoal.remaining, percent: nextGoal.percent }
+      : null;
+
+    if (checkpointKey) {
+      addGlobalToast({
+        group: 'learning-cue',
+        kind: 'review',
+        title: 'Five-item review unlocked',
+        message: `Answer all five to earn up to 25 points. ${nextGoal ? reviewsCopy(nextGoal.reviewRounds) + ` can reach ${next.label}.` : ''}`.trim(),
+        target,
+        actionLabel: 'Start review',
+        onAction: continueLearning,
+      }, 9000);
+      return;
+    }
+
+    const remainingItems = learning.size - count;
+    addGlobalToast({
+      group: 'learning-cue',
+      kind: 'progress',
+      title: `${remainingItems} more ${remainingItems === 1 ? 'item' : 'items'} to your review`,
+      message: 'Keep moving through different topics. The quiz appears after item five.',
+      target,
+    });
+  }, [
+    addGlobalToast,
+    continueLearning,
+    explore.level.next,
+    explore.score.total,
+    learnMode,
+    learning.current,
+    learning.size,
+    showWelcome,
+    siteSection,
+  ]);
+
+  const hudIsBuild = siteSection === 'build';
+  const hudPrevious = hudIsBuild
+    ? (prevBuildTopic ? { id: prevBuildTopic, title: getBuildTopic(prevBuildTopic)?.title || prevBuildTopic } : null)
+    : (prevItem ? { id: prevItem, title: prevData?.title || prevItem } : null);
+  const hudNext = hudIsBuild
+    ? (nextBuildTopic ? { id: nextBuildTopic, title: getBuildTopic(nextBuildTopic)?.title || nextBuildTopic } : null)
+    : (nextItem ? { id: nextItem, title: nextData?.title || nextItem } : null);
+  const hudProgress = hudIsBuild ? explore.buildProgress : explore.progress;
+  const hudProgressSections = hudIsBuild
+    ? BUILD_LITERACY_CLUSTERS.map((cluster) => ({
+        id: cluster.id,
+        name: cluster.title,
+        items: cluster.topics,
+        colors: getBuildClusterColors(cluster.id),
+      }))
+    : categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        items: category.items,
+        colors: CATEGORY_COLORS[category.id],
+      }));
 
   return (
-    <div className={`flex flex-col h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div
+      data-theme={darkMode ? 'dark' : 'light'}
+      className={`flex flex-col h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}
+    >
       {showWelcome && (
         <WelcomeScreen
           onEnter={handleEnterApp}
@@ -401,22 +610,6 @@ export default function App() {
         onSelectItem={setActiveItem}
       />
 
-      <PathsLauncher
-        isOpen={showPaths && !showWelcome && !activePath}
-        onClose={() => setShowPaths(false)}
-        onSelectPath={(path) => { setActivePath(path); setShowPaths(false); }}
-        mastered={explore.mastered}
-        badges={explore.badges}
-      />
-
-      <PathView
-        path={activePath}
-        isOpen={!!activePath && !showWelcome}
-        onClose={() => setActivePath(null)}
-        onAwardBadge={(pathId) => explore.awardBadge(pathId)}
-        onSelectItem={setActiveItem}
-      />
-
       <BuildLiteracyIndex
         isOpen={showBuildIndex && !showWelcome}
         onClose={() => setShowBuildIndex(false)}
@@ -427,30 +620,13 @@ export default function App() {
         mastered={explore.mastered}
       />
 
-      <BuildPathsLauncher
-        isOpen={showBuildPaths && !showWelcome && !activeBuildPath}
-        onClose={() => setShowBuildPaths(false)}
-        onSelectPath={(path) => { setActiveBuildPath(path); setShowBuildPaths(false); }}
-        mastered={explore.mastered}
-        badges={explore.badges}
-      />
-
-      <BuildPathView
-        path={activeBuildPath}
-        isOpen={!!activeBuildPath && !showWelcome}
-        onClose={() => setActiveBuildPath(null)}
-        onAwardBadge={(pathId) => explore.awardBadge(pathId)}
-        onSelectTopic={(id) => {
-          setSiteSection('build');
-          setActiveBuildTopic(id);
-        }}
-      />
-
       <ScoreBreakdownModal
         isOpen={showScoreBreakdown && !showWelcome}
         onClose={() => setShowScoreBreakdown(false)}
         score={explore.score}
         level={explore.level}
+        learningProgress={learningProgress}
+        onContinueLearning={continueLearning}
         onOpenProof={() => { setShowScoreBreakdown(false); setProofSnapshot(null); setShowProof(true); }}
       />
 
@@ -461,6 +637,7 @@ export default function App() {
         level={explore.level}
         badges={explore.badges}
         proofSnapshot={proofSnapshot}
+        onContinueLearning={continueLearning}
       />
 
       {/* Top Navigation */}
@@ -470,6 +647,7 @@ export default function App() {
           setDarkMode={setDarkMode}
           learnMode={learnMode}
           toggleLearnMode={toggleLearnMode}
+          learningProgress={learningProgress}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           activeBuildTopic={activeBuildTopic}
@@ -483,24 +661,64 @@ export default function App() {
           explore={explore}
           onOpenCheatSheet={() => setShowCheatSheet(true)}
           onOpenGlossaryIndex={() => setShowGlossaryIndex(true)}
-          onOpenPaths={() => setShowPaths(true)}
           onOpenBuildIndex={() => setShowBuildIndex(true)}
-          onOpenBuildPaths={() => setShowBuildPaths(true)}
           onOpenScoreBreakdown={() => setShowScoreBreakdown(true)}
           onStartTour={() => setShowTour(true)}
           tourForceMenu={tourForceMenu}
           authState={authState}
           syncStatus={cloudSync.status}
           onOpenProof={() => { setProofSnapshot(null); setShowProof(true); }}
+          showLearningControls={false}
+        />
+      )}
+
+      {!showWelcome && (
+        <FloatingLearningHud
+          previous={hudPrevious}
+          next={hudNext}
+          currentPosition={hudIsBuild ? activeBuildIndex + 1 : currentIndex + 1}
+          total={hudIsBuild ? BUILD_TOPIC_IDS.length : allItems.length}
+          onPrevious={() => {
+            if (hudIsBuild && prevBuildTopic) setActiveBuildTopic(prevBuildTopic);
+            if (!hudIsBuild && prevItem) setActiveItem(prevItem);
+          }}
+          onNext={() => {
+            if (hudIsBuild && nextBuildTopic) setActiveBuildTopic(nextBuildTopic);
+            if (!hudIsBuild && nextItem) setActiveItem(nextItem);
+          }}
+          itemLabel={hudIsBuild ? 'topic' : 'component'}
+          ariaLabel={hudIsBuild ? 'Build Literacy progression' : 'Glossary progression'}
+          progress={hudProgress}
+          progressSections={hudProgressSections}
+          visited={explore.visited}
+          sectionLabel={hudIsBuild ? 'Build literacy progress' : 'UI glossary progress'}
+          score={explore.score}
+          level={explore.level}
+          learningProgress={learningProgress}
+          accentClass={navAccentColors.accent}
+          onOpenScoreDetails={() => setShowScoreBreakdown(true)}
+          onOpenProof={() => { setProofSnapshot(null); setShowProof(true); }}
+          onContinueLearning={continueLearning}
+        />
+      )}
+
+      {!showWelcome && siteSection === 'glossary' && showCheckpoint && (
+        <LearningCheckpointModal
+          items={glossaryCheckpointItems}
+          questionPool={quizPool}
+          attemptsByTopic={explore.attempts}
+          onRecordAttempt={explore.recordQuizAttempt}
+          onQuizComplete={handleQuizRecorded}
+          onComplete={() => learning.completeCheckpoint('glossary')}
+          onSkip={() => learning.skipCheckpoint('glossary')}
+          categoryColors={activeCat}
         />
       )}
 
       {/* Global Toast Container */}
       <div className="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
         {toasts.map(t => (
-          <div key={t.id} className="bg-zinc-900 text-white px-5 py-3 rounded-lg shadow-lg animate-slide-in-right text-base font-medium">
-            {t.message}
-          </div>
+          <ProgressToast key={t.id} toast={t} onDismiss={dismissGlobalToast} />
         ))}
       </div>
 
@@ -516,19 +734,27 @@ export default function App() {
             }}
             learnMode={learnMode}
             toggleLearnMode={toggleLearnMode}
-            mastered={explore.mastered}
-            onMastered={() => {
-              // No-op for parity with UI Glossary; mastery flows through
-              // recordQuizAttempt + the auto-promote effect.
-            }}
             attempts={explore.attempts}
             recordQuizAttempt={explore.recordQuizAttempt}
+            onQuizComplete={handleQuizRecorded}
+            onCopyPrompt={() => handleCopyPrompt(activeBuildTopic)}
             tiers={explore.tiers}
+            learningCheckpointIds={learning.sections.build.checkpoint}
+            learningProgress={{
+              count: learning.sections.build.checkpoint
+                ? learning.size
+                : learning.sections.build.seen.length,
+              total: learning.size,
+              checkpointReady: !!learning.sections.build.checkpoint,
+            }}
+            onCompleteLearningCheckpoint={() => learning.completeCheckpoint('build')}
+            onSkipLearningCheckpoint={() => learning.skipCheckpoint('build')}
             panelWidth={panelWidth}
             setPanelWidth={setPanelWidth}
             isDesktop={isDesktop}
             infoOpen={infoOpen}
             setInfoOpen={setInfoOpen}
+            showProgressionNav={false}
           />
         ) : (
         <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
@@ -565,18 +791,18 @@ export default function App() {
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
 
                 {/* Definition Header */}
-                <div className="flex items-start justify-between mb-4 lg:mb-8">
+                <div className="flex items-start justify-between mb-4 lg:mb-5">
                   <div>
                     <div className="flex items-center flex-wrap gap-2 lg:gap-2.5 mb-2 lg:mb-3">
                       <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${activeCat.dot}`} />
                       <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>
-                        {showQuiz ? 'Learn Mode' : 'Definition'}
+                        Definition
                       </span>
                       <button
                         type="button"
                         onClick={toggleLearnMode}
                         aria-pressed={learnMode}
-                        aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'}
+                        aria-label={learnMode ? 'Turn off Learning Mode' : 'Turn on Learning Mode'}
                         className="group relative ml-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] h-11 shrink-0 bg-transparent"
                       >
                         <span
@@ -587,18 +813,19 @@ export default function App() {
                           }`}
                         >
                           <GraduationCap size={13} />
-                          {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                          {learnMode
+                            ? (showCheckpoint ? 'Quiz ready' : `Learning ${learning.sections.glossary.seen.length}/${learning.size}`)
+                            : 'Learning off'}
                         </span>
-                        <HoverTip text={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each component)'} />
+                        <HoverTip text={learnMode ? 'Turn off Learning Mode' : 'Turn on Learning Mode'} />
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
-                    <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
                       {currentData.title}
                     </h1>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {carouselArrows}
                     <button
                       onClick={() => setInfoOpen(false)}
                       className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -610,31 +837,14 @@ export default function App() {
                   </div>
                 </div>
 
-                {showQuiz ? (
-                  <QuizCard
-                    correctId={activeItem}
-                    correctTitle={currentData.title}
-                    correctDefinition={currentData.definition}
-                    correctComparison={currentData.comparison}
-                    distractorPool={quizPool}
-                    categoryColors={activeCat}
-                    onCorrect={handleQuizCorrect}
-                    variantBank={currentData.quizBank}
-                    pastAttempts={pastAttempts}
-                    cooldownLastTs={cooldownLastTs}
-                    onAttemptComplete={handleQuizAttempt}
-                  />
-                ) : (
-                  <DefinitionPanel
-                    summary={currentData.definition}
-                    details={currentData.details}
-                    resetKey={activeItem}
-                    categoryColors={activeCat}
-                  />
-                )}
+                <DefinitionPanel
+                  summary={currentData.definition}
+                  details={currentData.details}
+                  resetKey={activeItem}
+                  categoryColors={activeCat}
+                />
 
-                {/* Prompt Builder, hidden during an active quiz so it doesn't reveal the answer */}
-                <div data-tour="prompt-builder" className={`mb-8 ${showQuiz ? 'hidden' : ''}`}>
+                <div data-tour="prompt-builder" className="mb-8">
                   <PromptBuilder
                     data={currentData}
                     activeOptions={activeOptions}
@@ -645,7 +855,7 @@ export default function App() {
                 </div>
 
                 {/* Compare, below spec generator */}
-                {!showQuiz && siblings.length > 0 && (
+                {siblings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
                     <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
                       Compare
@@ -712,7 +922,27 @@ export default function App() {
                   Loading…
                 </div>
               }>
-                <DemoComponent demoId={activeItem} activeOptions={activeOptions} />
+                {demoOwnsStudio ? (
+                  <DemoComponent
+                    demoId={activeItem}
+                    activeOptions={activeOptions}
+                    onOptionToggle={toggleOption}
+                  />
+                ) : (
+                  <PatternStudioFrame
+                    demoId={activeItem}
+                    data={currentData}
+                    activeOptions={activeOptions}
+                    onOptionToggle={toggleOption}
+                    fill
+                  >
+                    <DemoComponent
+                      demoId={activeItem}
+                      activeOptions={activeOptions}
+                      onOptionToggle={toggleOption}
+                    />
+                  </PatternStudioFrame>
+                )}
               </Suspense>
             </div>
           </main>

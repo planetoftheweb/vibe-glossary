@@ -39,7 +39,7 @@ export default function TagInputDemo({ activeOptions }) {
             {tags.map((tag, i) => (
               <span key={tag} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${hasColors ? TAG_COLORS[i % TAG_COLORS.length] : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'}`}>
                 {tag}
-                <button onClick={() => removeTag(tag)} className="hover:opacity-70 transition-opacity"><X size={14} /></button>
+                <button type="button" aria-label={`Remove ${tag}`} onClick={() => removeTag(tag)} className="hover:opacity-70 transition-opacity"><X size={14} /></button>
               </span>
             ))}
             {tags.length < maxTags && (
@@ -58,7 +58,7 @@ export default function TagInputDemo({ activeOptions }) {
           {hasAutocomplete && showSuggestions && filteredSuggestions.length > 0 && (
             <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-20 p-2 animate-fade-in">
               {filteredSuggestions.slice(0, 5).map(s => (
-                <button key={s} onMouseDown={() => addTag(s)} className="w-full flex items-center gap-2 px-4 py-2.5 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors">
+                <button type="button" key={s} onMouseDown={() => addTag(s)} className="w-full flex items-center gap-2 px-4 py-2.5 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors">
                   <Plus size={16} /> {s}
                 </button>
               ))}

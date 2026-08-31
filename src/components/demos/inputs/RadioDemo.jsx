@@ -25,7 +25,7 @@ export default function RadioDemo({ activeOptions }) {
               <div className={`text-lg font-semibold ${selected === i && isCards ? 'text-indigo-900 dark:text-indigo-100' : 'text-zinc-900 dark:text-zinc-100'}`}>
                 Option {i + 1}
               </div>
-              {hasDesc && <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">This is a helpful description.</div>}
+              {hasDesc && <div className="text-base leading-relaxed text-zinc-500 dark:text-zinc-400 mt-1">This extra line explains what the choice changes.</div>}
             </div>
           </div>
         ))}

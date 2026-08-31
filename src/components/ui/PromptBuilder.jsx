@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Terminal, Zap, CheckSquare, Square, Check, Copy, Code2, ShieldCheck, ChevronDown } from 'lucide-react';
+import { Terminal, Zap, CheckSquare, Square, Circle, CircleDot, Check, Copy, Code2, ShieldCheck, ChevronDown } from 'lucide-react';
 import HoverTip from './HoverTip';
 
 const FRAMEWORKS = [
@@ -79,10 +79,37 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
 
   const includeScaffold = activeOptions.has('_scaffold');
   const includeRequirements = activeOptions.has('_requirements');
+  const promptOptions = data.prompt.options || [];
+  const ungroupedOptions = promptOptions.filter((option) => !option.group);
+  const optionGroups = [...new Set(promptOptions.filter((option) => option.group).map((option) => option.group))]
+    .map((group) => ({
+      id: group,
+      options: promptOptions.filter((option) => option.group === group),
+    }));
+
+  const isOptionActive = (option) => {
+    if (activeOptions.has(option.id)) return true;
+    if (!option.default || !option.group) return false;
+    return !promptOptions.some((candidate) => (
+      candidate.group === option.group && activeOptions.has(candidate.id)
+    ));
+  };
+
+  const handleOptionToggle = (option) => {
+    if (!option.group) {
+      onOptionToggle(option.id);
+      return;
+    }
+
+    const exclusiveIds = promptOptions
+      .filter((candidate) => candidate.group === option.group)
+      .map((candidate) => candidate.id);
+    onOptionToggle(option.id, exclusiveIds);
+  };
 
   // Build prompt text
-  let promptText = `## Component Spec\n${data.prompt.base}${data.prompt.options
-    .filter(opt => activeOptions.has(opt.id))
+  let promptText = `## Component Spec\n${data.prompt.base}${promptOptions
+    .filter(isOptionActive)
     .map(o => o.text)
     .join('')}.`;
 
@@ -121,21 +148,58 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
       </div>
 
       {/* Component options */}
-      <div className="flex flex-wrap gap-2 lg:gap-3 relative z-10">
-        {data.prompt.options.map((opt) => (
-          <button
-            key={opt.id}
-            onClick={() => onOptionToggle(opt.id)}
-            className={`flex items-center space-x-1.5 lg:space-x-2.5 px-3 py-1.5 lg:px-5 lg:py-3 rounded-lg lg:rounded-xl border text-sm lg:text-lg font-medium transition-all duration-200 ${
-              activeOptions.has(opt.id)
-                ? `${cc.active || 'bg-indigo-600 text-white'} border-transparent shadow-md transform scale-105`
-                : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
-            }`}
-          >
-            {activeOptions.has(opt.id) ? <CheckSquare size={18} /> : <Square size={18} />}
-            <span>{opt.label}</span>
-          </button>
-        ))}
+      <div className="space-y-3 relative z-10">
+        {ungroupedOptions.length > 0 && (
+          <div className="flex flex-wrap gap-2 lg:gap-3">
+            {ungroupedOptions.map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => handleOptionToggle(opt)}
+                className={`flex items-center space-x-1.5 lg:space-x-2.5 px-3 py-1.5 lg:px-5 lg:py-3 rounded-lg lg:rounded-xl border text-sm lg:text-lg font-medium transition-all duration-200 ${
+                  isOptionActive(opt)
+                    ? `${cc.active || 'bg-indigo-600 text-white'} border-transparent shadow-md transform scale-105`
+                    : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
+                }`}
+              >
+                {isOptionActive(opt) ? <CheckSquare size={18} /> : <Square size={18} />}
+                <span>{opt.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {optionGroups.map((group) => {
+          const groupLabel = group.options.find((option) => option.groupLabel)?.groupLabel || group.id;
+          return (
+            <div key={group.id} className="space-y-2">
+              <div className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                {groupLabel}
+              </div>
+              <div role="radiogroup" aria-label={groupLabel} className="flex flex-wrap gap-2 lg:gap-3">
+                {group.options.map((opt) => {
+                  const isActive = isOptionActive(opt);
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={isActive}
+                      onClick={() => handleOptionToggle(opt)}
+                      className={`flex items-center space-x-1.5 lg:space-x-2.5 px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
+                        isActive
+                          ? `${cc.active || 'bg-indigo-600 text-white'} border-transparent shadow-md`
+                          : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
+                      }`}
+                    >
+                      {isActive ? <CircleDot size={17} /> : <Circle size={17} />}
+                      <span>{opt.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Divider */}

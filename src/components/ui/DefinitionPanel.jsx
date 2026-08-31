@@ -27,7 +27,7 @@ export default function DefinitionPanel({
 
   return (
     <div className="mb-4 lg:mb-5">
-      <p className="text-lg lg:text-2xl text-zinc-700 dark:text-zinc-200 leading-relaxed font-medium">
+      <p className="font-sans text-lg lg:text-xl font-normal leading-7 lg:leading-8 text-zinc-700 dark:text-zinc-200">
         {summary}
       </p>
 
@@ -38,9 +38,9 @@ export default function DefinitionPanel({
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="definition-details"
-            className={`relative mt-3 inline-flex items-center gap-1.5 min-h-[44px] text-sm lg:text-base font-semibold ${accent} hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900 ${categoryColors?.ring || 'focus-visible:ring-indigo-500'} rounded`}
+            className={`relative mt-3 inline-flex items-center gap-1.5 min-h-[44px] text-base font-semibold ${accent} hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900 ${categoryColors?.ring || 'focus-visible:ring-indigo-500'} rounded`}
           >
-            <span>{open ? 'Show less' : 'Read more about when to use this'}</span>
+            <span>{open ? 'Show less' : 'See examples and when to use it'}</span>
             <ChevronDown
               size={18}
               className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -51,14 +51,14 @@ export default function DefinitionPanel({
           <div
             id="definition-details"
             role="region"
-            aria-label="Detailed explanation"
+            aria-label="Examples and usage guidance"
             className={`grid transition-all duration-300 ease-out ${
               open ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'
             }`}
           >
             <div className="overflow-hidden">
               <div
-                className={`rounded-xl border ${ring} bg-zinc-50/80 dark:bg-zinc-800/40 px-4 py-4 lg:px-5 lg:py-5 text-sm lg:text-base leading-relaxed text-zinc-700 dark:text-zinc-300 space-y-3`}
+                className={`rounded-xl border ${ring} bg-zinc-50/80 dark:bg-zinc-800/40 px-4 py-4 lg:px-5 lg:py-5 text-base leading-relaxed text-zinc-700 dark:text-zinc-300 space-y-3`}
               >
                 {String(details)
                   .split(/\n{2,}/)

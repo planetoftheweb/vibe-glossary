@@ -7,15 +7,15 @@ import {
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { useGlossary } from '../../hooks/useGlossary';
+import PatternStudioFrame from './PatternStudioFrame';
 
 /**
  * Shared live preview for glossary batch-2 patterns. Uses `demoId` (glossary key) to pick a mock UI.
  * `activeOptions` toggles opt1/opt2/opt3 from the prompt builder where relevant.
  */
-export default function CompactPatternDemo({ demoId, activeOptions = new Set() }) {
+export default function CompactPatternDemo({ demoId, activeOptions = new Set(), onOptionToggle }) {
   const glossary = useGlossary();
   const data = glossary[demoId];
-  const title = data?.title ?? demoId;
 
   const o = useMemo(
     () => (id) => activeOptions.has(id),
@@ -23,42 +23,218 @@ export default function CompactPatternDemo({ demoId, activeOptions = new Set() }
   );
 
   const body = RENDER[demoId] ? RENDER[demoId](o) : RENDER.__generic(o, demoId);
+  const centerPreview = demoId === 'hovercard';
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-zinc-50/80 dark:bg-zinc-950/40">
-      <div className="shrink-0 border-b border-zinc-200/80 px-4 pb-3 pt-4 dark:border-zinc-800/80 sm:px-6">
-        <p className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-          Pattern preview
-        </p>
-        <p className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">{title}</p>
-      </div>
-      <div className={PREVIEW.scroll}>
-        <div className={PREVIEW.inner}>{body}</div>
-      </div>
-    </div>
+    <PatternStudioFrame
+      demoId={demoId}
+      data={data}
+      activeOptions={activeOptions}
+      onOptionToggle={onOptionToggle}
+      centerPreview={centerPreview}
+      fill={demoId === 'virtuallist'}
+    >
+      {body}
+    </PatternStudioFrame>
   );
 }
 
 const cx = {
   card: 'rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/90 shadow-sm',
-  muted: 'text-zinc-500 dark:text-zinc-400 text-sm',
+  muted: 'text-zinc-500 dark:text-zinc-400 text-base leading-relaxed',
   pill: 'rounded-full px-2 py-0.5 text-xs font-semibold border border-zinc-200 dark:border-zinc-600',
   bar: 'rounded bg-zinc-200 dark:bg-zinc-700',
 };
 
 /** One centered column for all batch-2 previews, avoids double max-width and uneven padding */
 const PREVIEW = {
-  scroll: 'flex-1 min-h-0 overflow-y-auto overflow-x-hidden',
-  inner: 'mx-auto w-full max-w-xl px-5 py-8 sm:px-8 sm:py-10',
-  lede: 'text-sm leading-relaxed text-zinc-600 dark:text-zinc-400',
+  lede: 'text-base leading-relaxed text-zinc-600 dark:text-zinc-400',
   sectionTitle: 'text-base font-semibold tracking-tight text-zinc-900 dark:text-white',
   /** Centered form column inside the preview (inputs, search, URL bar, etc.) */
   formNarrow: 'mx-auto flex w-full max-w-md flex-col items-stretch gap-5',
-  fieldLabel: 'mb-2 block text-sm font-semibold text-zinc-800 dark:text-zinc-200',
+  fieldLabel: 'mb-2 block text-base font-semibold text-zinc-800 dark:text-zinc-200',
   /** Large, comfortable text fields, used across interactive + static demos */
   input:
     'min-h-[52px] w-full rounded-xl border-2 border-zinc-200 bg-white px-5 py-3.5 text-base leading-snug text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-indigo-400',
 };
+
+const VIRTUAL_LIST_TOTAL = 10_000;
+const VIRTUAL_LIST_HEADER_HEIGHT = 48;
+const VIRTUAL_LIST_PROJECTS = [
+  'Checkout refresh', 'AI prompt library', 'Team permissions', 'Billing portal',
+  'Search indexing', 'Design token sync', 'Usage dashboard', 'Release notes',
+];
+const VIRTUAL_LIST_OWNERS = ['A. Chen', 'J. Rivera', 'M. Patel', 'Ops bot'];
+const VIRTUAL_LIST_STATUSES = ['Live', 'Building', 'Review'];
+
+function virtualRowHeight(index, dynamicHeight) {
+  if (!dynamicHeight) return 68;
+  return [66, 86, 70, 102, 78][index % 5];
+}
+
+function virtualRowIndexAt(offsets, value) {
+  let low = 0;
+  let high = offsets.length - 1;
+
+  while (low < high) {
+    const mid = Math.floor((low + high + 1) / 2);
+    if (offsets[mid] <= value) low = mid;
+    else high = mid - 1;
+  }
+
+  return low;
+}
+
+function VirtualizedListPatternPreview({ o }) {
+  const dynamicHeight = o('opt1');
+  const stickyHeader = o('opt2');
+  const generousOverscan = o('opt3');
+  const viewportRef = useRef(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(380);
+
+  const geometry = useMemo(() => {
+    const heights = new Array(VIRTUAL_LIST_TOTAL);
+    const offsets = new Array(VIRTUAL_LIST_TOTAL);
+    let totalHeight = 0;
+
+    for (let index = 0; index < VIRTUAL_LIST_TOTAL; index += 1) {
+      offsets[index] = totalHeight;
+      heights[index] = virtualRowHeight(index, dynamicHeight);
+      totalHeight += heights[index];
+    }
+
+    return { heights, offsets, totalHeight };
+  }, [dynamicHeight]);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return undefined;
+
+    const measure = () => setViewportHeight(viewport.clientHeight || 380);
+    measure();
+
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
+
+  const contentScrollTop = Math.max(0, scrollTop - VIRTUAL_LIST_HEADER_HEIGHT);
+  const firstVisible = virtualRowIndexAt(geometry.offsets, contentScrollTop);
+  const lastVisible = virtualRowIndexAt(
+    geometry.offsets,
+    Math.min(geometry.totalHeight - 1, contentScrollTop + viewportHeight),
+  );
+  const overscanCount = generousOverscan ? 10 : 2;
+  const renderStart = Math.max(0, firstVisible - overscanCount);
+  const renderEnd = Math.min(VIRTUAL_LIST_TOTAL - 1, lastVisible + overscanCount);
+  const renderedCount = renderEnd - renderStart + 1;
+  const domSavings = ((1 - (renderedCount / VIRTUAL_LIST_TOTAL)) * 100).toFixed(1);
+  const rows = Array.from({ length: renderedCount }, (_, offset) => renderStart + offset);
+
+  function nudgeList(event) {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowDown' ? 1 : -1;
+    if (viewportRef.current) {
+      viewportRef.current.scrollTop += direction * virtualRowHeight(firstVisible, dynamicHeight);
+    }
+  }
+
+  return (
+    <section
+      className="virtual-list-lab"
+      data-virtual-list-lab=""
+      data-total-rows={String(VIRTUAL_LIST_TOTAL)}
+      data-rendered-rows={String(renderedCount)}
+      data-row-model={dynamicHeight ? 'variable' : 'fixed'}
+    >
+      <header className="virtual-list-lab__masthead">
+        <div>
+          <span>Workload simulator</span>
+          <strong>10,000 deployment records</strong>
+        </div>
+        <div className="virtual-list-lab__render-count" aria-live="polite">
+          <span>Page DOM</span>
+          <strong>{renderedCount}</strong>
+          <small>rows rendered</small>
+        </div>
+      </header>
+
+      <div className="virtual-list-lab__workspace">
+        <div className="virtual-list-lab__browser">
+          <div
+            ref={viewportRef}
+            className="virtual-list-lab__viewport"
+            tabIndex={0}
+            role="region"
+            aria-label="Virtualized list of 10,000 deployment records. Use the arrow keys or scroll to move through the list."
+            onKeyDown={nudgeList}
+            onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
+          >
+            <div className="virtual-list-lab__columns" data-sticky={String(stickyHeader)}>
+              <span>Deployment</span><span>Status</span><span>Updated</span>
+            </div>
+            <div
+              className="virtual-list-lab__spacer"
+              role="list"
+              aria-label="Currently rendered deployment records"
+              style={{ height: `${geometry.totalHeight}px` }}
+            >
+              {rows.map((index) => {
+                const project = VIRTUAL_LIST_PROJECTS[index % VIRTUAL_LIST_PROJECTS.length];
+                const owner = VIRTUAL_LIST_OWNERS[index % VIRTUAL_LIST_OWNERS.length];
+                const status = VIRTUAL_LIST_STATUSES[index % VIRTUAL_LIST_STATUSES.length];
+                const height = geometry.heights[index];
+                const showDetail = dynamicHeight && height >= 86;
+
+                return (
+                  <article
+                    key={index}
+                    role="listitem"
+                    className="virtual-list-lab__row"
+                    data-virtual-row={String(index)}
+                    style={{ height: `${height}px`, transform: `translateY(${geometry.offsets[index]}px)` }}
+                  >
+                    <div className="virtual-list-lab__record">
+                      <span className="virtual-list-lab__index">#{String(index + 1).padStart(4, '0')}</span>
+                      <div>
+                        <strong>{project}</strong>
+                        <small>{owner}{showDetail ? ' · Includes a measured two-line summary' : ''}</small>
+                      </div>
+                    </div>
+                    <span className={`virtual-list-lab__status virtual-list-lab__status--${status.toLowerCase()}`}>{status}</span>
+                    <time>{(index % 58) + 1}m ago</time>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          <footer className="virtual-list-lab__window">
+            <span><i aria-hidden="true" />Browser draws this window</span>
+            <strong>Rows {renderStart + 1}–{renderEnd + 1} of 10,000</strong>
+          </footer>
+        </div>
+
+        <aside className="virtual-list-lab__metrics" aria-label="Virtual list performance">
+          <div>
+            <span>DOM saved</span>
+            <strong>{domSavings}%</strong>
+            <small>Thousands of rows never enter the page.</small>
+          </div>
+          <dl>
+            <div><dt>Row model</dt><dd>{dynamicHeight ? 'Measured' : 'Fixed 68px'}</dd></div>
+            <div><dt>Header</dt><dd>{stickyHeader ? 'Pinned' : 'Scrolls away'}</dd></div>
+            <div><dt>Overscan</dt><dd>{overscanCount} rows</dd></div>
+          </dl>
+          <p>Scroll fast. The record numbers jump, but the page only carries a tiny slice of the full dataset.</p>
+        </aside>
+      </div>
+    </section>
+  );
+}
 
 const MULTI_IDS = ['design', 'eng', 'qa', 'docs', 'pm'];
 const MULTI_LABELS = {
@@ -169,7 +345,7 @@ function MapViewPatternPreview({ o }) {
           mapFrame
         )}
 
-        <figcaption className="border-t border-zinc-200/80 px-4 py-3 text-left text-[11px] leading-relaxed text-zinc-500 dark:border-zinc-800 dark:text-zinc-400 sm:px-5">
+        <figcaption className="border-t border-zinc-200/80 px-4 py-3 text-left text-base leading-relaxed text-zinc-500 dark:border-zinc-800 dark:text-zinc-400 sm:px-5">
           <a
             href="https://www.openstreetmap.org/copyright"
             target="_blank"
@@ -297,7 +473,7 @@ function LineChartPatternPreview({ o }) {
                         x={padL - 10}
                         y={y + 4}
                         textAnchor="end"
-                        className="fill-zinc-400 text-[11px] font-medium tabular-nums dark:fill-zinc-500"
+                        className="fill-zinc-400 text-xs font-medium tabular-nums dark:fill-zinc-500"
                       >
                         ${tick}k
                       </text>
@@ -364,7 +540,7 @@ function LineChartPatternPreview({ o }) {
                       className="fill-white stroke-zinc-200 shadow-lg dark:fill-zinc-800 dark:stroke-zinc-600"
                       strokeWidth="1"
                     />
-                    <text x={70} y={20} textAnchor="middle" className="fill-zinc-500 text-[11px] font-semibold uppercase tracking-wide">
+                    <text x={70} y={20} textAnchor="middle" className="fill-zinc-500 text-xs font-semibold uppercase tracking-wide">
                       {tip.label} 2026
                     </text>
                     <text x={70} y={36} textAnchor="middle" className="fill-zinc-900 text-sm font-bold tabular-nums dark:fill-white">
@@ -376,7 +552,7 @@ function LineChartPatternPreview({ o }) {
             </svg>
 
             {showAxes && (
-              <figcaption className="mt-3 grid grid-cols-6 gap-1 text-center text-[11px] font-medium text-zinc-500 dark:text-zinc-400 sm:text-xs">
+              <figcaption className="mt-3 grid grid-cols-6 gap-1 text-center text-xs font-medium text-zinc-500 dark:text-zinc-400">
                 {LINE_CHART_LABELS.map((lab) => (
                   <span key={lab} className="min-w-0 truncate">
                     {lab}
@@ -387,7 +563,7 @@ function LineChartPatternPreview({ o }) {
           </figure>
 
           {!showAxes && (
-            <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 text-center text-base text-zinc-500 dark:text-zinc-400">
               Enable <span className="font-semibold text-zinc-600 dark:text-zinc-300">Axes and grid</span> for scale and dates.
             </p>
           )}
@@ -590,7 +766,7 @@ function MultiSelectPatternPreview({ o }) {
                     toggle(id);
                   }}
                   disabled={atLimit}
-                  className={`flex min-h-[52px] w-full items-center gap-4 px-5 py-3.5 text-left text-base transition sm:text-sm ${
+                  className={`flex min-h-[52px] w-full items-center gap-4 px-5 py-3.5 text-left text-base transition ${
                     atLimit
                       ? 'cursor-not-allowed opacity-45'
                       : 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/80'
@@ -616,7 +792,7 @@ function MultiSelectPatternPreview({ o }) {
         </ul>
 
         {o('opt3') && (
-          <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-4 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
             In production: typeahead, Arrow keys to move, Space toggles, Esc closes.
           </p>
         )}
@@ -797,7 +973,7 @@ function ColorPickerPatternPreview({ o }) {
               <Pipette className="h-4 w-4 shrink-0" aria-hidden />
               Pick from screen
             </button>
-            {eyeMsg ? <p className="text-center text-xs text-amber-600 dark:text-amber-400">{eyeMsg}</p> : null}
+            {eyeMsg ? <p className="text-center text-base text-amber-600 dark:text-amber-400">{eyeMsg}</p> : null}
           </div>
         )}
       </div>
@@ -879,7 +1055,7 @@ function ComboboxPatternPreview({ o }) {
           then pick one option (not the same as open search).
         </p>
         {o('opt1') && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-500">
+          <p className="text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
             Async demo: short “Searching…” delay while you type. Type{' '}
             <kbd className="rounded border border-zinc-300 bg-zinc-100 px-2 py-0.5 font-mono text-xs dark:border-zinc-600 dark:bg-zinc-800">
               error
@@ -910,18 +1086,18 @@ function ComboboxPatternPreview({ o }) {
 
         <div role="listbox" aria-label="Matching frameworks" className="max-h-72 overflow-y-auto">
           {loadError && o('opt1') && (
-            <div className="px-5 py-6 text-sm text-rose-600 dark:text-rose-400" role="alert">
+            <div className="px-5 py-6 text-base text-rose-600 dark:text-rose-400" role="alert">
               Couldn’t load suggestions. (Demo error, try another query.)
             </div>
           )}
           {o('opt1') && loading && q && !loadError && (
-            <div className="flex items-center gap-3 px-5 py-6 text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-3 px-5 py-6 text-base text-zinc-500 dark:text-zinc-400">
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-indigo-500" aria-hidden />
               Searching…
             </div>
           )}
           {showListBody && filtered.length === 0 && !showCreatable && (
-            <div className="px-5 py-6 text-sm text-zinc-500 dark:text-zinc-400">No framework matches that text.</div>
+            <div className="px-5 py-6 text-base text-zinc-500 dark:text-zinc-400">No framework matches that text.</div>
           )}
           {showListBody &&
             filtered.map((label) => {
@@ -933,7 +1109,7 @@ function ComboboxPatternPreview({ o }) {
                   role="option"
                   aria-selected={active}
                   onClick={() => pick(label)}
-                  className={`flex min-h-[52px] w-full items-center border-b border-zinc-100 px-5 text-left text-base transition last:border-b-0 dark:border-zinc-800 sm:text-sm ${
+                  className={`flex min-h-[52px] w-full items-center border-b border-zinc-100 px-5 text-left text-base transition last:border-b-0 dark:border-zinc-800 ${
                     active
                       ? 'bg-indigo-50 font-semibold text-indigo-900 dark:bg-indigo-950/60 dark:text-indigo-100'
                       : 'text-zinc-800 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800/80'
@@ -947,7 +1123,7 @@ function ComboboxPatternPreview({ o }) {
             <button
               type="button"
               onClick={pickCreatable}
-              className="flex min-h-[52px] w-full items-center px-5 text-left text-base font-semibold text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40 sm:text-sm"
+              className="flex min-h-[52px] w-full items-center px-5 text-left text-base font-semibold text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
             >
               + Create “{q}”
             </button>
@@ -955,12 +1131,12 @@ function ComboboxPatternPreview({ o }) {
         </div>
 
         {selected ? (
-          <div className="border-t border-zinc-200 bg-zinc-50 px-5 py-4 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-300">
+          <div className="border-t border-zinc-200 bg-zinc-50 px-5 py-4 text-base text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-300">
             <span className="text-zinc-500 dark:text-zinc-500">Selected:</span>{' '}
             <span className="font-semibold text-zinc-900 dark:text-white">{selected}</span>
           </div>
         ) : (
-          <div className="border-t border-zinc-200 px-5 py-4 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-500">
+          <div className="border-t border-zinc-200 px-5 py-4 text-center text-base text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
             Pick a row to set the value.
           </div>
         )}
@@ -980,7 +1156,7 @@ function TreeGridPatternPreview({ o }) {
   const colCount = 3 + (alignCols ? 1 : 0);
 
   const th = 'px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400';
-  const td = 'px-4 py-3.5 align-middle text-sm text-zinc-800 dark:text-zinc-100';
+  const td = 'px-4 py-3.5 align-middle text-base text-zinc-800 dark:text-zinc-100';
   const sizeCell = ' text-right tabular-nums';
 
   return (
@@ -1144,7 +1320,7 @@ function StickyTableHeaderPatternPreview({ o }) {
           aria-label="Table with scrollable body and sticky header"
           className="max-h-[min(52vh,320px)] overflow-auto scroll-smooth border-t border-zinc-100 dark:border-zinc-800"
         >
-          <table className="w-full min-w-[36rem] border-collapse text-sm">
+          <table className="w-full min-w-[36rem] border-collapse text-base">
             <thead>
               <tr>
                 <th
@@ -1199,7 +1375,7 @@ function StickyTableHeaderPatternPreview({ o }) {
             </tbody>
           </table>
         </div>
-        <p className="border-t border-zinc-100 px-4 py-3 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <p className="border-t border-zinc-100 px-4 py-3 text-center text-base leading-relaxed text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
           {shadowWhenScrolled
             ? 'Shadow under the header appears after you scroll, layered above body text.'
             : 'Turn on Shadow in the spec to emphasize separation when scrolled.'}
@@ -1379,7 +1555,7 @@ function LinkCardPatternPreview({ o }) {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Couldn’t load link preview</p>
-              <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
                 The fetch failed or the page returned an error, you can still open the link below.
               </p>
               <p className="mt-3 break-all font-mono text-sm font-medium text-indigo-600 dark:text-indigo-400">{LINK_PREVIEW_DEMO_URL}</p>
@@ -1426,7 +1602,7 @@ function LinkCardPatternPreview({ o }) {
           />
           <div className="space-y-2 p-5 sm:p-6">
             {!domainBar && (
-              <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="flex flex-wrap items-center gap-2 text-base font-medium text-zinc-500 dark:text-zinc-400">
                 <Globe className="h-4 w-4 shrink-0" aria-hidden />
                 <span className="font-mono text-zinc-600 dark:text-zinc-300">{LINK_PREVIEW_HOST}</span>
               </p>
@@ -1502,7 +1678,7 @@ function QrCodePatternPreview({ o }) {
             draggable={false}
           />
         ) : failed ? (
-          <p className="text-center text-sm font-medium text-rose-600 dark:text-rose-400">Could not generate QR code.</p>
+          <p className="text-center text-base font-medium text-rose-600 dark:text-rose-400">Could not generate QR code.</p>
         ) : (
           <Loader2 className="h-10 w-10 animate-spin text-indigo-500" aria-label="Generating QR code" />
         )}
@@ -1823,22 +1999,7 @@ const RENDER = {
   },
 
   virtuallist(o) {
-    return (
-      <div className={`${cx.card} p-3`}>
-        <div className="flex justify-between text-xs text-zinc-500 mb-2">
-          <span>Virtual scroll</span>
-          {o('opt1') && <span>10k rows</span>}
-        </div>
-        <div className="space-y-1 font-mono text-xs text-zinc-600 dark:text-zinc-400 max-h-24 overflow-hidden">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="flex gap-2">
-              <span className="text-zinc-400 w-6">{i + 1}</span>
-              <span className={cx.bar + ' h-3 flex-1'} />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <VirtualizedListPatternPreview o={o} />;
   },
 
   chatthread(o) {
@@ -1880,7 +2041,7 @@ const RENDER = {
 
   codeblock(o) {
     return (
-      <pre className={`${cx.card} p-4 text-left overflow-x-auto text-[11px] leading-relaxed font-mono bg-zinc-950 text-emerald-400`}>
+      <pre className={`${cx.card} p-4 text-left overflow-x-auto text-xs leading-relaxed font-mono bg-zinc-950 text-emerald-400`}>
         <code>
           {`function greet() {\n  `}
           <span className="text-indigo-400">return</span>
@@ -1941,7 +2102,7 @@ const RENDER = {
   scrollarea(o) {
     return (
       <div className={`${cx.card} p-0`}>
-        <div className="max-h-32 overflow-y-auto p-3 text-xs text-zinc-600 dark:text-zinc-300 space-y-2">
+        <div className="max-h-40 overflow-y-auto p-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 space-y-3">
           {Array.from({ length: o('opt1') ? 12 : 6 }, (_, i) => (
             <p key={i}>Section {i + 1}, scroll the pane, not the page.</p>
           ))}
@@ -1973,7 +2134,7 @@ const RENDER = {
       <div className="space-y-3">
         <div className={`${cx.card} p-3 text-xs text-zinc-600 dark:text-zinc-300`}>Page content</div>
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center shadow-lg">
-          <p className="text-xs flex-1">We use cookies to improve your experience.</p>
+          <p className="text-base leading-relaxed flex-1">We use cookies to remember settings and improve your experience.</p>
           <div className="flex gap-2 shrink-0">
             <button type="button" className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-600">
               {o('opt1') ? 'Settings' : 'Reject'}
@@ -2226,17 +2387,20 @@ const RENDER = {
     const focusOpen = o('opt2')
       ? 'group-focus-within:visible group-focus-within:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0'
       : '';
+    const triggerLabel = o('opt2')
+      ? 'Hover over or focus this text to show the card'
+      : 'Hover over this text to show the card';
 
     return (
-      <div className="flex w-full min-h-[12rem] flex-col items-center justify-start pt-2">
-        {/* pb-* extends the group’s hover hit area so the pointer can reach the popover without leaving :hover */}
-        <div className="group relative inline-flex flex-col items-center pb-40">
+      <div className="flex w-full flex-col items-center justify-center text-center">
+        <div className="group relative inline-flex items-center justify-center">
           <button
             type="button"
-            className="rounded-sm border-b border-dashed border-indigo-400 text-base font-semibold text-indigo-600 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/70 dark:text-indigo-400"
+            className="rounded-xl border border-dashed border-indigo-400/80 bg-indigo-500/5 px-5 py-3 text-base font-semibold text-indigo-700 outline-offset-4 transition-colors hover:bg-indigo-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/70 dark:text-indigo-300"
           >
-            @alex
+            {triggerLabel}
           </button>
+          <span aria-hidden className="absolute left-0 top-full h-3 w-full" />
           <div
             className={`absolute left-1/2 top-full z-30 mt-3 w-64 -translate-x-1/2 translate-y-1 rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-xl transition-[opacity,transform] duration-200 ease-out dark:border-zinc-700 dark:bg-zinc-900 ${delayClass} invisible pointer-events-none opacity-0 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ${focusOpen}`}
           >
@@ -2303,7 +2467,7 @@ const RENDER = {
             >
               Export
             </button>
-            <p className="max-w-xs text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <p className="max-w-xs text-center text-base leading-relaxed text-zinc-600 dark:text-zinc-300">
               With <span className="font-medium text-zinc-800 dark:text-zinc-200">Spotlight</span> off, many libraries
               still pulse or ring the target instead of dimming the whole page.
             </p>

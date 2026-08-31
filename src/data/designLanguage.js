@@ -29,7 +29,7 @@ export const DESIGN_LANGUAGE_CLUSTER = {
       id: 'design-system',
       title: 'Design system vs component library vs UI kit',
       summary:
-        'A design system is the whole rulebook (tokens, components, principles, docs). A component library is the code. A UI kit is the Figma file. People mix the three up constantly.',
+        'A design system is the full rulebook for how an interface looks and behaves. A component library is the reusable code. A user interface kit is the matching design file, often made in Figma.',
       details:
         'A design system is the whole agreement: what the colors are called, how spacing works, what a button is, when to use one vs another, and the principles behind every choice. Material Design, Apple Human Interface Guidelines, GitHub Primer, and shadcn/ui are design systems.\n\nA component library is the code that implements the system. shadcn/ui, Material UI, Radix, Chakra, and Mantine are component libraries. You import a Button and get something that already follows the rules.\n\nA UI kit is the Figma (or Sketch, or Penpot) file your designers work from. Same components, but in a tool meant for visual exploration. The three should agree, but they often drift, which is why "the button in Figma is 8px taller than the one on the site" is a real meeting people have.',
       comparison:

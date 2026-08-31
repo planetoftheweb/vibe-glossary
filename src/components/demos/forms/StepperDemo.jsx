@@ -28,6 +28,9 @@ export default function StepperDemo({ activeOptions }) {
               <div key={step.id} className={`flex ${isVertical ? 'flex-row items-start gap-3' : 'flex-col items-center'} ${isVertical && i > 0 ? 'mt-2' : ''}`}>
                 <div className="flex flex-col items-center">
                   <button
+                    type="button"
+                    aria-label={`Go to step ${step.id}: ${step.label}`}
+                    aria-current={isActive ? 'step' : undefined}
                     onClick={() => goTo(step.id)}
                     className={`w-14 h-14 rounded-full flex items-center justify-center text-base font-bold transition-all ${
                       isDone ? 'bg-emerald-500 text-white' :
@@ -46,7 +49,7 @@ export default function StepperDemo({ activeOptions }) {
                 )}
                 <div className={isVertical ? '' : 'mt-3 text-center'}>
                   <p className={`text-base font-semibold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-500'}`}>{step.label}</p>
-                  {hasDescription && <p className="text-xs text-zinc-400 mt-1">{step.description}</p>}
+                  {hasDescription && <p className="text-base text-zinc-400 mt-1">{step.description}</p>}
                 </div>
                 {!isVertical && i < STEPS.length - 1 && <div className="flex-1 hidden sm:hidden" />}
               </div>
@@ -62,6 +65,7 @@ export default function StepperDemo({ activeOptions }) {
         {/* Navigation */}
         <div className="flex justify-between">
           <button
+            type="button"
             onClick={() => setCurrent(c => Math.max(1, c - 1))}
             disabled={current === 1}
             className="flex items-center gap-2 px-5 py-3 text-base font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white disabled:opacity-30 transition-colors"
@@ -69,6 +73,7 @@ export default function StepperDemo({ activeOptions }) {
             <ChevronLeft size={20} /> Back
           </button>
           <button
+            type="button"
             onClick={() => setCurrent(c => Math.min(STEPS.length, c + 1))}
             disabled={current === STEPS.length}
             className="flex items-center gap-2 px-5 py-3 text-base font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg disabled:opacity-30 hover:opacity-90 transition-opacity"

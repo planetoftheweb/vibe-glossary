@@ -16,7 +16,7 @@ const TIER_META = {
   visited:  { label: 'Visited',  icon: Eye,            classes: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700',
               next: 'Copy a prompt to reach Used.' },
   used:     { label: 'Used',     icon: ClipboardCopy,  classes: 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-700/40',
-              next: 'Pass Quiz Me to reach Passed.' },
+              next: 'Complete its checkpoint question to reach Passed.' },
   passed:   { label: 'Passed',   icon: GraduationCap,  classes: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-700/40',
               next: 'Reload tomorrow and pass a different question to Master it.' },
   mastered: { label: 'Mastered', icon: Award,          classes: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-700/40',

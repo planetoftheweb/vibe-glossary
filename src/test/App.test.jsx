@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import App from '../App';
 
 // ─── Mock auth/cloud sync so tests never touch Firebase ─────────────────────
@@ -65,6 +65,19 @@ vi.mock('../data/glossary', () => ({
       },
       demo: () => <div>Modal Demo</div>,
     },
+    popover: {
+      title: 'Popover',
+      definition: 'A small anchored panel',
+      vibeTip: 'tip',
+      comparison: 'comp',
+      prompt: {
+        base: 'Add popover',
+        options: [],
+        requirements: [],
+        scaffolds: { shadcn: 'code' },
+      },
+      demo: () => <div>Popover Demo</div>,
+    },
   },
 }));
 
@@ -76,7 +89,10 @@ vi.mock('../data/categories', () => ({
       name: 'Overlays',
       type: 'Components',
       icon: null,
-      items: [{ id: 'modal', name: 'Modal / Dialog' }],
+      items: [
+        { id: 'modal', name: 'Modal / Dialog' },
+        { id: 'popover', name: 'Popover' },
+      ],
     },
   ],
   CATEGORY_COLORS: {
@@ -138,10 +154,12 @@ describe('clampPanelWidth formula', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 describe('dark mode', () => {
   it('adds "dark" class to documentElement after render', async () => {
+    let container;
     await act(async () => {
-      render(<App />);
+      ({ container } = render(<App />));
     });
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(container.firstElementChild).toHaveAttribute('data-theme', 'dark');
   });
 });
 
@@ -207,14 +225,14 @@ describe('shareable topic URLs', () => {
   });
 });
 
-describe('#29 glossary Quiz me uses a 44px hit box', () => {
-  it('Learn Mode control on /glossary/modal is 44px with compact paint', async () => {
+describe('glossary Learning Mode checkpoint control', () => {
+  it('defaults on and shows progress in a compact 44px control', async () => {
     localStorage.setItem('vg-visited', '1');
     window.history.replaceState(null, '', '/glossary/modal');
     await act(async () => {
       render(<App />);
     });
-    const btn = screen.getByRole('button', { name: /Turn on Learn Mode \(quiz each component\)/i });
+    const btn = screen.getByRole('button', { name: 'Turn off Learning Mode' });
     expect(btn.className).toMatch(/min-h-\[44px\]/);
     expect(btn.className).toMatch(/h-11/);
     expect(btn.className).not.toMatch(/bg-indigo-600/);
@@ -222,6 +240,72 @@ describe('#29 glossary Quiz me uses a 44px hit box', () => {
     expect(paint).toBeTruthy();
     expect(paint.className).toMatch(/py-1/);
     expect(paint.className).not.toMatch(/min-h-\[44px\]/);
-    expect(paint.textContent).toMatch(/Quiz me/);
+    expect(paint.textContent).toMatch(/Learning 1\/5/);
+    expect(localStorage.getItem('vg-learn-mode')).toBeNull();
+  });
+
+  it('honors a saved off preference', async () => {
+    localStorage.setItem('vg-visited', '1');
+    localStorage.setItem('vg-learn-mode', 'false');
+    window.history.replaceState(null, '', '/glossary/modal');
+    await act(async () => {
+      render(<App />);
+    });
+
+    expect(screen.getByRole('button', { name: 'Turn on Learning Mode' }))
+      .toHaveTextContent('Learning off');
+  });
+});
+
+describe('glossary progression navigation', () => {
+  it('shows the neighboring component names, position, and keyboard hint', async () => {
+    localStorage.setItem('vg-visited', '1');
+    await act(async () => {
+      render(<App />);
+    });
+
+    const nav = screen.getByRole('navigation', { name: 'Glossary progression' });
+    expect(nav).toHaveTextContent('Start of list');
+    expect(nav).toHaveTextContent('1 of 2');
+    expect(nav).toHaveTextContent('Use');
+    expect(nav).toHaveTextContent('Popover');
+    expect(screen.getByRole('button', { name: 'No previous component' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Next component: Popover' })).toBeEnabled();
+  });
+
+  it('uses right and left arrow keys to move through components', async () => {
+    localStorage.setItem('vg-visited', '1');
+    await act(async () => {
+      render(<App />);
+    });
+
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    expect(screen.getByRole('heading', { name: 'Popover' })).toBeInTheDocument();
+    expect(screen.getByText('2 of 2')).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: 'ArrowLeft' });
+    expect(screen.getByRole('heading', { name: 'Modal' })).toBeInTheDocument();
+    expect(screen.getByText('1 of 2')).toBeInTheDocument();
+  });
+
+  it('leaves arrow keys with text inputs and open dialogs', async () => {
+    localStorage.setItem('vg-visited', '1');
+    await act(async () => {
+      render(<App />);
+    });
+
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.focus();
+    fireEvent.keyDown(input, { key: 'ArrowRight' });
+    expect(screen.getByRole('heading', { name: 'Modal' })).toBeInTheDocument();
+    input.remove();
+
+    const dialog = document.createElement('div');
+    dialog.setAttribute('role', 'dialog');
+    document.body.appendChild(dialog);
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    expect(screen.getByRole('heading', { name: 'Modal' })).toBeInTheDocument();
+    dialog.remove();
   });
 });

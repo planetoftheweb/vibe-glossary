@@ -18,10 +18,10 @@ export default function RatingDemo({ activeOptions }) {
         <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl p-10 shadow-md text-center">
           <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-6">Was this helpful?</p>
           <div className="flex items-center gap-6 justify-center">
-            <button onClick={() => setThumbs('up')} className={`p-6 rounded-2xl border-2 transition-all ${thumbs === 'up' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 scale-110' : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-emerald-300 hover:text-emerald-500'}`}>
+            <button type="button" aria-label="Helpful" aria-pressed={thumbs === 'up'} onClick={() => setThumbs('up')} className={`p-6 rounded-2xl border-2 transition-all ${thumbs === 'up' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 scale-110' : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-emerald-300 hover:text-emerald-500'}`}>
               <ThumbsUp size={40} />
             </button>
-            <button onClick={() => setThumbs('down')} className={`p-6 rounded-2xl border-2 transition-all ${thumbs === 'down' ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/20 text-rose-600 scale-110' : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-rose-300 hover:text-rose-500'}`}>
+            <button type="button" aria-label="Not helpful" aria-pressed={thumbs === 'down'} onClick={() => setThumbs('down')} className={`p-6 rounded-2xl border-2 transition-all ${thumbs === 'down' ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/20 text-rose-600 scale-110' : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-rose-300 hover:text-rose-500'}`}>
               <ThumbsDown size={40} />
             </button>
           </div>
@@ -40,6 +40,9 @@ export default function RatingDemo({ activeOptions }) {
         <div className="flex items-center gap-3 justify-center mb-4">
           {[1, 2, 3, 4, 5].map(n => (
             <button
+              type="button"
+              aria-label={`${n} out of 5, ${LABELS[n - 1]}`}
+              aria-pressed={rating === n}
               key={n}
               onClick={() => setRating(n)}
               onMouseEnter={() => setHover(n)}
@@ -59,7 +62,7 @@ export default function RatingDemo({ activeOptions }) {
             {LABELS[display - 1]}
           </p>
         )}
-        {rating > 0 && <p className="text-sm text-zinc-400 mt-3">You rated {rating}/5</p>}
+        {rating > 0 && <p className="text-base text-zinc-400 mt-3">You rated {rating}/5</p>}
       </div>
     </div>
   );

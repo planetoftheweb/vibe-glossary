@@ -55,9 +55,9 @@ export default function CalendarDemo({ activeOptions }) {
     <div className="flex flex-col items-center justify-center h-full w-full p-8">
       <div className="w-full max-w-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-md p-6">
         <div className="flex items-center justify-between mb-5">
-          <button onClick={prevMonth} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg text-zinc-500 transition-colors"><ChevronLeft size={20} /></button>
+          <button type="button" aria-label="Previous month" onClick={prevMonth} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg text-zinc-500 transition-colors"><ChevronLeft size={20} /></button>
           <span className="text-lg font-semibold text-zinc-900 dark:text-white">{MONTHS[month]} {year}</span>
-          <button onClick={nextMonth} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg text-zinc-500 transition-colors"><ChevronRight size={20} /></button>
+          <button type="button" aria-label="Next month" onClick={nextMonth} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg text-zinc-500 transition-colors"><ChevronRight size={20} /></button>
         </div>
         <div className="grid grid-cols-7 gap-1.5 mb-2">
           {DAYS.map(d => <div key={d} className="text-center text-xs font-semibold text-zinc-400 uppercase py-1.5">{d}</div>)}
@@ -72,6 +72,9 @@ export default function CalendarDemo({ activeOptions }) {
             const event = hasEvents ? EVENTS[day] : null;
             return (
               <button
+                type="button"
+                aria-label={`${MONTHS[month]} ${day}, ${year}${event ? `, ${event.label}` : ''}`}
+                aria-pressed={isSelected}
                 key={day}
                 onClick={() => handleDayClick(day)}
                 className={`relative aspect-square flex flex-col items-center justify-center rounded-lg text-base transition-all ${

@@ -91,7 +91,7 @@ export const WEB_FOUNDATIONS_CLUSTER = {
       id: 'html-vs-xml-json',
       title: 'HTML vs XHTML vs XML vs JSON',
       summary:
-        'HTML is for web pages and forgives most of your typos. XML is the strict ancestor used for data files. JSON is the modern, lightweight format your APIs almost certainly use.',
+        'HTML (HyperText Markup Language) builds web pages. XML (Extensible Markup Language) stores strict, tagged data. JSON (JavaScript Object Notation) is the simpler data format most modern apps exchange.',
       details:
         'These all use angle brackets or curly braces to wrap data, but they show up in different places. HTML (HyperText Markup Language) is what your browser turns into a page. It is forgiving: forget a closing tag and the browser usually still renders something.\n\nXML (Extensible Markup Language) looks like HTML but is strict, every tag must close, and you can invent your own tag names. You will meet it in RSS feeds, configuration files, and some legacy enterprise APIs. XHTML was the failed attempt to make HTML follow XML rules; you can mostly forget it exists.\n\nJSON (JavaScript Object Notation) uses curly braces and square brackets instead of tags. It is what almost every modern web API speaks today, because it is shorter, easier to parse, and maps directly to objects in your code.',
       comparison:
@@ -389,7 +389,7 @@ export const WEB_FOUNDATIONS_CLUSTER = {
       id: 'accessibility-tree',
       title: 'The accessibility tree',
       summary:
-        'A parallel "screen reader version" of your DOM that the browser builds for assistive tech. If something is not in the accessibility tree, screen readers cannot see it.',
+        'The browser makes a simplified map of the page for screen readers. It includes each control\'s name, role, value, and state. If a control is missing from this map, a screen reader cannot use it.',
       details:
         'Your browser actually builds two trees from your HTML. The DOM is the one you can inspect in DevTools and that JavaScript walks. The accessibility tree is a slimmer, screen-reader-friendly version that strips out purely decorative stuff and includes role, name, state, and value for each element.\n\nThis is why semantic HTML matters: a real <button> shows up in the accessibility tree as { role: "button", name: "Save" }. A <div onClick> shows up as { role: "generic", name: "" }, which to a screen reader user reads as nothing useful at all.\n\nMost browsers have an "Accessibility" panel in DevTools that lets you inspect the tree directly. It is the fastest way to confirm "yes, the screen reader will announce this thing as a Save button" before you ship.',
       comparison:

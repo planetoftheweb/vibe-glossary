@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+
+export const MODAL_EXIT_DURATION_MS = 200;
 
 export default function ModalDemo({ activeOptions }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   /** Bumps on each open so CSS entrance animations replay (otherwise they only run once per mount). */
   const [openNonce, setOpenNonce] = useState(0);
   const isBlur   = activeOptions.has('blur');
@@ -10,10 +13,41 @@ export default function ModalDemo({ activeOptions }) {
   const hasFooter = activeOptions.has('footer');
   const isLarge  = activeOptions.has('size');
 
+  useEffect(() => {
+    if (!isClosing) return undefined;
+
+    const timeoutId = window.setTimeout(() => {
+      setIsOpen(false);
+      setIsClosing(false);
+    }, MODAL_EXIT_DURATION_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isClosing]);
+
   const handleOpen = () => {
     setOpenNonce((n) => n + 1);
+    setIsClosing(false);
     setIsOpen(true);
   };
+
+  const handleClose = () => {
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (!isAnim || prefersReducedMotion) {
+      setIsClosing(false);
+      setIsOpen(false);
+      return;
+    }
+
+    setIsClosing(true);
+  };
+
+  const backdropAnimation = isClosing
+    ? 'animate-modal-backdrop-out'
+    : isAnim ? 'animate-modal-backdrop' : '';
+  const dialogAnimation = isClosing
+    ? 'animate-modal-dialog-out'
+    : isAnim ? 'animate-modal-dialog' : '';
 
   return (
     <div className="flex flex-col items-center justify-center h-full relative w-full p-8">
@@ -28,14 +62,14 @@ export default function ModalDemo({ activeOptions }) {
       {isOpen && (
         <div
           key={openNonce}
-          className={`absolute inset-0 z-50 flex items-center justify-center p-8 ${isBlur ? 'bg-black/60 backdrop-blur-sm' : 'bg-black/50'} ${isAnim ? 'animate-modal-backdrop' : ''}`}
+          className={`absolute inset-0 z-50 flex items-center justify-center p-8 ${isBlur ? 'bg-black/60 backdrop-blur-sm' : 'bg-black/50'} ${backdropAnimation}`}
         >
           <div
-            className={`bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl w-full border border-zinc-200 dark:border-zinc-700 flex flex-col ${isLarge ? 'max-w-3xl h-[28rem]' : 'max-w-md'} ${isAnim ? 'animate-modal-dialog' : ''}`}
+            className={`bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl w-full border border-zinc-200 dark:border-zinc-700 flex flex-col ${isLarge ? 'max-w-3xl h-[28rem]' : 'max-w-md'} ${dialogAnimation}`}
           >
             <div className="flex justify-between items-start p-8 pb-3">
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white">Confirm Action</h3>
-              <button onClick={() => setIsOpen(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+              <button onClick={handleClose} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
                 <X size={24} />
               </button>
             </div>
@@ -53,12 +87,12 @@ export default function ModalDemo({ activeOptions }) {
             </div>
             {hasFooter ? (
               <div className="p-5 border-t border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 rounded-b-2xl flex justify-end space-x-3">
-                <button onClick={() => setIsOpen(false)} className="px-5 py-2.5 text-base font-medium text-zinc-600 hover:bg-zinc-200 rounded-lg transition dark:text-zinc-300 dark:hover:bg-zinc-700">Cancel</button>
-                <button onClick={() => setIsOpen(false)} className="px-5 py-2.5 text-base font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm dark:bg-white dark:text-zinc-900">Confirm</button>
+                <button onClick={handleClose} className="px-5 py-2.5 text-base font-medium text-zinc-600 hover:bg-zinc-200 rounded-lg transition dark:text-zinc-300 dark:hover:bg-zinc-700">Cancel</button>
+                <button onClick={handleClose} className="px-5 py-2.5 text-base font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm dark:bg-white dark:text-zinc-900">Confirm</button>
               </div>
             ) : (
               <div className="p-8 pt-0 flex justify-end space-x-3">
-                <button onClick={() => setIsOpen(false)} className="px-5 py-2.5 text-base font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm dark:bg-white dark:text-zinc-900">Close</button>
+                <button onClick={handleClose} className="px-5 py-2.5 text-base font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm dark:bg-white dark:text-zinc-900">Close</button>
               </div>
             )}
           </div>

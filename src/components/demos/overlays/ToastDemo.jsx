@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
+
+const TOAST_DURATION_MS = 3000;
+
+export const TOAST_POSITION_CLASSES = {
+  'top-left': 'top-6 left-6 items-start',
+  'top-right': 'top-6 right-6 items-end',
+  'bottom-left': 'bottom-6 left-6 items-start',
+  'bottom-right': 'bottom-6 right-6 items-end',
+};
 
 export default function ToastDemo({ activeOptions }) {
   const [toasts, setToasts]  = useState([]);
-  const isStacked = activeOptions.has('stacked');
+  const nextToastId = useRef(0);
+  const timeoutIds = useRef(new Set());
   const hasAction = activeOptions.has('action');
   const isError   = activeOptions.has('error');
+  const positionOption = [...activeOptions].find((id) => id.startsWith('position-'));
+  const position = positionOption?.replace('position-', '') || 'bottom-right';
+  const positionClass = TOAST_POSITION_CLASSES[position] || TOAST_POSITION_CLASSES['bottom-right'];
+  const entranceClass = position.endsWith('left') ? 'animate-slide-in-left' : 'animate-slide-in-right';
+
+  useEffect(() => () => {
+    timeoutIds.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
+  }, []);
 
   const addToast = () => {
-    const id = Date.now();
-    setToasts(prev => isStacked ? [...prev, id] : [id]);
-    setTimeout(() => setToasts(p => p.filter(t => t !== id)), 3000);
+    const id = ++nextToastId.current;
+    setToasts((previous) => [...previous, id]);
+
+    const timeoutId = window.setTimeout(() => {
+      setToasts((previous) => previous.filter((toastId) => toastId !== id));
+      timeoutIds.current.delete(timeoutId);
+    }, TOAST_DURATION_MS);
+    timeoutIds.current.add(timeoutId);
   };
 
   return (
@@ -21,11 +44,17 @@ export default function ToastDemo({ activeOptions }) {
       >
         Trigger Toast
       </button>
-      <div className="absolute bottom-6 right-6 flex flex-col gap-3 pointer-events-none z-50">
+      <div
+        aria-label="Toast notifications"
+        aria-live="polite"
+        data-toast-position={position}
+        className={`absolute flex flex-col gap-3 pointer-events-none z-50 ${positionClass}`}
+      >
         {toasts.map((id) => (
           <div
             key={id}
-            className={`p-5 rounded-xl shadow-xl flex items-center gap-4 animate-slide-in-right ${isError ? 'bg-red-50 text-red-900 border border-red-200' : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100'}`}
+            role="status"
+            className={`p-5 rounded-xl shadow-xl flex items-center gap-4 ${entranceClass} ${isError ? 'bg-red-50 text-red-900 border border-red-200' : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100'}`}
           >
             {isError
               ? <AlertTriangle size={22} className="text-red-500" />

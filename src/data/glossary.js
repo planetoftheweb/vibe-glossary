@@ -1,6 +1,7 @@
 import { GLOSSARY_BATCH_2 } from './glossaryBatch2.js';
 import { GLOSSARY_DETAILS } from './glossaryDetails.js';
 import { GLOSSARY_MOTION } from './glossaryMotion.js';
+import { patternStudioDescription } from './patternStudioCopy.js';
 
 const _RAW_GLOSSARY_DATA = {
   // ─── Overlays ───
@@ -234,6 +235,10 @@ const _RAW_GLOSSARY_DATA = {
         { id: 'stacked', label: 'Stacked',    text: ' that stacks vertically' },
         { id: 'action',  label: 'Action',     text: ' with an undo action button' },
         { id: 'error',   label: 'Error Type', text: ' styled as an error alert' },
+        { id: 'position-top-left', group: 'toast-position', groupLabel: 'Position', label: 'Top left', text: ' positioned in the top-left corner' },
+        { id: 'position-top-right', group: 'toast-position', groupLabel: 'Position', label: 'Top right', text: ' positioned in the top-right corner' },
+        { id: 'position-bottom-left', group: 'toast-position', groupLabel: 'Position', label: 'Bottom left', text: ' positioned in the bottom-left corner' },
+        { id: 'position-bottom-right', group: 'toast-position', groupLabel: 'Position', label: 'Bottom right', text: ' positioned in the bottom-right corner', default: true },
       ],
       requirements: [
         'Use role="status" or aria-live="polite" for screen readers',
@@ -2201,14 +2206,60 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
   ...GLOSSARY_MOTION,
 };
 
+const BEGINNER_PROMPT_BASES = {
+  drawer: 'Add a temporary panel that slides in from the right without leaving the current page',
+  tooltip: 'Add a short label that appears when an icon is hovered or focused',
+  toast: 'Show a brief confirmation message that disappears on its own',
+  otp: 'Build a four-digit verification code input that supports typing and pasting',
+  switch: 'Add an on or off switch that changes the setting immediately',
+  dropzone: 'Create a file upload area that supports drag and drop plus click to browse',
+  radio: 'Show a visible group of choices where only one can be selected',
+  slider: 'Add a slider that shows its current value while it moves',
+  calendar: 'Create a calendar where people can pick a date with a mouse or keyboard',
+  statcard: 'Show key performance indicator cards with a value, label, and change over time',
+  rating: 'Add a rating control that can be used with a mouse or keyboard',
+  sidebar: 'Build a sidebar that shows the current section and collapses on smaller screens',
+  card: 'Create a card that groups one item with its title, description, and main action',
+  masonry: 'Arrange different-height cards in columns without leaving large gaps',
+  tabs: 'Add tabs for switching between related views without leaving the page',
+  breadcrumbs: 'Show a trail of links from the home page to the current page',
+  accordion: 'Create a list of headings that expand to show more information',
+  lightbox: 'Open a larger image over the page when a thumbnail is selected',
+  infinitescroll: 'Load the next set of results as the person nears the end of the list',
+  alert: 'Show an inline message that explains what happened and what to do next',
+  empty: 'Design an empty state that explains what belongs here and offers a next step',
+  badge: 'Add a short status label that stays readable in light and dark mode',
+  avatars: 'Show a small group of people with names available to screen readers',
+  timeline: 'Arrange dated events in order with a clear title and description for each',
+  skeleton: 'Show loading placeholders shaped like the content that will replace them',
+  progress: 'Show measurable task progress with a label and a numeric value',
+  hero: 'Build a first-page section with one clear message and one primary action',
+  pricing: 'Compare pricing plans so the differences and recommended choice are easy to scan',
+  testimonial: 'Show a customer quote with the speaker name, role, and clear attribution',
+  faq: 'Build a frequently asked questions section with expandable answers',
+};
+
 /**
  * Public glossary: each entry has the long-form `details` injected from
  * `glossaryDetails.js`. Keeping details in a separate file makes the long
  * copy easier to edit without scrolling past the prompt scaffolding.
  */
 export const GLOSSARY_DATA = Object.fromEntries(
-  Object.entries(_RAW_GLOSSARY_DATA).map(([id, entry]) => [
-    id,
-    GLOSSARY_DETAILS[id] ? { ...entry, details: GLOSSARY_DETAILS[id] } : entry,
-  ])
+  Object.entries(_RAW_GLOSSARY_DATA).map(([id, entry]) => {
+    const details = GLOSSARY_DETAILS[id];
+    // The definition pane owns the explanation. Use the stronger opening from
+    // the long-form copy here, then let the studio focus on the exercise.
+    const definition = details
+      ? patternStudioDescription({ ...entry, details })
+      : entry.definition;
+
+    const prompt = BEGINNER_PROMPT_BASES[id]
+      ? { ...entry.prompt, base: BEGINNER_PROMPT_BASES[id] }
+      : entry.prompt;
+
+    return [
+      id,
+      details ? { ...entry, definition, prompt, details } : { ...entry, prompt },
+    ];
+  })
 );

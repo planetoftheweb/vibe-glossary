@@ -11,7 +11,7 @@
  * Tiers per topic:
  *   - Visited     1 pt   opened the topic
  *   - Used        2 pts  copied a prompt
- *   - Passed      5 pts  one clean Quiz Me pass
+ *   - Passed      5 pts  completed its checkpoint question
  *   - Mastered   10 pts  a SECOND clean pass, in a different session,
  *                        on a different question variant
  *   - Retained   +5 pts  rolling, granted by a fresh-variant retention check

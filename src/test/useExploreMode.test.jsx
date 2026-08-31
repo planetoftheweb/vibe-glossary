@@ -141,45 +141,7 @@ describe('markCopied', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 6. surpriseMe
-// ---------------------------------------------------------------------------
-describe('surpriseMe', () => {
-  it('returns a valid id from ALL_IDS', () => {
-    const { result } = renderHook(() => useExploreMode());
-    const id = result.current.surpriseMe();
-    expect(ALL_IDS).toContain(id);
-  });
-
-  it('prefers unvisited ids when some remain unvisited', () => {
-    const { result } = renderHook(() => useExploreMode());
-
-    // Mark all IDs visited except the last one
-    const allButLast = ALL_IDS.slice(0, -1);
-    act(() => {
-      allButLast.forEach(id => result.current.markVisited(id));
-    });
-
-    // With only one unvisited id left, surpriseMe must return it
-    const lastId = ALL_IDS[ALL_IDS.length - 1];
-    const picked = result.current.surpriseMe();
-    expect(picked).toBe(lastId);
-  });
-
-  it('falls back to ALL_IDS when all ids have been visited', () => {
-    const { result } = renderHook(() => useExploreMode());
-
-    act(() => {
-      ALL_IDS.forEach(id => result.current.markVisited(id));
-    });
-
-    // All visited — result must still be a valid id
-    const picked = result.current.surpriseMe();
-    expect(ALL_IDS).toContain(picked);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// 7. progress
+// 6. progress
 // ---------------------------------------------------------------------------
 describe('progress', () => {
   it('starts with visited count of 0', () => {
@@ -237,7 +199,7 @@ describe('progress', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 8. resetProgress
+// 7. resetProgress
 // ---------------------------------------------------------------------------
 describe('resetProgress', () => {
   it('clears the visited set', () => {

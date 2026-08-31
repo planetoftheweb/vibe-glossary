@@ -25,6 +25,19 @@ const defaultProps = {
   onCopy: vi.fn(),
 };
 
+const toastPositionData = {
+  prompt: {
+    base: 'Implement Toast',
+    options: [
+      { id: 'action', label: 'Action', text: ' with an undo action' },
+      { id: 'position-top-left', group: 'toast-position', groupLabel: 'Position', label: 'Top left', text: ' positioned in the top-left corner' },
+      { id: 'position-top-right', group: 'toast-position', groupLabel: 'Position', label: 'Top right', text: ' positioned in the top-right corner' },
+      { id: 'position-bottom-left', group: 'toast-position', groupLabel: 'Position', label: 'Bottom left', text: ' positioned in the bottom-left corner' },
+      { id: 'position-bottom-right', group: 'toast-position', groupLabel: 'Position', label: 'Bottom right', text: ' positioned in the bottom-right corner', default: true },
+    ],
+  },
+};
+
 // jsdom may or may not expose navigator.clipboard depending on the test runner version.
 // Ensure it exists as a configurable property, then spy on writeText.
 let writeTextSpy;
@@ -178,6 +191,45 @@ describe('PromptBuilder', () => {
 
     await user.click(screen.getByRole('button', { name: /Focus Trap/ }));
     expect(onOptionToggle).toHaveBeenCalledWith('trap');
+  });
+
+  it('renders an exclusive position picker and includes its default in the spec', () => {
+    render(
+      <PromptBuilder
+        {...defaultProps}
+        data={toastPositionData}
+      />
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'Position' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: 'Bottom right' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText(/positioned in the bottom-right corner/)).toBeInTheDocument();
+  });
+
+  it('selects one position and sends all sibling ids for replacement', async () => {
+    const user = userEvent.setup();
+    const onOptionToggle = vi.fn();
+
+    render(
+      <PromptBuilder
+        {...defaultProps}
+        data={toastPositionData}
+        activeOptions={new Set(['position-top-left'])}
+        onOptionToggle={onOptionToggle}
+      />
+    );
+
+    expect(screen.getByRole('radio', { name: 'Top left' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText(/positioned in the top-left corner/)).toBeInTheDocument();
+    expect(screen.queryByText(/positioned in the bottom-right corner/)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: 'Top right' }));
+    expect(onOptionToggle).toHaveBeenCalledWith('position-top-right', [
+      'position-top-left',
+      'position-top-right',
+      'position-bottom-left',
+      'position-bottom-right',
+    ]);
   });
 
   // 10. Framework picker: dropdown only shows frameworks present in data.prompt.scaffolds

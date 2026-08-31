@@ -54,7 +54,7 @@ export default function AppShellDemo({ activeOptions }) {
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 shrink-0" aria-hidden />
             </div>
           </header>
-          <main className={`flex-1 ${mainPad} text-zinc-600 dark:text-zinc-400 text-sm`}>
+          <main className={`flex-1 ${mainPad} text-zinc-600 dark:text-zinc-300 text-base leading-relaxed`}>
             <p className="font-medium text-zinc-900 dark:text-zinc-100 mb-2">Main content</p>
             <p>Pages render inside this region. The shell stays put while routes change.</p>
           </main>

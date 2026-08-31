@@ -11,6 +11,9 @@ import { useGlossary } from '../../hooks/useGlossary';
 import usePanelResize from '../../hooks/usePanelResize';
 import BuildTopicView from './BuildTopicView';
 import TalkToAiCard from './TalkToAiCard';
+import MotionLesson from './MotionLesson';
+import WebFoundationLesson from './WebFoundationLesson';
+import LearningCheckpointModal from './LearningCheckpointModal';
 import HoverTip from '../ui/HoverTip';
 
 /**
@@ -27,16 +30,21 @@ export default function BuildLiteracyView({
   onOpenGlossaryEntry,
   learnMode,
   toggleLearnMode,
-  mastered,
-  onMastered,
   attempts = {},
   recordQuizAttempt,
   tiers,
+  learningCheckpointIds = null,
+  learningProgress,
+  onCompleteLearningCheckpoint,
+  onSkipLearningCheckpoint,
+  onQuizComplete,
+  onCopyPrompt,
   panelWidth = 44,
   setPanelWidth,
   isDesktop = true,
   infoOpen = true,
   setInfoOpen,
+  showProgressionNav = true,
 }) {
   const glossary = useGlossary();
   const [mobileView, setMobileView] = useState('info'); // 'info' | 'preview'
@@ -70,7 +78,33 @@ export default function BuildLiteracyView({
       .filter(t => t.definition);
   }, [topic]);
 
-  const isMastered = topic ? mastered.has(topic.id) : false;
+  const checkpointItems = useMemo(
+    () => (learningCheckpointIds || [])
+      .map((id) => {
+        const checkpointTopic = getBuildTopic(id);
+        if (!checkpointTopic) return null;
+        return {
+          id,
+          title: checkpointTopic.title,
+          definition: checkpointTopic.summary || checkpointTopic.definition || '',
+        };
+      })
+      .filter(Boolean),
+    [learningCheckpointIds]
+  );
+  const showCheckpoint = learnMode && checkpointItems.length === learningProgress?.total;
+  const checkpointModal = showCheckpoint ? (
+    <LearningCheckpointModal
+      items={checkpointItems}
+      questionPool={quizPool}
+      attemptsByTopic={attempts}
+      onRecordAttempt={recordQuizAttempt}
+      onQuizComplete={onQuizComplete}
+      onComplete={onCompleteLearningCheckpoint}
+      onSkip={onSkipLearningCheckpoint}
+      categoryColors={cc}
+    />
+  ) : null;
 
   useEffect(() => { setMobileView('info'); }, [activeTopicId]);
 
@@ -78,8 +112,24 @@ export default function BuildLiteracyView({
   // container ref so the math is relative to this view, not the App shell.
   const { containerRef, onResizeStart } = usePanelResize(setPanelWidth || (() => {}));
 
+  if (cluster?.id === 'web-foundations' && topic) {
+    return (
+      <>
+        <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-zinc-950">
+          <WebFoundationLesson
+            topic={topic}
+            cluster={cluster}
+            onSelectTopic={setActiveTopicId}
+          />
+        </div>
+        {checkpointModal}
+      </>
+    );
+  }
+
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
+    <>
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
       {/* Mobile view toggle */}
       <div className="lg:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
         <button
@@ -102,7 +152,7 @@ export default function BuildLiteracyView({
           }`}
         >
           <Sparkles size={18} />
-          Talk to AI
+          {topic?.id === 'motion' ? 'Motion lab' : 'Concept studio'}
         </button>
       </div>
 
@@ -125,13 +175,13 @@ export default function BuildLiteracyView({
                 onOpenGlossaryEntry={onOpenGlossaryEntry}
                 learnMode={learnMode}
                 toggleLearnMode={toggleLearnMode}
-                isMastered={isMastered}
-                onMastered={onMastered}
-                quizPool={quizPool}
                 pastAttempts={topic ? (attempts[topic.id] || []) : []}
-                recordQuizAttempt={recordQuizAttempt}
                 topicTier={topic ? tiers?.[topic.id] : null}
                 onCloseInfo={setInfoOpen ? () => setInfoOpen(false) : undefined}
+                currentPosition={currentIndex + 1}
+                totalTopics={BUILD_TOPIC_IDS.length}
+                learningProgress={learningProgress}
+                showProgressionNav={showProgressionNav}
               />
             ) : (
               <div className="p-10 text-zinc-500 dark:text-zinc-400">
@@ -155,7 +205,7 @@ export default function BuildLiteracyView({
           </div>
         )}
 
-        {/* Right: Talk to your AI showpiece */}
+        {/* Right: interactive teaching studio */}
         <div
           className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}
         >
@@ -176,11 +226,15 @@ export default function BuildLiteracyView({
             </div>
           )}
 
-          <div className="relative z-10 flex-1 overflow-y-auto px-5 py-8 lg:px-10 lg:py-12 flex flex-col items-center justify-center">
-            {topic && <TalkToAiCard topic={topic} categoryColors={cc} />}
+          <div className="relative z-10 flex-1 overflow-y-auto flex flex-col px-4 py-5 lg:px-6 lg:py-6 xl:px-8 xl:py-8">
+            {topic?.id === 'motion'
+              ? <MotionLesson />
+              : (topic && <TalkToAiCard topic={topic} categoryColors={cc} onCopy={onCopyPrompt} />)}
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      {checkpointModal}
+    </>
   );
 }

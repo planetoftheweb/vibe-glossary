@@ -98,7 +98,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
         <div className="px-6 pt-6 pb-2">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen size={14} className="text-violet-400" />
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">UI Glossary categories</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">UI Glossary categories</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {categories.map(cat => {
@@ -140,7 +140,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
         <div className="px-6 pt-6 pb-2">
           <div className="flex items-center gap-2 mb-4">
             <GraduationCap size={14} className="text-indigo-400" />
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Build Literacy clusters</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">Build Literacy clusters</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {BUILD_LITERACY_CLUSTERS.map(cluster => {
@@ -183,7 +183,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
             <div className="flex items-center gap-2 mb-4">
               <Keyboard size={16} className="text-zinc-400" />
-              <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Keyboard Shortcuts</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-400">Keyboard Shortcuts</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {SHORTCUTS.map(({ keys, label }) => (
@@ -191,7 +191,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
                   <span className="text-sm text-zinc-300">{label}</span>
                   <div className="flex items-center gap-1 shrink-0">
                     {keys.map((k, i) => (
-                      <kbd key={i} className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700 text-zinc-200 font-mono text-[11px] font-semibold min-w-[24px] text-center">
+                      <kbd key={i} className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700 text-zinc-200 font-mono text-xs font-semibold min-w-[24px] text-center">
                         {k}
                       </kbd>
                     ))}

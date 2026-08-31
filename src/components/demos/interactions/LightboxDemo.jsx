@@ -56,7 +56,7 @@ export default function LightboxDemo({ activeOptions }) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full min-h-0 p-4 md:p-8">
-      <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4 text-center max-w-md">
+      <p className="text-base leading-relaxed text-zinc-500 dark:text-zinc-400 mb-4 text-center max-w-md">
         Click a tile to open. Toggle prompt options for{' '}
         <span className="font-medium text-zinc-700 dark:text-zinc-200">Zoom</span> and{' '}
         <span className="font-medium text-zinc-700 dark:text-zinc-200">Gallery nav</span>.
@@ -206,12 +206,12 @@ export default function LightboxDemo({ activeOptions }) {
                     />
                   ))}
                 </div>
-                <p className="text-xs sm:text-sm text-white/45">Arrow keys · Esc to close</p>
+                <p className="text-base text-white/70">Use the arrow keys to move. Press Esc to close.</p>
               </div>
             )}
 
             {hasZoom && !hasGallery && (
-              <p className="pointer-events-none mt-3 text-center text-xs sm:text-sm text-white/45">
+              <p className="pointer-events-none mt-3 text-center text-base text-white/70">
                 Use <strong className="text-white/70">Fit</strong> vs <strong className="text-white/70">Zoom</strong> or tap the image
               </p>
             )}

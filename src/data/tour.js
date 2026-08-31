@@ -1,4 +1,4 @@
-export const TOUR_VERSION = 2;
+export const TOUR_VERSION = 3;
 
 export const TOUR_STEPS = [
   {
@@ -40,10 +40,10 @@ export const TOUR_STEPS = [
     target: '[data-tour="search"]',
   },
   {
-    id: 'paths',
-    title: 'Learning paths and badges',
-    body: 'Open the menu to find curated paths that tie related topics together. Finish one and earn a badge.',
-    target: '[data-tour="learning-paths"]',
+    id: 'checkpoint',
+    title: 'Five-item learning checkpoints',
+    body: 'Learning Mode is on by default. After five items, you can review what you saw, take a short quiz, and earn VibeScore points.',
+    target: '[data-tour="learning-checkpoint"]',
     action: 'openMenu',
   },
 ];

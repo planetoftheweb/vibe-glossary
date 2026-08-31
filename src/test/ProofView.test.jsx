@@ -10,7 +10,6 @@ vi.mock('../lib/proof', () => ({
   buildProofUrl: () => 'https://vibe-glossary.web.app/#proof=abc',
   buildProofText: () => 'My proof text',
   CLASS_BAR_POINTS: 200,
-  CLASS_PATH_ID: 'vibe-prompting-ui',
 }));
 
 vi.mock('../lib/share', () => ({

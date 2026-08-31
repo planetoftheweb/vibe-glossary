@@ -1,9 +1,8 @@
-import { useMemo } from 'react';
 import {
-  ChevronLeft, ChevronRight, GraduationCap, BookOpen, Lightbulb, PanelLeftClose,
+  GraduationCap, BookOpen, Lightbulb, PanelLeftClose,
 } from 'lucide-react';
 import DefinitionPanel from '../ui/DefinitionPanel';
-import QuizCard from './QuizCard';
+import ProgressionNav from '../ui/ProgressionNav';
 import TopicTierBadge from './TopicTierBadge';
 import HoverTip from '../ui/HoverTip';
 import { getBuildClusterColors } from '../../data/buildLiteracy';
@@ -26,60 +25,16 @@ export default function BuildTopicView({
   onOpenGlossaryEntry,
   learnMode,
   toggleLearnMode,
-  isMastered,
-  onMastered,
-  quizPool,
   pastAttempts = [],
-  recordQuizAttempt,
   topicTier,
   onCloseInfo,
+  currentPosition = 1,
+  totalTopics = 1,
+  learningProgress = { count: 0, total: 5, checkpointReady: false },
+  showProgressionNav = true,
 }) {
   const cc = getBuildClusterColors(cluster?.id);
-  // Stay available even after the topic is "mastered" so the learner can come
-  // back, hit a fresh variant, and earn retention points.
-  const showQuiz = learnMode && quizPool.length >= 4;
-  const cooldownLastTs = useMemo(() => {
-    for (let i = pastAttempts.length - 1; i >= 0; i--) {
-      const a = pastAttempts[i];
-      if (a.valid && a.correct) return a.ts;
-    }
-    return null;
-  }, [pastAttempts]);
-
-  const carouselArrows = useMemo(() => (
-    <div className="flex items-center gap-1.5">
-      {prevTopic && (
-        <button
-          onClick={() => onSelectTopic(prevTopic.id)}
-          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
-          aria-label={`Previous topic: ${prevTopic.title}`}
-        >
-          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
-            <ChevronLeft size={16} className="text-zinc-600 dark:text-zinc-300" />
-          </span>
-          <span className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Previous</span>
-            <span className="block text-lg font-semibold text-white">{prevTopic.title}</span>
-          </span>
-        </button>
-      )}
-      {nextTopic && (
-        <button
-          onClick={() => onSelectTopic(nextTopic.id)}
-          className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] bg-transparent"
-          aria-label={`Next topic: ${nextTopic.title}`}
-        >
-          <span className="w-8 h-8 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center">
-            <ChevronRight size={16} className="text-zinc-600 dark:text-zinc-300" />
-          </span>
-          <span className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap px-4 py-2.5 rounded-lg bg-zinc-900 dark:bg-zinc-700 text-right opacity-0 group-hover:opacity-100 transition-opacity shadow-xl z-30">
-            <span className="block text-xs uppercase tracking-wider text-zinc-400 font-bold">Next</span>
-            <span className="block text-lg font-semibold text-white">{nextTopic.title}</span>
-          </span>
-        </button>
-      )}
-    </div>
-  ), [prevTopic, nextTopic, onSelectTopic]);
+  const checkpointReady = learnMode && learningProgress.checkpointReady;
 
   if (!topic) return null;
 
@@ -88,18 +43,18 @@ export default function BuildTopicView({
   return (
     <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 lg:mb-8 gap-4">
+      <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center flex-wrap gap-2 lg:gap-2.5 mb-2 lg:mb-3">
             <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${cc.dot}`} />
             <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${cc.accent}`}>
-              {showQuiz ? 'Quiz mode' : cluster?.title || 'Build literacy'}
+              {cluster?.title || 'Build literacy'}
             </span>
             <button
               type="button"
               onClick={toggleLearnMode}
               aria-pressed={learnMode}
-              aria-label={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each topic)'}
+              aria-label={learnMode ? 'Turn off Learning Mode' : 'Turn on Learning Mode'}
               className="group relative ml-1 inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-transparent"
             >
               <span
@@ -110,21 +65,22 @@ export default function BuildTopicView({
                 }`}
               >
                 <GraduationCap size={13} />
-                {learnMode ? 'Learn Mode: On' : 'Quiz me'}
+                {learnMode
+                  ? (checkpointReady ? 'Quiz ready' : `Learning ${learningProgress.count}/${learningProgress.total}`)
+                  : 'Learning off'}
               </span>
-              <HoverTip text={learnMode ? 'Exit Learn Mode' : 'Turn on Learn Mode (quiz each topic)'} />
+              <HoverTip text={learnMode ? 'Turn off Learning Mode' : 'Turn on Learning Mode'} />
             </button>
             <TopicTierBadge
               tier={topicTier || tierFor({ visited: true, attempts: pastAttempts })}
               className="ml-1"
             />
           </div>
-          <h1 className="text-2xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+          <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
             {topic.title}
           </h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          {carouselArrows}
           {onCloseInfo && (
             <button
               type="button"
@@ -139,35 +95,30 @@ export default function BuildTopicView({
         </div>
       </div>
 
-      {/* Definition or quiz */}
-      {showQuiz ? (
-        <QuizCard
-          correctId={topic.id}
-          correctTitle={topic.title}
-          correctDefinition={summary}
-          correctComparison={topic.comparison}
-          distractorPool={quizPool}
-          categoryColors={cc}
-          // Mastery now flows through the attempts log; do not insta-mark
-          // mastered on first correct or the second-session pass becomes
-          // unreachable.
-          onCorrect={() => {}}
-          variantBank={topic.quizBank}
-          pastAttempts={pastAttempts}
-          cooldownLastTs={cooldownLastTs}
-          onAttemptComplete={(attempt) => recordQuizAttempt?.(topic.id, attempt)}
-        />
-      ) : (
-        <DefinitionPanel
-          summary={summary}
-          details={topic.details}
-          resetKey={topic.id}
-          categoryColors={cc}
+      {showProgressionNav && (
+        <ProgressionNav
+          previous={prevTopic}
+          next={nextTopic}
+          currentPosition={currentPosition}
+          total={totalTopics}
+          onPrevious={() => prevTopic && onSelectTopic(prevTopic.id)}
+          onNext={() => nextTopic && onSelectTopic(nextTopic.id)}
+          itemLabel="topic"
+          ariaLabel="Build Literacy progression"
+          accentClass={cc.accent}
+          className="mb-4 lg:mb-8"
         />
       )}
 
+      <DefinitionPanel
+        summary={summary}
+        details={topic.details}
+        resetKey={topic.id}
+        categoryColors={cc}
+      />
+
       {/* Vibe tip */}
-      {!showQuiz && topic.vibeTip && (
+      {topic.vibeTip && (
         <div className={`mb-6 lg:mb-8 flex items-start gap-3 px-4 py-3 lg:px-5 lg:py-4 rounded-xl border ${cc.border} ${cc.bg}`}>
           <Lightbulb size={20} className={`shrink-0 mt-0.5 ${cc.accent}`} />
           <div>
@@ -182,7 +133,7 @@ export default function BuildTopicView({
       )}
 
       {/* Comparison */}
-      {!showQuiz && topic.comparison && (
+      {topic.comparison && (
         <div className="mb-6 lg:mb-8">
           <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
             Compare
@@ -194,7 +145,7 @@ export default function BuildTopicView({
       )}
 
       {/* Sibling chips, hop to other topics in this cluster */}
-      {!showQuiz && cluster?.topics?.length > 1 && (
+      {cluster?.topics?.length > 1 && (
         <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
           <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
             More in {cluster.title}
@@ -216,7 +167,7 @@ export default function BuildTopicView({
       )}
 
       {/* Related UI components */}
-      {!showQuiz && topic.relatedGlossaryIds?.length > 0 && (
+      {topic.relatedGlossaryIds?.length > 0 && (
         <div className="mt-auto pt-6 lg:pt-8 border-t border-zinc-100 dark:border-zinc-800">
           <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-3">
             Related UI patterns

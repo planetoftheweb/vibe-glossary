@@ -27,6 +27,7 @@ export function useGlossary() {
           'details',
           'comparison',
           'vibeTip',
+          'prompt',
         ];
         const merged = { ...GLOSSARY_DATA, ...remote };
         for (const id of Object.keys(merged)) {

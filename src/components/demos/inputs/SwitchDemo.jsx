@@ -8,11 +8,16 @@ export default function SwitchDemo({ activeOptions }) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <p className="mb-5 text-center text-base text-zinc-500 dark:text-zinc-300">Press the switch to turn Airplane Mode on or off.</p>
       <div className="flex items-center gap-4 px-8 py-6 bg-white dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-md">
         {hasLabel && (
           <span className="text-xl font-semibold text-zinc-900 dark:text-white mr-6">Airplane Mode</span>
         )}
         <button
+          type="button"
+          role="switch"
+          aria-checked={isOn}
+          aria-label="Airplane Mode"
           onClick={() => setIsOn(!isOn)}
           className={`w-20 h-10 rounded-full p-1.5 transition-colors duration-300 relative ${isOn ? 'bg-indigo-600' : 'bg-zinc-200 dark:bg-zinc-700'}`}
         >

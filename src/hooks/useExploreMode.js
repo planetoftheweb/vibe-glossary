@@ -135,10 +135,8 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
   }, []);
 
   /**
-   * Append a quiz attempt for a topic. Caller (QuizCard or PathView) is
-   * responsible for running `evaluateAttempt` against the time-per-question
-   * data and supplying `valid` + `reasons`. We trust their decision so the
-   * scoring math stays pure.
+   * Append a quiz attempt for a topic. The quiz supplies the validity and
+   * result so the scoring math stays pure and reusable.
    */
   const recordQuizAttempt = useCallback((topicId, attempt) => {
     if (!topicId || !attempt) return;
@@ -170,21 +168,6 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
       return next;
     });
   }, []);
-
-  const surpriseMe = useCallback(() => {
-    const unvisited = allIds.filter(id => !visited.has(id));
-    const pool = unvisited.length > 0 ? unvisited : allIds;
-    return pool[Math.floor(Math.random() * pool.length)];
-  }, [visited, allIds]);
-
-  // Surprise Me, build-literacy edition. Same "favor unvisited" trick so a
-  // user who has explored most of the section eventually sees the new things.
-  const surpriseMeBuild = useCallback(() => {
-    if (!buildIds.length) return null;
-    const unvisited = buildIds.filter(id => !visited.has(id));
-    const pool = unvisited.length > 0 ? unvisited : buildIds;
-    return pool[Math.floor(Math.random() * pool.length)];
-  }, [visited, buildIds]);
 
   // Glossary-only progress (preserves the existing public shape).
   const visitedGlossary = useMemo(
@@ -358,8 +341,6 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
     awardBadge,
     recordQuizAttempt,
     recordRetentionPass,
-    surpriseMe,
-    surpriseMeBuild,
     progress,
     buildProgress,
     buildClusters,

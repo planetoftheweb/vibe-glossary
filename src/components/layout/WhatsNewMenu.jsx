@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Sparkles, ChevronRight } from 'lucide-react';
+import { Megaphone, ChevronRight } from 'lucide-react';
 import HoverTip from '../ui/HoverTip';
 import {
   WHATS_NEW, APP_VERSION, hasUnseenReleases, markReleasesSeen,
@@ -62,7 +62,7 @@ function ReleaseList({ onAction, dense = false }) {
 
 /**
  * Collapsible "What's New" section for the main hamburger menu. Only shown
- * below `sm`, where the sparkles pill doesn't fit in the nav bar.
+ * below `sm`, where the announcement button doesn't fit in the nav bar.
  */
 export function WhatsNewMenuSection({ onAction }) {
   const [open, setOpen] = useState(false);
@@ -86,7 +86,7 @@ export function WhatsNewMenuSection({ onAction }) {
         aria-expanded={open}
         className="w-full flex items-center gap-2 px-4 pt-3 pb-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
       >
-        <Sparkles size={14} />
+        <Megaphone size={14} />
         <span className="text-xs font-bold uppercase tracking-wider">What's New</span>
         {unseen && <span className="w-2 h-2 rounded-full bg-indigo-500" aria-hidden />}
         <span className="ml-auto text-xs text-zinc-400 font-semibold tabular-nums">v{APP_VERSION}</span>
@@ -102,7 +102,7 @@ export function WhatsNewMenuSection({ onAction }) {
 }
 
 /**
- * Sparkles pill + dropdown showcasing recent releases, with an unseen dot.
+ * Announcement button + dropdown showcasing recent releases, with an unseen dot.
  */
 export default function WhatsNewMenu({ isOpen, onToggle, onClose, onAction }) {
   const wrapRef = useRef(null);
@@ -137,7 +137,7 @@ export default function WhatsNewMenu({ isOpen, onToggle, onClose, onAction }) {
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
-        <Sparkles size={22} />
+        <Megaphone size={22} />
         <HoverTip text="What's new" align="right" hidden={isOpen} />
         {unseen && (
           <span
@@ -153,7 +153,7 @@ export default function WhatsNewMenu({ isOpen, onToggle, onClose, onAction }) {
           style={{ width: 'min(380px, calc(100vw - 16px))' }}
         >
           <div className="flex items-center gap-2 px-4 pt-3 pb-2 border-b border-zinc-100 dark:border-zinc-800">
-            <Sparkles size={14} className="text-indigo-500" />
+            <Megaphone size={14} className="text-indigo-500" />
             <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               What's New
             </span>

@@ -9,6 +9,9 @@ import HoverTip from '../ui/HoverTip';
  */
 export default function VibeScorePill({ score, level, onClick, ariaLabel }) {
   const total = score?.total ?? 0;
+  const goalHint = level?.next
+    ? `${level.pointsToNext} pts to ${level.next.label}. See what to do next.`
+    : 'Top level reached. See your learning breakdown.';
   const previous = useRef(total);
   const [delta, setDelta] = useState(null);
 
@@ -40,7 +43,7 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel }) {
           {level?.current?.label || 'Lurker'}
         </span>
       </span>
-      <HoverTip text="See your VibeScore breakdown" align="right" />
+      <HoverTip text={goalHint} align="right" />
       {delta != null && (
         <span
           aria-hidden

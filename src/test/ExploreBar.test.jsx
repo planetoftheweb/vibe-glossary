@@ -23,7 +23,6 @@ const makeExplore = (overrides = {}) => ({
   progress: { visited: 2, copied: 1, total: 99, percent: 2 },
   visited: new Set(['modal', 'drawer']),
   copied: new Set(['modal']),
-  surpriseMe: vi.fn().mockReturnValue('tabs'),
   resetProgress: vi.fn(),
   ...overrides,
 });
@@ -98,32 +97,7 @@ describe('prompts copied count', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 4. "Surprise Me" button
-// ---------------------------------------------------------------------------
-describe('"Surprise Me" button', () => {
-  it('calls surpriseMe() when clicked', async () => {
-    const user = userEvent.setup();
-    const props = defaultProps();
-    render(<ExploreBar {...props} />);
-
-    await user.click(screen.getByRole('button', { name: /surprise me/i }));
-
-    expect(props.explore.surpriseMe).toHaveBeenCalledTimes(1);
-  });
-
-  it('calls onSelectItem with the id returned by surpriseMe()', async () => {
-    const user = userEvent.setup();
-    const props = defaultProps();
-    render(<ExploreBar {...props} />);
-
-    await user.click(screen.getByRole('button', { name: /surprise me/i }));
-
-    expect(props.onSelectItem).toHaveBeenCalledWith('tabs');
-  });
-});
-
-// ---------------------------------------------------------------------------
-// 5. Trophy/expand button toggles the expanded panel
+// 4. Trophy/expand button toggles the expanded panel
 // ---------------------------------------------------------------------------
 describe('expand/collapse progress panel', () => {
   it('does not show the expanded panel initially', () => {

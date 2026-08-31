@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  X, Sparkles, Eye, ClipboardCopy, GraduationCap, Award, Repeat, Trophy, Info,
-  ShieldCheck,
+  X, Sparkles, Eye, ClipboardCopy, GraduationCap, Award, Repeat, Info,
+  ShieldCheck, ArrowRight, Target, BookOpenCheck, CheckCircle,
 } from 'lucide-react';
 import { POINTS, LEVELS } from '../../lib/scoring';
+import { CLASS_BAR_POINTS } from '../../lib/proof';
+import { goalProgress, reviewsCopy } from '../../lib/progressCoaching';
 import ShareAchievement from './ShareAchievement';
 import HoverTip from '../ui/HoverTip';
 
@@ -14,7 +16,17 @@ import HoverTip from '../ui/HoverTip';
  * make the deep-learning points visible: "1pt for visiting is small, 10pts
  * for mastering is big."
  */
-export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onOpenProof }) {
+export default function ScoreBreakdownModal({
+  isOpen,
+  onClose,
+  score,
+  level,
+  onOpenProof,
+  onContinueLearning,
+  learningProgress,
+}) {
+  const [selectedLevelId, setSelectedLevelId] = useState(null);
+
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -22,15 +34,25 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedLevelId(level?.next?.id || level?.current?.id || null);
+  }, [isOpen, level?.current?.id, level?.next?.id]);
+
   if (!isOpen || !score || !level) return null;
 
   const handleBackdrop = (e) => { if (e.target === e.currentTarget) onClose(); };
 
   const total = score.total;
   const next = level.next;
-  const percentToNext = next
-    ? Math.min(100, Math.round((level.pointsIntoLevel / (next.min - level.current.min)) * 100))
-    : 100;
+  const selectedLevel = LEVELS.find((candidate) => candidate.id === selectedLevelId)
+    || next
+    || level.current;
+  const selectedGoal = goalProgress(total, selectedLevel.min);
+  const classGoal = goalProgress(total, CLASS_BAR_POINTS);
+  const itemsUntilReview = learningProgress?.checkpointReady
+    ? 0
+    : Math.max(0, (learningProgress?.total || 5) - (learningProgress?.count || 0));
 
   return (
     <div
@@ -93,50 +115,169 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
         {/* Body */}
         <div className="flex-1 min-h-0 overflow-y-auto px-5 lg:px-7 py-5 lg:py-6 space-y-6">
 
-          {/* Level progress */}
+          {/* Interactive goal coach */}
+          <section className="overflow-hidden rounded-2xl border border-violet-500/30 bg-zinc-950 text-white shadow-xl">
+            <div className="relative overflow-hidden px-5 py-5 lg:px-6">
+              <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-violet-600/25 blur-3xl" aria-hidden="true" />
+              <div className="absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-amber-500/15 blur-3xl" aria-hidden="true" />
+
+              <div className="relative flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.16em] text-violet-300">
+                    <Target size={14} aria-hidden="true" /> Your next mission
+                  </p>
+                  {selectedGoal.met ? (
+                    <h3 className="mt-2 text-2xl font-extrabold tracking-tight lg:text-3xl">
+                      {selectedLevel.label} achieved
+                    </h3>
+                  ) : (
+                    <h3 className="mt-2 text-2xl font-extrabold tracking-tight lg:text-3xl">
+                      {selectedGoal.remaining} points to {selectedLevel.label}
+                    </h3>
+                  )}
+                  <p className="mt-1 max-w-md text-sm leading-relaxed text-zinc-400">
+                    {selectedGoal.met
+                      ? selectedLevel.blurb
+                      : `${reviewsCopy(selectedGoal.reviewRounds)} can get you there. Every correct review answer adds ${POINTS.passed} points.`}
+                  </p>
+                </div>
+                <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right">
+                  <strong className="block text-2xl font-black tabular-nums text-amber-300">
+                    {selectedGoal.percent}%
+                  </strong>
+                  <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">of target</span>
+                </div>
+              </div>
+
+              <div className="relative mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-400 transition-all duration-700"
+                  style={{ width: `${selectedGoal.percent}%` }}
+                />
+              </div>
+
+              {!selectedGoal.met && (
+                <div className="relative mt-5">
+                  <p className="mb-2 text-xs font-black uppercase tracking-[0.1em] text-zinc-500">
+                    One exact way to finish
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedGoal.plan.map((step) => (
+                      <span
+                        key={step.id}
+                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-zinc-200"
+                      >
+                        <b className="text-white">{step.count} {step.label}</b>
+                        <em className="not-italic text-emerald-300">+{step.points}</em>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="relative mt-5 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1.5 text-sm font-bold text-white">
+                    <BookOpenCheck size={16} className="text-violet-300" aria-hidden="true" />
+                    {learningProgress?.checkpointReady
+                      ? 'Your five-item review is ready now.'
+                      : `${itemsUntilReview} more ${itemsUntilReview === 1 ? 'item' : 'items'} unlock your next review.`}
+                  </p>
+                  <p className="mt-0.5 text-xs text-zinc-500">Open five different items, then answer five review questions.</p>
+                </div>
+                {onContinueLearning && (
+                  <button
+                    type="button"
+                    onClick={onContinueLearning}
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-extrabold text-zinc-950 transition-transform hover:-translate-y-0.5"
+                  >
+                    {learningProgress?.checkpointReady ? 'Start review' : 'Keep learning'}
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Pick any level to preview the work */}
           <section>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2 flex items-center justify-between gap-3">
               <span className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                Level
+                Choose a level to preview
               </span>
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                {next
-                  ? `${level.pointsToNext} pts to ${next.label}`
-                  : 'Top rung. Keep retaining what you know.'}
-              </span>
+              {next ? (
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">Next: {next.label}</span>
+              ) : (
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">Top rung. Keep retaining what you know.</span>
+              )}
             </div>
-            <div className="h-2.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-700"
-                style={{ width: `${percentToNext}%` }}
-              />
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {LEVELS.map((l) => {
                 const reached = total >= l.min;
                 const isCurrent = l.id === level.current.id;
-                return (
-                  <span
-                    key={l.id}
-                    tabIndex={0}
-                    className="group relative inline-flex items-center justify-center min-h-[44px] min-w-[44px]"
-                    aria-label={`${l.label}. ${l.blurb}`}
-                  >
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors ${
-                      isCurrent
-                        ? 'bg-amber-500 text-white border-amber-500'
-                        : reached
-                          ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700/40'
-                          : 'bg-transparent text-zinc-400 dark:text-zinc-500 border-zinc-200 dark:border-zinc-700'
-                    }`}>
+                const isSelected = l.id === selectedLevel.id;
+                const classes = `group relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border px-3 py-1 text-xs font-bold transition-all ${
+                  isCurrent
+                    ? 'border-amber-500 bg-amber-500 text-white'
+                    : reached
+                      ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-700/40 dark:bg-amber-500/10 dark:text-amber-300'
+                      : isSelected
+                        ? 'border-violet-500 bg-violet-500/15 text-violet-700 ring-2 ring-violet-500/20 dark:text-violet-300'
+                        : 'border-zinc-200 bg-transparent text-zinc-400 hover:border-violet-400 hover:text-violet-600 dark:border-zinc-700 dark:text-zinc-500 dark:hover:text-violet-300'
+                }`;
+
+                if (reached) {
+                  return (
+                    <span key={l.id} tabIndex={0} className={classes} aria-label={`${l.label}. ${l.blurb}`}>
+                      {isCurrent && <CheckCircle size={13} className="mr-1" aria-hidden="true" />}
                       {l.label}
+                      <HoverTip text={l.blurb} />
                     </span>
-                    <HoverTip text={l.blurb} />
-                  </span>
+                  );
+                }
+
+                return (
+                  <button
+                    key={l.id}
+                    type="button"
+                    className={classes}
+                    aria-label={`${l.label}. ${l.blurb}. Preview requirements.`}
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedLevelId(l.id)}
+                  >
+                    {l.label}
+                    <HoverTip text={`Preview the work for ${l.label}`} />
+                  </button>
                 );
               })}
             </div>
           </section>
+
+          {/* Class requirement, translated into work */}
+          <button
+            type="button"
+            onClick={() => setSelectedLevelId('tinkerer')}
+            className={`flex w-full min-h-[76px] items-center gap-3 rounded-xl border p-4 text-left transition-colors ${
+              classGoal.met
+                ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/35'
+                : 'border-indigo-300 bg-indigo-50 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/35 dark:hover:bg-indigo-950/55'
+            }`}
+          >
+            <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${classGoal.met ? 'bg-emerald-500 text-white' : 'bg-indigo-500 text-white'}`}>
+              {classGoal.met ? <CheckCircle size={21} aria-hidden="true" /> : <ShieldCheck size={21} aria-hidden="true" />}
+            </span>
+            <span className="min-w-0 flex-1">
+              <strong className="block text-base text-zinc-900 dark:text-white">
+                Class requirement: {classGoal.met ? 'complete' : `${classGoal.remaining} points left`}
+              </strong>
+              <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-300">
+                {classGoal.met
+                  ? 'You reached Tinkerer. Your class proof is ready.'
+                  : `${reviewsCopy(classGoal.reviewRounds)}. Select this goal to see the exact mix.`}
+              </span>
+            </span>
+            <ArrowRight size={18} className="shrink-0 text-zinc-400" aria-hidden="true" />
+          </button>
 
           {/* Section sub-totals */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,7 +317,7 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
                 icon={<GraduationCap size={18} />}
                 label="Passed"
                 pts={POINTS.passed}
-                copy="Pass a clean Quiz Me attempt for the topic."
+                copy="Answer a five-item checkpoint question correctly."
               />
               <RuleRow
                 icon={<Award size={18} />}
@@ -190,12 +331,6 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
                 pts={POINTS.retained}
                 copy="Pass a fresh-variant retention check 30 days after mastery. Repeats monthly."
               />
-              <RuleRow
-                icon={<Trophy size={18} />}
-                label="Path bonus"
-                pts={POINTS.pathBonus}
-                copy="Finish a learning path with at least 80% on the end quiz."
-              />
             </div>
           </section>
 
@@ -208,10 +343,10 @@ export default function ScoreBreakdownModal({ isOpen, onClose, score, level, onO
                   How we keep the score honest
                 </p>
                 <ul className="text-sm lg:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed list-disc list-outside ml-5 space-y-1">
-                  <li>Each question needs at least 4 seconds of your attention to count.</li>
-                  <li>Answers that take over 90 seconds count as practice.</li>
-                  <li>After a counted pass, the same topic has a 30-minute cooldown.</li>
-                  <li>Question variants rotate, so memorising one answer does not unlock the next pass.</li>
+                  <li>A checkpoint unlocks after five different items.</li>
+                  <li>Each correct checkpoint answer is recorded for that topic.</li>
+                  <li>Question wording rotates when a topic appears in another checkpoint.</li>
+                  <li>A second pass only reaches Mastered in a different tab session.</li>
                   <li>Wrong answers never lose you points. Mistakes are learning, not penalties.</li>
                 </ul>
               </div>
@@ -247,7 +382,7 @@ function SectionTotal({ title, total, breakdown, accent }) {
     { label: 'Passed',  value: breakdown.passed },
     { label: 'Mastered',value: breakdown.mastered },
     { label: 'Retained',value: breakdown.retained },
-    { label: 'Path bonus', value: breakdown.pathBonus },
+    { label: 'Legacy badge bonus', value: breakdown.pathBonus },
   ].filter(r => r.value > 0);
 
   return (

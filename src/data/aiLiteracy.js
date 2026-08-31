@@ -69,7 +69,7 @@ export const AI_LITERACY_CLUSTER = {
       id: 'prompts-roles',
       title: 'System, user, and assistant: the three roles',
       summary:
-        'Every LLM API takes a list of messages, each tagged with a role. System sets the rules, user is what the human typed, assistant is what the model said. The model writes the next assistant message.',
+        'An app sends a language model a list of messages. A system message sets the rules, a user message contains the person\'s request, and an assistant message contains the model\'s reply. The model writes the next assistant message.',
       details:
         'A chat with an LLM is just a list of messages. Each message has a role and content. The system role is your instructions to the model: who it is, the rules it must follow, the tools it has, the output format you want. The user role is the human input. The assistant role is what the model produced on previous turns. You send the whole list every time, and the model writes the next assistant message.\n\nFew-shot prompting is a trick where you put example user/assistant pairs in the message list before the real user turn. The model picks up the pattern. "Here are 3 examples of input and output, now do the next one" works astonishingly well for structured tasks.\n\nA common beginner mistake is jamming everything into one giant user message. Putting the rules in system, the examples as user/assistant pairs, and the actual question in the final user message produces sharper, more consistent answers. Models are also trained to weight system instructions slightly higher than user instructions, which matters when a user tries to override your guardrails.',
       comparison:
@@ -111,7 +111,7 @@ export const AI_LITERACY_CLUSTER = {
       id: 'multimodal',
       title: 'Multimodal models',
       summary:
-        'A multimodal model handles more than just text. Vision models read images. Audio models hear speech. Some handle video. The point is one API call can mix words, pictures, and sound.',
+        'A multimodal model can work with more than text. It may read images, hear speech, or understand video. One request can combine words, pictures, and sound.',
       details:
         'Until 2023 most LLMs were text in, text out. Multimodal models broke that wall. GPT-4o, Claude with vision, Gemini 2.5, and similar can take an image plus text in the same prompt. Some take audio. A few take video frames or generate images and audio as output.\n\nIn practice, "multimodal" usually means "vision-language": you can attach a screenshot, a photo of a whiteboard, a chart, or a UI mockup and ask the model about it. This is the killer feature for design feedback ("does this layout work on mobile?"), bug reports ("here is a screenshot of the error"), and front-end coding ("turn this Figma frame into JSX").\n\nAudio in is becoming standard for voice agents and transcription. Audio out (speech generation) is its own category, often a separate model behind the same provider. Image generation and video generation are usually different models entirely (DALL-E, Imagen, Sora, Veo, Midjourney) even when the same vendor offers them.\n\nCost note: images cost a surprising number of tokens. A high-res screenshot can easily be 1,000 to 2,000 tokens before you write a single word.',
       comparison:
@@ -174,7 +174,7 @@ export const AI_LITERACY_CLUSTER = {
       id: 'tool-calling',
       title: 'Tool calling (function calling)',
       summary:
-        'A protocol where you tell the LLM "here are functions you can call, with these names, arguments, and descriptions". The model decides when to call one and writes the arguments as JSON. Your code runs the function and feeds the result back.',
+        'Tool calling lets a language model ask your code to perform an action. You describe the available actions and the information each needs. The model chooses one, your code runs it, and the result goes back to the model.',
       details:
         'Tool calling (also called function calling) is the bridge between an LLM and the rest of your software. You declare the tools available: each one has a name, a description ("look up the weather for a city"), and a JSON schema for its arguments. You send those declarations along with the user message. The model decides whether to answer directly or to call a tool, and if it calls a tool, it produces the function name and a JSON arguments blob.\n\nYour code parses that, runs the actual function (hit the weather API, query the database, edit the file), and sends the result back as a "tool" message. The model then either calls another tool or writes the final answer.\n\nThis is how agents do things. It is also how vendor-specific features work: Claude\'s computer use, OpenAI\'s code interpreter, Gemini\'s search grounding. They are all tool calls under the hood, with the tool schema written by the vendor.\n\nThe craft is in tool design. Good tools have one job, a clear description (the model uses the description to decide when to call), and a small argument surface. A "do_anything" tool is a trap; the model will use it for everything and never reach for the better-fitting tools.',
       comparison:
@@ -216,7 +216,7 @@ export const AI_LITERACY_CLUSTER = {
       id: 'rag',
       title: 'RAG (Retrieval-Augmented Generation)',
       summary:
-        'A pattern where you search your own documents for relevant snippets, paste them into the prompt, and ask the LLM to answer using only that context. Lets a generic model answer specific questions about your data.',
+        'Retrieval-Augmented Generation searches your own documents for useful passages, adds those passages to the request, and asks the language model to answer from that material. It helps a general model answer questions about your information.',
       details:
         'An LLM only knows what it was trained on, plus what is in the prompt. Your private docs, the latest deploy notes, your customer\'s support history are not in the training data. RAG (Retrieval-Augmented Generation) is the workaround.\n\nThe pattern has two phases. Indexing: split your documents into chunks (a few hundred tokens each), turn each chunk into an embedding (a vector of numbers that captures meaning), and store the chunks plus their embeddings in a vector database (Pinecone, Weaviate, Postgres + pgvector, Turso, Chroma, Qdrant). Query: turn the user\'s question into an embedding, find the chunks closest in vector space, paste the top 3-10 into the prompt with the original question, and ask the model to answer using only that context.\n\nGood RAG is mostly retrieval craft, not LLM craft. The biggest wins come from chunking strategy (paragraph? heading section? sliding window?), hybrid search (combine vector similarity with keyword/BM25), reranking (pull 50, rerank with a small model, keep top 5), and metadata filters (only search docs from this project, this date range).\n\nWhen RAG fails, the answer is almost never "use a bigger model". It is almost always "the retriever did not surface the right chunk".',
       comparison:
@@ -235,9 +235,9 @@ export const AI_LITERACY_CLUSTER = {
     },
     {
       id: 'fine-tuning',
-      title: 'Fine-tuning vs prompting vs RAG',
+      title: 'Fine-tuning vs prompting vs RAG (retrieval)',
       summary:
-        'Three ways to make an LLM do what you want. Prompting: change the words you send. RAG: change the data you send. Fine-tuning: change the model itself by training it on your examples.',
+        'These are three ways to guide a language model. Prompting changes the instructions. Retrieval adds information from your own documents. Fine-tuning trains the model on many examples of the behavior you want.',
       details:
         'When the model is not behaving the way you want, you have three escalating options.\n\nPrompting is always the first move. Better system prompt, few-shot examples, clearer role, output format. Free, instant, and good enough for most tasks. Try harder before reaching for the others.\n\nRAG (covered separately) is the answer when the model just does not know your data. Prompting cannot teach it your private docs; retrieval can.\n\nFine-tuning is the answer when prompting and RAG cannot get the style, format, or behavior consistent enough. You collect a few hundred to a few thousand input/output pairs, run a training job (provider-hosted: OpenAI, Anthropic via Bedrock, or self-hosted with LoRA on Llama), and you get a private model variant that behaves your way without long prompts. Pros: smaller prompts, faster, more consistent on the trained pattern. Cons: cost, slow iteration, you have to keep updating it as your data drifts, and the base model still does not know your private data (so you may still need RAG on top).\n\nThe order is almost always: prompt first, RAG when the issue is "it does not know", fine-tune when the issue is "it cannot consistently do". Skipping straight to fine-tuning is a common money sink.',
       comparison:
@@ -256,9 +256,9 @@ export const AI_LITERACY_CLUSTER = {
     },
     {
       id: 'hallucinations-evals',
-      title: 'Hallucinations and evals',
+      title: 'Hallucinations and evaluations (evals)',
       summary:
-        'A hallucination is when the model confidently makes something up (a function, a citation, an API). Evals are the test suite for AI: a fixed set of inputs and graded outputs you re-run to catch regressions.',
+        'A hallucination is a confident answer that is made up or wrong. An evaluation, often shortened to eval, is a repeatable test that checks model answers. Run the same evaluations after a prompt or model change to catch new mistakes.',
       details:
         'A hallucination is the LLM confidently producing something that sounds right and is not. A function name that does not exist. A book that was never written. A legal citation invented out of thin air. It happens because the model is predicting plausible text, not retrieving facts. Plausible-sounding wrong is its native failure mode.\n\nThe vibe coder defenses, in order: 1) ground the model in real data via RAG so it has the right facts to copy from. 2) require sources or tool calls for any factual claim ("only answer using the provided context; if not present, say so"). 3) verify with code: run the function it suggested, check the API exists, compile the snippet. 4) keep a human in the loop for anything load-bearing.\n\nEvals are the discipline of measuring this. An eval is a fixed dataset of inputs paired with a way to grade the output: exact match, regex, an LLM-as-judge, or a human review. You run it on every prompt change, model change, and pipeline change, and you watch the metrics. If you change a prompt and the eval drops 10 points, you found out before the user did.\n\nWithout evals, you are flying blind. You will swap models because "this one feels better", ship a regression because "the new prompt seems clearer", and never know. Even a 30-example eval beats nothing.',
       comparison:

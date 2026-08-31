@@ -1,42 +1,43 @@
 # VibeGlossary
 
-A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live component demos and 110 plain-language Build Literacy topics, generate AI prompts, take quizzes, and track learning with the VibeScore system.
+A friendly UI + Build Literacy glossary for vibe coders. Browse 111 live component demos and 130 plain-language Build Literacy topics, generate AI prompts, take five-item checkpoint quizzes, and track learning with the VibeScore system.
 
 ## Features
 
 ### UI Glossary
-- **98 interactive demos** across 9 categories: Overlays, Inputs, Data Display, Forms, Layouts, Navigation, Interactions, Feedback, Marketing
+- **111 interactive demos** across 9 categories: Overlays, Inputs, Data Display, Forms, Layouts, Navigation, Interactions, Feedback, Marketing
 - **Lazy-loaded demos** — each component ships as its own ~1–7 kB code-split chunk, so the initial bundle stays small as the glossary grows
 - **Firestore-backed content** — component entries and categories can be edited in Firestore without a code deploy; local data seeds instantly and Firestore merges in silently
 - **Spec Generator** — toggle options, add Requirements and Scaffold code (shadcn/ui, Headless UI, Radix, or Plain HTML), and copy the assembled prompt
-- **Live preview** — every component is interactive, not just a static screenshot
+- **Live teaching studio** — every component is interactive, with larger examples and plain-language guidance about what to try and why it matters
 - **Long-form details accordion** — a one-line summary with an expandable beginner-friendly explanation for every entry
 
 ### Build Literacy
-- **110 topics across 8 clusters**: Web Foundations, Engineering, Auth & Security, Product, Design Language, Spec & Process, AI Literacy
+- **130 topics across 9 clusters**: Web Foundations, Engineering Practice, Auth & Security, Product Thinking, Design Language, Spec & Process, AI Literacy, Protocols & APIs, and Motion
 - **Two-part Talk-to-AI prompts** — a generic starter that asks the AI to interview you, plus a practical example you can adapt
+- **Unique teaching headline for every topic** so the studio opens with the idea the learner is about to prove
 - **Mnemonic for every topic** — the "if you remember nothing else" line
 - **Sibling Compare chips** and a Build Literacy Index for fast cross-topic learning
 - **Per-cluster color theming** that mirrors the UI Glossary's dynamic accents
 
 ### Learning system
-- **VibeScore** — a single learning score with per-tier points (Visited 1, Used 2, Passed 5, Mastered 10, Retained +5 monthly, Path bonus +25) and a six-rung level ladder: Lurker → Scroller → Tinkerer → Shipper → Polyglot → Vibe Coder
+- **VibeScore** — a single learning score with per-tier points (Visited 1, Used 2, Passed 5, Mastered 10, Retained +5 monthly) and a six-rung level ladder: Lurker → Scroller → Tinkerer → Shipper → Polyglot → Vibe Coder
+- **Learning Mode starts on** and offers a five-item checkpoint after every five lessons. Review, take the five-question quiz for points, or skip for now
+- **Floating Learning HUD** — Previous and Next destinations, arrow-key navigation, progress and score popovers, plus drag, dock, minimize, and hide controls
+- **Progress coaching** — timely messages explain what earns the next level, how many reviews remain, and what is left for the class requirement
 - **Quiz integrity** — 4-second time floor, 90-second ceiling, 30-minute cooldown, rotating variants, mastery requires two clean passes in different sessions on different variants. Wrong answers never lose points
-- **Learn Mode** for both surfaces — sibling compare pills, demo-to-definition quizzes, mastery tracking, and guided learning paths with end-of-path quizzes (80% to earn the badge)
-- **Score breakdown modal** — UI Glossary vs Build Literacy sub-scores, integrity rules in plain English
-- **Surprise Me** for both UI Glossary and Build Literacy
+- **Score breakdown modal** — UI Glossary vs Build Literacy sub-scores, level requirements, and integrity rules in plain English
 - **Class proof** — students can generate a proof URL or copy proof text for Canvas/LMS submissions; instructors open the URL to verify VibeScore, level, badges, and whether the class bar was met
-- **"Vibe prompting for UI" class path** — a cross-cluster learning path covering Design Language, AI Literacy, and Web Foundations topics, designed for classroom assignments
 
 ### Sharing & UX
-- **Social share popover** — share your VibeScore, level, or path badge to X, LinkedIn, Bluesky, Facebook, Reddit, Email, or copy text + link. Falls back to `navigator.share` on mobile
-- **Resizable two-pane layout** with drag handles, persisted in `localStorage`, working consistently across both surfaces
-- **Cross-cluster Previous/Next** that flows across category and cluster boundaries
+- **Social share popover** — share your VibeScore or level to X, LinkedIn, Bluesky, Facebook, Reddit, Email, or copy text + link. Falls back to `navigator.share` on mobile
+- **Responsive lesson layout** that gives the live studio the room it needs without stacking competing sidebars
+- **Cross-cluster Previous/Next** that flows across category and cluster boundaries, with left/right arrow-key support
 - **Welcome Screen** that surfaces both UI Glossary and Build Literacy as equal entry points
 - **Cheat Sheet** (⌘/) listing UI categories and Build Literacy clusters in one grid
 - **Unified search** (⌘K) across UI components and Build Literacy topics
-- **Dark/light mode** with class-based Tailwind theming
-- **Responsive** — mobile view toggle, icon-only nav collapse below `lg`, adaptive typography
+- **Dark/light mode** in the user menu for both signed-in and signed-out visitors
+- **Readable responsive typography** — Poppins for body copy, Hubot Sans for real headlines, and Source Code Pro for code
 - **Open Graph + Twitter Card** meta tags
 - **Footer** with version, counts, and links to the repo and changelog
 
@@ -46,7 +47,7 @@ A friendly UI + Build Literacy glossary for vibe coders. Browse 98 live componen
 - [Vite 5](https://vitejs.dev/)
 - [Tailwind CSS 3](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/)
-- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (1026 tests)
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (1,400+ tests)
 - [Firebase Hosting](https://firebase.google.com/products/hosting) + [Firestore](https://firebase.google.com/products/firestore)
 
 ## Getting Started
@@ -77,11 +78,10 @@ src/
 │   ├── ui/             # ExploreBar, PromptBuilder, ConfigToggle
 │   ├── learn/          # UI Glossary + Build Literacy learning surface
 │   │                   # CompareView, GlossaryIndex, QuizCard
-│   │                   # PathsLauncher, PathView
 │   │                   # BuildLiteracyView, BuildTopicView, BuildLiteracyIndex
-│   │                   # BuildPathsLauncher, BuildPathView
-│   │                   # TalkToAiCard, TopicTierBadge
-│   │                   # VibeScorePill, ScoreBreakdownModal, ShareAchievement
+│   │                   # LearningCheckpointModal, FloatingLearningHud
+│   │                   # MotionLesson, WebFoundationLesson, TalkToAiCard
+│   │                   # VibeScorePill, ScoreBreakdownModal, ProgressToast
 │   │                   # ProofView
 │   ├── CheatSheet.jsx
 │   ├── WelcomeScreen.jsx
@@ -98,10 +98,12 @@ src/
 │   ├── buildLiteracy.js      # Build Literacy clusters + topics
 │   ├── aiLiteracy.js         # AI Literacy cluster (LLMs, RAG, MCP, etc.)
 │   ├── designLanguage.js     # Design Language cluster
-│   └── buildPaths.js         # Build Literacy learning paths + quizzes
+│   ├── buildStudioCopy.js    # Unique studio headline for every Build Literacy topic
+│   └── webFoundationLessons.js # Interactive Web Foundation lesson definitions
 ├── lib/
 │   ├── scoring.js            # Pure VibeScore math (POINTS, LEVELS, tiers)
 │   ├── quizIntegrity.js      # Time floor/ceiling, cooldowns, variant rotation
+│   ├── progressCoaching.js   # Level and class-requirement coaching
 │   ├── share.js              # Share text + platform URL builders
 │   └── proof.js              # Class proof: bar check, snapshot, URL encode/decode
 ├── hooks/
@@ -110,7 +112,7 @@ src/
 │   ├── useGlossary.js        # Firestore-backed component reader
 │   └── useCategories.jsx     # Firestore-backed category reader
 ├── firebase.js               # Firebase app + Firestore init
-├── test/                     # Vitest test suite (1026 tests)
+├── test/                     # Vitest test suite (1,400+ tests)
 ├── styles/
 │   └── animations.css
 ├── App.jsx
@@ -123,14 +125,14 @@ Deployed on [Firebase Hosting](https://vibe-glossary.web.app).
 
 ```bash
 npm run build
-firebase deploy --only hosting --project vibe-glossary
+firebase deploy --only hosting,firestore:rules --project vibe-glossary
 ```
 
 ## For teachers: assigning VibeGlossary as class work
 
 Students visit [vibe-glossary.web.app](https://vibe-glossary.web.app), explore topics, take quizzes, and earn badges. No account is needed; progress is stored in the browser.
 
-**Class bar (minimum for credit):** reach Tinkerer level (200 pts) OR earn the "Vibe prompting for UI" path badge (complete the path and pass the 5-question quiz at 80%).
+**Class bar (minimum for credit):** reach Tinkerer level (200 points) through exploration, prompt use, and checkpoint quizzes.
 
 **How students submit proof:**
 

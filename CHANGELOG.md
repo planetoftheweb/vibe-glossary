@@ -7,15 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-31
+
 ### Added
-- **Feature tour** for first-time visitors. Data-driven steps walk through the glossary, prompt builder, VibeScore, social share, class proof, search, and learning paths. Versioned in `src/data/tour.js` so returning users get offered new tours once without nagging. Replay anytime from the main menu
-- **"Browse components" hero CTA** replaces the old skip-intro X button, landing users directly in the glossary at the first component
-- **"Take the tour" secondary CTA** in the welcome hero for users who want guidance before diving in
-- **19 new tests** covering WelcomeScreen changes, tour step shape validation, version-bump re-offer logic, and dismiss persistence
+- **Learning Mode is on by default** with a five-item checkpoint after every five glossary or Build Literacy items. Learners can review the material, take a five-question quiz for VibeScore points, or skip and keep exploring
+- **Floating Learning HUD** with clear Previous and Next destinations, left/right keyboard navigation, progress and score popovers, and drag, dock, minimize, and hide controls
+- **Progress coaching** that explains exactly what earns the next level, how many reviews remain, and how much work is left for the class requirement
+- **Optional score-storage prompt** after a learner has used navigation enough to have progress worth saving
+- **Live teaching studios** for motion, UI patterns, and Web Foundations. Easing, particle fields, virtualized lists, OTP inputs, accessibility, CSS, and markup now teach through larger interactive scenes
+- **130 page-specific Build Literacy studio headlines** so each lesson opens with its own idea instead of repeating a generic cluster headline
+- **Guided feature tour** for the glossary, prompt builder, VibeScore, class proof, search, and five-item checkpoints
+- **Regression coverage for the redesign**, bringing the suite above 1,400 tests
+
+### Changed
+- Rebuilt the glossary presentation around large, readable Poppins body copy and Hubot Sans display headlines, with lighter weights and more comfortable spacing at smaller sizes
+- Expanded the UI Glossary to 111 interactive entries and Build Literacy to 130 plain-language topics across 9 clusters
+- Consolidated competing lesson explanations into one stronger teaching voice and rewrote beginner-facing copy to explain both what a term means and when to use it
+- Reworked example layouts to use the available viewport, center compact scenes, expose useful context, and keep configuration controls from crowding the lesson
+- Moved Dark Mode into the user menu for both signed-in and signed-out visitors
+- Made the What's New control and VibeScore visually and verbally distinct
 
 ### Removed
-- **"How it works" 1-2-3 section** from the welcome screen. The feature cards now follow directly after the hero
-- **Skip intro X button** from the hero top-right corner (replaced by explicit CTA buttons)
+- **Learning Paths and Surprise Me** from Learning Mode. Five-item checkpoints now provide the progression and quiz rhythm
+
+### Fixed
+- Learning checkpoints now open as dismissible modals instead of trapping the lesson in a sidebar; Escape and the right arrow skip them
+- Fixed clipped configuration choices, oversized double sidebars, tiny explanatory type, top-aligned empty previews, and the white strip that could appear while scrolling
+- Added consistent light and dark presentation across Web Foundations and the other live studios
 
 ## [0.9.0] - 2026-08-17
 
@@ -228,7 +246,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...v0.12.0
+[0.9.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...84cf753
 [0.8.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.6.0...v0.7.0

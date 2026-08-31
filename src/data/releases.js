@@ -26,6 +26,36 @@ export const RELEASE_ACTION_KINDS = [
 
 export const WHATS_NEW = [
   {
+    id: 'learning-hud-checkpoints',
+    version: '0.12.0',
+    date: '2026-08-31',
+    tag: 'feature',
+    title: 'A learning rhythm that moves with you',
+    blurb: 'Learning Mode now starts on, checks in after every five items, and awards quiz points. The movable HUD keeps Previous, Next, progress, and score close without shrinking the lesson.',
+    image: null,
+    action: { kind: 'score' },
+  },
+  {
+    id: 'interactive-teaching-studios',
+    version: '0.12.0',
+    date: '2026-08-31',
+    tag: 'module',
+    title: 'Lessons you can touch, not just read',
+    blurb: 'Motion, UI patterns, and Web Foundations now use large live studios. Change easing, shape particle fields, inspect markup, and see the idea respond immediately.',
+    image: null,
+    action: { kind: 'glossary', id: 'easing' },
+  },
+  {
+    id: 'readable-beginner-pass',
+    version: '0.12.0',
+    date: '2026-08-31',
+    tag: 'improvement',
+    title: 'Bigger type and clearer explanations',
+    blurb: 'Every lesson got a beginner pass with roomier Poppins body copy, Hubot Sans headlines, one strong explanation, and a unique headline that says what the page will teach.',
+    image: null,
+    action: { kind: 'build', id: 'what-is-a-protocol' },
+  },
+  {
     id: 'motion-language',
     version: '0.12.0',
     date: '2026-08-18',

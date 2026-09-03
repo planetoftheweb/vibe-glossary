@@ -164,9 +164,9 @@ function SpacingScene({ lens }) {
         <span className="spacing-scene__label spacing-scene__label--margin">margin</span>
         <div className="spacing-scene__margin">
           <div className="spacing-scene__border">
-            <span className="spacing-scene__label">border</span>
+            <span className="spacing-scene__label spacing-scene__label--border">border</span>
             <div className="spacing-scene__padding">
-              <span className="spacing-scene__label">padding</span>
+              <span className="spacing-scene__label spacing-scene__label--padding">padding</span>
               <div className="spacing-scene__content">
                 <Sparkles size={24} aria-hidden="true" />
                 <strong>Content breathes here</strong>

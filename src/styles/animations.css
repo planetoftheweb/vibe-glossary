@@ -2260,14 +2260,14 @@
   position: relative;
   border: 4px solid var(--studio-accent-two);
   border-radius: 18px;
-  padding: 4px;
+  padding: 26px 14px 14px;
   box-shadow: 0 20px 50px rgb(0 0 0 / 0.34);
 }
 
 .spacing-scene__padding {
   position: relative;
   border-radius: 12px;
-  padding: 28px;
+  padding: 30px 16px 16px;
   background: rgb(45 212 191 / 0.18);
   transition: padding 240ms ease;
 }
@@ -2293,16 +2293,23 @@
 .spacing-scene__label {
   position: absolute;
   z-index: 3;
-  top: 7px;
+  top: 8px;
   left: 10px;
-  color: rgb(255 255 255 / 0.64);
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgb(8 6 15 / 0.78);
+  color: rgb(255 255 255 / 0.88);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.1em;
+  line-height: 1.2;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
-.spacing-scene__label--margin { top: 22px; left: 28px; color: #fbbf24; }
+.spacing-scene__label--margin { top: 8px; left: 10px; color: #fbbf24; }
+.spacing-scene__label--border { color: #f9a8d4; }
+.spacing-scene__label--padding { color: #5eead4; }
 
 .concept-visual--spacing[data-lens='stress'] .spacing-scene__margin { padding: 7px 23px 13px 5px; }
 .concept-visual--spacing[data-lens='stress'] .spacing-scene__padding { padding: 19px 7px 11px 29px; }

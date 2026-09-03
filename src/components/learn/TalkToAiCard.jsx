@@ -4,7 +4,6 @@ import {
   ArrowRight,
   BrainCircuit,
   Check,
-  ChevronDown,
   CircleDot,
   FileCode,
   HelpCircle,
@@ -124,7 +123,6 @@ function noteFor(topic, lens) {
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
   const [lens, setLens] = useState('map');
   const [copied, setCopied] = useState(null);
-  const [howOpen, setHowOpen] = useState(false);
   const note = useMemo(() => noteFor(topic, lens), [topic, lens]);
 
   const raw = topic?.talkToAi;
@@ -156,41 +154,56 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
-  const activeLens = LENSES.find((item) => item.id === lens) || LENSES[0];
+  const stageToolbar = (
+    <div className="concept-studio__rail" role="group" aria-label="Concept views">
+      {LENSES.map((item) => {
+        const Icon = item.icon;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className="concept-studio__lens min-h-[44px] min-w-[44px]"
+            aria-pressed={lens === item.id}
+            onClick={() => setLens(item.id)}
+          >
+            <Icon size={16} aria-hidden="true" />
+            <span>{item.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
 
   const controls = (
-    <>
-      <div className="concept-studio__bar">
-        <div className="concept-studio__rail" role="group" aria-label="Concept views">
-          {LENSES.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className="concept-studio__lens min-h-[44px] min-w-[44px]"
-                aria-pressed={lens === item.id}
-                onClick={() => setLens(item.id)}
-              >
-                <Icon size={16} aria-hidden="true" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          className="concept-studio__how-toggle min-h-[44px]"
-          aria-expanded={howOpen}
-          aria-controls="concept-studio-how"
-          onClick={() => setHowOpen((open) => !open)}
-        >
+    <div className="concept-studio__drawers">
+      <details className="concept-studio__drawer">
+        <summary className="concept-studio__drawer-toggle min-h-[44px]">
           <HelpCircle size={16} aria-hidden="true" />
           <span>How these views work</span>
-          <ChevronDown size={16} aria-hidden="true" />
-        </button>
+        </summary>
+        <div
+          id="concept-studio-how"
+          className="concept-studio__how"
+          role="region"
+          aria-label="How these views work"
+        >
+          <p className="concept-studio__how-lead">{HOW_LEAD}</p>
+          <ul className="concept-studio__how-list">
+            {LENSES.map((item) => (
+              <li key={item.id}>
+                <strong>{item.label}</strong>
+                <p>{item.how}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </details>
 
+      <details className="concept-studio__drawer">
+        <summary className="concept-studio__drawer-toggle min-h-[44px]">
+          <Wand2 size={16} aria-hidden="true" />
+          <span>Use with AI</span>
+        </summary>
         <div className="concept-studio__handoff">
           <button
             type="button"
@@ -215,33 +228,18 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
             <HoverTip text="See a filled-in version" />
           </button>
         </div>
+      </details>
 
-        <p className="concept-studio__mnemonic">
+      <details className="concept-studio__drawer">
+        <summary className="concept-studio__drawer-toggle min-h-[44px]">
           <MemoryStick size={16} aria-hidden="true" />
-          <span className="concept-studio__mnemonic-label">Remember</span>
+          <span>Remember this</span>
+        </summary>
+        <p className="concept-studio__mnemonic">
           <span>{topic?.mnemonic || topic?.summary}</span>
         </p>
-      </div>
-
-      {howOpen ? (
-        <div
-          id="concept-studio-how"
-          className="concept-studio__how"
-          role="region"
-          aria-label="How these views work"
-        >
-          <p className="concept-studio__how-lead">{HOW_LEAD}</p>
-          <ul className="concept-studio__how-list">
-            {LENSES.map((item) => (
-              <li key={item.id}>
-                <strong>{item.label}</strong>
-                <p>{item.how}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-    </>
+      </details>
+    </div>
   );
 
   return (
@@ -249,10 +247,10 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
       tone={topic?.clusterId || categoryColors?.tone || 'violet'}
       eyebrow={`${topic?.clusterTitle || 'Build literacy'} studio`}
       title={getBuildStudioHeadline(topic)}
-      intro={topic?.summary}
+      stageFirst
+      stageToolbar={stageToolbar}
       controls={controls}
       stageLabel="Live concept map"
-      stageMeta={`Current view: ${activeLens.label}`}
       stage={<ConceptScene topic={topic} lens={lens} />}
       stageClassName="concept-studio__scene"
       noteLabel={note.label}

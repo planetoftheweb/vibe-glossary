@@ -26,7 +26,10 @@ describe('TalkToAiCard concept studio', () => {
     expect(document.querySelector('.concept-visual--spacing')).toHaveAttribute('data-lens', 'map');
     expect(screen.getByRole('button', { name: /Copy starter prompt/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Copy real example/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /How these views work/i })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByText('How these views work').closest('details')).not.toHaveAttribute('open');
+    const visual = document.querySelector('.concept-visual--spacing');
+    const how = screen.getByText('How these views work');
+    expect(visual.compareDocumentPosition(how) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     screen.getAllByRole('button', { name: /Copy /i }).forEach((button) => {
       expect(button).not.toHaveAttribute('title');
     });

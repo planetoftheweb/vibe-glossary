@@ -154,6 +154,8 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
+  const activeLens = LENSES.find((item) => item.id === lens) || LENSES[0];
+
   const stageToolbar = (
     <div className="concept-studio__rail" role="group" aria-label="Concept views">
       {LENSES.map((item) => {
@@ -162,12 +164,17 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
           <button
             key={item.id}
             type="button"
-            className="concept-studio__lens min-h-[44px] min-w-[44px]"
+            className="group relative concept-studio__lens min-h-[44px] min-w-[44px]"
             aria-pressed={lens === item.id}
+            aria-label={`${item.label}. ${item.description}`}
             onClick={() => setLens(item.id)}
           >
             <Icon size={16} aria-hidden="true" />
             <span>{item.label}</span>
+            <span className="concept-studio__lens-overlay" role="tooltip">
+              <strong>{item.label}</strong>
+              {item.description}
+            </span>
           </button>
         );
       })}
@@ -251,12 +258,17 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
       stageToolbar={stageToolbar}
       controls={controls}
       stageLabel="Live concept map"
-      stage={<ConceptScene topic={topic} lens={lens} />}
+      stage={(
+        <>
+          <aside className={`concept-studio__explainer concept-studio__explainer--${note.tone}`} aria-live="polite">
+            <span>{note.label}</span>
+            <strong>{activeLens.label}</strong>
+            <p>{note.title}</p>
+          </aside>
+          <ConceptScene topic={topic} lens={lens} />
+        </>
+      )}
       stageClassName="concept-studio__scene"
-      noteLabel={note.label}
-      noteTitle={note.title}
-      noteBody={note.body}
-      noteTone={note.tone}
       className="concept-studio"
     />
   );

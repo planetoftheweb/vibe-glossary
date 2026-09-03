@@ -1818,7 +1818,7 @@
 }
 
 .concept-studio .vg-studio__stage {
-  min-height: 640px;
+  min-height: 0;
 }
 
 .concept-studio__drawers {
@@ -2044,16 +2044,99 @@
   line-height: 1.6;
 }
 
-.concept-studio__scene { padding: 22px; }
+.concept-studio__scene {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 12px 14px 14px;
+}
+
+.concept-studio__explainer {
+  position: absolute;
+  z-index: 8;
+  top: 12px;
+  left: 12px;
+  max-width: min(22rem, calc(100% - 24px));
+  padding: 10px 12px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 14px;
+  background: rgb(8 6 15 / 0.88);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.concept-studio__explainer span {
+  display: block;
+  color: var(--studio-accent);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.concept-studio__explainer strong {
+  display: block;
+  margin-top: 4px;
+  color: white;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.concept-studio__explainer p {
+  margin: 4px 0 0;
+  color: #d5d1e1;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.concept-studio__explainer--warning span { color: #fbbf24; }
+.concept-studio__explainer--safe span { color: var(--studio-safe); }
+
+.concept-studio__lens-overlay {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 8px);
+  left: 50%;
+  width: max(220px, 100%);
+  padding: 10px 12px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 12px;
+  background: #18151f;
+  color: #d5d1e1;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 16px 32px rgb(0 0 0 / 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.concept-studio__lens-overlay strong {
+  display: block;
+  margin-bottom: 2px;
+  color: white;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.concept-studio__lens:hover .concept-studio__lens-overlay,
+.concept-studio__lens:focus-visible .concept-studio__lens-overlay {
+  opacity: 1;
+}
 
 .concept-visual {
   position: relative;
   display: grid;
   width: 100%;
-  min-height: 472px;
-  align-content: center;
+  min-height: 0;
+  align-content: start;
   justify-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
 .concept-visual__ghost {
@@ -2102,7 +2185,8 @@
 
 .spacing-scene__scale {
   display: flex;
-  height: 285px;
+  height: auto;
+  min-height: 0;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
@@ -2212,7 +2296,7 @@
   position: relative;
   display: flex;
   width: 100%;
-  min-height: 310px;
+  min-height: 0;
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;

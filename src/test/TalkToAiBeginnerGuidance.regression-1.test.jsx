@@ -40,6 +40,6 @@ describe('Build Literacy concept studio guidance', () => {
 
     expect(screen.getByText('What changed')).toBeInTheDocument();
     expect(screen.getByText('Break it shows the mistake this idea helps prevent.')).toBeInTheDocument();
-    expect(screen.getByText(/Compare the changed diagram with Map it/)).toBeInTheDocument();
+    expect(screen.getByText('Expose the mistake this idea prevents.')).toBeInTheDocument();
   });
 });

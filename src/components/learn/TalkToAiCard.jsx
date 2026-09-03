@@ -5,7 +5,6 @@ import {
   Check,
   CircleDot,
   FileCode,
-  MemoryStick,
   Sparkles,
   Wand2,
 } from 'lucide-react';
@@ -61,9 +60,8 @@ const CLUSTER_SCENES = {
  * but they are a handoff after the learner can see the idea, not the lesson.
  */
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
-  const [messy, setMessy] = useState(false);
   const [copied, setCopied] = useState(null);
-  const lens = messy ? 'stress' : 'map';
+  const lens = 'map';
 
   const raw = topic?.talkToAi;
   const starter = raw && typeof raw === 'object' ? raw.starter || '' : '';
@@ -94,61 +92,32 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
-  const stageToolbar = (
-    <button
-      type="button"
-      className="concept-studio__mess min-h-[44px]"
-      aria-pressed={messy}
-      onClick={() => setMessy((value) => !value)}
-    >
-      {messy ? 'Show the idea' : 'Show the mess'}
-    </button>
-  );
-
-  const controls = (
-    <div className="concept-studio__drawers">
-      <details className="concept-studio__drawer">
-        <summary className="concept-studio__drawer-toggle min-h-[44px]">
-          <Wand2 size={16} aria-hidden="true" />
-          <span>Use with AI</span>
-        </summary>
-        <div className="concept-studio__handoff">
-          <button
-            type="button"
-            className="group relative concept-studio__copy min-h-[44px]"
-            onClick={() => copyPrompt(starter, 'starter')}
-            disabled={!starter}
-            aria-label="Copy starter prompt"
-          >
-            {copied === 'starter' ? <Check size={16} aria-hidden="true" /> : <Wand2 size={16} aria-hidden="true" />}
-            <span>{copied === 'starter' ? 'Copied' : 'Starter'}</span>
-            <HoverTip text="Let the AI interview you first" />
-          </button>
-          <button
-            type="button"
-            className="group relative concept-studio__copy min-h-[44px]"
-            onClick={() => copyPrompt(example, 'example')}
-            disabled={!example}
-            aria-label="Copy real example"
-          >
-            {copied === 'example' ? <Check size={16} aria-hidden="true" /> : <FileCode size={16} aria-hidden="true" />}
-            <span>{copied === 'example' ? 'Copied' : 'Example'}</span>
-            <HoverTip text="See a filled-in version" />
-          </button>
-        </div>
-      </details>
-
-      <details className="concept-studio__drawer">
-        <summary className="concept-studio__drawer-toggle min-h-[44px]">
-          <MemoryStick size={16} aria-hidden="true" />
-          <span>Remember this</span>
-        </summary>
-        <p className="concept-studio__mnemonic">
-          <span>{topic?.mnemonic || topic?.summary}</span>
-        </p>
-      </details>
+  const actions = (starter || example) ? (
+    <div className="concept-studio__handoff">
+      <button
+        type="button"
+        className="group relative concept-studio__copy min-h-[44px]"
+        onClick={() => copyPrompt(starter, 'starter')}
+        disabled={!starter}
+        aria-label="Copy a prompt"
+      >
+        {copied === 'starter' ? <Check size={16} aria-hidden="true" /> : <Wand2 size={16} aria-hidden="true" />}
+        <span>{copied === 'starter' ? 'Copied' : 'Copy a prompt'}</span>
+        <HoverTip text="Paste this into your AI to work on this idea" />
+      </button>
+      <button
+        type="button"
+        className="group relative concept-studio__copy min-h-[44px]"
+        onClick={() => copyPrompt(example, 'example')}
+        disabled={!example}
+        aria-label="Copy a filled-in example"
+      >
+        {copied === 'example' ? <Check size={16} aria-hidden="true" /> : <FileCode size={16} aria-hidden="true" />}
+        <span>{copied === 'example' ? 'Copied' : 'Copy a filled-in example'}</span>
+        <HoverTip text="A filled-in version you can paste" />
+      </button>
     </div>
-  );
+  ) : null;
 
   return (
     <StudioShell
@@ -156,8 +125,7 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
       eyebrow={`${topic?.clusterTitle || 'Build literacy'} studio`}
       title={getBuildStudioHeadline(topic)}
       stageFirst
-      stageToolbar={stageToolbar}
-      controls={controls}
+      controls={actions}
       stageLabel="Live example"
       stage={<ConceptScene topic={topic} lens={lens} />}
       stageClassName="concept-studio__scene"

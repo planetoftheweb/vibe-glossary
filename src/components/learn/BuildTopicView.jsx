@@ -144,6 +144,17 @@ export default function BuildTopicView({
         </div>
       )}
 
+      {topic.mnemonic && (
+        <div className="mb-6 lg:mb-8">
+          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+            Remember
+          </p>
+          <p className="text-base lg:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed">
+            {topic.mnemonic}
+          </p>
+        </div>
+      )}
+
       {/* Sibling chips, hop to other topics in this cluster */}
       {cluster?.topics?.length > 1 && (
         <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">

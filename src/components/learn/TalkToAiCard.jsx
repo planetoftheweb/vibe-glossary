@@ -4,19 +4,19 @@ import {
   ArrowRight,
   BrainCircuit,
   Check,
+  ChevronDown,
   CircleDot,
-  Copy,
   FileCode,
-  Focus,
+  HelpCircle,
   MemoryStick,
-  MessageSquareQuote,
   Rocket,
   ScanLine,
   Sparkles,
   Wand2,
 } from 'lucide-react';
 import { getBuildStudioHeadline } from '../../data/buildStudioCopy';
-import StudioShell, { StudioControl } from '../ui/StudioShell';
+import HoverTip from '../ui/HoverTip';
+import StudioShell from '../ui/StudioShell';
 
 const LENSES = [
   {
@@ -24,6 +24,7 @@ const LENSES = [
     label: 'Map it',
     short: 'Structure',
     description: 'See the parts and how they connect.',
+    how: 'See the parts and how they connect. Start here so the diagram makes sense before you copy a prompt.',
     icon: ScanLine,
   },
   {
@@ -31,6 +32,7 @@ const LENSES = [
     label: 'Break it',
     short: 'Weak default',
     description: 'Expose the mistake this idea prevents.',
+    how: 'Expose the mistake this idea prevents. Compare with Map it. The weak default should feel wrong.',
     icon: AlertTriangle,
   },
   {
@@ -38,9 +40,12 @@ const LENSES = [
     label: 'Use it',
     short: 'Project move',
     description: 'Turn the idea into a decision you can make.',
+    how: 'Turn the idea into a decision you can make. Look for one project-ready move.',
     icon: Rocket,
   },
 ];
+
+const HOW_LEAD = 'Start with Map it. Then choose Break it and Use it. Watch the diagram and this note change with each choice.';
 
 const CLUSTER_SCENES = {
   product: {
@@ -119,6 +124,7 @@ function noteFor(topic, lens) {
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
   const [lens, setLens] = useState('map');
   const [copied, setCopied] = useState(null);
+  const [howOpen, setHowOpen] = useState(false);
   const note = useMemo(() => noteFor(topic, lens), [topic, lens]);
 
   const raw = topic?.talkToAi;
@@ -154,87 +160,87 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
 
   const controls = (
     <>
-      <StudioControl
-        number="01"
-        icon={Focus}
-        label="View"
-        value={activeLens.short}
-        description="Choose each view in order. Watch the diagram and note change."
-        className="concept-studio__lens"
-      >
-        <div className="vg-studio__choice-list">
-          {LENSES.map((item, index) => {
+      <div className="concept-studio__bar">
+        <div className="concept-studio__rail" role="group" aria-label="Concept views">
+          {LENSES.map((item) => {
             const Icon = item.icon;
             return (
               <button
                 key={item.id}
                 type="button"
-                className="vg-studio__choice"
+                className="concept-studio__lens min-h-[44px] min-w-[44px]"
                 aria-pressed={lens === item.id}
                 onClick={() => setLens(item.id)}
               >
-                <span className="vg-studio__choice-index">{String(index + 1).padStart(2, '0')}</span>
-                <span className="vg-studio__choice-copy">
-                  <strong>{item.label}</strong>
-                  <small>{item.description}</small>
-                </span>
-                <Icon size={17} aria-hidden="true" />
+                <Icon size={16} aria-hidden="true" />
+                <span>{item.label}</span>
               </button>
             );
           })}
         </div>
-      </StudioControl>
 
-      <StudioControl
-        number="02"
-        icon={MessageSquareQuote}
-        label="Use with AI"
-        value="After the lesson"
-        description="Copy a prompt for your project after the picture makes sense."
-        className="concept-studio__handoff"
-      >
-        <div className="concept-studio__copy-stack">
+        <button
+          type="button"
+          className="concept-studio__how-toggle min-h-[44px]"
+          aria-expanded={howOpen}
+          aria-controls="concept-studio-how"
+          onClick={() => setHowOpen((open) => !open)}
+        >
+          <HelpCircle size={16} aria-hidden="true" />
+          <span>How these views work</span>
+          <ChevronDown size={16} aria-hidden="true" />
+        </button>
+
+        <div className="concept-studio__handoff">
           <button
             type="button"
-            className="concept-studio__copy min-h-[44px]"
+            className="group relative concept-studio__copy min-h-[44px]"
             onClick={() => copyPrompt(starter, 'starter')}
             disabled={!starter}
             aria-label="Copy starter prompt"
           >
-            <span>{copied === 'starter' ? <Check size={15} /> : <Wand2 size={15} />}</span>
-            <span>
-              <strong>{copied === 'starter' ? 'Copied' : 'Starter prompt'}</strong>
-              <small>Let the AI interview you first</small>
-            </span>
-            <Copy size={14} aria-hidden="true" />
+            {copied === 'starter' ? <Check size={16} aria-hidden="true" /> : <Wand2 size={16} aria-hidden="true" />}
+            <span>{copied === 'starter' ? 'Copied' : 'Starter'}</span>
+            <HoverTip text="Let the AI interview you first" />
           </button>
           <button
             type="button"
-            className="concept-studio__copy min-h-[44px]"
+            className="group relative concept-studio__copy min-h-[44px]"
             onClick={() => copyPrompt(example, 'example')}
             disabled={!example}
             aria-label="Copy real example"
           >
-            <span>{copied === 'example' ? <Check size={15} /> : <FileCode size={15} />}</span>
-            <span>
-              <strong>{copied === 'example' ? 'Copied' : 'Real example'}</strong>
-              <small>See a filled-in version</small>
-            </span>
-            <Copy size={14} aria-hidden="true" />
+            {copied === 'example' ? <Check size={16} aria-hidden="true" /> : <FileCode size={16} aria-hidden="true" />}
+            <span>{copied === 'example' ? 'Copied' : 'Example'}</span>
+            <HoverTip text="See a filled-in version" />
           </button>
         </div>
-      </StudioControl>
 
-      <StudioControl
-        number="03"
-        icon={MemoryStick}
-        label="Remember this"
-        value="One sentence"
-        description="Carry this sentence into your next project."
-        className="concept-studio__memory"
-      >
-        <blockquote>{topic?.mnemonic || topic?.summary}</blockquote>
-      </StudioControl>
+        <p className="concept-studio__mnemonic">
+          <MemoryStick size={16} aria-hidden="true" />
+          <span className="concept-studio__mnemonic-label">Remember</span>
+          <span>{topic?.mnemonic || topic?.summary}</span>
+        </p>
+      </div>
+
+      {howOpen ? (
+        <div
+          id="concept-studio-how"
+          className="concept-studio__how"
+          role="region"
+          aria-label="How these views work"
+        >
+          <p className="concept-studio__how-lead">{HOW_LEAD}</p>
+          <ul className="concept-studio__how-list">
+            {LENSES.map((item) => (
+              <li key={item.id}>
+                <strong>{item.label}</strong>
+                <p>{item.how}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </>
   );
 

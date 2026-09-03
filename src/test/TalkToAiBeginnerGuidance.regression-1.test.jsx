@@ -14,13 +14,24 @@ const topic = {
 };
 
 describe('Build Literacy concept studio guidance', () => {
-  it('tells a new learner which views to choose and what to watch', () => {
+  it('tells a new learner which views to choose and what to watch', async () => {
+    const user = userEvent.setup();
     render(<TalkToAiCard topic={topic} />);
 
     expect(screen.getByText('Try this')).toBeInTheDocument();
     expect(screen.getByText('Start with Map it. Then choose Break it and Use it.')).toBeInTheDocument();
     expect(screen.getByText(/Watch the diagram and this note change/)).toBeInTheDocument();
-    expect(screen.getByText('Choose each view in order. Watch the diagram and note change.')).toBeInTheDocument();
+    expect(screen.queryByText('Choose each view in order. Watch the diagram and note change.')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Start here so the diagram makes sense before you copy a prompt/)).not.toBeInTheDocument();
+
+    const howButton = screen.getByRole('button', { name: /How these views work/i });
+    expect(howButton).toHaveAttribute('aria-expanded', 'false');
+    await user.click(howButton);
+    expect(howButton).toHaveAttribute('aria-expanded', 'true');
+
+    expect(screen.getByText(/Start here so the diagram makes sense before you copy a prompt/)).toBeInTheDocument();
+    expect(screen.getByText(/The weak default should feel wrong/)).toBeInTheDocument();
+    expect(screen.getByText(/Look for one project-ready move/)).toBeInTheDocument();
   });
 
   it('explains the consequence after the learner changes the view', async () => {

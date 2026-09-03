@@ -21,7 +21,8 @@ describe('Build Literacy concept studio guidance', () => {
     expect(screen.getByText('Live example')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Show the mess/i })).not.toBeInTheDocument();
     expect(screen.queryByText('How these views work')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Copy a prompt' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Prompt' })).toBeInTheDocument();
+    expect(screen.getByText('Starter')).toBeInTheDocument();
   });
 
   it('puts the remember sentence on the left, not behind a toggle', () => {

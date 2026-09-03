@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TalkToAiCard from '../components/learn/TalkToAiCard';
 
 const topic = {
@@ -17,20 +18,23 @@ const topic = {
 };
 
 describe('TalkToAiCard concept studio', () => {
-  it('shows the live example without studio verbs or drawers', () => {
+  it('puts Prompt and Example in the live example header and shows the prompt text', async () => {
+    const user = userEvent.setup();
     render(<TalkToAiCard topic={topic} />);
 
-    expect(screen.getByText('Give every gap a beat.')).toBeInTheDocument();
     expect(screen.getByText('Live example')).toBeInTheDocument();
-    expect(document.querySelector('.concept-visual--spacing')).toHaveAttribute('data-lens', 'map');
-    expect(screen.queryByRole('button', { name: /Show the mess/i })).not.toBeInTheDocument();
-    expect(screen.queryByText('Use with AI')).not.toBeInTheDocument();
-    expect(screen.queryByText('Remember this')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Copy a prompt' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Copy a filled-in example' })).toBeInTheDocument();
-    screen.getAllByRole('button', { name: /Copy /i }).forEach((button) => {
+    expect(screen.getByText('Interview me about spacing first.')).toBeInTheDocument();
+    expect(screen.queryByText('A type scale gives every sentence a job.')).not.toBeInTheDocument();
+    const prompt = screen.getByRole('button', { name: 'Prompt' });
+    const example = screen.getByRole('button', { name: 'Example' });
+    expect(prompt).toHaveAttribute('aria-pressed', 'true');
+    [prompt, example].forEach((button) => {
       expect(button).not.toHaveAttribute('title');
       expect(button.className).toMatch(/min-h-\[44px\]/);
     });
+
+    await user.click(example);
+    expect(screen.getByText('Use space.4 between these cards.')).toBeInTheDocument();
+    expect(example).toHaveAttribute('aria-pressed', 'true');
   });
 });

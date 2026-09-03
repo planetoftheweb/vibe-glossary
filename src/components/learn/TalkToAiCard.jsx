@@ -3,13 +3,9 @@ import {
   ArrowRight,
   BrainCircuit,
   Check,
-  CircleDot,
-  FileCode,
   Sparkles,
-  Wand2,
 } from 'lucide-react';
 import { getBuildStudioHeadline } from '../../data/buildStudioCopy';
-import HoverTip from '../ui/HoverTip';
 import StudioShell from '../ui/StudioShell';
 
 const CLUSTER_SCENES = {
@@ -61,6 +57,7 @@ const CLUSTER_SCENES = {
  */
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
   const [copied, setCopied] = useState(null);
+  const [shown, setShown] = useState('starter');
   const lens = 'map';
 
   const raw = topic?.talkToAi;
@@ -92,30 +89,36 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
-  const actions = (starter || example) ? (
-    <div className="concept-studio__handoff">
-      <button
-        type="button"
-        className="group relative concept-studio__copy min-h-[44px]"
-        onClick={() => copyPrompt(starter, 'starter')}
-        disabled={!starter}
-        aria-label="Copy a prompt"
-      >
-        {copied === 'starter' ? <Check size={16} aria-hidden="true" /> : <Wand2 size={16} aria-hidden="true" />}
-        <span>{copied === 'starter' ? 'Copied' : 'Copy a prompt'}</span>
-        <HoverTip text="Paste this into your AI to work on this idea" />
-      </button>
-      <button
-        type="button"
-        className="group relative concept-studio__copy min-h-[44px]"
-        onClick={() => copyPrompt(example, 'example')}
-        disabled={!example}
-        aria-label="Copy a filled-in example"
-      >
-        {copied === 'example' ? <Check size={16} aria-hidden="true" /> : <FileCode size={16} aria-hidden="true" />}
-        <span>{copied === 'example' ? 'Copied' : 'Copy a filled-in example'}</span>
-        <HoverTip text="A filled-in version you can paste" />
-      </button>
+  const shownText = shown === 'example' ? example : starter;
+
+  const showAndCopy = (kind) => {
+    const text = kind === 'example' ? example : starter;
+    setShown(kind);
+    copyPrompt(text, kind);
+  };
+
+  const stageToolbar = (starter || example) ? (
+    <div className="concept-studio__prompt-tabs">
+      {starter ? (
+        <button
+          type="button"
+          className="concept-studio__prompt-tab min-h-[44px]"
+          aria-pressed={shown === 'starter'}
+          onClick={() => showAndCopy('starter')}
+        >
+          {copied === 'starter' ? 'Copied' : 'Prompt'}
+        </button>
+      ) : null}
+      {example ? (
+        <button
+          type="button"
+          className="concept-studio__prompt-tab min-h-[44px]"
+          aria-pressed={shown === 'example'}
+          onClick={() => showAndCopy('example')}
+        >
+          {copied === 'example' ? 'Copied' : 'Example'}
+        </button>
+      ) : null}
     </div>
   ) : null;
 
@@ -125,9 +128,16 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
       eyebrow={`${topic?.clusterTitle || 'Build literacy'} studio`}
       title={getBuildStudioHeadline(topic)}
       stageFirst
-      controls={actions}
+      stageToolbar={stageToolbar}
       stageLabel="Live example"
-      stage={<ConceptScene topic={topic} lens={lens} />}
+      stage={(
+        <>
+          {shownText ? (
+            <pre className="concept-studio__prompt">{shownText}</pre>
+          ) : null}
+          <ConceptScene topic={topic} lens={lens} />
+        </>
+      )}
       stageClassName="concept-studio__scene"
       className="concept-studio"
     />
@@ -176,14 +186,6 @@ function SpacingScene({ lens }) {
           </div>
         </div>
       </div>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress'
-          ? 'Random values make every relationship feel accidental.'
-          : lens === 'apply'
-            ? 'Pick a base unit, then use its multiples everywhere.'
-            : 'Padding is inside. Margin is outside. The scale connects both.'}
-      </div>
     </div>
   );
 }
@@ -205,10 +207,6 @@ function TypographyScene({ lens }) {
             <em>{size}px</em>
           </div>
         ))}
-      </div>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress' ? 'One-off sizes turn hierarchy into static.' : 'A type scale gives every sentence a job.'}
       </div>
     </div>
   );
@@ -237,10 +235,6 @@ function TokenScene({ topic, lens }) {
         <p>{lens === 'stress' ? 'Three hard-coded choices. Three places to drift.' : 'One named decision flows through the whole component.'}</p>
         <button type="button">Primary action</button>
       </article>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'apply' ? 'Name the choice once. Reuse the name, not the raw value.' : 'The left side is the contract. The right side is one consumer.'}
-      </div>
     </div>
   );
 }
@@ -271,12 +265,6 @@ function SystemScene({ topic, lens, profile }) {
           {lens === 'stress' ? 'Weak link exposed' : lens === 'apply' ? 'Ready for your project' : 'System mapped'}
         </div>
       </article>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress'
-          ? `Remove one handoff and the ${profile.nodes[3].toLowerCase()} becomes a guess.`
-          : profile.caption}
-      </div>
     </div>
   );
 }

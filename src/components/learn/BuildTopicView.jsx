@@ -155,25 +155,27 @@ export default function BuildTopicView({
         </div>
       )}
 
-      {/* Sibling chips, hop to other topics in this cluster */}
       {cluster?.topics?.length > 1 && (
-        <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+        <div className="mb-6 lg:mb-8">
+          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">
             More in {cluster.title}
-          </span>
-          {cluster.topics
-            .filter(t => t.id !== topic.id)
-            .slice(0, 8)
-            .map(sib => (
-              <button
-                key={sib.id}
-                type="button"
-                onClick={() => onSelectTopic(sib.id)}
-                className={`relative px-3 py-1 min-h-[44px] rounded-full text-sm lg:text-base font-medium border border-zinc-200 dark:border-zinc-700 ${cc.text} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
-              >
-                {sib.title}
-              </button>
-            ))}
+          </p>
+          <ul className="m-0 p-0 list-none divide-y divide-zinc-200 dark:divide-zinc-800">
+            {cluster.topics
+              .filter(t => t.id !== topic.id)
+              .slice(0, 8)
+              .map(sib => (
+                <li key={sib.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectTopic(sib.id)}
+                    className={`flex w-full min-h-[44px] items-center py-2 text-left text-base lg:text-lg font-medium ${cc.text} hover:opacity-80`}
+                  >
+                    {sib.title}
+                  </button>
+                </li>
+              ))}
+          </ul>
         </div>
       )}
 

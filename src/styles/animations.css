@@ -1821,6 +1821,33 @@
   min-height: 0;
 }
 
+.concept-studio__mess {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.04);
+  color: #d5d1e1;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.concept-studio__mess:hover {
+  color: white;
+  border-color: rgb(var(--studio-accent-rgb) / 0.5);
+}
+
+.concept-studio__mess[aria-pressed='true'] {
+  border-color: rgb(251 191 36 / 0.55);
+  background: rgb(120 53 15 / 0.28);
+  color: white;
+}
+
 .concept-studio__drawers {
   display: flex;
   flex-direction: column;

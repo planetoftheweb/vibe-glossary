@@ -14,32 +14,24 @@ const topic = {
 };
 
 describe('Build Literacy concept studio guidance', () => {
-  it('tells a new learner which views to choose and what to watch', async () => {
-    const user = userEvent.setup();
+  it('lets a new learner see the idea without a three-view lesson', () => {
     render(<TalkToAiCard topic={topic} />);
 
-    expect(screen.getByText('Try this')).toBeInTheDocument();
-    expect(screen.getByText('Start with Map it. Then choose Break it and Use it.')).toBeInTheDocument();
-    expect(screen.getAllByText(/Watch the diagram and this note change/).length).toBeGreaterThan(0);
-    const howToggle = screen.getByText('How these views work').closest('summary');
-    const howDrawer = howToggle.closest('details');
-    expect(howDrawer).not.toHaveAttribute('open');
-
-    await user.click(howToggle);
-    expect(howDrawer).toHaveAttribute('open');
-    expect(screen.getByText(/Start here so the diagram makes sense before you copy a prompt/)).toBeInTheDocument();
-    expect(screen.getByText(/The weak default should feel wrong/)).toBeInTheDocument();
-    expect(screen.getByText(/Look for one project-ready move/)).toBeInTheDocument();
+    expect(screen.getByText('Live example')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Show the mess/i })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByText('Try this')).not.toBeInTheDocument();
+    expect(screen.queryByText('How these views work')).not.toBeInTheDocument();
+    expect(screen.getByText('Use with AI').closest('details')).not.toHaveAttribute('open');
+    expect(screen.getByText('Remember this').closest('details')).not.toHaveAttribute('open');
   });
 
-  it('explains the consequence after the learner changes the view', async () => {
+  it('shows the weak default when the learner asks to see the mess', async () => {
     const user = userEvent.setup();
     render(<TalkToAiCard topic={topic} />);
 
-    await user.click(screen.getByRole('button', { name: /Break it/i }));
+    await user.click(screen.getByRole('button', { name: /Show the mess/i }));
 
-    expect(screen.getByText('What changed')).toBeInTheDocument();
-    expect(screen.getByText('Break it shows the mistake this idea helps prevent.')).toBeInTheDocument();
-    expect(screen.getByText('Expose the mistake this idea prevents.')).toBeInTheDocument();
+    expect(document.querySelector('.concept-visual')).toHaveAttribute('data-lens', 'stress');
+    expect(screen.getByText('Weak link exposed')).toBeInTheDocument();
   });
 });

@@ -1,50 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
-  AlertTriangle,
   ArrowRight,
   BrainCircuit,
   Check,
   CircleDot,
   FileCode,
-  HelpCircle,
   MemoryStick,
-  Rocket,
-  ScanLine,
   Sparkles,
   Wand2,
 } from 'lucide-react';
 import { getBuildStudioHeadline } from '../../data/buildStudioCopy';
 import HoverTip from '../ui/HoverTip';
 import StudioShell from '../ui/StudioShell';
-
-const LENSES = [
-  {
-    id: 'map',
-    label: 'Map it',
-    short: 'Structure',
-    description: 'See the parts and how they connect.',
-    how: 'See the parts and how they connect. Start here so the diagram makes sense before you copy a prompt.',
-    icon: ScanLine,
-  },
-  {
-    id: 'stress',
-    label: 'Break it',
-    short: 'Weak default',
-    description: 'Expose the mistake this idea prevents.',
-    how: 'Expose the mistake this idea prevents. Compare with Map it. The weak default should feel wrong.',
-    icon: AlertTriangle,
-  },
-  {
-    id: 'apply',
-    label: 'Use it',
-    short: 'Project move',
-    description: 'Turn the idea into a decision you can make.',
-    how: 'Turn the idea into a decision you can make. Look for one project-ready move.',
-    icon: Rocket,
-  },
-];
-
-const HOW_LEAD = 'Start with Map it. Then choose Break it and Use it. Watch the diagram and this note change with each choice.';
 
 const CLUSTER_SCENES = {
   product: {
@@ -89,41 +56,14 @@ const CLUSTER_SCENES = {
   },
 };
 
-function noteFor(topic, lens) {
-  if (lens === 'stress') {
-    return {
-      label: 'What changed',
-      title: 'Break it shows the mistake this idea helps prevent.',
-      body: `Compare the changed diagram with Map it. ${topic?.comparison || topic?.summary || ''}`,
-      tone: 'warning',
-    };
-  }
-
-  if (lens === 'apply') {
-    return {
-      label: 'What changed',
-      title: 'Use it turns the lesson into one decision you can make.',
-      body: `Look for the project-ready move. ${topic?.vibeTip || topic?.mnemonic || topic?.summary || ''}`,
-      tone: 'safe',
-    };
-  }
-
-  return {
-    label: 'Try this',
-    title: 'Start with Map it. Then choose Break it and Use it.',
-    body: `Watch the diagram and this note change with each choice. ${topic?.mnemonic || topic?.summary || ''}`,
-    tone: 'good',
-  };
-}
-
 /**
  * A concept studio for Build Literacy. The AI prompts are still available,
  * but they are a handoff after the learner can see the idea, not the lesson.
  */
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
-  const [lens, setLens] = useState('map');
+  const [messy, setMessy] = useState(false);
   const [copied, setCopied] = useState(null);
-  const note = useMemo(() => noteFor(topic, lens), [topic, lens]);
+  const lens = messy ? 'stress' : 'map';
 
   const raw = topic?.talkToAi;
   const starter = raw && typeof raw === 'object' ? raw.starter || '' : '';
@@ -154,58 +94,19 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
-  const activeLens = LENSES.find((item) => item.id === lens) || LENSES[0];
-
   const stageToolbar = (
-    <div className="concept-studio__rail" role="group" aria-label="Concept views">
-      {LENSES.map((item) => {
-        const Icon = item.icon;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            className="group relative concept-studio__lens min-h-[44px] min-w-[44px]"
-            aria-pressed={lens === item.id}
-            aria-label={`${item.label}. ${item.description}`}
-            onClick={() => setLens(item.id)}
-          >
-            <Icon size={16} aria-hidden="true" />
-            <span>{item.label}</span>
-            <span className="concept-studio__lens-overlay" role="tooltip">
-              <strong>{item.label}</strong>
-              {item.description}
-            </span>
-          </button>
-        );
-      })}
-    </div>
+    <button
+      type="button"
+      className="concept-studio__mess min-h-[44px]"
+      aria-pressed={messy}
+      onClick={() => setMessy((value) => !value)}
+    >
+      {messy ? 'Show the idea' : 'Show the mess'}
+    </button>
   );
 
   const controls = (
     <div className="concept-studio__drawers">
-      <details className="concept-studio__drawer">
-        <summary className="concept-studio__drawer-toggle min-h-[44px]">
-          <HelpCircle size={16} aria-hidden="true" />
-          <span>How these views work</span>
-        </summary>
-        <div
-          id="concept-studio-how"
-          className="concept-studio__how"
-          role="region"
-          aria-label="How these views work"
-        >
-          <p className="concept-studio__how-lead">{HOW_LEAD}</p>
-          <ul className="concept-studio__how-list">
-            {LENSES.map((item) => (
-              <li key={item.id}>
-                <strong>{item.label}</strong>
-                <p>{item.how}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </details>
-
       <details className="concept-studio__drawer">
         <summary className="concept-studio__drawer-toggle min-h-[44px]">
           <Wand2 size={16} aria-hidden="true" />
@@ -257,17 +158,8 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
       stageFirst
       stageToolbar={stageToolbar}
       controls={controls}
-      stageLabel="Live concept map"
-      stage={(
-        <>
-          <aside className={`concept-studio__explainer concept-studio__explainer--${note.tone}`} aria-live="polite">
-            <span>{note.label}</span>
-            <strong>{activeLens.label}</strong>
-            <p>{note.title}</p>
-          </aside>
-          <ConceptScene topic={topic} lens={lens} />
-        </>
-      )}
+      stageLabel="Live example"
+      stage={<ConceptScene topic={topic} lens={lens} />}
       stageClassName="concept-studio__scene"
       className="concept-studio"
     />

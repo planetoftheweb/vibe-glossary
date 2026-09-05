@@ -67,7 +67,7 @@ function ProgressRing({ progress, accentClass, size = 32, strokeWidth = 3.5 }) {
           r="16"
           fill="none"
           stroke="currentColor"
-          className="text-emerald-500"
+          className="text-indigo-500"
           strokeWidth="1.5"
           pathLength="100"
           strokeDasharray={`${masteredPercent} 100`}
@@ -116,9 +116,9 @@ function SequenceButton({ direction, item, itemLabel, onClick }) {
       disabled={!item}
       aria-label={item ? `${label} ${itemLabel}: ${item.title}` : `No ${label.toLowerCase()} ${itemLabel}`}
       aria-keyshortcuts={previous ? 'ArrowLeft' : 'ArrowRight'}
-      className={`group flex min-w-0 flex-1 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-violet-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-500 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent sm:px-4 ${previous ? '' : 'text-right'}`}
+      className={`group flex min-w-0 flex-1 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-indigo-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent sm:px-4 ${previous ? '' : 'text-right'}`}
     >
-      {previous && <Icon size={24} className="shrink-0 text-violet-500 transition-transform group-hover:-translate-x-0.5" aria-hidden="true" />}
+      {previous && <Icon size={24} className="shrink-0 text-indigo-500 transition-transform group-hover:-translate-x-0.5" aria-hidden="true" />}
       <span className="min-w-0 flex-1">
         <span className="block text-xs font-black uppercase tracking-[0.1em] text-zinc-500 dark:text-zinc-400">
           {label}
@@ -127,7 +127,7 @@ function SequenceButton({ direction, item, itemLabel, onClick }) {
           {item?.title || (previous ? 'Start of list' : 'End of list')}
         </span>
       </span>
-      {!previous && <Icon size={24} className="shrink-0 text-violet-500 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />}
+      {!previous && <Icon size={24} className="shrink-0 text-indigo-500 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />}
     </button>
   );
 }
@@ -173,7 +173,7 @@ function ProgressPopup({ progress, sections, visited, accentClass, sectionLabel,
           <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
             <strong className="text-zinc-800 dark:text-zinc-200">{progress?.visited || 0}/{progress?.total || 0}</strong> explored, {progress?.copied || 0} prompts used
           </p>
-          <p className="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="mt-1 text-xs font-bold text-indigo-600 dark:text-indigo-400">
             {progress?.mastered || 0} mastered
           </p>
         </div>
@@ -181,7 +181,7 @@ function ProgressPopup({ progress, sections, visited, accentClass, sectionLabel,
 
       <div className="border-y border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200">
-          <BookOpenCheck size={17} className="text-violet-500" aria-hidden="true" />
+          <BookOpenCheck size={17} className="text-indigo-500" aria-hidden="true" />
           {learningProgress?.checkpointReady
             ? 'Your five-item review is ready.'
             : `${itemsUntilReview} more ${itemsUntilReview === 1 ? 'item' : 'items'} to your next review.`}
@@ -196,14 +196,14 @@ function ProgressPopup({ progress, sections, visited, accentClass, sectionLabel,
           return (
             <div key={section.id}>
               <div className="mb-1.5 flex items-center gap-2">
-                <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${section.colors?.dot || 'bg-violet-500'}`} />
+                <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${section.colors?.dot || 'bg-indigo-500'}`} />
                 <strong className="min-w-0 flex-1 truncate text-sm text-zinc-800 dark:text-zinc-200">{section.name}</strong>
-                {count === itemIds.length && itemIds.length > 0 && <Check size={14} className="text-emerald-500" aria-label="Complete" />}
+                {count === itemIds.length && itemIds.length > 0 && <Check size={14} className="text-indigo-500" aria-label="Complete" />}
                 <span className="text-xs tabular-nums text-zinc-400">{count}/{itemIds.length}</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
                 <div
-                  className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-500 ${section.colors?.gradient || 'from-violet-500 to-fuchsia-500'}`}
+                  className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-500 ${section.colors?.gradient || 'from-indigo-500 to-indigo-400'}`}
                   style={{ width: `${percent}%` }}
                 />
               </div>
@@ -227,13 +227,13 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
   return (
     <PopupShell id="learning-hud-score" title="Score" popupAbove={popupAbove} onClose={onClose}>
       <div className="relative overflow-hidden bg-zinc-950 px-5 py-5 text-white">
-        <div className="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-amber-500/20 blur-3xl" aria-hidden="true" />
+        <div className="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-indigo-500/20 blur-3xl" aria-hidden="true" />
         <div className="relative flex items-start gap-4">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-950/30">
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-lg shadow-indigo-950/30">
             <Sparkles size={27} aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-300">Score {total}</p>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-indigo-300">Score {total}</p>
             <h3 className="mt-1 text-3xl font-black tracking-tight">{level?.current?.label || 'Lurker'}</h3>
             <p className="mt-1 text-sm text-zinc-400">{level?.current?.blurb || 'Just looking around. Welcome.'}</p>
           </div>
@@ -243,14 +243,14 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
           <div className="relative mt-5 rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="flex items-center justify-between gap-3">
               <span className="flex items-center gap-2 text-sm font-extrabold">
-                <Target size={16} className="text-violet-300" aria-hidden="true" />
+                <Target size={16} className="text-indigo-300" aria-hidden="true" />
                 {nextGoal.remaining} points to {next.label}
               </span>
-              <span className="text-xs font-black tabular-nums text-amber-300">{nextGoal.percent}%</span>
+              <span className="text-xs font-black tabular-nums text-indigo-300">{nextGoal.percent}%</span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-400"
+                className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-indigo-400"
                 style={{ width: `${nextGoal.percent}%` }}
               />
             </div>
@@ -259,7 +259,7 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
             </p>
           </div>
         ) : (
-          <p className="relative mt-5 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm font-bold text-emerald-300">
+          <p className="relative mt-5 rounded-xl border border-indigo-400/20 bg-indigo-400/10 p-3 text-sm font-bold text-indigo-300">
             Top level reached. Keep reviewing to retain what you know.
           </p>
         )}
@@ -269,9 +269,9 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
         <button
           type="button"
           onClick={onContinueLearning}
-          className="flex min-h-[58px] w-full items-center gap-3 rounded-xl border border-violet-200 bg-violet-50 px-4 text-left transition-colors hover:bg-violet-100 dark:border-violet-800/60 dark:bg-violet-950/35 dark:hover:bg-violet-950/55"
+          className="flex min-h-[58px] w-full items-center gap-3 rounded-xl border border-indigo-200 bg-indigo-50 px-4 text-left transition-colors hover:bg-indigo-100 dark:border-indigo-800/60 dark:bg-indigo-950/35 dark:hover:bg-indigo-950/55"
         >
-          <BookOpenCheck size={20} className="shrink-0 text-violet-600 dark:text-violet-300" aria-hidden="true" />
+          <BookOpenCheck size={20} className="shrink-0 text-indigo-600 dark:text-indigo-300" aria-hidden="true" />
           <span className="min-w-0 flex-1">
             <strong className="block text-sm text-zinc-900 dark:text-white">
               {learningProgress?.checkpointReady ? 'Start your five-item review' : `${itemsUntilReview} more ${itemsUntilReview === 1 ? 'item' : 'items'} unlock the quiz`}
@@ -319,7 +319,7 @@ export default function FloatingLearningHud({
   score,
   level,
   learningProgress,
-  accentClass = 'text-violet-500',
+  accentClass = 'text-indigo-500',
   onOpenScoreDetails,
   onOpenProof,
   onContinueLearning,
@@ -456,10 +456,10 @@ export default function FloatingLearningHud({
       <button
         type="button"
         onClick={() => setMode('minimized')}
-        className="fixed bottom-20 right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-violet-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+        className="fixed bottom-20 right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         aria-label="Show learning HUD"
       >
-        <Maximize2 size={17} className="text-violet-300" aria-hidden="true" />
+        <Maximize2 size={17} className="text-indigo-300" aria-hidden="true" />
         Learning HUD
       </button>
     );
@@ -481,7 +481,7 @@ export default function FloatingLearningHud({
       aria-label="Learning HUD"
     >
       {hudState.mode === 'minimized' ? (
-        <div className="pointer-events-auto flex items-center overflow-hidden rounded-2xl border border-violet-400/35 bg-zinc-950/95 text-white shadow-[0_20px_70px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
+        <div className="pointer-events-auto flex items-center overflow-hidden rounded-2xl border border-indigo-400/35 bg-zinc-950/95 text-white shadow-[0_20px_70px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
           <button
             type="button"
             onPointerDown={handlePointerDown}
@@ -494,7 +494,7 @@ export default function FloatingLearningHud({
             type="button"
             onClick={goPrevious}
             disabled={!previous}
-            className="grid min-h-[48px] min-w-[44px] place-items-center text-violet-300 transition-colors hover:bg-white/10 disabled:opacity-30"
+            className="grid min-h-[48px] min-w-[44px] place-items-center text-indigo-300 transition-colors hover:bg-white/10 disabled:opacity-30"
             aria-label={previous ? `Previous ${itemLabel}: ${previous.title}` : `No previous ${itemLabel}`}
           >
             <ChevronLeft size={20} aria-hidden="true" />
@@ -513,7 +513,7 @@ export default function FloatingLearningHud({
             type="button"
             onClick={goNext}
             disabled={!next}
-            className="grid min-h-[48px] min-w-[44px] place-items-center text-violet-300 transition-colors hover:bg-white/10 disabled:opacity-30"
+            className="grid min-h-[48px] min-w-[44px] place-items-center text-indigo-300 transition-colors hover:bg-white/10 disabled:opacity-30"
             aria-label={next ? `Next ${itemLabel}: ${next.title}` : `No next ${itemLabel}`}
           >
             <ChevronRight size={20} aria-hidden="true" />
@@ -528,7 +528,7 @@ export default function FloatingLearningHud({
           </button>
         </div>
       ) : (
-        <div className="pointer-events-auto w-[min(940px,calc(100vw-24px))] overflow-visible rounded-2xl border border-violet-400/30 bg-white/95 text-zinc-900 shadow-[0_28px_90px_rgba(0,0,0,0.38)] backdrop-blur-2xl dark:bg-zinc-950/95 dark:text-white">
+        <div className="pointer-events-auto w-[min(940px,calc(100vw-24px))] overflow-visible rounded-2xl border border-indigo-400/30 bg-white/95 text-zinc-900 shadow-[0_28px_90px_rgba(0,0,0,0.38)] backdrop-blur-2xl dark:bg-zinc-950/95 dark:text-white">
           <div
             data-testid="learning-hud-drag-bar"
             onPointerDown={handlePointerDown}
@@ -575,7 +575,7 @@ export default function FloatingLearningHud({
                     >
                       <Icon size={16} aria-hidden="true" />
                       {label}
-                      {hudState.dock === id && <Check size={15} className="ml-auto text-violet-500" aria-hidden="true" />}
+                      {hudState.dock === id && <Check size={15} className="ml-auto text-indigo-500" aria-hidden="true" />}
                     </button>
                   ))}
                 </div>
@@ -616,7 +616,7 @@ export default function FloatingLearningHud({
                   onClick={() => setActivePopup(activePopup === 'progress' ? null : 'progress')}
                   aria-expanded={activePopup === 'progress'}
                   aria-controls="learning-hud-progress"
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2 text-xs font-extrabold transition-colors hover:border-violet-400 hover:bg-violet-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-violet-500 dark:hover:bg-violet-950/40 sm:px-3"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2 text-xs font-extrabold transition-colors hover:border-indigo-400 hover:bg-indigo-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950/40 sm:px-3"
                   aria-label={`${sectionLabel}: ${progress?.visited || 0} of ${progress?.total || 0}`}
                 >
                   <ProgressRing progress={progress} accentClass={accentClass} size={27} />
@@ -627,10 +627,10 @@ export default function FloatingLearningHud({
                   onClick={() => setActivePopup(activePopup === 'score' ? null : 'score')}
                   aria-expanded={activePopup === 'score'}
                   aria-controls="learning-hud-score"
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-amber-300/70 bg-amber-50 px-2 text-xs font-extrabold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200 dark:hover:bg-amber-500/20 sm:px-3"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-indigo-300/70 bg-indigo-50 px-2 text-xs font-extrabold text-indigo-800 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-200 dark:hover:bg-indigo-500/20 sm:px-3"
                   aria-label={`Score ${score?.total || 0}, level ${level?.current?.label || 'Lurker'}`}
                 >
-                  <Sparkles size={15} className="text-amber-500" aria-hidden="true" />
+                  <Sparkles size={15} className="text-indigo-500" aria-hidden="true" />
                   <span>Score {score?.total || 0}</span>
                   <span className="hidden text-xs uppercase tracking-wide opacity-80 sm:inline">{level?.current?.label || 'Lurker'}</span>
                 </button>

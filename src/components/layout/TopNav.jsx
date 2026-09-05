@@ -297,7 +297,7 @@ function MainMenu({
           <span className="ml-auto text-xs text-zinc-400 font-semibold">
             {progress.visited}/{progress.total}
             {progress.mastered > 0 && (
-              <span className="text-emerald-500 ml-1.5">· {progress.mastered} ✓</span>
+              <span className="text-indigo-500 ml-1.5">· {progress.mastered} ✓</span>
             )}
           </span>
           <ChevronRight size={16} className={`transition-transform ${statsOpen ? 'rotate-90' : ''}`} />
@@ -313,7 +313,7 @@ function MainMenu({
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
                     className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                    className="text-emerald-500" strokeWidth="1.5"
+                    className="text-indigo-500" strokeWidth="1.5"
                     strokeDasharray={`${progress.masteredPercent * 1.0367} 200`}
                     strokeLinecap="round"
                   />
@@ -338,7 +338,7 @@ function MainMenu({
                   {progress.visited}/{progress.total} explored · {progress.copied} copied
                 </p>
                 {progress.mastered > 0 && (
-                  <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                  <p className="text-xs text-indigo-500 leading-tight mt-0.5 font-semibold">
                     {progress.mastered} mastered ✓
                   </p>
                 )}
@@ -357,7 +357,7 @@ function MainMenu({
                     <div className="flex items-center gap-2 mb-1">
                       <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
                       <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
-                      {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
+                      {isComplete && <Check size={13} className="text-indigo-500 shrink-0" />}
                       <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                     </div>
                     <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -392,7 +392,7 @@ function MainMenu({
         </MenuItem>
         <MenuItem icon={<Keyboard size={18} />} onClick={handleCheatSheet}>
           Cheat Sheet
-          <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
+          <kbd className="ml-auto text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
         </MenuItem>
         <MenuItem icon={<Compass size={18} />} onClick={handleTour}>
           Replay Tour
@@ -732,7 +732,7 @@ export default function TopNav({
               onClick={() => setSiteSection('glossary')}
               aria-label="UI Glossary"
               aria-current={siteSection === 'glossary' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'glossary'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -746,7 +746,7 @@ export default function TopNav({
               onClick={() => setSiteSection('build')}
               aria-label="Build literacy"
               aria-current={siteSection === 'build' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'build'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -909,7 +909,7 @@ export default function TopNav({
                     >
                       <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
                       {isMastered && (
-                        <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />
+                        <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />
                       )}
                     </button>
                   );
@@ -995,7 +995,7 @@ export default function TopNav({
               >
                 <Keyboard size={18} />
                 <span className="font-medium">Cheat Sheet</span>
-                <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
+                <kbd className="ml-auto text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
               </button>
             </PillDropdown>
           </div>
@@ -1037,7 +1037,7 @@ export default function TopNav({
               aria-label="Search (⌘K)"
             >
               <Search size={20} />
-              <kbd className="hidden xl:flex items-center text-xs font-mono bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 leading-none">⌘K</kbd>
+              <kbd className="hidden xl:flex items-center text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 leading-none">⌘K</kbd>
               <HoverTip text="Search" align="right" />
             </button>
           )}
@@ -1102,7 +1102,7 @@ export default function TopNav({
                   <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                      className="text-emerald-500" strokeWidth="1.5"
+                      className="text-indigo-500" strokeWidth="1.5"
                       strokeDasharray={`${activeProgress.masteredPercent * 1.0367} 200`}
                       strokeLinecap="round"
                     />
@@ -1125,7 +1125,7 @@ export default function TopNav({
                     {activeProgress.visited}/{activeProgress.total} explored · {activeProgress.copied} copied
                   </p>
                   {activeProgress.mastered > 0 && (
-                    <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                    <p className="text-xs text-indigo-500 leading-tight mt-0.5 font-semibold">
                       {activeProgress.mastered} mastered ✓
                     </p>
                   )}
@@ -1142,7 +1142,7 @@ export default function TopNav({
                       <div className="flex items-center gap-2 mb-1">
                         <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
                         <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
-                        {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
+                        {isComplete && <Check size={13} className="text-indigo-500 shrink-0" />}
                         <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                       </div>
                       <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -1344,7 +1344,7 @@ export default function TopNav({
                 }`}
               >
                 <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
-                {isMastered && <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />}
+                {isMastered && <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />}
               </button>
             );
           })}

@@ -67,7 +67,14 @@ export default function App() {
   const [siteSection, setSiteSection]     = useState(() => topicFromWindow()?.section || 'glossary');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
-  const [darkMode, setDarkMode]           = useState(true);
+  const [darkMode, setDarkMode]           = useState(() => {
+    try {
+      const saved = localStorage.getItem('vg-dark-mode');
+      return saved === null ? true : saved === 'true';
+    } catch {
+      return true;
+    }
+  });
   const [learnMode, setLearnMode]         = useState(() => {
     try {
       const saved = localStorage.getItem('vg-learn-mode');
@@ -119,10 +126,13 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Apply dark mode class
+  // Apply dark mode class and persist choice
   useEffect(() => {
     if (darkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
+    try { localStorage.setItem('vg-dark-mode', String(darkMode)); } catch {}
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', darkMode ? '#09090b' : '#ffffff');
   }, [darkMode]);
 
   // Cmd+/ to toggle cheat sheet

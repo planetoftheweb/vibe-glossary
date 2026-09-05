@@ -155,7 +155,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
               <button
                 key={opt.id}
                 onClick={() => handleOptionToggle(opt)}
-                className={`flex items-center space-x-1.5 lg:space-x-2.5 px-3 py-1.5 lg:px-5 lg:py-3 rounded-lg lg:rounded-xl border text-sm lg:text-lg font-medium transition-all duration-200 ${
+                className={`flex items-center space-x-1.5 lg:space-x-2.5 min-h-[44px] px-3 py-1.5 lg:px-5 lg:py-3 rounded-lg lg:rounded-xl border text-sm lg:text-lg font-medium transition-all duration-200 ${
                   isOptionActive(opt)
                     ? `${cc.active || 'bg-indigo-600 text-white'} border-transparent shadow-md transform scale-105`
                     : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
@@ -185,7 +185,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
                       role="radio"
                       aria-checked={isActive}
                       onClick={() => handleOptionToggle(opt)}
-                      className={`flex items-center space-x-1.5 lg:space-x-2.5 px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
+                      className={`flex items-center space-x-1.5 lg:space-x-2.5 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
                         isActive
                           ? `${cc.active || 'bg-indigo-600 text-white'} border-transparent shadow-md`
                           : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
@@ -210,7 +210,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
         {data.prompt.scaffolds && (
           <button
             onClick={() => onOptionToggle('_scaffold')}
-            className={`flex items-center space-x-1.5 lg:space-x-2 px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
+            className={`flex items-center space-x-1.5 lg:space-x-2 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
               includeScaffold
                 ? 'bg-emerald-600 text-white border-transparent shadow-md'
                 : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-emerald-300 dark:hover:border-zinc-600'
@@ -224,7 +224,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
         {data.prompt.requirements && (
           <button
             onClick={() => onOptionToggle('_requirements')}
-            className={`flex items-center space-x-1.5 lg:space-x-2 px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
+            className={`flex items-center space-x-1.5 lg:space-x-2 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
               includeRequirements
                 ? 'bg-amber-600 text-white border-transparent shadow-md'
                 : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-amber-300 dark:hover:border-zinc-600'
@@ -240,7 +240,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
           <div className="relative">
             <button
               onClick={() => setFwOpen(!fwOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm lg:text-base font-medium text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors"
+              className="flex items-center gap-1.5 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm lg:text-base font-medium text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors"
             >
               <span>{activeLabel}</span>
               <ChevronDown size={14} className={`text-zinc-400 transition-transform ${fwOpen ? 'rotate-180' : ''}`} />

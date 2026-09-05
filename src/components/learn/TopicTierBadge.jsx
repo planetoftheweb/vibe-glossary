@@ -51,7 +51,7 @@ export default function TopicTierBadge({ tier, className = '' }) {
       aria-label={`${labelText}. ${meta.next}`}
     >
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${meta.classes}`}>
-        <Icon size={11} className="shrink-0" aria-hidden />
+        <Icon size={14} className="shrink-0" aria-hidden />
         {labelText}
       </span>
       <HoverTip text={meta.next} />

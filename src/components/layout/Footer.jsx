@@ -26,7 +26,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
-          <FileText size={18} />
+          <FileText size={16} />
           Changelog
         </a>
         <a
@@ -35,7 +35,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
-          <Github size={18} />
+          <Github size={16} />
           GitHub
         </a>
       </div>

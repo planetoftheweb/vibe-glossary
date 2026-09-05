@@ -779,7 +779,7 @@ export default function App() {
                   : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
               }`}
             >
-              <FileText size={18} />
+              <FileText size={16} />
               Definition
             </button>
             <button
@@ -790,7 +790,7 @@ export default function App() {
                   : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
               }`}
             >
-              <Eye size={18} />
+              <Eye size={16} />
               Live Preview
             </button>
           </div>
@@ -822,7 +822,7 @@ export default function App() {
                               : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800'
                           }`}
                         >
-                          <GraduationCap size={13} />
+                          <GraduationCap size={14} />
                           {learnMode
                             ? (showCheckpoint ? 'Quiz ready' : `Learning ${learning.sections.glossary.seen.length}/${learning.size}`)
                             : 'Learning off'}
@@ -831,7 +831,7 @@ export default function App() {
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
-                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
+                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white">
                       {currentData.title}
                     </h1>
                   </div>
@@ -841,7 +841,7 @@ export default function App() {
                       className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                       aria-label="Close panel"
                     >
-                      <PanelLeftClose size={18} />
+                      <PanelLeftClose size={16} />
                       <HoverTip text="Close panel" align="right" />
                     </button>
                   </div>
@@ -913,7 +913,7 @@ export default function App() {
                   className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
                   aria-label="Open Definition"
                 >
-                  <BookOpen size={18} />
+                  <BookOpen size={16} />
                   <HoverTip text="Open Definition" />
                 </button>
               )}
@@ -927,33 +927,39 @@ export default function App() {
                 <MousePointerClick size={14} />
                 <span>Try it</span>
               </div>
-              <Suspense fallback={
-                <div className="flex-1 flex items-center justify-center text-zinc-400 dark:text-zinc-600 text-base">
-                  Loading…
-                </div>
-              }>
-                {demoOwnsStudio ? (
+              {demoOwnsStudio ? (
+                <Suspense fallback={
+                  <div className="flex flex-1 w-full min-h-[560px] items-center justify-center text-base text-zinc-400 dark:text-zinc-600" aria-hidden="true">
+                    Loading…
+                  </div>
+                }>
                   <DemoComponent
                     demoId={activeItem}
                     activeOptions={activeOptions}
                     onOptionToggle={toggleOption}
                   />
-                ) : (
-                  <PatternStudioFrame
-                    demoId={activeItem}
-                    data={currentData}
-                    activeOptions={activeOptions}
-                    onOptionToggle={toggleOption}
-                    fill
-                  >
+                </Suspense>
+              ) : (
+                <PatternStudioFrame
+                  demoId={activeItem}
+                  data={currentData}
+                  activeOptions={activeOptions}
+                  onOptionToggle={toggleOption}
+                  fill
+                >
+                  <Suspense fallback={
+                    <div className="flex w-full min-h-[330px] items-center justify-center text-base text-zinc-400 dark:text-zinc-600" aria-hidden="true">
+                      Loading…
+                    </div>
+                  }>
                     <DemoComponent
                       demoId={activeItem}
                       activeOptions={activeOptions}
                       onOptionToggle={toggleOption}
                     />
-                  </PatternStudioFrame>
-                )}
-              </Suspense>
+                  </Suspense>
+                </PatternStudioFrame>
+              )}
             </div>
           </main>
         </div>

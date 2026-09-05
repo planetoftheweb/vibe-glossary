@@ -57,7 +57,7 @@ export default function StudioShell({
         <div className="vg-studio__stage-header">
           <div className="vg-studio__stage-label">
             <span className="vg-studio__live-dot" aria-hidden="true" />
-            <Radio size={13} aria-hidden="true" />
+            <Radio size={14} aria-hidden="true" />
             {stageLabel}
           </div>
           {stageToolbar ? <div className="vg-studio__stage-toolbar">{stageToolbar}</div> : null}
@@ -119,7 +119,7 @@ export function StudioControl({
     <section className={`vg-studio__control ${className}`.trim()}>
       <div className="vg-studio__control-heading">
         <span>
-          {Icon ? <Icon size={17} aria-hidden="true" /> : null}
+          {Icon ? <Icon size={16} aria-hidden="true" /> : null}
           {number ? `${number} · ` : ''}{label}
         </span>
         {value ? <strong>{value}</strong> : null}

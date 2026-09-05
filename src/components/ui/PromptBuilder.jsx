@@ -161,7 +161,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
                     : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
                 }`}
               >
-                {isOptionActive(opt) ? <CheckSquare size={18} /> : <Square size={18} />}
+                {isOptionActive(opt) ? <CheckSquare size={16} /> : <Square size={16} />}
                 <span>{opt.label}</span>
               </button>
             ))}
@@ -191,7 +191,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
                           : `bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 ${cc.hover || 'hover:border-indigo-300'} dark:hover:border-zinc-600`
                       }`}
                     >
-                      {isActive ? <CircleDot size={17} /> : <Circle size={17} />}
+                      {isActive ? <CircleDot size={16} /> : <Circle size={16} />}
                       <span>{opt.label}</span>
                     </button>
                   );

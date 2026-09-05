@@ -197,8 +197,9 @@
   margin: 0;
   color: #4e4853;
   font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(21px, 2.2vw, 29px);
-  line-height: 1.34;
+  font-size: clamp(18px, 1.2vw, 20px);
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 .wf-objective {
@@ -947,9 +948,9 @@
 .wf-hook {
   color: var(--wf-muted);
   font-family: inherit;
-  font-size: clamp(20px, 2vw, 27px);
-  font-weight: 650;
-  line-height: 1.34;
+  font-size: clamp(18px, 1.2vw, 20px);
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 .dark .wf-objective { border-top-color: rgb(255 255 255 / 0.1); }

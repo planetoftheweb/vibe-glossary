@@ -42,7 +42,7 @@ export default function DefinitionPanel({
           >
             <span>{open ? 'Show less' : 'See examples and when to use it'}</span>
             <ChevronDown
-              size={18}
+              size={16}
               className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
               aria-hidden="true"
             />

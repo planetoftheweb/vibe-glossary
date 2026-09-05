@@ -55,7 +55,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
               : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-transparent'
           }`}
         >
-          <Calendar size={15} />
+          <Calendar size={16} />
           <span className="text-zinc-400 dark:text-zinc-500">Today:</span>
           <span className={isCotdActive ? '' : 'text-zinc-900 dark:text-white'}>{cotdData?.title || componentOfTheDay}</span>
         </button>
@@ -80,14 +80,14 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
           <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Trophy size={17} className="text-amber-500" />
+                <Trophy size={16} className="text-amber-500" />
                 Your Progress
               </h3>
               <button
                 onClick={explore.resetProgress}
                 className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 flex items-center gap-1 transition-colors"
               >
-                <RotateCcw size={12} /> Reset
+                <RotateCcw size={14} /> Reset
               </button>
             </div>
 
@@ -106,7 +106,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
                         <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{cat.name}</span>
-                        {isComplete && <Check size={12} className="text-emerald-500" />}
+                        {isComplete && <Check size={14} className="text-emerald-500" />}
                       </div>
                       <span className="text-xs text-zinc-400">{catVisited}/{cat.items.length}</span>
                     </div>
@@ -135,7 +135,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
                             }`}
                             aria-label={`${item.name}, ${isCopied ? 'visited and copied' : isVisited ? 'visited' : 'not yet explored'}`}
                           >
-                            {isCopied ? <Copy size={8} /> : isVisited ? <Eye size={8} /> : null}
+                            {isCopied ? <Copy size={14} /> : isVisited ? <Eye size={14} /> : null}
                             {item.name}
                           </button>
                         );

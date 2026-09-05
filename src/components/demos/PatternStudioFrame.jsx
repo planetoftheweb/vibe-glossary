@@ -104,7 +104,7 @@ export default function PatternStudioFrame({
           disabled={!onOptionToggle}
         >
           <span className="pattern-studio__toggle-state" aria-hidden="true">
-            {selected ? <Check size={17} /> : <Plus size={18} />}
+            {selected ? <Check size={16} /> : <Plus size={16} />}
           </span>
           <span className="pattern-studio__toggle-tip" aria-hidden="true">
             {selected ? 'Remove from scene' : 'Add to scene'}
@@ -121,7 +121,7 @@ export default function PatternStudioFrame({
       description="Use the example, then change the spec on the left to direct the build."
     >
       <div className="pattern-studio__anatomy">
-        <span>Trigger</span><ChevronRight size={15} aria-hidden="true" /><span>Behavior</span><ChevronRight size={15} aria-hidden="true" /><span>Result</span>
+        <span>Trigger</span><ChevronRight size={16} aria-hidden="true" /><span>Behavior</span><ChevronRight size={16} aria-hidden="true" /><span>Result</span>
       </div>
     </StudioControl>
   );

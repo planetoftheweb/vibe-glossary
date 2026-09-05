@@ -151,7 +151,7 @@ function PopupShell({ id, title, popupAbove, onClose, children }) {
           className="grid min-h-[44px] min-w-[44px] place-items-center rounded-xl text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-white"
           aria-label={`Close ${title.toLowerCase()}`}
         >
-          <X size={18} aria-hidden="true" />
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
       {children}
@@ -181,7 +181,7 @@ function ProgressPopup({ progress, sections, visited, accentClass, sectionLabel,
 
       <div className="border-y border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200">
-          <BookOpenCheck size={17} className="text-indigo-500" aria-hidden="true" />
+          <BookOpenCheck size={16} className="text-indigo-500" aria-hidden="true" />
           {learningProgress?.checkpointReady
             ? 'Your five-item review is ready.'
             : `${itemsUntilReview} more ${itemsUntilReview === 1 ? 'item' : 'items'} to your next review.`}
@@ -230,7 +230,7 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
         <div className="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-indigo-500/20 blur-3xl" aria-hidden="true" />
         <div className="relative flex items-start gap-4">
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-lg shadow-indigo-950/30">
-            <Sparkles size={27} aria-hidden="true" />
+            <Sparkles size={24} aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-black uppercase tracking-[0.16em] text-indigo-300">Score {total}</p>
@@ -278,7 +278,7 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
             </strong>
             <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">Five correct answers can add 25 points.</span>
           </span>
-          <ChevronRight size={17} className="text-zinc-400" aria-hidden="true" />
+          <ChevronRight size={16} className="text-zinc-400" aria-hidden="true" />
         </button>
 
         <div className="grid grid-cols-2 gap-2">
@@ -459,7 +459,7 @@ export default function FloatingLearningHud({
         className="fixed bottom-20 right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         aria-label="Show learning HUD"
       >
-        <Maximize2 size={17} className="text-indigo-300" aria-hidden="true" />
+        <Maximize2 size={16} className="text-indigo-300" aria-hidden="true" />
         Learning HUD
       </button>
     );
@@ -488,7 +488,7 @@ export default function FloatingLearningHud({
             className="grid min-h-[48px] min-w-[44px] touch-none cursor-grab place-items-center text-zinc-500 hover:text-white active:cursor-grabbing"
             aria-label="Move learning HUD"
           >
-            <GripHorizontal size={18} aria-hidden="true" />
+            <GripHorizontal size={16} aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -524,7 +524,7 @@ export default function FloatingLearningHud({
             className="grid min-h-[48px] min-w-[44px] place-items-center text-zinc-500 transition-colors hover:bg-white/10 hover:text-white"
             aria-label="Hide learning HUD"
           >
-            <EyeOff size={18} aria-hidden="true" />
+            <EyeOff size={16} aria-hidden="true" />
           </button>
         </div>
       ) : (
@@ -540,7 +540,7 @@ export default function FloatingLearningHud({
               className="flex min-h-[44px] min-w-[44px] touch-none cursor-grab items-center gap-2 px-2 text-zinc-400 transition-colors hover:text-zinc-800 active:cursor-grabbing dark:hover:text-white"
               aria-label="Move learning HUD"
             >
-              <GripHorizontal size={18} aria-hidden="true" />
+              <GripHorizontal size={16} aria-hidden="true" />
               <span className="hidden text-xs font-black uppercase tracking-[0.12em] sm:inline">Learning HUD</span>
             </button>
             <span className="ml-auto hidden text-xs font-bold text-zinc-400 md:block">Drag to move</span>
@@ -553,7 +553,7 @@ export default function FloatingLearningHud({
                 className="grid min-h-[44px] min-w-[44px] place-items-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-white"
                 aria-label="Dock learning HUD"
               >
-                {hudState.dock === 'top' ? <PanelTop size={17} aria-hidden="true" /> : hudState.dock === 'bottom' ? <PanelBottom size={17} aria-hidden="true" /> : <Move size={17} aria-hidden="true" />}
+                {hudState.dock === 'top' ? <PanelTop size={16} aria-hidden="true" /> : hudState.dock === 'bottom' ? <PanelBottom size={16} aria-hidden="true" /> : <Move size={16} aria-hidden="true" />}
               </button>
               {activePopup === 'dock' && (
                 <div
@@ -575,7 +575,7 @@ export default function FloatingLearningHud({
                     >
                       <Icon size={16} aria-hidden="true" />
                       {label}
-                      {hudState.dock === id && <Check size={15} className="ml-auto text-indigo-500" aria-hidden="true" />}
+                      {hudState.dock === id && <Check size={16} className="ml-auto text-indigo-500" aria-hidden="true" />}
                     </button>
                   ))}
                 </div>
@@ -586,7 +586,7 @@ export default function FloatingLearningHud({
                 className="grid min-h-[44px] min-w-[44px] place-items-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-white"
                 aria-label="Minimize learning HUD"
               >
-                <Minimize2 size={17} aria-hidden="true" />
+                <Minimize2 size={16} aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -594,7 +594,7 @@ export default function FloatingLearningHud({
                 className="grid min-h-[44px] min-w-[44px] place-items-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-white"
                 aria-label="Hide learning HUD"
               >
-                <EyeOff size={17} aria-hidden="true" />
+                <EyeOff size={16} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -619,7 +619,7 @@ export default function FloatingLearningHud({
                   className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2 text-xs font-extrabold transition-colors hover:border-indigo-400 hover:bg-indigo-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950/40 sm:px-3"
                   aria-label={`${sectionLabel}: ${progress?.visited || 0} of ${progress?.total || 0}`}
                 >
-                  <ProgressRing progress={progress} accentClass={accentClass} size={27} />
+                  <ProgressRing progress={progress} accentClass={accentClass} size={24} />
                   <span className="hidden sm:inline">Progress</span>
                 </button>
                 <button
@@ -630,7 +630,7 @@ export default function FloatingLearningHud({
                   className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-indigo-300/70 bg-indigo-50 px-2 text-xs font-extrabold text-indigo-800 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-200 dark:hover:bg-indigo-500/20 sm:px-3"
                   aria-label={`Score ${score?.total || 0}, level ${level?.current?.label || 'Lurker'}`}
                 >
-                  <Sparkles size={15} className="text-indigo-500" aria-hidden="true" />
+                  <Sparkles size={16} className="text-indigo-500" aria-hidden="true" />
                   <span>Score {score?.total || 0}</span>
                   <span className="hidden text-xs uppercase tracking-wide opacity-80 sm:inline">{level?.current?.label || 'Lurker'}</span>
                 </button>

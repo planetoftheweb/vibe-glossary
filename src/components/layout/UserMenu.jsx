@@ -47,7 +47,7 @@ function MenuRow({ icon: Icon, onClick, children, tone = 'text-zinc-700 dark:tex
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 text-base ${tone} hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors`}
     >
-      <Icon size={18} />
+      <Icon size={16} />
       {children}
     </button>
   );
@@ -61,7 +61,7 @@ function ThemeRow({ darkMode, setDarkMode }) {
       aria-pressed={darkMode}
       className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
     >
-      {darkMode ? <Moon size={18} aria-hidden="true" /> : <Sun size={18} aria-hidden="true" />}
+      {darkMode ? <Moon size={16} aria-hidden="true" /> : <Sun size={16} aria-hidden="true" />}
       <span className="font-medium">Dark Mode</span>
       <span className={`ml-auto relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}>
         <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -180,7 +180,7 @@ export default function UserMenu({
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
                   <p className={`flex items-center gap-1.5 text-xs font-semibold mt-1 ${sync.tone}`}>
-                    <SyncIcon size={13} className={sync.spin ? 'animate-spin' : ''} />
+                    <SyncIcon size={14} className={sync.spin ? 'animate-spin' : ''} />
                     {sync.text}
                   </p>
                 </div>

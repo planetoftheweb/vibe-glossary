@@ -70,7 +70,11 @@
   }
 
   @media (max-width: 760px) {
-    h1,
+    h1 {
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
     h2 {
       font-weight: 700;
       letter-spacing: -0.008em;
@@ -95,7 +99,11 @@
 
 @layer utilities {
   @media (max-width: 760px) {
-    h1.font-extrabold,
+    h1.font-extrabold {
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
     h2.font-extrabold,
     h3.font-extrabold {
       font-weight: 700;
@@ -1419,8 +1427,14 @@
   color: white;
   font-size: clamp(30px, 3vw, 48px);
   font-weight: 775;
-  letter-spacing: -0.018em;
+  letter-spacing: -0.008em;
   line-height: 0.98;
+}
+
+@media (min-width: 1334px) {
+  .pattern-studio .vg-studio__hero h2 {
+    letter-spacing: -0.015em;
+  }
 }
 
 .vg-studio__intro {
@@ -1726,7 +1740,7 @@
 }
 
 .vg-studio__note strong { display: block; color: white; font-size: 17px; }
-.vg-studio__note p { margin: 4px 0 0; color: #aaa4b4; font-size: 16px; line-height: 1.5; }
+.vg-studio__note p { margin: 4px 0 0; color: #aaa4b4; font-size: 16px; line-height: 1.6; }
 .vg-studio__note--warning { border-color: rgb(251 191 36 / 0.24); background: rgb(120 53 15 / 0.1); }
 .vg-studio__note--warning > span { color: #fbbf24; }
 .vg-studio__note--safe { border-color: rgb(94 234 212 / 0.22); }
@@ -3644,7 +3658,7 @@
   overflow: hidden;
   margin: 0;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
   white-space: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -3753,7 +3767,7 @@
   color: #b8b3c9;
   font-size: 16px;
   font-weight: 650;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }

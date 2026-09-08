@@ -231,10 +231,10 @@ export default function QuizCard({
 
             if (isCorrectPicked) {
               stateClasses = 'bg-emerald-500 border-emerald-500 text-white shadow-md';
-              icon = <Check size={18} className="shrink-0" />;
+              icon = <Check size={16} className="shrink-0" />;
             } else if (isWrong) {
               stateClasses = 'bg-rose-500/10 border-rose-400 text-rose-700 dark:text-rose-300';
-              icon = <X size={18} className="shrink-0 text-rose-500" />;
+              icon = <X size={16} className="shrink-0 text-rose-500" />;
             }
 
             return (
@@ -253,7 +253,7 @@ export default function QuizCard({
 
         {showHint && correctComparison && !picked?.correct && (
           <div className="mt-4 lg:mt-5 flex items-start gap-2.5 px-4 py-3 rounded-lg bg-white/60 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-700">
-            <Lightbulb size={18} className="shrink-0 mt-0.5 text-amber-500" />
+            <Lightbulb size={16} className="shrink-0 mt-0.5 text-amber-500" />
             <p className="text-base text-zinc-700 dark:text-zinc-200">
               <span className="font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-xs mr-2">Hint</span>
               {correctComparison}
@@ -298,9 +298,9 @@ function PostCorrectBanner({ timeMs, cooldownLastTs }) {
       }`}
     >
       {isGood ? (
-        <Trophy size={18} className="shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+        <Trophy size={16} className="shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
       ) : (
-        <ShieldAlert size={18} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+        <ShieldAlert size={16} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
       )}
       <p className="text-sm lg:text-base text-zinc-700 dark:text-zinc-200">
         {message}

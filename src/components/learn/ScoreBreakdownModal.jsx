@@ -276,7 +276,7 @@ export default function ScoreBreakdownModal({
                   : `${reviewsCopy(classGoal.reviewRounds)}. Select this goal to see the exact mix.`}
               </span>
             </span>
-            <ArrowRight size={18} className="shrink-0 text-zinc-400" aria-hidden="true" />
+            <ArrowRight size={16} className="shrink-0 text-zinc-400" aria-hidden="true" />
           </button>
 
           {/* Section sub-totals */}
@@ -302,31 +302,31 @@ export default function ScoreBreakdownModal({
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <RuleRow
-                icon={<Eye size={18} />}
+                icon={<Eye size={16} />}
                 label="Visited"
                 pts={POINTS.visited}
                 copy="Open a topic and read the definition."
               />
               <RuleRow
-                icon={<ClipboardCopy size={18} />}
+                icon={<ClipboardCopy size={16} />}
                 label="Used"
                 pts={POINTS.used}
                 copy="Copy a prompt to use somewhere."
               />
               <RuleRow
-                icon={<GraduationCap size={18} />}
+                icon={<GraduationCap size={16} />}
                 label="Passed"
                 pts={POINTS.passed}
                 copy="Answer a five-item checkpoint question correctly."
               />
               <RuleRow
-                icon={<Award size={18} />}
+                icon={<Award size={16} />}
                 label="Mastered"
                 pts={POINTS.mastered}
                 copy="Pass again later, in a new tab session, on a different question."
               />
               <RuleRow
-                icon={<Repeat size={18} />}
+                icon={<Repeat size={16} />}
                 label="Retained"
                 pts={POINTS.retained}
                 copy="Pass a fresh-variant retention check 30 days after mastery. Repeats monthly."
@@ -337,7 +337,7 @@ export default function ScoreBreakdownModal({
           {/* Integrity rules, the "no gaming" small print */}
           <section className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 lg:p-5">
             <div className="flex items-start gap-3">
-              <Info size={18} className="shrink-0 mt-0.5 text-zinc-500 dark:text-zinc-400" />
+              <Info size={16} className="shrink-0 mt-0.5 text-zinc-500 dark:text-zinc-400" />
               <div>
                 <p className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">
                   How we keep the score honest

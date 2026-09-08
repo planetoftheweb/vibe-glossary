@@ -90,7 +90,7 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
             className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
             title="Close"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 

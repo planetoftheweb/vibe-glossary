@@ -48,11 +48,11 @@ export default function TableDemo({ activeOptions }) {
         {isFilterable && (
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 flex items-center gap-2 px-4 py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl">
-              <Search size={18} className="text-zinc-400" />
+              <Search size={16} className="text-zinc-400" />
               <input value={filter} onChange={e => setFilter(e.target.value)} placeholder="Filter rows..." className="bg-transparent outline-none text-base w-full text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400" />
             </div>
             <button className="p-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-400 hover:text-zinc-600">
-              <Filter size={18} />
+              <Filter size={16} />
             </button>
           </div>
         )}

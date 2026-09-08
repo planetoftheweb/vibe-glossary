@@ -239,7 +239,7 @@
   overflow: hidden;
   background: var(--wf-paper);
   border: 1px solid #bdb4a7;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 28px 70px rgba(56, 46, 34, 0.14), 0 4px 12px rgba(56, 46, 34, 0.06);
 }
 
@@ -484,6 +484,8 @@
 .wf-code-token {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
   padding: 4px 8px;
   color: inherit;
@@ -503,13 +505,15 @@
 .wf-token-violet { color: #af9cff; }
 
 .wf-whole-element {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   margin: 12px 0 0;
-  padding: 4px 0;
+  min-height: 44px;
+  padding: 0;
   color: #aca5b0;
   background: transparent;
   border: 0;
-  font-size: 14px;
+  font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
 }

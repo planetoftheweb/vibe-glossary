@@ -49,7 +49,7 @@ export default function SelectDemo({ activeOptions }) {
             {isCombobox && (
               <div className="p-3 border-b border-zinc-100 dark:border-zinc-700">
                 <div className="flex items-center px-3 py-2.5 bg-zinc-50 dark:bg-zinc-900 rounded-md border border-zinc-200 dark:border-zinc-700">
-                  <Search size={18} className="text-zinc-400 mr-2" />
+                  <Search size={16} className="text-zinc-400 mr-2" />
                   <input className="bg-transparent border-none outline-none text-sm w-full placeholder:text-zinc-400 text-zinc-700 dark:text-zinc-200" placeholder="Search..." autoFocus />
                 </div>
               </div>
@@ -67,7 +67,7 @@ export default function SelectDemo({ activeOptions }) {
                     )}
                     <span>{fw}</span>
                   </div>
-                  {selected.includes(fw) && <Check size={18} className="text-indigo-600 animate-zoom-in" />}
+                  {selected.includes(fw) && <Check size={16} className="text-indigo-600 animate-zoom-in" />}
                 </div>
               ))}
             </div>

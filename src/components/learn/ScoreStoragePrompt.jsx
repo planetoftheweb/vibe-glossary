@@ -42,7 +42,7 @@ export default function ScoreStoragePrompt({ score = 0, onStore, onLater }) {
         </div>
 
         <p className="mt-4 flex items-center gap-2 rounded-xl bg-zinc-100 px-3.5 py-3 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-          <ShieldCheck size={17} className="shrink-0 text-emerald-500" aria-hidden="true" />
+          <ShieldCheck size={16} className="shrink-0 text-emerald-500" aria-hidden="true" />
           Registration is required to store it online. Your local progress stays either way.
         </p>
 
@@ -60,7 +60,7 @@ export default function ScoreStoragePrompt({ score = 0, onStore, onLater }) {
             onClick={onStore}
             className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-500"
           >
-            <CloudUpload size={17} aria-hidden="true" />
+            <CloudUpload size={16} aria-hidden="true" />
             Store my score
           </button>
         </div>

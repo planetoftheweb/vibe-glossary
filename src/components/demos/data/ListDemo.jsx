@@ -44,13 +44,13 @@ export default function ListDemo({ activeOptions }) {
                 <p className="text-base text-zinc-700 dark:text-zinc-300 mt-2 leading-relaxed">{item.text}</p>
                 <div className="flex items-center gap-5 mt-4">
                   <button type="button" aria-label={`${liked.has(item.id) ? 'Unlike' : 'Like'} post by ${item.author}`} onClick={() => toggleLike(item.id)} className={`flex items-center gap-1.5 text-sm transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
-                    <Heart size={18} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
+                    <Heart size={16} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
                   </button>
                   <button type="button" aria-label={`Read ${item.comments} comments on ${item.author}'s post`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
-                    <MessageCircle size={18} /> {item.comments}
+                    <MessageCircle size={16} /> {item.comments}
                   </button>
                   <button type="button" aria-label={`Share post by ${item.author}`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-emerald-500 transition-colors">
-                    <Share2 size={18} />
+                    <Share2 size={16} />
                   </button>
                 </div>
               </div>
@@ -59,7 +59,7 @@ export default function ListDemo({ activeOptions }) {
         ))}
         {isInfinite && (
           <button className="w-full py-4 text-base font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-center gap-2 transition-colors">
-            <ArrowDown size={18} /> Load more
+            <ArrowDown size={16} /> Load more
           </button>
         )}
       </div>

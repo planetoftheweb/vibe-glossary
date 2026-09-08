@@ -164,11 +164,11 @@ export default function MotionLesson() {
               setRun((value) => value + 1);
             }}
           >
-            <Accessibility size={17} aria-hidden />
+            <Accessibility size={16} aria-hidden />
             {reduced ? 'Motion reduced' : 'Try reduced motion'}
           </button>
           <button type="button" className="motion-lab__replay" onClick={replay}>
-            <Play size={17} fill="currentColor" aria-hidden />
+            <Play size={16} fill="currentColor" aria-hidden />
             Replay scene
           </button>
         </div>
@@ -178,7 +178,7 @@ export default function MotionLesson() {
         <div className="motion-lab__controls" aria-label="Motion controls">
           <div className="motion-lab__control motion-lab__control--tempo">
             <div className="motion-lab__control-heading">
-              <span><Timer size={17} aria-hidden /> 01 · Duration</span>
+              <span><Timer size={16} aria-hidden /> 01 · Duration</span>
               <strong>{reduced ? '0' : duration}ms</strong>
             </div>
             <p>How long does the moment get?</p>
@@ -208,7 +208,7 @@ export default function MotionLesson() {
 
           <div className="motion-lab__control">
             <div className="motion-lab__control-heading">
-              <span><Waves size={17} aria-hidden /> 02 · Easing</span>
+              <span><Waves size={16} aria-hidden /> 02 · Easing</span>
               <strong>{easingData.label}</strong>
             </div>
             <p>How does the object gather speed?</p>
@@ -231,7 +231,7 @@ export default function MotionLesson() {
 
           <div className="motion-lab__control">
             <div className="motion-lab__control-heading">
-              <span><Layers3 size={17} aria-hidden /> 03 · Choreography</span>
+              <span><Layers3 size={16} aria-hidden /> 03 · Choreography</span>
               <strong>{cue.short}</strong>
             </div>
             <p>What enters first, second, and last?</p>

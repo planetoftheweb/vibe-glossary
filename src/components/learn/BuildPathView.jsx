@@ -201,7 +201,7 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
               disabled={stepIndex === 0}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm lg:text-base font-semibold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
-              <ChevronLeft size={18} /> Previous
+              <ChevronLeft size={16} /> Previous
             </button>
             <span className="text-sm lg:text-base text-zinc-500 dark:text-zinc-400">
               Step {stepIndex + 1} of {totalSteps}
@@ -210,7 +210,7 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
               onClick={handleNextStep}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm lg:text-base font-semibold text-white transition-colors ${colors_active(cc)}`}
             >
-              {stepIndex === totalSteps - 1 ? 'Take the quiz' : 'Next'} <ChevronRight size={18} />
+              {stepIndex === totalSteps - 1 ? 'Take the quiz' : 'Next'} <ChevronRight size={16} />
             </button>
           </div>
         )}
@@ -429,10 +429,10 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
 
           if (isPickedRight || showCorrect) {
             stateClasses = 'bg-emerald-500 border-emerald-500 text-white shadow-md';
-            icon = <Check size={18} className="shrink-0" />;
+            icon = <Check size={16} className="shrink-0" />;
           } else if (isPickedWrong) {
             stateClasses = 'bg-rose-500/10 border-rose-400 text-rose-700 dark:text-rose-300';
-            icon = <X size={18} className="shrink-0 text-rose-500" />;
+            icon = <X size={16} className="shrink-0 text-rose-500" />;
           }
 
           return (
@@ -458,7 +458,7 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
             onClick={onNext}
             className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors_active(colors)}`}
           >
-            {quizIndex === totalQuiz - 1 ? 'See results' : 'Next question'} <ChevronRight size={18} />
+            {quizIndex === totalQuiz - 1 ? 'See results' : 'Next question'} <ChevronRight size={16} />
           </button>
         </div>
       )}
@@ -543,7 +543,7 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
             onClick={onRetry}
             className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors_active(colors)}`}
           >
-            <RotateCcw size={18} /> Retry the quiz
+            <RotateCcw size={16} /> Retry the quiz
           </button>
         )}
         <button

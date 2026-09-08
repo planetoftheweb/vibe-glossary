@@ -38,7 +38,7 @@ function TreeNode({ node, depth = 0, hasIcons, hasLines }) {
         className={`w-full flex items-center gap-2 py-2 px-3 rounded-lg text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors group ${isFolder ? 'cursor-pointer' : 'cursor-default'}`}
         style={{ paddingLeft: `${depth * 20 + 12}px` }}
       >
-        {isFolder && <ChevronRight size={18} className={`text-zinc-400 transition-transform ${open ? 'rotate-90' : ''}`} />}
+        {isFolder && <ChevronRight size={16} className={`text-zinc-400 transition-transform ${open ? 'rotate-90' : ''}`} />}
         {!isFolder && <span className="w-4" />}
         {hasIcons && <Icon size={20} className={iconColor} />}
         <span className={`${isFolder ? 'font-medium text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-400'}`}>{node.name}</span>

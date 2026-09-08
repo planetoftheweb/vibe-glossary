@@ -66,7 +66,7 @@ export default function ContextMenuDemo({ activeOptions }) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    {hasIcons && <Icon size={18} />}
+                    {hasIcons && <Icon size={16} />}
                     {item.label}
                   </div>
                   {hasShortcuts && item.shortcut && <kbd className="text-xs font-mono text-zinc-400">{item.shortcut}</kbd>}

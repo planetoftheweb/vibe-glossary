@@ -45,7 +45,7 @@ export default function DragDropDemo({ activeOptions }) {
             return (
               <div key={status} className="bg-zinc-100 dark:bg-zinc-800/50 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <Icon size={18} className={config.color} />
+                  <Icon size={16} className={config.color} />
                   <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">{label}</span>
                   <span className="text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-500 px-2 py-0.5 rounded-full">{items.filter(i => i.status === status).length}</span>
                 </div>

@@ -174,7 +174,7 @@ export default function LearningCheckpoint({
               className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-base font-bold text-white transition-colors hover:bg-violet-500"
             >
               {hasStarted ? `Return to question ${questionIndex + 1}` : 'Start the five-question quiz'}
-              <ArrowRight size={18} aria-hidden="true" />
+              <ArrowRight size={16} aria-hidden="true" />
             </button>
             {onSkip && (
               <button
@@ -238,8 +238,8 @@ export default function LearningCheckpoint({
                   disabled={correctPicked || isWrong}
                   className={`flex w-full items-start gap-3 rounded-xl border-2 px-4 py-3 text-left text-base font-medium leading-snug transition-colors disabled:cursor-not-allowed ${stateClasses}`}
                 >
-                  {isCorrect && <Check size={18} className="mt-0.5 shrink-0" aria-hidden="true" />}
-                  {isWrong && <X size={18} className="mt-0.5 shrink-0" aria-hidden="true" />}
+                  {isCorrect && <Check size={16} className="mt-0.5 shrink-0" aria-hidden="true" />}
+                  {isWrong && <X size={16} className="mt-0.5 shrink-0" aria-hidden="true" />}
                   <span>{choice.definition}</span>
                 </button>
               );
@@ -279,7 +279,7 @@ export default function LearningCheckpoint({
             className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-base font-bold text-white hover:bg-violet-500"
           >
             Continue learning
-            <ArrowRight size={18} aria-hidden="true" />
+            <ArrowRight size={16} aria-hidden="true" />
           </button>
         </div>
       )}

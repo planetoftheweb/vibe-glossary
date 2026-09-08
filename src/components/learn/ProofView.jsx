@@ -147,9 +147,9 @@ export default function ProofView({
           }`}>
             <div className="flex items-center gap-2 mb-1">
               {bar.met ? (
-                <CheckCircle size={18} className="text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
               ) : (
-                <ShieldAlert size={18} className="text-amber-600 dark:text-amber-400" />
+                <ShieldAlert size={16} className="text-amber-600 dark:text-amber-400" />
               )}
               <span className={`text-sm font-bold uppercase tracking-wider ${
                 bar.met
@@ -198,7 +198,7 @@ export default function ProofView({
           <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
             <div className="px-4 py-3 bg-gradient-to-r from-amber-400 to-amber-600 text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles size={18} />
+                <Sparkles size={16} />
                 <span className="text-base font-bold">VibeScore</span>
               </div>
               <span className="text-2xl font-extrabold tabular-nums">{snapshot?.s ?? 0}</span>

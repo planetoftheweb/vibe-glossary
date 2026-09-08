@@ -2414,7 +2414,7 @@
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 20px;
   background: linear-gradient(155deg, rgb(var(--studio-accent-rgb) / 0.3), rgb(var(--studio-accent-two-rgb) / 0.09)), #121019;
   box-shadow: 0 28px 60px rgb(0 0 0 / 0.38);
@@ -4303,7 +4303,7 @@
   grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid rgb(var(--studio-accent-rgb) / 0.32);
-  border-radius: 20px;
+  border-radius: 16px;
   background:
     radial-gradient(circle at 18% 86%, rgb(var(--studio-accent-two-rgb) / 0.12), transparent 24rem),
     #080a12;

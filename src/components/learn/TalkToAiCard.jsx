@@ -249,7 +249,7 @@ function SystemScene({ topic, lens, profile }) {
           <div className={`system-scene__node ${lens === 'stress' && index === 2 ? 'is-alert' : ''}`} key={node}>
             <span>{String(index + 1).padStart(2, '0')}</span>
             <strong>{node}</strong>
-            {index < profile.nodes.length - 1 ? <ArrowRight size={18} aria-hidden="true" /> : <Check size={18} aria-hidden="true" />}
+            {index < profile.nodes.length - 1 ? <ArrowRight size={16} aria-hidden="true" /> : <Check size={16} aria-hidden="true" />}
           </div>
         ))}
       </div>

@@ -88,7 +88,7 @@ export default function BuildTopicView({
               className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               aria-label="Close definition panel"
             >
-              <PanelLeftClose size={18} />
+              <PanelLeftClose size={16} />
               <HoverTip text="Close panel" align="right" />
             </button>
           )}

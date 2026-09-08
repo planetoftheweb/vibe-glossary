@@ -66,7 +66,7 @@ export default function InfiniteScrollDemo({ activeOptions }) {
           {isLoadMore && !loading && items.length < 30 && (
             <div className="p-4">
               <button onClick={loadMore} className="w-full py-3 text-base font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-zinc-50 dark:bg-zinc-700 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                <ArrowDown size={18} /> Load more
+                <ArrowDown size={16} /> Load more
               </button>
             </div>
           )}

@@ -45,7 +45,7 @@ export default function PricingDemo({ activeOptions }) {
                 <ul className="space-y-3">
                   {plan.features.map(f => (
                     <li key={f} className="flex items-center gap-2.5 text-sm text-zinc-600 dark:text-zinc-400">
-                      <Check size={18} className="text-emerald-500 shrink-0" /> {f}
+                      <Check size={16} className="text-emerald-500 shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>

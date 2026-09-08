@@ -191,7 +191,7 @@ function EasingPreview({ reduced }) {
             {slow ? 'Slow study on' : 'Slow study'}
           </button>
           <button type="button" onClick={replay} aria-label="Replay easing compare">
-            <RotateCcw size={17} aria-hidden="true" />
+            <RotateCcw size={16} aria-hidden="true" />
             Replay
           </button>
         </div>
@@ -424,7 +424,7 @@ function ParticlePreview({ reduced }) {
             aria-pressed={moving && !reduced}
             aria-label={reduced ? 'Motion reduced by system preference' : moving ? 'Pause particle motion' : 'Play particle motion'}
           >
-            {moving && !reduced ? <Pause size={17} aria-hidden="true" /> : <Play size={17} aria-hidden="true" />}
+            {moving && !reduced ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
             <span>{reduced ? 'Reduced' : moving ? 'Pause' : 'Play'}</span>
           </button>
           <button
@@ -433,7 +433,7 @@ function ParticlePreview({ reduced }) {
             aria-pressed={visible}
             aria-label={visible ? 'Hide particles' : 'Show particles'}
           >
-            {visible ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+            {visible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
             <span>{visible ? 'Hide field' : 'Show field'}</span>
           </button>
         </div>

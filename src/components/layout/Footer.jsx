@@ -10,7 +10,7 @@ export default function Footer() {
   const componentCount = categories.reduce((sum, c) => sum + c.items.length, 0);
 
   return (
-    <footer className="shrink-0 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 px-4 lg:px-6 py-3 flex flex-wrap items-center justify-center lg:justify-between gap-x-6 gap-y-2 text-sm lg:text-base text-zinc-600 dark:text-zinc-300">
+    <footer className="shrink-0 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 px-4 lg:px-6 py-3 flex flex-wrap items-center justify-center lg:justify-between gap-x-6 gap-y-2 text-base text-zinc-600 dark:text-zinc-300">
       <div className="flex items-center gap-3">
         <span className="font-semibold text-zinc-800 dark:text-zinc-100">VibeGlossary</span>
         <span className="font-mono text-zinc-500 dark:text-zinc-400">v{version}</span>
@@ -26,7 +26,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
-          <FileText size={18} />
+          <FileText size={16} />
           Changelog
         </a>
         <a
@@ -35,7 +35,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 min-h-[44px] hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
-          <Github size={18} />
+          <Github size={16} />
           GitHub
         </a>
       </div>

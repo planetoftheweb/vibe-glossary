@@ -137,7 +137,7 @@ export default function WhatsNewMenu({ isOpen, onToggle, onClose, onAction }) {
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
-        <Megaphone size={22} />
+        <Megaphone size={20} />
         <HoverTip text="What's new" align="right" hidden={isOpen} />
         {unseen && (
           <span

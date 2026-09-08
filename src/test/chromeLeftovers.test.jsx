@@ -42,15 +42,17 @@ describe('#21 Learning Mode and Copy keep compact paint and a 44px hit box', () 
     expect(paint.textContent).toMatch(/Learning off/);
   });
 
-  it('Talk to AI Copy chip sits in a 44px hit box', () => {
+  it('Talk to AI Prompt and Example sit in a 44px hit box', () => {
     render(<TalkToAiCard topic={topic} />);
-    const copies = screen.getAllByRole('button', { name: /Copy /i });
-    expect(copies.length).toBeGreaterThan(0);
-    copies.forEach((btn) => {
+    const tabs = [
+      screen.getByRole('button', { name: 'Prompt' }),
+      screen.getByRole('button', { name: 'Example' }),
+    ];
+    tabs.forEach((btn) => {
       expect(btn.className).toMatch(/min-h-\[44px\]/);
-      const paint = btn.querySelector('span');
-      expect(paint.className).not.toMatch(/min-h-\[44px\]/);
+      expect(btn).not.toHaveAttribute('title');
     });
+    expect(screen.getByText('Hello starter')).toBeInTheDocument();
   });
 
   it('Spec Generator Copy uses a 44px hit box and no title=', () => {

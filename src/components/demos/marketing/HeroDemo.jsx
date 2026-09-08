@@ -6,8 +6,8 @@ export default function HeroDemo({ activeOptions }) {
   const isGradient = activeOptions.has('gradient');
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-8">
-      <div className={`w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl ${isGradient ? 'bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600' : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700'}`}>
+    <div className="flex h-full min-h-[330px] w-full flex-col items-center justify-center p-8">
+      <div className={`w-full max-w-4xl min-h-[280px] overflow-hidden rounded-3xl shadow-2xl ${isGradient ? 'bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600' : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700'}`}>
         <div className="p-12 md:p-16 text-center">
           <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-8 ${isGradient ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'}`}>
             <Sparkles size={14} /> New: AI-Powered Features

@@ -15,7 +15,7 @@ function ProgressionButton({ direction, item, onClick, itemLabel }) {
       aria-keyshortcuts={isPrevious ? 'ArrowLeft' : 'ArrowRight'}
       className="group flex min-w-0 flex-1 items-center gap-2 px-3 py-2.5 text-left transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-500 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent dark:hover:bg-zinc-800/80"
     >
-      {isPrevious && <Icon size={18} className="shrink-0 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />}
+      {isPrevious && <Icon size={16} className="shrink-0 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />}
       <span className={`min-w-0 flex-1 ${isPrevious ? '' : 'text-right'}`}>
         <span className="block text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           {label}
@@ -24,7 +24,7 @@ function ProgressionButton({ direction, item, onClick, itemLabel }) {
           {item?.title || boundaryLabel}
         </span>
       </span>
-      {!isPrevious && <Icon size={18} className="ml-auto shrink-0 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />}
+      {!isPrevious && <Icon size={16} className="ml-auto shrink-0 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />}
     </button>
   );
 }

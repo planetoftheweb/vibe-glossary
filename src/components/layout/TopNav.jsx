@@ -249,11 +249,11 @@ function MainMenu({
       <div className="border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-2">
         <SectionHeader icon={<BookText size={14} />} label="Content" />
         {siteSection === 'glossary' ? (
-          <MenuItem icon={<BookText size={18} />} onClick={handleBuildLiteracy}>
+          <MenuItem icon={<BookText size={16} />} onClick={handleBuildLiteracy}>
             Build literacy
           </MenuItem>
         ) : (
-          <MenuItem icon={<BookOpen size={18} />} onClick={handleUiGlossary}>
+          <MenuItem icon={<BookOpen size={16} />} onClick={handleUiGlossary}>
             UI glossary
           </MenuItem>
         )}
@@ -267,7 +267,7 @@ function MainMenu({
             data-tour="learning-checkpoint"
             className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
           >
-            <GraduationCap size={18} />
+            <GraduationCap size={16} />
             <div className="flex flex-col items-start min-w-0 text-left">
               <span className="font-medium">Learning Mode</span>
               <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
@@ -297,7 +297,7 @@ function MainMenu({
           <span className="ml-auto text-xs text-zinc-400 font-semibold">
             {progress.visited}/{progress.total}
             {progress.mastered > 0 && (
-              <span className="text-emerald-500 ml-1.5">· {progress.mastered} ✓</span>
+              <span className="text-indigo-500 ml-1.5">· {progress.mastered} ✓</span>
             )}
           </span>
           <ChevronRight size={16} className={`transition-transform ${statsOpen ? 'rotate-90' : ''}`} />
@@ -313,7 +313,7 @@ function MainMenu({
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
                     className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                   <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                    className="text-emerald-500" strokeWidth="1.5"
+                    className="text-indigo-500" strokeWidth="1.5"
                     strokeDasharray={`${progress.masteredPercent * 1.0367} 200`}
                     strokeLinecap="round"
                   />
@@ -338,7 +338,7 @@ function MainMenu({
                   {progress.visited}/{progress.total} explored · {progress.copied} copied
                 </p>
                 {progress.mastered > 0 && (
-                  <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                  <p className="text-xs text-indigo-500 leading-tight mt-0.5 font-semibold">
                     {progress.mastered} mastered ✓
                   </p>
                 )}
@@ -357,7 +357,7 @@ function MainMenu({
                     <div className="flex items-center gap-2 mb-1">
                       <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
                       <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
-                      {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
+                      {isComplete && <Check size={14} className="text-indigo-500 shrink-0" />}
                       <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                     </div>
                     <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -382,19 +382,19 @@ function MainMenu({
       <div className="2xl:hidden border-t border-zinc-100 dark:border-zinc-800">
         <SectionHeader icon={<LifeBuoy size={14} />} label="Help" />
         <MenuItem
-          icon={isBuild ? <BookText size={18} /> : <BookOpen size={18} />}
+          icon={isBuild ? <BookText size={16} /> : <BookOpen size={16} />}
           onClick={handleGlossaryIndex}
         >
           {isBuild ? 'Build Literacy Index' : 'Glossary Index'}
         </MenuItem>
-        <MenuItem icon={<Home size={18} />} onClick={handleWelcome}>
+        <MenuItem icon={<Home size={16} />} onClick={handleWelcome}>
           Welcome Screen
         </MenuItem>
-        <MenuItem icon={<Keyboard size={18} />} onClick={handleCheatSheet}>
+        <MenuItem icon={<Keyboard size={16} />} onClick={handleCheatSheet}>
           Cheat Sheet
-          <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
+          <kbd className="ml-auto text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
         </MenuItem>
-        <MenuItem icon={<Compass size={18} />} onClick={handleTour}>
+        <MenuItem icon={<Compass size={16} />} onClick={handleTour}>
           Replay Tour
         </MenuItem>
       </div>
@@ -732,7 +732,7 @@ export default function TopNav({
               onClick={() => setSiteSection('glossary')}
               aria-label="UI Glossary"
               aria-current={siteSection === 'glossary' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'glossary'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -746,7 +746,7 @@ export default function TopNav({
               onClick={() => setSiteSection('build')}
               aria-label="Build literacy"
               aria-current={siteSection === 'build' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'build'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
@@ -768,7 +768,7 @@ export default function TopNav({
               icon={
                 <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
                   <span className={`w-2.5 h-2.5 rounded-full ${catColors.dot}`} />
-                  {activeCat?.icon && cloneElement(activeCat.icon, { size: 22 })}
+                  {activeCat?.icon && cloneElement(activeCat.icon, { size: 20 })}
                 </span>
               }
               label={activeCat?.name || 'Overlays'}
@@ -807,7 +807,7 @@ export default function TopNav({
           {siteSection === 'glossary' && (
           <div className="hidden md:block min-w-0">
             <PillDropdown
-              icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
+              icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
               label={activeItemData?.name || 'Modal'}
               isOpen={openDropdown === 'component'}
               onToggle={() => setOpenDropdown(openDropdown === 'component' ? null : 'component')}
@@ -887,7 +887,7 @@ export default function TopNav({
           {siteSection === 'build' && (
             <div className="hidden md:block min-w-0">
               <PillDropdown
-                icon={<List size={22} className="text-zinc-500 dark:text-zinc-400" />}
+                icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
                 label={activeBuildTopicData?.title || 'Pick a topic'}
                 isOpen={openDropdown === 'build-topic'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-topic' ? null : 'build-topic')}
@@ -909,7 +909,7 @@ export default function TopNav({
                     >
                       <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
                       {isMastered && (
-                        <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />
+                        <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />
                       )}
                     </button>
                   );
@@ -926,7 +926,7 @@ export default function TopNav({
               Below that they live inside the hamburger menu instead. */}
           <div className="hidden 2xl:flex items-center">
             <PillDropdown
-              icon={<GraduationCap size={22} />}
+              icon={<GraduationCap size={20} />}
               iconOnly
               label="Learning"
               ariaLabel="Learning"
@@ -941,7 +941,7 @@ export default function TopNav({
                 data-tour="learning-checkpoint"
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                <GraduationCap size={18} />
+                <GraduationCap size={16} />
                 <div className="flex flex-col items-start min-w-0 text-left">
                   <span className="font-medium">Learning Mode</span>
                   <span className="text-xs text-zinc-400 dark:text-zinc-500 leading-none mt-0.5">
@@ -959,7 +959,7 @@ export default function TopNav({
             </PillDropdown>
 
             <PillDropdown
-              icon={<LifeBuoy size={22} />}
+              icon={<LifeBuoy size={20} />}
               iconOnly
               label="Help"
               ariaLabel="Help"
@@ -977,7 +977,7 @@ export default function TopNav({
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                {siteSection === 'build' ? <BookText size={18} /> : <BookOpen size={18} />}
+                {siteSection === 'build' ? <BookText size={16} /> : <BookOpen size={16} />}
                 <span className="font-medium">
                   {siteSection === 'build' ? 'Build Literacy Index' : 'Glossary Index'}
                 </span>
@@ -986,16 +986,16 @@ export default function TopNav({
                 onClick={() => { onGetStarted(); setOpenDropdown(null); }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                <Home size={18} />
+                <Home size={16} />
                 <span className="font-medium">Welcome Screen</span>
               </button>
               <button
                 onClick={() => { onOpenCheatSheet(); setOpenDropdown(null); }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                <Keyboard size={18} />
+                <Keyboard size={16} />
                 <span className="font-medium">Cheat Sheet</span>
-                <kbd className="ml-auto text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
+                <kbd className="ml-auto text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-500 dark:text-zinc-400">⌘/</kbd>
               </button>
             </PillDropdown>
           </div>
@@ -1003,7 +1003,7 @@ export default function TopNav({
           {/* Desktop: inline expanding search */}
           {searchOpen ? (
             <div className="hidden md:block relative w-72 lg:w-96">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -1037,7 +1037,7 @@ export default function TopNav({
               aria-label="Search (⌘K)"
             >
               <Search size={20} />
-              <kbd className="hidden xl:flex items-center text-xs font-mono bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 leading-none">⌘K</kbd>
+              <kbd className="hidden xl:flex items-center text-sm md:text-base font-mono bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 leading-none">⌘K</kbd>
               <HoverTip text="Search" align="right" />
             </button>
           )}
@@ -1102,7 +1102,7 @@ export default function TopNav({
                   <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
                     <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                      className="text-emerald-500" strokeWidth="1.5"
+                      className="text-indigo-500" strokeWidth="1.5"
                       strokeDasharray={`${activeProgress.masteredPercent * 1.0367} 200`}
                       strokeLinecap="round"
                     />
@@ -1125,7 +1125,7 @@ export default function TopNav({
                     {activeProgress.visited}/{activeProgress.total} explored · {activeProgress.copied} copied
                   </p>
                   {activeProgress.mastered > 0 && (
-                    <p className="text-xs text-emerald-500 leading-tight mt-0.5 font-semibold">
+                    <p className="text-xs text-indigo-500 leading-tight mt-0.5 font-semibold">
                       {activeProgress.mastered} mastered ✓
                     </p>
                   )}
@@ -1142,7 +1142,7 @@ export default function TopNav({
                       <div className="flex items-center gap-2 mb-1">
                         <div className={`w-2 h-2 rounded-full ${cc.dot}`} />
                         <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">{section.name}</span>
-                        {isComplete && <Check size={13} className="text-emerald-500 shrink-0" />}
+                        {isComplete && <Check size={14} className="text-indigo-500 shrink-0" />}
                         <span className="ml-auto text-xs text-zinc-400">{sectionVisited}/{section.items.length}</span>
                       </div>
                       <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -1240,7 +1240,7 @@ export default function TopNav({
       {searchOpen && (
         <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
           <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               ref={searchInputRef}
               type="text"
@@ -1285,7 +1285,7 @@ export default function TopNav({
           icon={
             <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
               <span className={`w-2 h-2 rounded-full ${activeBuildColors.dot}`} />
-              {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={18} />}
+              {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={16} />}
             </span>
           }
           isOpen={openDropdown === 'mob-build-cluster'}
@@ -1344,7 +1344,7 @@ export default function TopNav({
                 }`}
               >
                 <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
-                {isMastered && <Check size={14} className="text-emerald-500 shrink-0" aria-label="Mastered" />}
+                {isMastered && <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />}
               </button>
             );
           })}

@@ -1,46 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
-  AlertTriangle,
   ArrowRight,
   BrainCircuit,
   Check,
-  CircleDot,
-  Copy,
-  FileCode,
-  Focus,
-  MemoryStick,
-  MessageSquareQuote,
-  Rocket,
-  ScanLine,
   Sparkles,
-  Wand2,
 } from 'lucide-react';
 import { getBuildStudioHeadline } from '../../data/buildStudioCopy';
-import StudioShell, { StudioControl } from '../ui/StudioShell';
-
-const LENSES = [
-  {
-    id: 'map',
-    label: 'Map it',
-    short: 'Structure',
-    description: 'See the parts and how they connect.',
-    icon: ScanLine,
-  },
-  {
-    id: 'stress',
-    label: 'Break it',
-    short: 'Weak default',
-    description: 'Expose the mistake this idea prevents.',
-    icon: AlertTriangle,
-  },
-  {
-    id: 'apply',
-    label: 'Use it',
-    short: 'Project move',
-    description: 'Turn the idea into a decision you can make.',
-    icon: Rocket,
-  },
-];
+import StudioShell from '../ui/StudioShell';
 
 const CLUSTER_SCENES = {
   product: {
@@ -85,41 +51,14 @@ const CLUSTER_SCENES = {
   },
 };
 
-function noteFor(topic, lens) {
-  if (lens === 'stress') {
-    return {
-      label: 'What changed',
-      title: 'Break it shows the mistake this idea helps prevent.',
-      body: `Compare the changed diagram with Map it. ${topic?.comparison || topic?.summary || ''}`,
-      tone: 'warning',
-    };
-  }
-
-  if (lens === 'apply') {
-    return {
-      label: 'What changed',
-      title: 'Use it turns the lesson into one decision you can make.',
-      body: `Look for the project-ready move. ${topic?.vibeTip || topic?.mnemonic || topic?.summary || ''}`,
-      tone: 'safe',
-    };
-  }
-
-  return {
-    label: 'Try this',
-    title: 'Start with Map it. Then choose Break it and Use it.',
-    body: `Watch the diagram and this note change with each choice. ${topic?.mnemonic || topic?.summary || ''}`,
-    tone: 'good',
-  };
-}
-
 /**
  * A concept studio for Build Literacy. The AI prompts are still available,
  * but they are a handoff after the learner can see the idea, not the lesson.
  */
 export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
-  const [lens, setLens] = useState('map');
   const [copied, setCopied] = useState(null);
-  const note = useMemo(() => noteFor(topic, lens), [topic, lens]);
+  const [shown, setShown] = useState('starter');
+  const lens = 'map';
 
   const raw = topic?.talkToAi;
   const starter = raw && typeof raw === 'object' ? raw.starter || '' : '';
@@ -150,109 +89,56 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
     onCopy?.({ kind });
   };
 
-  const activeLens = LENSES.find((item) => item.id === lens) || LENSES[0];
+  const shownText = shown === 'example' ? example : starter;
 
-  const controls = (
-    <>
-      <StudioControl
-        number="01"
-        icon={Focus}
-        label="View"
-        value={activeLens.short}
-        description="Choose each view in order. Watch the diagram and note change."
-        className="concept-studio__lens"
-      >
-        <div className="vg-studio__choice-list">
-          {LENSES.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className="vg-studio__choice"
-                aria-pressed={lens === item.id}
-                onClick={() => setLens(item.id)}
-              >
-                <span className="vg-studio__choice-index">{String(index + 1).padStart(2, '0')}</span>
-                <span className="vg-studio__choice-copy">
-                  <strong>{item.label}</strong>
-                  <small>{item.description}</small>
-                </span>
-                <Icon size={17} aria-hidden="true" />
-              </button>
-            );
-          })}
-        </div>
-      </StudioControl>
+  const showAndCopy = (kind) => {
+    const text = kind === 'example' ? example : starter;
+    setShown(kind);
+    copyPrompt(text, kind);
+  };
 
-      <StudioControl
-        number="02"
-        icon={MessageSquareQuote}
-        label="Use with AI"
-        value="After the lesson"
-        description="Copy a prompt for your project after the picture makes sense."
-        className="concept-studio__handoff"
-      >
-        <div className="concept-studio__copy-stack">
-          <button
-            type="button"
-            className="concept-studio__copy min-h-[44px]"
-            onClick={() => copyPrompt(starter, 'starter')}
-            disabled={!starter}
-            aria-label="Copy starter prompt"
-          >
-            <span>{copied === 'starter' ? <Check size={15} /> : <Wand2 size={15} />}</span>
-            <span>
-              <strong>{copied === 'starter' ? 'Copied' : 'Starter prompt'}</strong>
-              <small>Let the AI interview you first</small>
-            </span>
-            <Copy size={14} aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="concept-studio__copy min-h-[44px]"
-            onClick={() => copyPrompt(example, 'example')}
-            disabled={!example}
-            aria-label="Copy real example"
-          >
-            <span>{copied === 'example' ? <Check size={15} /> : <FileCode size={15} />}</span>
-            <span>
-              <strong>{copied === 'example' ? 'Copied' : 'Real example'}</strong>
-              <small>See a filled-in version</small>
-            </span>
-            <Copy size={14} aria-hidden="true" />
-          </button>
-        </div>
-      </StudioControl>
-
-      <StudioControl
-        number="03"
-        icon={MemoryStick}
-        label="Remember this"
-        value="One sentence"
-        description="Carry this sentence into your next project."
-        className="concept-studio__memory"
-      >
-        <blockquote>{topic?.mnemonic || topic?.summary}</blockquote>
-      </StudioControl>
-    </>
-  );
+  const stageToolbar = (starter || example) ? (
+    <div className="concept-studio__prompt-tabs">
+      {starter ? (
+        <button
+          type="button"
+          className="concept-studio__prompt-tab min-h-[44px]"
+          aria-pressed={shown === 'starter'}
+          onClick={() => showAndCopy('starter')}
+        >
+          {copied === 'starter' ? 'Copied' : 'Prompt'}
+        </button>
+      ) : null}
+      {example ? (
+        <button
+          type="button"
+          className="concept-studio__prompt-tab min-h-[44px]"
+          aria-pressed={shown === 'example'}
+          onClick={() => showAndCopy('example')}
+        >
+          {copied === 'example' ? 'Copied' : 'Example'}
+        </button>
+      ) : null}
+    </div>
+  ) : null;
 
   return (
     <StudioShell
       tone={topic?.clusterId || categoryColors?.tone || 'violet'}
       eyebrow={`${topic?.clusterTitle || 'Build literacy'} studio`}
       title={getBuildStudioHeadline(topic)}
-      intro={topic?.summary}
-      controls={controls}
-      stageLabel="Live concept map"
-      stageMeta={`Current view: ${activeLens.label}`}
-      stage={<ConceptScene topic={topic} lens={lens} />}
+      stageFirst
+      stageToolbar={stageToolbar}
+      stageLabel="Live example"
+      stage={(
+        <>
+          {shownText ? (
+            <pre className="concept-studio__prompt">{shownText}</pre>
+          ) : null}
+          <ConceptScene topic={topic} lens={lens} />
+        </>
+      )}
       stageClassName="concept-studio__scene"
-      noteLabel={note.label}
-      noteTitle={note.title}
-      noteBody={note.body}
-      noteTone={note.tone}
       className="concept-studio"
     />
   );
@@ -288,9 +174,9 @@ function SpacingScene({ lens }) {
         <span className="spacing-scene__label spacing-scene__label--margin">margin</span>
         <div className="spacing-scene__margin">
           <div className="spacing-scene__border">
-            <span className="spacing-scene__label">border</span>
+            <span className="spacing-scene__label spacing-scene__label--border">border</span>
             <div className="spacing-scene__padding">
-              <span className="spacing-scene__label">padding</span>
+              <span className="spacing-scene__label spacing-scene__label--padding">padding</span>
               <div className="spacing-scene__content">
                 <Sparkles size={24} aria-hidden="true" />
                 <strong>Content breathes here</strong>
@@ -299,14 +185,6 @@ function SpacingScene({ lens }) {
             </div>
           </div>
         </div>
-      </div>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress'
-          ? 'Random values make every relationship feel accidental.'
-          : lens === 'apply'
-            ? 'Pick a base unit, then use its multiples everywhere.'
-            : 'Padding is inside. Margin is outside. The scale connects both.'}
       </div>
     </div>
   );
@@ -329,10 +207,6 @@ function TypographyScene({ lens }) {
             <em>{size}px</em>
           </div>
         ))}
-      </div>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress' ? 'One-off sizes turn hierarchy into static.' : 'A type scale gives every sentence a job.'}
       </div>
     </div>
   );
@@ -361,10 +235,6 @@ function TokenScene({ topic, lens }) {
         <p>{lens === 'stress' ? 'Three hard-coded choices. Three places to drift.' : 'One named decision flows through the whole component.'}</p>
         <button type="button">Primary action</button>
       </article>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'apply' ? 'Name the choice once. Reuse the name, not the raw value.' : 'The left side is the contract. The right side is one consumer.'}
-      </div>
     </div>
   );
 }
@@ -395,12 +265,6 @@ function SystemScene({ topic, lens, profile }) {
           {lens === 'stress' ? 'Weak link exposed' : lens === 'apply' ? 'Ready for your project' : 'System mapped'}
         </div>
       </article>
-      <div className="concept-visual__caption">
-        <CircleDot size={16} aria-hidden="true" />
-        {lens === 'stress'
-          ? `Remove one handoff and the ${profile.nodes[3].toLowerCase()} becomes a guess.`
-          : profile.caption}
-      </div>
     </div>
   );
 }

@@ -22,8 +22,10 @@ export default function StudioShell({
   controls,
   stageLabel = 'Live scene',
   stageMeta,
+  stageToolbar,
   stage,
   stageClassName = '',
+  stageFirst = false,
   noteLabel = 'Studio note',
   noteTitle,
   noteBody,
@@ -33,9 +35,48 @@ export default function StudioShell({
 }) {
   const resolvedTitleId = titleId || `studio-${studioId(title)}`;
 
+  const note = (noteTitle || noteBody) ? (
+    <div className={`vg-studio__note vg-studio__note--${noteTone}`} aria-live="polite">
+      <span>{noteLabel}</span>
+      <div>
+        {noteTitle ? <strong>{noteTitle}</strong> : null}
+        {noteBody ? <p>{noteBody}</p> : null}
+      </div>
+    </div>
+  ) : null;
+
+  const workbench = (
+    <div className={`vg-studio__workbench ${controls ? '' : 'vg-studio__workbench--stage-only'}${stageFirst ? ' vg-studio__workbench--stage-first' : ''}`.trim()}>
+      {controls && !stageFirst ? (
+        <aside className="vg-studio__controls" aria-label={`${title} controls`}>
+          {controls}
+        </aside>
+      ) : null}
+
+      <div className="vg-studio__stage">
+        <div className="vg-studio__stage-header">
+          <div className="vg-studio__stage-label">
+            <span className="vg-studio__live-dot" aria-hidden="true" />
+            <Radio size={14} aria-hidden="true" />
+            {stageLabel}
+          </div>
+          {stageToolbar ? <div className="vg-studio__stage-toolbar">{stageToolbar}</div> : null}
+          {stageMeta ? <span className="vg-studio__stage-meta">{stageMeta}</span> : null}
+        </div>
+        <div className={`vg-studio__scene ${stageClassName}`.trim()}>{stage}</div>
+      </div>
+
+      {controls && stageFirst ? (
+        <aside className="vg-studio__controls" aria-label={`${title} controls`}>
+          {controls}
+        </aside>
+      ) : null}
+    </div>
+  );
+
   return (
     <section
-      className={`vg-studio vg-studio--${studioId(tone)} ${className}`.trim()}
+      className={`vg-studio vg-studio--${studioId(tone)} ${stageFirst ? 'vg-studio--stage-first' : ''} ${className}`.trim()}
       aria-labelledby={resolvedTitleId}
     >
       <header className="vg-studio__hero">
@@ -50,36 +91,17 @@ export default function StudioShell({
         {actions ? <div className="vg-studio__actions">{actions}</div> : null}
       </header>
 
-      {(noteTitle || noteBody) ? (
-        <div className={`vg-studio__note vg-studio__note--${noteTone}`} aria-live="polite">
-          <span>{noteLabel}</span>
-          <div>
-            {noteTitle ? <strong>{noteTitle}</strong> : null}
-            {noteBody ? <p>{noteBody}</p> : null}
-          </div>
-        </div>
-      ) : null}
-
-      <div className={`vg-studio__workbench ${controls ? '' : 'vg-studio__workbench--stage-only'}`}>
-        {controls ? (
-          <aside className="vg-studio__controls" aria-label={`${title} controls`}>
-            {controls}
-          </aside>
-        ) : null}
-
-        <div className="vg-studio__stage">
-          <div className="vg-studio__stage-header">
-            <div>
-              <span className="vg-studio__live-dot" aria-hidden="true" />
-              <Radio size={13} aria-hidden="true" />
-              {stageLabel}
-            </div>
-            {stageMeta ? <span>{stageMeta}</span> : null}
-          </div>
-          <div className={`vg-studio__scene ${stageClassName}`.trim()}>{stage}</div>
-        </div>
-      </div>
-
+      {stageFirst ? (
+        <>
+          {workbench}
+          {note}
+        </>
+      ) : (
+        <>
+          {note}
+          {workbench}
+        </>
+      )}
     </section>
   );
 }
@@ -97,7 +119,7 @@ export function StudioControl({
     <section className={`vg-studio__control ${className}`.trim()}>
       <div className="vg-studio__control-heading">
         <span>
-          {Icon ? <Icon size={17} aria-hidden="true" /> : null}
+          {Icon ? <Icon size={16} aria-hidden="true" /> : null}
           {number ? `${number} · ` : ''}{label}
         </span>
         {value ? <strong>{value}</strong> : null}

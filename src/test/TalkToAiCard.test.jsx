@@ -18,26 +18,23 @@ const topic = {
 };
 
 describe('TalkToAiCard concept studio', () => {
-  it('teaches the concept before presenting the AI handoff', async () => {
+  it('puts Prompt and Example in the live example header and shows the prompt text', async () => {
     const user = userEvent.setup();
     render(<TalkToAiCard topic={topic} />);
 
-    expect(screen.getByText('Give every gap a beat.')).toBeInTheDocument();
-    expect(document.querySelector('.concept-visual--spacing')).toHaveAttribute('data-lens', 'map');
-    expect(screen.getByRole('button', { name: /Copy starter prompt/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Copy real example/i })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /Break it/i }));
-    expect(document.querySelector('.concept-visual--spacing')).toHaveAttribute('data-lens', 'stress');
-    expect(screen.getByText('What changed')).toBeInTheDocument();
-    expect(screen.getByText('Break it shows the mistake this idea helps prevent.')).toBeInTheDocument();
-    expect(screen.getByText(/Random values make every relationship feel accidental/i)).toBeInTheDocument();
-  });
-
-  it('keeps AI copy actions inside a full hit target', () => {
-    render(<TalkToAiCard topic={topic} />);
-    screen.getAllByRole('button', { name: /Copy /i }).forEach((button) => {
+    expect(screen.getByText('Live example')).toBeInTheDocument();
+    expect(screen.getByText('Interview me about spacing first.')).toBeInTheDocument();
+    expect(screen.queryByText('A type scale gives every sentence a job.')).not.toBeInTheDocument();
+    const prompt = screen.getByRole('button', { name: 'Prompt' });
+    const example = screen.getByRole('button', { name: 'Example' });
+    expect(prompt).toHaveAttribute('aria-pressed', 'true');
+    [prompt, example].forEach((button) => {
+      expect(button).not.toHaveAttribute('title');
       expect(button.className).toMatch(/min-h-\[44px\]/);
     });
+
+    await user.click(example);
+    expect(screen.getByText('Use space.4 between these cards.')).toBeInTheDocument();
+    expect(example).toHaveAttribute('aria-pressed', 'true');
   });
 });

@@ -44,7 +44,7 @@ export default function CommandPaletteDemo({ activeOptions }) {
           <div className="px-3 py-3 border-b border-zinc-100 dark:border-zinc-700">
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider px-3 mb-1.5">Recent</p>
             <button className="w-full flex items-center gap-3 px-4 py-2.5 text-base text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors">
-              <Settings size={18} /> Open Settings
+              <Settings size={16} /> Open Settings
             </button>
           </div>
         )}
@@ -65,7 +65,7 @@ export default function CommandPaletteDemo({ activeOptions }) {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon size={18} />
+                      <Icon size={16} />
                       <span className="font-medium">{cmd.label}</span>
                     </div>
                     <div className="flex items-center gap-2">

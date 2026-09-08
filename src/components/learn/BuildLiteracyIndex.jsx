@@ -106,7 +106,7 @@ export default function BuildLiteracyIndex({ isOpen, onClose, onSelectTopic, mas
         {/* Filter bar */}
         <div className="px-5 lg:px-7 py-4 border-b border-zinc-200 dark:border-zinc-800 shrink-0 flex flex-col gap-3">
           <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               ref={inputRef}
               type="text"

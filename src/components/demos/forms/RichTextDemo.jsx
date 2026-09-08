@@ -23,7 +23,7 @@ export default function RichTextDemo({ activeOptions }) {
                   const Icon = btn.icon;
                   return (
                     <button key={btn.label} className={`p-2 rounded-md transition-colors ${btn.active ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-700 dark:hover:text-zinc-300'}`} title={btn.label}>
-                      <Icon size={18} />
+                      <Icon size={16} />
                     </button>
                   );
                 })}

@@ -21,7 +21,7 @@ export default function DatePickerDemo({ activeOptions }) {
             <Calendar size={20} className="text-zinc-400" />
             <span className="text-lg text-zinc-900 dark:text-white font-medium">{value}</span>
           </div>
-          <ChevronDown size={18} className={`text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+          <ChevronDown size={16} className={`text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
 
         {open && (

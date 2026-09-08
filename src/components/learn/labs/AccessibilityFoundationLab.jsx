@@ -74,7 +74,7 @@ function AccessibilityAuditLab({ onComplete }) {
           <div className="wf-audit-list">
             {AUDIT_ITEMS.map(([id, title, description]) => (
               <button key={id} type="button" className={has(id) ? 'is-fixed' : ''} onClick={() => repair(id)}>
-                <span>{has(id) ? <Check size={17} /> : <AlertTriangle size={17} />}</span>
+                <span>{has(id) ? <Check size={16} /> : <AlertTriangle size={16} />}</span>
                 <span><strong>{title}</strong><small>{description}</small></span>
                 <span>{has(id) ? 'Fixed' : 'Repair'}</span>
               </button>
@@ -286,7 +286,7 @@ function FocusManagementLab({ onComplete }) {
               </div>
             ) : null}
           </div>
-          <div className="wf-focus-monitor"><Keyboard size={17} /> Focus: <strong>{focus}</strong></div>
+          <div className="wf-focus-monitor"><Keyboard size={16} /> Focus: <strong>{focus}</strong></div>
         </LabSection>
 
         <LabSection eyebrow="2 · Control the journey" title="Focus has an entrance, boundary, and return trip" copy="A visual overlay is only half a modal. Keyboard focus needs a deliberate route.">
@@ -381,7 +381,7 @@ function ContrastLab({ onComplete }) {
         <LabSection eyebrow="2 · Read the meter" title={`${ratio.toFixed(2)}:1 ${passes ? 'passes' : 'fails'}`} copy="Ordinary text needs at least 4.5:1 under the WCAG AA contrast criterion.">
           <div className={`wf-contrast-meter ${passes ? 'is-pass' : 'is-fail'}`}>
             <span style={{ width: `${Math.min(100, (ratio / 7) * 100)}%` }} />
-            <strong>{passes ? <Check size={18} /> : <AlertTriangle size={18} />}{passes ? 'AA pass' : 'AA fail'}</strong>
+            <strong>{passes ? <Check size={16} /> : <AlertTriangle size={16} />}{passes ? 'AA pass' : 'AA fail'}</strong>
           </div>
           <Inspector rows={[
             ['Foreground', foreground],

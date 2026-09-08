@@ -196,7 +196,7 @@ export default function ShareAchievement({
             />
             <PlatformButton
               label="LinkedIn"
-              icon={<Linkedin size={18} />}
+              icon={<Linkedin size={16} />}
               onClick={() => openExternal(urls.linkedin)}
             />
             <PlatformButton
@@ -206,7 +206,7 @@ export default function ShareAchievement({
             />
             <PlatformButton
               label="Facebook"
-              icon={<Facebook size={18} />}
+              icon={<Facebook size={16} />}
               onClick={() => openExternal(urls.facebook)}
             />
             <PlatformButton
@@ -216,7 +216,7 @@ export default function ShareAchievement({
             />
             <PlatformButton
               label="Email"
-              icon={<Mail size={18} />}
+              icon={<Mail size={16} />}
               onClick={() => { window.location.href = urls.mailto; }}
             />
           </div>

@@ -109,7 +109,7 @@ export default function WebFoundationLesson({
             disabled={!previous}
             aria-label={previous ? `Previous lesson: ${previous.title}` : 'No previous lesson'}
           >
-            <ArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={16} aria-hidden="true" />
             <span className="wf-nav-label">Previous</span>
           </button>
           <button
@@ -119,7 +119,7 @@ export default function WebFoundationLesson({
             aria-label={next ? `Next lesson: ${next.title}` : 'No next lesson'}
           >
             <span className="wf-nav-label">Next</span>
-            <ArrowRight size={18} aria-hidden="true" />
+            <ArrowRight size={16} aria-hidden="true" />
           </button>
         </nav>
       </header>
@@ -138,7 +138,7 @@ export default function WebFoundationLesson({
       </div>
 
       <section className="wf-intro">
-        <div className="wf-kicker"><FlaskConical size={17} aria-hidden="true" /> {lesson.kicker}</div>
+        <div className="wf-kicker"><FlaskConical size={16} aria-hidden="true" /> {lesson.kicker}</div>
         <h1 className={topic.title.length > 24 ? 'is-long' : undefined}>{topic.title}</h1>
         <p className="wf-hook">{lesson.hook}</p>
         <div className="wf-objective">
@@ -156,7 +156,7 @@ export default function WebFoundationLesson({
           </div>
           <span>Browser Lab</span>
           <button type="button" onClick={restart} aria-label="Restart lesson">
-            <RotateCcw size={15} aria-hidden="true" /> Restart
+            <RotateCcw size={16} aria-hidden="true" /> Restart
           </button>
         </div>
 
@@ -170,7 +170,7 @@ export default function WebFoundationLesson({
 
       <footer className={`wf-recall ${complete ? 'is-complete' : ''}`}>
         <div className="wf-recall-status" aria-live="polite">
-          <span className="wf-recall-check"><Check size={18} aria-hidden="true" /></span>
+          <span className="wf-recall-check"><Check size={16} aria-hidden="true" /></span>
           <div>
             <span>{complete ? 'You proved it' : 'Finish the challenge'}</span>
             <p>{complete ? topic.mnemonic : 'Change the live example until the challenge confirms the browser understands your fix.'}</p>
@@ -179,7 +179,7 @@ export default function WebFoundationLesson({
 
         {complete && next ? (
           <button type="button" className="wf-next-lesson" onClick={() => onSelectTopic(next.id)}>
-            Next: {next.title} <ArrowRight size={18} aria-hidden="true" />
+            Next: {next.title} <ArrowRight size={16} aria-hidden="true" />
           </button>
         ) : null}
       </footer>

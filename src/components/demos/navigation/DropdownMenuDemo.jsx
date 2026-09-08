@@ -26,7 +26,7 @@ export default function DropdownMenuDemo({ activeOptions }) {
           aria-haspopup="true"
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100 font-medium shadow-sm min-h-[44px]"
         >
-          <MoreHorizontal size={18} />
+          <MoreHorizontal size={16} />
           Account
         </button>
         {open && (

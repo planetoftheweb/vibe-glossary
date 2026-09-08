@@ -22,7 +22,7 @@ export default function FilterBarDemo({ activeOptions }) {
           className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3"
         >
           <div className="flex-1 min-w-[200px] flex items-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 shadow-sm">
-            <Search size={18} className="text-zinc-400 shrink-0" />
+            <Search size={16} className="text-zinc-400 shrink-0" />
             <input
               value={q}
               onChange={e => setQ(e.target.value)}

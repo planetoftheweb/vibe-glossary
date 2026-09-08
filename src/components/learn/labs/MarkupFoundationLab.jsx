@@ -83,7 +83,7 @@ function TagAnatomyLab({ onComplete }) {
                 {label}
               </button>
             </form>
-            <div className="wf-event-log"><MousePointerClick size={15} /> {lastEvent}</div>
+            <div className="wf-event-log"><MousePointerClick size={16} /> {lastEvent}</div>
           </div>
         </LabSection>
 

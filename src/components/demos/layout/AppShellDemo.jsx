@@ -49,7 +49,7 @@ export default function AppShellDemo({ activeOptions }) {
                 </div>
               )}
               <button type="button" className="ml-auto p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Notifications">
-                <Bell size={18} />
+                <Bell size={16} />
               </button>
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 shrink-0" aria-hidden />
             </div>

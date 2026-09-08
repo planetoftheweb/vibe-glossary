@@ -140,7 +140,7 @@ export default function BuildLiteracyView({
               : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
           }`}
         >
-          <FileText size={18} />
+          <FileText size={16} />
           Definition
         </button>
         <button
@@ -151,7 +151,7 @@ export default function BuildLiteracyView({
               : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
           }`}
         >
-          <Sparkles size={18} />
+          <Sparkles size={16} />
           {topic?.id === 'motion' ? 'Motion lab' : 'Concept studio'}
         </button>
       </div>
@@ -220,7 +220,7 @@ export default function BuildLiteracyView({
                 className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
                 aria-label="Open Definition"
               >
-                <BookOpen size={18} />
+                <BookOpen size={16} />
                 <HoverTip text="Open Definition" />
               </button>
             </div>

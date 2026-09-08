@@ -52,7 +52,7 @@ export default function ProgressToast({ toast, onDismiss }) {
         aria-label="Dismiss progress message"
         onClick={() => onDismiss(toast.id)}
       >
-        <X size={15} aria-hidden />
+        <X size={16} aria-hidden />
       </button>
     </aside>
   );

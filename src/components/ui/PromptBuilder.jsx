@@ -212,8 +212,8 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
             onClick={() => onOptionToggle('_scaffold')}
             className={`flex items-center space-x-1.5 lg:space-x-2 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
               includeScaffold
-                ? 'bg-emerald-600 text-white border-transparent shadow-md'
-                : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-emerald-300 dark:hover:border-zinc-600'
+                ? 'bg-indigo-600 text-white border-transparent shadow-md'
+                : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-indigo-300 dark:hover:border-zinc-600'
             }`}
           >
             <Code2 size={16} />
@@ -226,8 +226,8 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
             onClick={() => onOptionToggle('_requirements')}
             className={`flex items-center space-x-1.5 lg:space-x-2 min-h-[44px] px-3 py-1.5 lg:px-4 lg:py-2.5 rounded-lg lg:rounded-xl border text-sm lg:text-base font-medium transition-all duration-200 ${
               includeRequirements
-                ? 'bg-amber-600 text-white border-transparent shadow-md'
-                : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-amber-300 dark:hover:border-zinc-600'
+                ? 'bg-indigo-600 text-white border-transparent shadow-md'
+                : 'bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 hover:border-indigo-300 dark:hover:border-zinc-600'
             }`}
           >
             <ShieldCheck size={16} />

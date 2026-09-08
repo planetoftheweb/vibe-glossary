@@ -54,7 +54,7 @@
 
   h2 {
     font-weight: 700;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.008em;
   }
 
   h3 {
@@ -346,7 +346,7 @@
   align-items: center;
   gap: 5px;
   margin-top: 8px;
-  border-radius: 9px;
+  border-radius: 8px;
   padding: 0 11px;
   background: white;
   color: #18131f;
@@ -360,7 +360,7 @@
   display: grid;
   width: 44px;
   height: 44px;
-  border-radius: 11px;
+  border-radius: 12px;
   color: #777181;
   place-items: center;
 }
@@ -764,7 +764,7 @@
   position: relative;
   min-height: 44px;
   border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 11px;
+  border-radius: 12px;
   background: rgb(255 255 255 / 0.035);
   color: #9f99ae;
   font-size: 12px;
@@ -1599,7 +1599,7 @@
   width: 28px;
   height: 28px;
   border: 1px solid rgb(255 255 255 / 0.11);
-  border-radius: 9px;
+  border-radius: 8px;
   color: #777082;
   font-size: 12px;
   font-weight: 900;
@@ -1853,7 +1853,7 @@
   justify-content: center;
   padding: 0 14px;
   border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgb(255 255 255 / 0.04);
   color: #d5d1e1;
   font-size: 16px;
@@ -1931,7 +1931,7 @@
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0 14px;
   background: transparent;
   color: #a39dad;
@@ -1965,7 +1965,7 @@
   align-items: center;
   gap: 8px;
   border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0 12px;
   background: rgb(255 255 255 / 0.035);
   color: #d5d1e1;
@@ -2002,7 +2002,7 @@
   justify-content: center;
   gap: 8px;
   border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0 12px;
   background: rgb(255 255 255 / 0.035);
   color: #a39dad;
@@ -2113,7 +2113,7 @@
   align-items: center;
   padding: 0 12px;
   border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgb(255 255 255 / 0.04);
   color: #d5d1e1;
   font-size: 16px;
@@ -2375,7 +2375,7 @@
   top: 8px;
   left: 10px;
   padding: 3px 7px;
-  border-radius: 6px;
+  border-radius: 8px;
   background: rgb(8 6 15 / 0.78);
   color: rgb(255 255 255 / 0.88);
   font-size: 12px;
@@ -2502,7 +2502,7 @@
 .token-scene__card > span { color: var(--studio-safe); font-size: 12px; font-weight: 900; letter-spacing: 0.12em; }
 .token-scene__card h3 { position: relative; z-index: 1; margin: 28px 0 8px; color: white; font-size: clamp(22px, 3vw, 34px); font-weight: 700; letter-spacing: -0.01em; line-height: 0.98; }
 .token-scene__card p { position: relative; z-index: 1; margin: 0; color: #b8b3c4; font-size: 16px; line-height: 1.5; }
-.token-scene__card button { position: relative; z-index: 1; min-height: 44px; margin-top: 22px; border: 0; border-radius: 11px; padding: 0 15px; background: var(--studio-accent); color: #09090b; font-size: 16px; font-weight: 900; }
+.token-scene__card button { position: relative; z-index: 1; min-height: 44px; margin-top: 22px; border: 0; border-radius: 12px; padding: 0 15px; background: var(--studio-accent); color: #09090b; font-size: 16px; font-weight: 900; }
 .concept-visual--tokens[data-lens='stress'] .token-scene__rail > div { border-color: rgb(251 113 133 / 0.38); transform: translateX(var(--drift, 0)); }
 .concept-visual--tokens[data-lens='stress'] .token-scene__rail > div:nth-child(2) { --drift: 8px; }
 .concept-visual--tokens[data-lens='stress'] .token-scene__rail > div:nth-child(3) { --drift: -5px; }
@@ -2652,7 +2652,7 @@
 .easing-lab__transport button {
   min-height: 44px;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius: 8px;
   background: transparent;
   color: #a1a1aa;
   font-size: 14px;
@@ -3231,7 +3231,7 @@
   min-width: 0;
   min-height: 44px;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius: 8px;
   padding: 0 12px;
   background: transparent;
   color: #a1a1aa;
@@ -3842,7 +3842,7 @@
   align-items: flex-end;
   justify-content: center;
   gap: 3px;
-  border-radius: 9px;
+  border-radius: 8px;
   background: rgb(255 255 255 / 0.045);
 }
 
@@ -3864,7 +3864,7 @@
   width: 28px;
   height: 28px;
   border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: 9px;
+  border-radius: 8px;
   color: #817b8a;
   font-size: 18px;
   font-weight: 700;

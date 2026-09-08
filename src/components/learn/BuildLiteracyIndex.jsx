@@ -213,7 +213,7 @@ function ClusterChip({ label, count, colors, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm lg:text-base font-medium transition-colors ${active ? activeCls : idleCls}`}
+      className={`flex items-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-full text-sm lg:text-base font-medium transition-colors ${active ? activeCls : idleCls}`}
     >
       <span>{label}</span>
       <span className="text-xs lg:text-sm opacity-70">{count}</span>

@@ -15,14 +15,17 @@ import { AUTH_ERROR_COPY, AUTH_ERROR_FALLBACK } from '../lib/authErrors';
  */
 export default function useAuth() {
   const [user, setUser] = useState(null);
-  const [authReady, setAuthReady] = useState(false);
+  const [authReady, setAuthReady] = useState(!auth);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => onAuthStateChanged(auth, (nextUser) => {
-    setUser(nextUser);
-    setAuthReady(true);
-  }), []);
+  useEffect(() => {
+    if (!auth) return undefined;
+    return onAuthStateChanged(auth, (nextUser) => {
+      setUser(nextUser);
+      setAuthReady(true);
+    });
+  }, []);
 
   const run = useCallback(async (action) => {
     setBusy(true);

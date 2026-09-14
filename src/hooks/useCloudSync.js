@@ -24,7 +24,7 @@ export default function useCloudSync(user, snapshot, importSnapshot) {
 
   // On sign-in: pull the backup, merge it into local state, push the union up.
   useEffect(() => {
-    if (!user) {
+    if (!user || !db) {
       readyUidRef.current = null;
       setStatus('idle');
       return;
@@ -59,7 +59,7 @@ export default function useCloudSync(user, snapshot, importSnapshot) {
 
   // Debounced backup whenever progress changes after the initial restore.
   useEffect(() => {
-    if (!user || readyUidRef.current !== user.uid) return undefined;
+    if (!user || !db || readyUidRef.current !== user.uid) return undefined;
     setStatus('saving');
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(async () => {

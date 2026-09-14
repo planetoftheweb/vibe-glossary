@@ -9,7 +9,7 @@ export function useCategories() {
   const [categories, setCategories] = useState(_cache || CATEGORIES);
 
   useEffect(() => {
-    if (_cache) return;
+    if (_cache || !db) return;
     getDocs(collection(db, 'categories'))
       .then(snapshot => {
         if (snapshot.empty) return;

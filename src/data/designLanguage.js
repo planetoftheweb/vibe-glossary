@@ -510,6 +510,28 @@ export const DESIGN_LANGUAGE_CLUSTER = {
       relatedGlossaryIds: ['hero', 'appshell'],
     },
     {
+      id: 'first-minute',
+      title: 'First minute: win before the wall',
+      summary:
+        'The first sixty seconds decide whether a cold visitor gets the idea or hits the wall. One clear job, one obvious next step, and they never have to ask you what to do.',
+      details:
+        'Empty states cover blank lists and tables. The first minute is bigger: the whole arc from "I opened this link" to "I understand what this is for and I took one useful action." Capstone wants that arc for a stranger, without Ray narrating over their shoulder.\n\nWin the first minute with three pieces. A short line that names the outcome (what they get, not what the product is). One primary action that starts that outcome. Proof they landed in the right place (a sample item, a short tip, or a tiny preview of the finished state). If any of those is missing, people stall, click around, and ask you what to do. That ask means the wall already won.\n\nKeep the first minute ruthlessly small. Hide secondary settings, advanced filters, and "learn more" rabbit holes until after the first success. Returning users can skip the welcome. Cold visitors cannot skip the orientation. Test it by opening the live link yourself in a private window and staying quiet for sixty seconds. If you would have to explain the next click, the first minute is not done.',
+      comparison:
+        'Empty state = what to show when a list has nothing. First minute = the whole cold-visitor arc until they get one win. Onboarding tour = optional guided clicks. First minute should work even if they skip the tour.',
+      vibeTip:
+        'Tell your AI "design the first sixty seconds for a stranger: one outcome line, one primary action, one proof they are in the right place. Hide everything else until after the first success."',
+      talkToAi: {
+        starter:
+          'Design the first-minute experience for [app or page]. Before changing anything, ask me: 1) the one job a cold visitor should complete in under a minute, 2) what proof shows they landed in the right place, 3) what we should hide until after that first win, 4) how returning users should skip the welcome. Then propose the hero line, the primary button label, and the empty or sample content for that first screen. Keep secondary controls out of the first minute.',
+        example:
+          'Design the first minute for my habit tracker share link. Cold visitors should create one habit and check it off once. Returning users go straight to today. Hide streaks, settings, and social until after that first check-off. Give me the outcome line, the primary CTA, and the first-run empty that seeds one sample habit.',
+      },
+      mnemonic:
+        'One clear job in the first minute. If they have to ask you what to do, the wall already won.',
+      relatedGlossaryIds: ['empty', 'hero', 'appshell'],
+    },
+
+    {
       id: 'empty-states',
       title: 'Empty states: no screen is ever just blank',
       summary:
@@ -551,6 +573,28 @@ export const DESIGN_LANGUAGE_CLUSTER = {
         'Hold the space, shape the wait, and make the button show it is working. Content the user is reading never jumps.',
       relatedGlossaryIds: ['skeleton', 'spinner', 'progress'],
     },
+    {
+      id: 'affordance',
+      title: 'Affordance: look like what you do',
+      summary:
+        'If something is clickable, editable, or disabled, it should look that way before anyone tries. Guessing is a design bug, not a user skill gap.',
+      details:
+        'Affordance is the visual hint that tells people what an element can do. A raised button looks pressable. An underlined word looks like a link. A field with a border and a caret looks editable. Grayed text with no hover looks disabled. When the look and the behavior disagree, people click the wrong thing, miss the right thing, or ask for help.\n\nComponent states cover default, hover, focus, active, disabled, and loading. Iconography covers which icon set you use. Affordance is the missing middle: does this control look like the action it performs? Stuck clicks and quiet controls in coaching almost always fail here. A row that is clickable but looks like plain text. A delete that looks like a label. A disabled save that still looks primary.\n\nFix affordance with honestly, not decoration. Make buttons look like buttons (shape, contrast, hit area). Make editable fields look like fields (border or underline, enough padding, visible focus). Make disabled look unavailable (lower contrast, no hover lift, cursor that says no). Do not rely on color alone. Pair the look with a label or aria-label so screen readers get the same message.',
+      comparison:
+        'Component states = the six moods of a control. Affordance = whether the resting look already promises the right action. Iconography = which drawn symbol you use. Affordance fails when a quiet label is secretly a button.',
+      vibeTip:
+        'Tell your AI "every interactive control must look interactive at rest: buttons look pressable, fields look editable, disabled looks unavailable. No clickable plain text without a clear link or button treatment."',
+      talkToAi: {
+        starter:
+          'Audit affordance on [page or component]. Before changing styles, ask me: 1) which elements are clickable, editable, or disabled, 2) where users already get stuck or ask what to click, 3) our button and field tokens if we have them. Then list every control whose resting look does not match its action, propose the fix (button treatment, field chrome, disabled styling, or a real label), and show the updated classes. No designer slang. Plain words only.',
+        example:
+          'Audit the settings row list in src/pages/Settings.tsx. Several whole rows are clickable but look like static text. The Save button stays bright when disabled. Make rows look pressable, make disabled Save look unavailable, and add clear labels. Show the diff.',
+      },
+      mnemonic:
+        'If it does a thing, it should look like it does that thing. Guessing is a design bug.',
+      relatedGlossaryIds: ['button', 'inputgroup', 'tooltip'],
+    },
+
     {
       id: 'iconography',
       title: 'Iconography: one set, one stroke, always a label',

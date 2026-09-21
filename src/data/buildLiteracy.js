@@ -405,6 +405,28 @@ export const BUILD_LITERACY_CLUSTERS = [
         relatedGlossaryIds: [],
       },
       {
+        id: 'smoke-test-stranger-path',
+        title: 'Smoke test: private window, stranger path',
+        summary:
+          'Open the live link in a private window and walk the main happy path as someone who is not you. If it fails there, it fails for Ray\'s cold visitor too.',
+        details:
+          'A smoke test is a short, honest pass over the main flow after you ship or share a link. Capstone asks for the live VibeIt link in a private or incognito window, walking the path a stranger would take. You are not hunting every edge case. You are proving the happy path still works when cookies, logins, and "I already know where the button is" are gone.\n\nWhy private window: your normal browser is full of logged-in sessions, saved forms, extensions, and muscle memory. A stranger gets none of that. Private mode clears the advantage so you see the real first-run walls: wrong redirect, broken auth, empty data that assumes you already set something up, a button that only works because you are still signed in elsewhere.\n\nKeep the script tiny. One happy path. Start from the shared URL. Do the one job the product promises. Stop when that job succeeds or when you would need to ask the builder what to do next. TDD and unit vs integration prove pieces and assemblies in code. This proves the assembled product for a human who is not you. If the private-window path fails, fix that before you polish anything else.',
+        comparison:
+          'Unit tests prove a piece. Integration tests prove pieces together. Smoke test (stranger path) proves the live happy path for someone who is not you. End-to-end suites can automate this later. Capstone starts with one private-window walk.',
+        vibeTip:
+          'After every shareable deploy, run the same three lines: private window, paste the live link, complete the one main job without coaching yourself. Write down where you hesitated.',
+        talkToAi: {
+          starter:
+            'Write a stranger-path smoke checklist for [app]. Before drafting it, ask me: 1) the live URL to open, 2) the one happy-path job a cold visitor must complete, 3) what "success" looks like in one sentence, 4) any login or sample data the stranger should NOT need. Then give me a 5 to 8 step private-window script I can follow out loud, plus a short "fail if" list for each step.',
+          example:
+            'Write a private-window smoke checklist for my VibeIt share link. Happy path: open the link, understand the app in the first minute, complete the primary action once. No account required. Fail if I need Ray to explain a click or if a blank screen looks broken.',
+        },
+        mnemonic:
+          'Private window. Stranger eyes. One happy path. If it fails there, it fails for Ray.',
+        relatedGlossaryIds: [],
+      },
+
+      {
         id: 'ci',
         title: 'CI (Continuous Integration)',
         summary:

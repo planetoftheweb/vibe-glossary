@@ -56,8 +56,10 @@ export const BUILD_STUDIO_HEADLINES = {
   'rule-strengths': 'Decide which rules warn and which rules stop the build.',
   'design-md-file': 'Put the visual contract where the builder can read it.',
   'page-grammar': 'Give every screen one idea and every section one job.',
+  'first-minute': 'Win the first sixty seconds before the wall shows up.',
   'empty-states': 'Turn an empty screen into a useful next move.',
   'loading-stability': 'Show the wait without making the page jump.',
+  affordance: 'Make every control look like the action it performs.',
   iconography: 'Make every icon speak the same visual language.',
   'microcopy-tone': 'Write buttons that name results and errors that name fixes.',
 
@@ -77,6 +79,7 @@ export const BUILD_STUDIO_HEADLINES = {
   // Engineering practice
   tdd: 'Write the proof before the code.',
   'unit-vs-integration': 'Prove the piece. Then prove the pieces still work together.',
+  'smoke-test-stranger-path': 'Prove the live happy path with stranger eyes.',
   ci: 'Make every change pass the same gate.',
   'staging-vs-prod': 'Rehearse the release before real users see it.',
   semver: 'Read the version number as a warning label.',

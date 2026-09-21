@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * Drag handle for a two-pane "info / preview" layout. The caller owns the
@@ -19,6 +19,8 @@ export default function usePanelResize(setPanelWidth, {
 } = {}) {
   const containerRef = useRef(null);
   const isResizing = useRef(false);
+  // Held here so an unmount mid-drag can tear the window listeners down.
+  const teardownRef = useRef(null);
 
   const onResizeStart = useCallback((e) => {
     e.preventDefault();
@@ -26,31 +28,44 @@ export default function usePanelResize(setPanelWidth, {
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
 
+    // Touch events don't carry clientX at the top level; nullish coalesce
+    // (not `||`) so a mouse resting on the exact left edge (clientX === 0)
+    // is honored instead of collapsing to NaN.
+    const pointerX = (ev) => ev.clientX ?? ev.touches?.[0]?.clientX;
+
     const handleMove = (ev) => {
       if (!isResizing.current || !containerRef.current) return;
+      const px = pointerX(ev);
+      if (px == null) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const x = (ev.clientX || ev.touches?.[0]?.clientX) - rect.left;
-      const pct = Math.min(maxPercent, Math.max(minPercent, (x / rect.width) * 100));
+      const pct = Math.min(maxPercent, Math.max(minPercent, ((px - rect.left) / rect.width) * 100));
       setPanelWidth(pct);
     };
-    const handleUp = () => {
+    const cleanup = () => {
       isResizing.current = false;
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
-      setPanelWidth(prev => {
-        try { localStorage.setItem(storageKey, prev); } catch {}
-        return prev;
-      });
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleUp);
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleUp);
+      teardownRef.current = null;
     };
+    const handleUp = () => {
+      setPanelWidth(prev => {
+        try { localStorage.setItem(storageKey, prev); } catch {}
+        return prev;
+      });
+      cleanup();
+    };
+    teardownRef.current = cleanup;
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleUp);
     window.addEventListener('touchmove', handleMove);
     window.addEventListener('touchend', handleUp);
   }, [setPanelWidth, minPercent, maxPercent, storageKey]);
+
+  useEffect(() => () => { teardownRef.current?.(); }, []);
 
   return { containerRef, onResizeStart };
 }

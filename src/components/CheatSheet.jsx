@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import {
   Layers, MousePointer, Layout, Grip, MessageSquare, BarChart3, FormInput,
-  MousePointerClick, Megaphone, X, ArrowRight, Keyboard,
-  Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
+  MousePointerClick, Megaphone, Wind, X, ArrowRight, Keyboard,
+  Cable, Compass, Palette, Lightbulb, Wrench, FileText, Database, KeyRound, Bot,
   BookOpen, GraduationCap,
 } from 'lucide-react';
 import { useCategories } from '../hooks/useCategories';
@@ -16,6 +16,7 @@ const CATEGORY_META = {
   layout:       { icon: Layout,             color: 'from-emerald-500 to-teal-600',   border: 'border-emerald-500/30', glow: 'shadow-emerald-500/20' },
   navigation:   { icon: Grip,               color: 'from-amber-500 to-orange-600',   border: 'border-amber-500/30',   glow: 'shadow-amber-500/20' },
   interactions: { icon: MousePointerClick,  color: 'from-orange-500 to-red-600',     border: 'border-orange-500/30',  glow: 'shadow-orange-500/20' },
+  motion:       { icon: Wind,               color: 'from-lime-500 to-emerald-600',   border: 'border-lime-500/30',    glow: 'shadow-lime-500/20' },
   feedback:     { icon: MessageSquare,      color: 'from-rose-500 to-pink-600',      border: 'border-rose-500/30',    glow: 'shadow-rose-500/20' },
   marketing:    { icon: Megaphone,          color: 'from-pink-500 to-rose-600',      border: 'border-pink-500/30',    glow: 'shadow-pink-500/20' },
 };
@@ -27,6 +28,7 @@ const BUILD_CLUSTER_META = {
   engineering:       { icon: Wrench,   color: 'from-emerald-500 to-teal-600',   border: 'border-emerald-500/30', glow: 'shadow-emerald-500/20' },
   'spec-driven':     { icon: FileText, color: 'from-cyan-500 to-sky-600',       border: 'border-cyan-500/30',   glow: 'shadow-cyan-500/20' },
   data:              { icon: Database, color: 'from-blue-500 to-indigo-600',    border: 'border-blue-500/30',   glow: 'shadow-blue-500/20' },
+  protocols:         { icon: Cable,    color: 'from-orange-500 to-red-600',     border: 'border-orange-500/30', glow: 'shadow-orange-500/20' },
   auth:              { icon: KeyRound, color: 'from-rose-500 to-pink-600',      border: 'border-rose-500/30',   glow: 'shadow-rose-500/20' },
   'ai-literacy':     { icon: Bot,      color: 'from-purple-500 to-violet-700',  border: 'border-purple-500/30', glow: 'shadow-purple-500/20' },
 };
@@ -144,7 +146,8 @@ export default function CheatSheet({ isOpen, onClose, onSelectCategory, onSelect
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {BUILD_LITERACY_CLUSTERS.map(cluster => {
-              const meta = BUILD_CLUSTER_META[cluster.id] || BUILD_CLUSTER_META['web-foundations'];
+              const meta = BUILD_CLUSTER_META[cluster.id];
+              if (!meta) return null;
               const Icon = meta.icon;
               const count = cluster.topics?.length || 0;
               return (

@@ -463,17 +463,20 @@ export default function App() {
     pendingScoreEventRef.current = null;
 
     if (currentLevel.current.id !== previousLevel.current.id) {
+      const isTinkerer = currentLevel.current.id === 'tinkerer';
       addGlobalToast({
         kind: 'level',
         title: `${currentLevel.current.label} unlocked`,
         points: gained,
-        message: currentLevel.current.id === 'tinkerer'
-          ? 'You reached the class requirement. Your proof is ready whenever you are.'
+        message: isTinkerer
+          ? 'You met the class requirement! Tap "Get class proof link" below, or open your Score in the top bar to copy your proof link any time.'
           : currentLevel.current.blurb,
         target,
-        actionLabel: 'See the next mission',
-        onAction: () => setShowScoreBreakdown(true),
-      }, 9000);
+        actionLabel: isTinkerer ? 'Get class proof link' : 'See the next mission',
+        onAction: isTinkerer
+          ? () => { setProofSnapshot(null); setShowProof(true); }
+          : () => setShowScoreBreakdown(true),
+      }, isTinkerer ? 12000 : 9000);
       return;
     }
 

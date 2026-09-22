@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { ShieldCheck, Sparkles } from 'lucide-react';
 import HoverTip from '../ui/HoverTip';
 
 /**
  * Compact VibeScore pill for the top nav. Shows the running total + the
  * current level title. Animates a small "+N" when the score climbs so the
  * learner gets immediate feedback without spamming a toast.
+ *
+ * When the class bar is met, an adjacent "Class proof" chip appears so
+ * students can open ProofView without hunting through menus.
  */
-export default function VibeScorePill({ score, level, onClick, ariaLabel }) {
+export default function VibeScorePill({ score, level, onClick, ariaLabel, classBarMet, onOpenProof }) {
   const total = score?.total ?? 0;
   const goalHint = level?.next
     ? `${level.pointsToNext} pts to ${level.next.label}. See what to do next.`
@@ -28,30 +31,43 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel }) {
   }, [total]);
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel || `VibeScore ${total}, level ${level?.current?.label || ''}`}
-      className="group relative inline-flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
-    >
-      <Sparkles size={16} className="text-amber-500 shrink-0" />
-      <span className="flex flex-col items-start leading-tight">
-        <span className="text-sm font-bold text-zinc-900 dark:text-white tabular-nums">
-          {total}
+    <div className="inline-flex items-center gap-1">
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={ariaLabel || `VibeScore ${total}, level ${level?.current?.label || ''}`}
+        className="group relative inline-flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+      >
+        <Sparkles size={16} className="text-amber-500 shrink-0" />
+        <span className="flex flex-col items-start leading-tight">
+          <span className="text-sm font-bold text-zinc-900 dark:text-white tabular-nums">
+            {total}
+          </span>
+          <span className="hidden xl:inline text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-semibold">
+            {level?.current?.label || 'Lurker'}
+          </span>
         </span>
-        <span className="hidden xl:inline text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-semibold">
-          {level?.current?.label || 'Lurker'}
-        </span>
-      </span>
-      <HoverTip text={goalHint} align="right" />
-      {delta != null && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500 text-white shadow animate-fade-in"
+        <HoverTip text={goalHint} align="right" />
+        {delta != null && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500 text-white shadow animate-fade-in"
+          >
+            +{delta}
+          </span>
+        )}
+      </button>
+      {classBarMet && onOpenProof && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onOpenProof(); }}
+          className="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors animate-fade-in"
+          aria-label="Get class proof link"
         >
-          +{delta}
-        </span>
+          <ShieldCheck size={14} aria-hidden="true" />
+          <span className="hidden lg:inline">Class proof</span>
+        </button>
       )}
-    </button>
+    </div>
   );
 }

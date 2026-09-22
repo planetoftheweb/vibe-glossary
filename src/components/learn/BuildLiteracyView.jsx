@@ -161,7 +161,8 @@ export default function BuildLiteracyView({
         {/* Left: topic info, hidden when docked on desktop */}
         {infoOpen && (
           <div
-            className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`}
+            data-tour="definition-panel"
+            className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}
             style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}
           >
             {topic ? (

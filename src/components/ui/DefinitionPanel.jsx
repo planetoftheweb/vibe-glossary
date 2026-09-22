@@ -27,7 +27,7 @@ export default function DefinitionPanel({
 
   return (
     <div className="mb-4 lg:mb-5">
-      <p className="font-sans text-lg lg:text-xl font-normal leading-7 lg:leading-8 text-zinc-700 dark:text-zinc-200">
+      <p className="font-sans text-lg lg:text-xl font-normal leading-7 lg:leading-8 text-zinc-700 dark:text-zinc-200 break-words">
         {summary}
       </p>
 
@@ -63,7 +63,7 @@ export default function DefinitionPanel({
                 {String(details)
                   .split(/\n{2,}/)
                   .map((para, i) => (
-                    <p key={i}>{para.trim()}</p>
+                    <p key={i} className="break-words">{para.trim()}</p>
                   ))}
               </div>
             </div>

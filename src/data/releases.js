@@ -121,7 +121,7 @@ export const WHATS_NEW = [
     date: '2026-08-17',
     tag: 'feature',
     title: 'Class proof links',
-    blurb: 'Submit your progress as class work: copy a proof link showing your VibeScore, level, and badges. Instructors open it to verify.',
+    blurb: 'Submit your progress as class work: copy a proof link showing your VibeScore, level, and badges. Also available from your Score pill once you hit 200 points.',
     image: null,
     action: { kind: 'proof' },
   },

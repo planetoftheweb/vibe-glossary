@@ -9,6 +9,7 @@ import {
 import { CATEGORY_COLORS } from '../../data/categories';
 import VibeScorePill from '../learn/VibeScorePill';
 import ScoreStoragePrompt from '../learn/ScoreStoragePrompt';
+import { CLASS_BAR_POINTS } from '../../lib/proof';
 import UserMenu from './UserMenu';
 import WhatsNewMenu, { WhatsNewMenuSection } from './WhatsNewMenu';
 import {
@@ -1068,6 +1069,8 @@ export default function TopNav({
                 score={explore.score}
                 level={explore.level}
                 onClick={onOpenScoreBreakdown}
+                classBarMet={explore.score.total >= CLASS_BAR_POINTS}
+                onOpenProof={onOpenProof}
               />
             </div>
           )}

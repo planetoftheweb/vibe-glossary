@@ -136,4 +136,35 @@ describe('FloatingLearningHud', () => {
     expect(screen.getByLabelText('Learning HUD')).toHaveAttribute('data-dock', 'free');
     expect(screen.getByLabelText('Learning HUD')).toHaveStyle({ left: '90px', top: '88px' });
   });
+
+  it('promotes "Get class proof link" to a primary CTA when the class bar is met', async () => {
+    const user = userEvent.setup();
+    const props = {
+      ...baseProps(),
+      score: { total: 250 },
+      level: {
+        current: { id: 'tinkerer', label: 'Tinkerer', min: 200, blurb: 'Reached class requirement.' },
+        next: { id: 'builder', label: 'Builder', min: 500, blurb: 'Building real things.' },
+        pointsToNext: 250,
+      },
+    };
+    render(<FloatingLearningHud {...props} />);
+    await user.click(screen.getByRole('button', { name: /Score 250/i }));
+
+    const popup = screen.getByRole('dialog', { name: 'Score' });
+    const proofBtn = within(popup).getByRole('button', { name: /get class proof link/i });
+    expect(proofBtn).toBeInTheDocument();
+    expect(proofBtn.className).toMatch(/bg-emerald/);
+  });
+
+  it('keeps the proof button secondary when the class bar is not met', async () => {
+    const user = userEvent.setup();
+    const props = baseProps();
+    render(<FloatingLearningHud {...props} />);
+    await user.click(screen.getByRole('button', { name: /Score 33/i }));
+
+    const popup = screen.getByRole('dialog', { name: 'Score' });
+    expect(within(popup).queryByRole('button', { name: /get class proof link/i })).toBeNull();
+    expect(within(popup).getByRole('button', { name: /to class goal/i })).toBeInTheDocument();
+  });
 });

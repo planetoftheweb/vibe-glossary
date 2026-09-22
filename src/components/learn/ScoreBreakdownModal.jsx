@@ -82,10 +82,14 @@ export default function ScoreBreakdownModal({
                 type="button"
                 onClick={onOpenProof}
                 data-tour="class-proof"
-                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition-colors"
+                className={`inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                  classGoal.met
+                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm'
+                    : 'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20'
+                }`}
               >
                 <ShieldCheck size={14} />
-                Class proof
+                {classGoal.met ? 'Get class proof link' : 'Class proof'}
               </button>
             )}
             {total > 0 && (

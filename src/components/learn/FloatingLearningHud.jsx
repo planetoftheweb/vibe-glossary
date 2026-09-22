@@ -281,23 +281,43 @@ function ScorePopup({ score, level, learningProgress, popupAbove, onClose, onOpe
           <ChevronRight size={16} className="text-zinc-400" aria-hidden="true" />
         </button>
 
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={onOpenDetails}
-            className="min-h-[48px] rounded-xl bg-zinc-900 px-3 text-sm font-extrabold text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
-          >
-            Full score plan
-          </button>
-          <button
-            type="button"
-            onClick={onOpenProof}
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-zinc-200 px-3 text-sm font-extrabold text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-          >
-            <ShieldCheck size={16} aria-hidden="true" />
-            {classGoal.met ? 'Class proof ready' : `${classGoal.remaining} to class goal`}
-          </button>
-        </div>
+        {classGoal.met ? (
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={onOpenProof}
+              className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-extrabold text-white shadow transition-colors hover:bg-emerald-500"
+            >
+              <ShieldCheck size={16} aria-hidden="true" />
+              Get class proof link
+            </button>
+            <button
+              type="button"
+              onClick={onOpenDetails}
+              className="min-h-[44px] w-full rounded-xl border border-zinc-200 px-3 text-sm font-extrabold text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              Full score plan
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={onOpenDetails}
+              className="min-h-[48px] rounded-xl bg-zinc-900 px-3 text-sm font-extrabold text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+            >
+              Full score plan
+            </button>
+            <button
+              type="button"
+              onClick={onOpenProof}
+              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-zinc-200 px-3 text-sm font-extrabold text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              <ShieldCheck size={16} aria-hidden="true" />
+              {classGoal.remaining} to class goal
+            </button>
+          </div>
+        )}
       </div>
     </PopupShell>
   );

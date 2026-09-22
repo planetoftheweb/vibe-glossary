@@ -41,9 +41,9 @@ export default function BuildTopicView({
   const summary = topic.summary || topic.definition;
 
   return (
-    <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
+    <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4">
+      <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4 min-w-0">
         <div className="min-w-0 flex-1">
           <div className="flex items-center flex-wrap gap-2 lg:gap-2.5 mb-2 lg:mb-3">
             <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${cc.dot}`} />
@@ -76,7 +76,7 @@ export default function BuildTopicView({
               className="ml-1"
             />
           </div>
-          <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
+          <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white break-words">
             {topic.title}
           </h1>
         </div>
@@ -119,13 +119,13 @@ export default function BuildTopicView({
 
       {/* Vibe tip */}
       {topic.vibeTip && (
-        <div className={`mb-6 lg:mb-8 flex items-start gap-3 px-4 py-3 lg:px-5 lg:py-4 rounded-xl border ${cc.border} ${cc.bg}`}>
+        <div className={`mb-6 lg:mb-8 flex items-start gap-3 px-4 py-3 lg:px-5 lg:py-4 rounded-xl border min-w-0 ${cc.border} ${cc.bg}`}>
           <Lightbulb size={20} className={`shrink-0 mt-0.5 ${cc.accent}`} />
-          <div>
+          <div className="min-w-0">
             <p className={`text-xs lg:text-sm font-bold uppercase tracking-wider ${cc.text} mb-1`}>
               Vibe tip
             </p>
-            <p className="text-base lg:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed">
+            <p className="text-base lg:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed break-words">
               {topic.vibeTip}
             </p>
           </div>
@@ -138,7 +138,7 @@ export default function BuildTopicView({
           <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
             Compare
           </p>
-          <p className="text-base lg:text-lg italic text-zinc-600 dark:text-zinc-300 leading-relaxed">
+          <p className="text-base lg:text-lg italic text-zinc-600 dark:text-zinc-300 leading-relaxed break-words">
             {topic.comparison}
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function BuildTopicView({
           <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
             Remember
           </p>
-          <p className="text-base lg:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed">
+          <p className="text-base lg:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed break-words">
             {topic.mnemonic}
           </p>
         </div>
@@ -169,7 +169,7 @@ export default function BuildTopicView({
                   <button
                     type="button"
                     onClick={() => onSelectTopic(sib.id)}
-                    className={`flex w-full min-h-[44px] items-center py-2 text-left text-base lg:text-lg font-medium ${cc.text} hover:opacity-80`}
+                    className={`flex w-full min-h-[44px] min-w-0 items-center py-2 text-left text-base lg:text-lg font-medium break-words ${cc.text} hover:opacity-80`}
                   >
                     {sib.title}
                   </button>

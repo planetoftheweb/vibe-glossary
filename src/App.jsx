@@ -797,12 +797,12 @@ export default function App() {
 
           {/* Info & Prompt Panel, always visible on desktop, toggled on mobile */}
           {infoOpen && (
-            <div data-tour="definition-panel" className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto z-10 flex-col shrink-0 w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
-              <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full">
+            <div data-tour="definition-panel" className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
+              <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
 
                 {/* Definition Header */}
-                <div className="flex items-start justify-between mb-4 lg:mb-5">
-                  <div>
+                <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center flex-wrap gap-2 lg:gap-2.5 mb-2 lg:mb-3">
                       <div className={`w-2.5 lg:w-3.5 h-2.5 lg:h-3.5 rounded-full ${activeCat.dot}`} />
                       <span className={`text-xs lg:text-base font-bold uppercase tracking-wider ${activeCat.accent}`}>
@@ -831,7 +831,7 @@ export default function App() {
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
-                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white">
+                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white break-words">
                       {currentData.title}
                     </h1>
                   </div>

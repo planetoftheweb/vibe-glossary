@@ -681,7 +681,7 @@ export default function App() {
           authState={authState}
           syncStatus={cloudSync.status}
           onOpenProof={() => { setProofSnapshot(null); setShowProof(true); }}
-          showLearningControls={false}
+          showLearningControls={true}
         />
       )}
 

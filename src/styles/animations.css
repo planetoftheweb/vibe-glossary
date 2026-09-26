@@ -4656,6 +4656,19 @@
   min-height: 0;
 }
 
+
+/* Phone tab mode: only one pane is visible. Let the active pane fill the
+   split host and scroll so short content does not leave a dead black void
+   under the definition, and HUD clearance stays inside the scroller. */
+@media (max-width: 767.98px) {
+  .vg-pane-def,
+  .vg-pane-preview {
+    flex: 1 1 auto;
+    max-height: none;
+    min-height: 0;
+  }
+}
+
 /* From md up: both panes stay visible and stack vertically.
    Keep the definition short so the live demo stays on screen. */
 @media (min-width: 768px) {
@@ -4688,8 +4701,10 @@
   }
 }
 
-/* Extra-short landscape (iPad landscape body ~650px): favor the demo. */
-@container vg-split (max-height: 700px) {
+/* Extra-short landscape (iPad landscape body ~650px): favor the demo.
+   Require tablet+ width so phone tab mode is not capped at 28% height
+   (that left a giant empty void under Definition while Live Preview stayed hidden). */
+@container vg-split (min-width: 768px) and (max-height: 700px) {
   .vg-pane-def {
     max-height: 28%;
   }

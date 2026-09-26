@@ -8,6 +8,7 @@
   #root {
     width: 100%;
     height: 100%;
+    height: 100dvh;
     overflow: clip;
     overscroll-behavior: none;
     background-color: #ffffff;
@@ -4593,3 +4594,211 @@
 [data-theme='light'] .virtual-list-lab__metrics { border-color: #d4d4d8; background: rgb(244 244 245 / 0.62); }
 [data-theme='light'] .virtual-list-lab__metrics dl > div { border-color: #d4d4d8; }
 [data-theme='light'] .virtual-list-lab__metrics dt { color: #52525b; }
+
+
+/* === VibeGlossary iPad / tablet shell helpers === */
+/* Dynamic viewport height: 100vh fallback, then 100dvh so iPad Safari
+   chrome does not cover the footer / floating pager. */
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+.app-shell-header {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.app-shell-footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Clearance for the fixed Learning HUD + home indicator. */
+:root {
+  --vg-hud-clearance: calc(6.75rem + env(safe-area-inset-bottom, 0px));
+  --vg-panel-width: 40%;
+}
+
+.vg-scroll-clearance {
+  padding-bottom: var(--vg-hud-clearance);
+}
+
+/* Size container so side-by-side only turns on when BOTH width and height fit. */
+.vg-split-host {
+  container-type: size;
+  container-name: vg-split;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vg-split {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vg-pane-def,
+.vg-pane-preview {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* From md up: both panes stay visible and stack vertically.
+   Keep the definition short so the live demo stays on screen. */
+@media (min-width: 768px) {
+  .vg-pane-def {
+    flex: 0 1 auto;
+    max-height: 34%;
+  }
+
+  .vg-pane-preview {
+    flex: 1 1 auto;
+    min-height: 300px;
+  }
+
+  /* Studio stage mins are desktop-first; shrink them in the stacked tablet shell. */
+  .vg-pane-preview .pattern-studio .vg-studio__stage {
+    min-height: 280px;
+  }
+
+  .vg-pane-preview .pattern-studio__canvas {
+    min-height: 220px;
+    padding-bottom: 4.5rem;
+  }
+
+  .vg-pane-preview .pattern-studio-scroll {
+    padding-bottom: calc(24px + var(--vg-hud-clearance));
+  }
+
+  .vg-pane-preview .pattern-studio__demo {
+    padding-bottom: 1rem;
+  }
+}
+
+/* Extra-short landscape (iPad landscape body ~650px): favor the demo. */
+@container vg-split (max-height: 700px) {
+  .vg-pane-def {
+    max-height: 28%;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__stage {
+    min-height: 240px;
+  }
+
+  .vg-pane-preview .pattern-studio__canvas {
+    min-height: 200px;
+  }
+
+  /* Put the live stage above the Try-this note and option chrome so
+     "Open Right Sheet" stays on screen in short stacked tablet layouts. */
+  .vg-pane-preview .pattern-studio.vg-studio {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__hero {
+    order: 0;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__workbench {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__note {
+    order: 2;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__stage {
+    order: 1;
+  }
+
+  .vg-pane-preview .pattern-studio .vg-studio__controls {
+    order: 2;
+  }
+}
+
+/* Side-by-side only when the split host is wide AND tall enough.
+   1180x820 iPad landscape falls back to stacked; 1366x1024 goes side-by-side. */
+@container vg-split (min-width: 1200px) and (min-height: 700px) {
+  .vg-split {
+    flex-direction: row;
+  }
+
+  .vg-pane-def {
+    flex: 0 0 auto;
+    width: var(--vg-panel-width, 40%);
+    min-width: 320px;
+    max-width: 60%;
+    max-height: none;
+    height: 100%;
+  }
+
+  .vg-pane-preview {
+    flex: 1 1 auto;
+    min-width: 280px;
+    min-height: 0;
+  }
+
+  .vg-resize-handle {
+    display: flex !important;
+  }
+
+  .vg-side-by-side-only {
+    display: flex !important;
+  }
+
+  /* Restore full studio stage height in true desktop side-by-side. */
+  .vg-pane-preview .pattern-studio .vg-studio__stage {
+    min-height: 560px;
+  }
+
+  .vg-pane-preview .pattern-studio__canvas {
+    min-height: 330px;
+    padding-bottom: 0;
+  }
+
+  .vg-pane-preview .pattern-studio__demo {
+    padding-bottom: 0;
+  }
+}
+
+/* Glossary title: scale down instead of mid-word breaks. */
+.vg-glossary-title {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Fixed Learning HUD respects the home indicator / notch. */
+.vg-learning-hud[data-dock='bottom'] {
+  bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.vg-learning-hud[data-dock='top'] {
+  top: calc(5.75rem + env(safe-area-inset-top, 0px));
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.vg-learning-hud-hidden-tab {
+  bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  padding-right: env(safe-area-inset-right, 0px);
+}

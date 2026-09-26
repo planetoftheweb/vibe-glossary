@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  future: {
+    // Only emit :hover rules when the device can hover with a fine pointer.
+    hoverOnlyWhenSupported: true,
+  },
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {

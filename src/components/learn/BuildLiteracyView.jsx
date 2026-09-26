@@ -41,7 +41,6 @@ export default function BuildLiteracyView({
   onCopyPrompt,
   panelWidth = 44,
   setPanelWidth,
-  isDesktop = true,
   infoOpen = true,
   setInfoOpen,
   showProgressionNav = true,
@@ -130,11 +129,11 @@ export default function BuildLiteracyView({
   return (
     <>
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
-      {/* Mobile view toggle */}
-      <div className="lg:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
+      {/* Phone-only view toggle. Tablets show both panes stacked. */}
+      <div className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
         <button
           onClick={() => setMobileView('info')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
             mobileView === 'info'
               ? `${cc.text} ${cc.bg} border-b-2 ${cc.border}`
               : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
@@ -145,7 +144,7 @@ export default function BuildLiteracyView({
         </button>
         <button
           onClick={() => setMobileView('preview')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
             mobileView === 'preview'
               ? `${cc.text} ${cc.bg} border-b-2 ${cc.border}`
               : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
@@ -156,14 +155,14 @@ export default function BuildLiteracyView({
         </button>
       </div>
 
-      {/* Two-pane body */}
-      <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+      {/* Two-pane body: CSS container query drives side-by-side vs stacked */}
+      <div className="vg-split-host" style={{ '--vg-panel-width': `${panelWidth}%` }}>
+      <div ref={containerRef} className="vg-split">
         {/* Left: topic info, hidden when docked on desktop */}
         {infoOpen && (
           <div
             data-tour="definition-panel"
-            className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}
-            style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}
+            className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}
           >
             {topic ? (
               <BuildTopicView
@@ -200,7 +199,7 @@ export default function BuildLiteracyView({
             role="separator"
             aria-orientation="vertical"
             aria-label="Resize panels"
-            className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
+            className="vg-resize-handle hidden w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
           >
             <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
           </div>
@@ -208,14 +207,14 @@ export default function BuildLiteracyView({
 
         {/* Right: interactive teaching studio */}
         <div
-          className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}
+          className={`vg-pane-preview vg-scroll-clearance ${mobileView === 'preview' ? 'flex' : 'hidden'} md:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}
         >
           <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${cc.gradient} opacity-[0.05] blur-3xl pointer-events-none`} />
           <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${cc.gradient} opacity-[0.04] blur-3xl pointer-events-none`} />
 
           {/* Floating reopen button when the left panel is docked */}
           {!infoOpen && setInfoOpen && (
-            <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
+            <div className="vg-side-by-side-only hidden absolute top-4 left-4 z-30 gap-2">
               <button
                 onClick={() => setInfoOpen(true)}
                 className="group relative flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:bg-white dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
@@ -233,6 +232,7 @@ export default function BuildLiteracyView({
               : (topic && <TalkToAiCard topic={topic} categoryColors={cc} onCopy={onCopyPrompt} />)}
           </div>
         </div>
+      </div>
       </div>
       </div>
       {checkpointModal}

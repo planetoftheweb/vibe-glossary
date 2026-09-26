@@ -245,7 +245,7 @@ describe('#33 header topic pill shows a real word', () => {
     expect(label.className).toMatch(/min-w-0/);
     expect(label.className).toMatch(/max-w-full/);
     expect(label.className).not.toMatch(/min-content/);
-    expect(label.className).toMatch(/hidden lg:inline-block/);
+    expect(label.className).toMatch(/hidden xl:inline-block/);
   });
 
   it('does not cover What\'s New / VibeScore: left cluster still shrinks, right cluster does not', () => {
@@ -391,7 +391,7 @@ describe('#47 topic pill does not share pixels with search', () => {
     expect(topicLabel.className).not.toMatch(/\btruncate\b/);
 
     const left = screen.getByTestId('nav-left-cluster');
-    expect(left.className).toMatch(/flex-wrap/);
+    expect(left.className).toMatch(/flex-nowrap/);
     expect(left.className).toMatch(/min-w-0/);
     expect(left.className).toMatch(/overflow-visible/);
     expect(left.className).not.toMatch(/overflow-hidden/);

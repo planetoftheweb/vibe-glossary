@@ -76,7 +76,7 @@ export default function BuildTopicView({
               className="ml-1"
             />
           </div>
-          <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white break-words">
+          <h1 className="vg-glossary-title text-[clamp(1.75rem,2.4vw+1rem,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
             {topic.title}
           </h1>
         </div>

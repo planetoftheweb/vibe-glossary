@@ -13,6 +13,7 @@ describe('document scroll shell regression', () => {
 
     expect(rootRule, 'shared html, body, and #root rule').not.toBeNull();
     expect(rootRule[1]).toMatch(/height:\s*100%/);
+    expect(rootRule[1]).toMatch(/height:\s*100dvh/);
     expect(rootRule[1]).toMatch(/overflow:\s*clip/);
     expect(rootRule[1]).toMatch(/overscroll-behavior:\s*none/);
     expect(rootRule[1]).toMatch(/background(?:-color)?:\s*#ffffff/);

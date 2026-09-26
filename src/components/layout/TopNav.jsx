@@ -286,8 +286,8 @@ function MainMenu({
         </div>
       </div>
 
-      {/* STATS section, collapsible, hidden on lg+ where the Progress pill covers it */}
-      <div className="lg:hidden border-t border-zinc-100 dark:border-zinc-800">
+      {/* STATS section, collapsible, hidden on xl+ where the Progress pill covers it */}
+      <div className="xl:hidden border-t border-zinc-100 dark:border-zinc-800">
         <button
           onClick={toggleStats}
           className="w-full flex items-center gap-2 px-4 pt-3 pb-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
@@ -710,20 +710,20 @@ export default function TopNav({
   }, [searchInputRef]);
 
   return (
-    <header className="relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50">
+    <header className="app-shell-header relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>
       <div className="relative flex items-center justify-between gap-2 px-3 sm:px-4 md:px-6 min-h-20">
         {/* Left: Logo + pills. min-w-0 flex-1 keeps this cluster from covering Whats New / VibeScore. Do not overflow-hidden this ancestor: category dropdowns are absolute and would clip. Titles wrap on spaces (DESIGN.md). min-h-20 grows with a wrapped label so the panes below stay visible (#43). */}
-        <div data-testid="nav-left-cluster" className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4 min-w-0 flex-1 overflow-visible pr-2">
+        <div data-testid="nav-left-cluster" className="flex flex-nowrap items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0 flex-1 overflow-visible pr-2">
           <button
             onClick={onGetStarted}
             className="group relative flex items-center gap-2 lg:gap-3 font-bold tracking-tight text-zinc-900 dark:text-white shrink-0"
             aria-label="VibeGlossary, welcome screen"
           >
             <img src="/logo.png" alt="" className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl object-cover" />
-            <span className="hidden lg:inline text-xl lg:text-2xl">VibeGlossary</span>
+            <span className="hidden xl:inline text-xl xl:text-2xl">VibeGlossary</span>
             <HoverTip text="Welcome screen" />
           </button>
 
@@ -733,38 +733,38 @@ export default function TopNav({
               onClick={() => setSiteSection('glossary')}
               aria-label="UI Glossary"
               aria-current={siteSection === 'glossary' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] xl:min-w-0 px-2.5 xl:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'glossary'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
-              <BookOpen size={20} className="shrink-0 lg:hidden" aria-hidden />
-              <span className="hidden lg:inline">UI Glossary</span>
+              <BookOpen size={20} className="shrink-0 xl:hidden" aria-hidden />
+              <span className="hidden xl:inline">UI Glossary</span>
             </button>
             <button
               type="button"
               onClick={() => setSiteSection('build')}
               aria-label="Build literacy"
               aria-current={siteSection === 'build' ? 'page' : undefined}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] lg:min-w-0 px-2.5 lg:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] xl:min-w-0 px-2.5 xl:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'build'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
-              <BookText size={20} className="shrink-0 lg:hidden" aria-hidden />
-              <span className="hidden lg:inline">Build literacy</span>
+              <BookText size={20} className="shrink-0 xl:hidden" aria-hidden />
+              <span className="hidden xl:inline">Build literacy</span>
             </button>
           </div>
 
           {siteSection === 'glossary' && (
-          <div className="hidden md:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
+          <div className="hidden lg:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
           )}
 
           {/* Category */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-0">
+          <div className="hidden lg:block min-w-0">
             <PillDropdown
               icon={
                 <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
@@ -773,7 +773,7 @@ export default function TopNav({
                 </span>
               }
               label={activeCat?.name || 'Overlays'}
-              labelFrom="lg"
+              labelFrom="xl"
               labelMaxClass="min-w-0 max-w-full"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
@@ -806,10 +806,11 @@ export default function TopNav({
 
           {/* Component */}
           {siteSection === 'glossary' && (
-          <div className="hidden md:block min-w-0">
+          <div className="hidden lg:block min-w-0">
             <PillDropdown
               icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
               label={activeItemData?.name || 'Modal'}
+              labelFrom="xl"
               isOpen={openDropdown === 'component'}
               onToggle={() => setOpenDropdown(openDropdown === 'component' ? null : 'component')}
               onClose={() => setOpenDropdown(null)}
@@ -837,12 +838,12 @@ export default function TopNav({
 
           {/* Build literacy: divider before the two pills */}
           {siteSection === 'build' && (
-            <div className="hidden md:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
+            <div className="hidden lg:flex h-7 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
           )}
 
           {/* Build literacy: Cluster pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-0">
+            <div className="hidden lg:block min-w-0">
               <PillDropdown
                 icon={
                   <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
@@ -851,7 +852,7 @@ export default function TopNav({
                   </span>
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
-                labelFrom="lg"
+                labelFrom="xl"
                 labelMaxClass="min-w-0 max-w-full"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
@@ -886,10 +887,11 @@ export default function TopNav({
 
           {/* Build literacy: Topic pill */}
           {siteSection === 'build' && (
-            <div className="hidden md:block min-w-0">
+            <div className="hidden lg:block min-w-0">
               <PillDropdown
                 icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
                 label={activeBuildTopicData?.title || 'Pick a topic'}
+                labelFrom="xl"
                 isOpen={openDropdown === 'build-topic'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-topic' ? null : 'build-topic')}
                 onClose={() => setOpenDropdown(null)}
@@ -1052,8 +1054,8 @@ export default function TopNav({
             <Search size={20} />
           </button>
 
-          {/* What's New, sparkles pill with unseen dot (main menu covers < sm) */}
-          <div className="hidden sm:block">
+          {/* What's New: xl+ only so tablet headers stay one row */}
+          <div className="hidden xl:block">
             <WhatsNewMenu
               isOpen={openDropdown === 'whatsnew'}
               onToggle={() => setOpenDropdown(openDropdown === 'whatsnew' ? null : 'whatsnew')}
@@ -1064,7 +1066,7 @@ export default function TopNav({
 
           {/* VibeScore pill, opens the breakdown modal */}
           {showLearningControls && explore?.score && onOpenScoreBreakdown && (
-            <div data-tour="vibe-score" className="hidden md:block">
+            <div data-tour="vibe-score" className="hidden xl:block">
               <VibeScorePill
                 score={explore.score}
                 level={explore.level}
@@ -1076,7 +1078,7 @@ export default function TopNav({
           )}
 
           {/* Your Progress pill between search and hamburger */}
-          {showLearningControls && <div className="hidden md:block min-w-0">
+          {showLearningControls && <div className="hidden xl:block min-w-0">
             <PillDropdown
               icon={
                 <div className="relative w-7 h-7 shrink-0">

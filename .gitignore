@@ -34,3 +34,8 @@ lerna-debug.log*
 
 # Vite
 *.local
+
+# Local scratch / agent artifacts
+tmp/
+.gstack/
+.qa-results/

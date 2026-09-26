@@ -34,7 +34,6 @@ describe('BuildLiteracyView learning checkpoints', () => {
     learningProgress: { count: 5, total: 5, checkpointReady: true },
     panelWidth: 40,
     setPanelWidth: vi.fn(),
-    isDesktop: true,
     infoOpen: true,
     setInfoOpen: vi.fn(),
   };

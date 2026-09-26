@@ -17,13 +17,17 @@ describe('Definition pane overflow (#78)', () => {
     expect(build).toMatch(/min-w-0 max-w-full/);
   });
 
-  it('wraps long titles and body copy instead of clipping them', () => {
+  it('scales glossary titles instead of mid-word breaks', () => {
     const app = src('src/App.jsx');
     const topic = src('src/components/learn/BuildTopicView.jsx');
     const panel = src('src/components/ui/DefinitionPanel.jsx');
+    const css = src('src/styles/animations.css');
 
-    expect(app).toMatch(/<h1 className="[^"]*break-words/);
-    expect(topic).toMatch(/<h1 className="[^"]*break-words/);
+    expect(app).toMatch(/<h1 className="[^"]*vg-glossary-title/);
+    expect(topic).toMatch(/<h1 className="[^"]*vg-glossary-title/);
+    expect(app).not.toMatch(/<h1 className="[^"]*break-words/);
+    expect(topic).not.toMatch(/<h1 className="[^"]*break-words/);
+    expect(css).toMatch(/\.vg-glossary-title\s*\{[^}]*hyphens:\s*auto/);
     expect(panel).toContain('break-words');
     expect(topic).toMatch(/mnemonic[\s\S]*break-words/);
   });

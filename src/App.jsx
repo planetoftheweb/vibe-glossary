@@ -106,9 +106,6 @@ export default function App() {
     const saved = localStorage.getItem('vg-panel-width');
     return saved ? Number(saved) : 40; // percent
   });
-  const [isDesktop, setIsDesktop] = useState(() =>
-    typeof window !== 'undefined' && window.innerWidth >= 1024
-  );
   const { containerRef, onResizeStart: handleResizeStart } = usePanelResize(setPanelWidth);
   const [showTour, setShowTour] = useState(false);
   const [tourForceMenu, setTourForceMenu] = useState(false);
@@ -118,13 +115,6 @@ export default function App() {
     openScoreBreakdown: (open) => setShowScoreBreakdown(open),
     openMenu: (open) => setTourForceMenu(open),
   }), []);
-
-  // Keep isDesktop reactive so inline panel width is removed below lg breakpoint.
-  useEffect(() => {
-    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Apply dark mode class and persist choice
   useEffect(() => {
@@ -584,7 +574,7 @@ export default function App() {
   return (
     <div
       data-theme={darkMode ? 'dark' : 'light'}
-      className={`flex flex-col h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}
+      className={`app-shell flex flex-col w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}
     >
       {showWelcome && (
         <WelcomeScreen
@@ -764,19 +754,22 @@ export default function App() {
             onSkipLearningCheckpoint={() => learning.skipCheckpoint('build')}
             panelWidth={panelWidth}
             setPanelWidth={setPanelWidth}
-            isDesktop={isDesktop}
             infoOpen={infoOpen}
             setInfoOpen={setInfoOpen}
             showProgressionNav={false}
           />
         ) : (
-        <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div
+          className="vg-split-host"
+          style={{ '--vg-panel-width': `${panelWidth}%` }}
+        >
+        <div ref={containerRef} className="vg-split">
 
-          {/* Mobile view toggle */}
-          <div className="lg:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+          {/* Phone-only view toggle. Tablets show both panes stacked. */}
+          <div className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
             <button
               onClick={() => setMobileView('info')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
                 mobileView === 'info'
                   ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
                   : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
@@ -787,7 +780,7 @@ export default function App() {
             </button>
             <button
               onClick={() => setMobileView('preview')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-base font-semibold transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
                 mobileView === 'preview'
                   ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
                   : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
@@ -798,9 +791,9 @@ export default function App() {
             </button>
           </div>
 
-          {/* Info & Prompt Panel, always visible on desktop, toggled on mobile */}
+          {/* Info & Prompt Panel: phone tabs below md, stacked on tablet, side-by-side via CSS container query */}
           {infoOpen && (
-            <div data-tour="definition-panel" className={`${mobileView === 'info' ? 'flex' : 'hidden'} lg:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`} style={{ minWidth: 0, ...(isDesktop ? { width: `${panelWidth}%` } : {}) }}>
+            <div data-tour="definition-panel" className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
 
                 {/* Definition Header */}
@@ -834,14 +827,14 @@ export default function App() {
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
-                    <h1 className="text-[clamp(2.5rem,3.75vw,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white break-words">
+                    <h1 className="vg-glossary-title text-[clamp(1.75rem,2.4vw+1rem,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white">
                       {currentData.title}
                     </h1>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => setInfoOpen(false)}
-                      className="group relative hidden lg:flex items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      className="vg-side-by-side-only group relative hidden items-center justify-center min-w-[44px] min-h-[44px] p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                       aria-label="Close panel"
                     >
                       <PanelLeftClose size={16} />
@@ -896,20 +889,20 @@ export default function App() {
               role="separator"
               aria-orientation="vertical"
               aria-label="Resize panels"
-              className="hidden lg:flex w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
+              className="vg-resize-handle hidden w-1.5 hover:w-2.5 items-center justify-center cursor-col-resize bg-transparent hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-all group/resize shrink-0 z-20"
             >
               <GripVertical size={14} className="text-transparent group-hover/resize:text-zinc-500 dark:group-hover/resize:text-zinc-400 transition-colors" />
             </div>
           )}
 
           {/* Main Content, Live Preview */}
-          <main className={`${mobileView === 'preview' ? 'flex' : 'hidden'} lg:flex flex-1 relative overflow-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}>
+          <main className={`vg-pane-preview vg-scroll-clearance ${mobileView === 'preview' ? 'flex' : 'hidden'} md:flex flex-1 relative overflow-y-auto overflow-x-hidden flex-col bg-zinc-50 dark:bg-zinc-900`}>
             {/* Subtle color glow */}
             <div className={`absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.04] blur-3xl pointer-events-none transition-all duration-700`} />
             <div className={`absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-br ${navAccentColors.gradient} opacity-[0.03] blur-3xl pointer-events-none transition-all duration-700`} />
 
-            {/* Floating controls, desktop only */}
-            <div className="hidden lg:flex absolute top-4 left-4 z-30 gap-2">
+            {/* Floating controls, side-by-side only */}
+            <div className="vg-side-by-side-only hidden absolute top-4 left-4 z-30 gap-2">
               {!infoOpen && (
                 <button
                   onClick={() => setInfoOpen(true)}
@@ -965,6 +958,7 @@ export default function App() {
               )}
             </div>
           </main>
+        </div>
         </div>
         )}
 

@@ -476,7 +476,7 @@ export default function FloatingLearningHud({
       <button
         type="button"
         onClick={() => setMode('minimized')}
-        className="fixed bottom-20 right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        className="vg-learning-hud-hidden-tab fixed right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         aria-label="Show learning HUD"
       >
         <Maximize2 size={16} className="text-indigo-300" aria-hidden="true" />
@@ -486,9 +486,9 @@ export default function FloatingLearningHud({
   }
 
   const positionClass = hudState.dock === 'top'
-    ? 'left-1/2 top-[5.75rem] -translate-x-1/2'
+    ? 'left-1/2 -translate-x-1/2'
     : hudState.dock === 'bottom'
-      ? 'bottom-[4.25rem] left-1/2 -translate-x-1/2'
+      ? 'left-1/2 -translate-x-1/2'
       : '';
 
   return (
@@ -497,7 +497,7 @@ export default function FloatingLearningHud({
       style={rootPosition}
       data-dock={hudState.dock}
       data-mode={hudState.mode}
-      className={`pointer-events-none fixed z-[140] ${positionClass}`}
+      className={`vg-learning-hud pointer-events-none fixed z-[140] ${positionClass}`}
       aria-label="Learning HUD"
     >
       {hudState.mode === 'minimized' ? (
@@ -591,7 +591,7 @@ export default function FloatingLearningHud({
                       type="button"
                       role="menuitem"
                       onClick={() => setDock(id)}
-                      className="flex min-h-[42px] w-full items-center gap-2 rounded-lg px-3 text-left text-sm font-bold text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                      className="flex min-h-[44px] w-full items-center gap-2 rounded-lg px-3 text-left text-sm font-bold text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
                     >
                       <Icon size={16} aria-hidden="true" />
                       {label}

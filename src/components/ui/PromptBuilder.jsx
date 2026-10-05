@@ -122,14 +122,24 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
   }
 
   const handleCopy = () => {
-    navigator.clipboard?.writeText(promptText).catch(() => {
+    const legacyCopy = () => {
       const ta = document.createElement('textarea');
       ta.value = promptText;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-    });
+    };
+    // Optional chaining short-circuits the whole chain, so without the explicit
+    // branch the fallback never ran when `navigator.clipboard` was undefined
+    // (http dev, iframes without clipboard-write) — "Copied!" was shown and
+    // onCopy credited +2 pts for a copy that never happened.
+    const pending = navigator.clipboard?.writeText(promptText);
+    if (pending) {
+      pending.catch(legacyCopy);
+    } else {
+      legacyCopy();
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     onCopy?.();

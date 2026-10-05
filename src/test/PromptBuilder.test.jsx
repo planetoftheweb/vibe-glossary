@@ -288,4 +288,34 @@ describe('PromptBuilder', () => {
     await user.click(screen.getByRole('button', { name: 'Copy to clipboard (markdown)' }));
     expect(onCopy).toHaveBeenCalledTimes(1);
   });
+
+  // Regression: optional chaining short-circuited the whole chain, so when
+  // navigator.clipboard was undefined (http dev, iframes without clipboard-write)
+  // the execCommand fallback never ran — the UI showed "Copied!" and credited
+  // +2 pts for a copy that silently did nothing.
+  it('falls back to execCommand("copy") when navigator.clipboard is undefined', async () => {
+    const user = userEvent.setup();
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
+    const execCommandMock = vi.fn().mockReturnValue(true);
+    document.execCommand = execCommandMock;
+    const onCopy = vi.fn();
+    try {
+      render(<PromptBuilder {...defaultProps} onCopy={onCopy} />);
+      await user.click(screen.getByRole('button', { name: 'Copy to clipboard (markdown)' }));
+      expect(execCommandMock).toHaveBeenCalledWith('copy');
+      expect(onCopy).toHaveBeenCalledTimes(1);
+    } finally {
+      delete document.execCommand;
+      Object.defineProperty(navigator, 'clipboard', {
+        value: originalClipboard,
+        configurable: true,
+        writable: true,
+      });
+    }
+  });
 });

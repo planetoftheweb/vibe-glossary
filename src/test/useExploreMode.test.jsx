@@ -240,3 +240,40 @@ describe('resetProgress', () => {
     expect(result.current.progress.percent).toBe(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Mastery is sticky — trimming the attempts log must not drop the +10 pts
+// ---------------------------------------------------------------------------
+describe('mastery decay', () => {
+  it('keeps tiers[id].mastered true after the attempts log is trimmed to the cap', () => {
+    const { result } = renderHook(() => useExploreMode());
+    const topicId = ALL_IDS[0];
+
+    // Two session+variant passes earn mastery.
+    act(() => {
+      result.current.recordQuizAttempt(topicId, {
+        valid: true, correct: true, sessionId: 'A', variantId: 'v1',
+      });
+    });
+    act(() => {
+      result.current.recordQuizAttempt(topicId, {
+        valid: true, correct: true, sessionId: 'B', variantId: 'v2',
+      });
+    });
+    expect(result.current.tiers[topicId].mastered).toBe(true);
+
+    // The user keeps drilling in the same session+variant. The cap is 20, so
+    // 25 more pushes the original mastery pair out of the window.
+    act(() => {
+      for (let i = 0; i < 25; i += 1) {
+        result.current.recordQuizAttempt(topicId, {
+          valid: true, correct: true, sessionId: 'C', variantId: 'v3',
+        });
+      }
+    });
+
+    // Attempts have been trimmed but mastery (and its 10 pts) survive.
+    expect(result.current.attempts[topicId].length).toBeLessThanOrEqual(20);
+    expect(result.current.tiers[topicId].mastered).toBe(true);
+  });
+});

@@ -32,11 +32,34 @@ describe('LearningCheckpointModal', () => {
     });
   });
 
-  it.each(['Escape', 'ArrowRight'])('skips when %s is pressed', (key) => {
+  it.each(['Escape', 'ArrowRight'])('skips when %s is pressed on the review phase', (key) => {
     const onSkip = renderModal();
 
     fireEvent.keyDown(window, { key });
 
+    expect(onSkip).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores ArrowRight during the quiz phase so correct answers survive', async () => {
+    const onSkip = vi.fn();
+    render(
+      <LearningCheckpointModal
+        items={items}
+        questionPool={items}
+        onSkip={onSkip}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /start the five-question quiz/i }));
+    await waitFor(() => {
+      expect(screen.getByText(/which description matches modal/i)).toBeInTheDocument();
+    });
+
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    expect(onSkip).not.toHaveBeenCalled();
+
+    // Escape still bails out from the quiz as the documented universal skip.
+    fireEvent.keyDown(window, { key: 'Escape' });
     expect(onSkip).toHaveBeenCalledTimes(1);
   });
 });

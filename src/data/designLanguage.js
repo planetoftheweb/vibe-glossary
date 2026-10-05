@@ -637,5 +637,68 @@ export const DESIGN_LANGUAGE_CLUSTER = {
         'Buttons say the outcome. Errors say what happened and what to do. Confirmations say what specifically got done.',
       relatedGlossaryIds: ['toast', 'alert'],
     },
+    {
+      id: 'so-what-charts',
+      title: 'So what: every chart says its takeaway',
+      summary:
+        'A chart without a takeaway is decoration. Put a one-line sentence above every chart that tells the reader what it means, who the dashboard is for, and what decision the data supports. Then label the axes, include units, and cut any chart that does not earn its space.',
+      details:
+        'The most common dashboard mistake is asking the AI for "three chart types" and getting a bar chart, a line chart, and a pie chart that look busy but say nothing. A viewer opens the page, sees the shapes, and still has no idea what to do. The fix is to write the takeaway first, before the chart.\n\nA takeaway is one plain sentence above the chart: "Revenue grew 12% month over month" or "Three of five tasks are overdue." It tells the reader what the chart means so they do not have to decode it themselves. If you cannot write that sentence, the chart probably should not exist.\n\nEvery chart also needs labeled axes with units. A y-axis that says "Amount" could be dollars, users, or seconds. A bar labeled "Q3" could be any year. Specificity is free and ambiguity is expensive. And always ask who this dashboard is for and what decision it supports. A manager checking weekly progress needs different charts than an engineer debugging a spike. Design for the decision, not the decoration.\n\nFinally, cut charts that repeat each other or do not support a decision. Two charts showing the same trend in different shapes waste space and attention. The rule is simple: if the takeaway sentence for chart B is the same as chart A, delete chart B.',
+      comparison:
+        'Chart with a takeaway = answers a question. Chart without a takeaway = decoration that makes the dashboard look busy. Dashboard for a decision = useful. Dashboard for a meeting slide = furniture.',
+      vibeTip:
+        'Tell your AI "above every chart, write one sentence that says the takeaway. Label both axes with units. Cut any chart whose takeaway duplicates another." You stop getting decoration and start getting answers.',
+      talkToAi: {
+        starter:
+          'I am building a dashboard for [project or audience]. Before generating charts, ask me: 1) who will look at this dashboard and how often, 2) what decisions they need to make from it, 3) the data sources available, 4) whether this is a monitoring dashboard (watched daily) or a report (read once). Then propose only the charts that support those decisions, write a one-line takeaway above each, label the axes with units, and push back on any chart I request that duplicates another or does not earn its space.',
+        example:
+          'Build a student progress dashboard for an instructor reviewing weekly homework. Three metrics: average score trend (line chart), assignment completion rate (bar chart), and overdue count (stat card). Each chart has a one-sentence takeaway above it. Axes show week numbers and percentages. Do not add a pie chart just to have a third shape.',
+      },
+      mnemonic:
+        'Say the so-what before the chart.',
+      relatedGlossaryIds: ['barchart', 'linechart', 'statcard'],
+    },
+    {
+      id: 'feedback-loops',
+      title: 'Feedback loops: every action answers back',
+      summary:
+        'Every click, tap, save, and error should produce a visible response. Clicks animate. Saves confirm. Errors explain what went wrong and what to do next. A silent interface feels broken even when it works.',
+      details:
+        'A feedback loop is the response the interface gives after every user action. Press a button and it depresses. Submit a form and a confirmation appears. Trigger an error and the message names the problem and the fix. Without these responses, people click again, wonder if the app froze, and lose trust in something that is actually working.\n\nThree layers cover most of the territory. Immediate feedback (under 100 milliseconds) is the visual change on the control itself: a button press animation, a toggle snapping to its new state, a field border turning red on invalid input. This layer tells the user "I heard you." Confirmation feedback (under a few seconds) is the result of the action: a toast saying "Changes saved," a new row appearing in the list, a redirect to the next page. This layer tells the user "it worked." Error feedback is the explanation when something fails: what went wrong, in plain words, and what the user can try ("Could not save. Check your connection and try again"). This layer tells the user "here is the way forward."\n\nThe gap most products have is the middle: actions that succeed silently. The user clicks Save, the network call finishes, but nothing visible changes. Did it save? Did it fail? They click again, maybe twice. Silent success is almost as bad as silent failure because it forces the user to guess. A small toast, a brief check animation, or even a disabled-then-re-enabled button is enough to close the loop.',
+      comparison:
+        'Immediate feedback = the control responds to the touch. Confirmation = the result is visible. Error feedback = the problem and the fix are named. Silent interface = broken trust, even when the code works.',
+      vibeTip:
+        'Add to your prompt: "every user action must produce visible feedback. Clicks animate, saves confirm with a toast, errors explain the problem and the next step. No silent success and no silent failure."',
+      talkToAi: {
+        starter:
+          'Audit feedback loops in [page or app]. Before changing code, ask me: 1) which actions are interactive (buttons, forms, toggles, drags), 2) which currently succeed or fail silently, 3) whether we have a toast or notification system already. Then list every action that lacks visible feedback, propose the right response for each (immediate animation, confirmation toast, inline error), and implement them. Flag any place where an error message says "something went wrong" without naming the problem or the fix.',
+        example:
+          'Audit the settings page in my React app. The Save button does not change during the network call and shows no confirmation on success. The delete action has no confirmation step. Add a loading state to Save ("Saving..."), a success toast ("Settings saved"), an error toast that names the problem, and a confirmation dialog before delete.',
+      },
+      mnemonic:
+        'No silent clicks.',
+      relatedGlossaryIds: ['toast', 'button', 'spinner', 'alert'],
+    },
+    {
+      id: 'progressive-disclosure',
+      title: 'Progressive disclosure: show the next step, tuck the rest',
+      summary:
+        'Show only what matters right now. Tuck advanced options, secondary details, and later steps behind a deliberate reveal (a click, a scroll, an expansion). New users see a calm starting point. Power users find depth when they need it.',
+      details:
+        'Progressive disclosure is the practice of revealing information and controls only when they become relevant. A search page starts with one input. Filters appear after the first search. Sort options appear after results load. Advanced settings hide behind an expander. The user never faces the full complexity at once, but nothing is removed; it is one interaction away when they are ready.\n\nThe principle solves two problems at the same time. For new users, it reduces the "wall of options" that makes a product feel overwhelming on first contact. For returning users, it keeps the common path fast by tucking rare options out of the way. A settings page with three visible fields and an "Advanced" expander serves both audiences better than the same page with thirty fields in one scroll.\n\nThree common patterns carry most of the weight. Expanders and accordions tuck longer content behind a heading ("Show details"). Steppers and wizards break a long form into stages so users think about one stage at a time. Overflow menus and "More" buttons hide secondary actions that matter only occasionally. The common thread is that every hidden element has a clear, labeled door the user can open when they are ready, and the door tells them what is behind it before they open it.\n\nThe mistake is hiding too aggressively. If the next step is unclear, or the label does not promise what is inside, progressive disclosure becomes a scavenger hunt. The rule: the current step and its one obvious next action are always visible. Everything else can wait.',
+      comparison:
+        'Full complexity up front = wall of options, newcomers stall. Progressive disclosure = calm start, depth on demand. Hidden with no door = scavenger hunt, which is worse than showing everything.',
+      vibeTip:
+        'Tell your AI "show the primary action and one obvious next step. Tuck advanced options behind a labeled expander. Never hide something without a clear label that says what is behind it."',
+      talkToAi: {
+        starter:
+          'Apply progressive disclosure to [page or feature]. Before changing the layout, ask me: 1) who uses this (new users, power users, or both), 2) which controls are used on every visit vs occasionally, 3) the current pain (too many options at once, or important things are too hidden). Then propose which elements stay visible, which tuck behind an expander or a step, and what the reveal label says. Make sure every hidden group has a clear door and the next step is always obvious.',
+        example:
+          'Simplify the report builder page. Show the data source picker and one date range field on load. Tuck "Columns," "Filters," and "Sort" behind labeled expanders that open with a click. Add a "Generate report" button that is always visible. Move "Export options" and "Schedule" into a secondary menu. Label every door clearly so users know what they will find.',
+      },
+      mnemonic:
+        'Next step out, the rest tucked in.',
+      relatedGlossaryIds: ['accordion', 'stepper', 'disclosure', 'tabs'],
+    },
   ],
 };

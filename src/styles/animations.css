@@ -2588,6 +2588,294 @@
 .motion-pattern-studio .vg-studio__stage { min-height: 560px; }
 .motion-pattern-studio__scene { padding: 0; }
 
+/* So-what charts scene ------------------------------------------------- */
+.concept-visual--so-what-charts {
+  gap: 16px;
+  align-items: center;
+}
+
+.so-what__toggle {
+  display: flex;
+  justify-content: center;
+}
+
+.so-what__toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 999px;
+  padding: 8px 18px;
+  background: rgb(255 255 255 / 0.06);
+  color: #d4d0dc;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.so-what__toggle-btn:hover { background: rgb(255 255 255 / 0.1); }
+.so-what__toggle-btn.is-active { border-color: var(--studio-accent); color: var(--studio-accent); }
+
+.so-what__card {
+  width: min(100%, 420px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 18px;
+  padding: 18px;
+  background: rgb(15 12 24 / 0.88);
+  backdrop-filter: blur(12px);
+}
+
+.so-what__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #858091;
+}
+
+.so-what__takeaway {
+  overflow: hidden;
+  max-height: 0;
+  margin-bottom: 0;
+  color: var(--studio-accent);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  opacity: 0;
+  transition: max-height 280ms ease, opacity 200ms ease, margin-bottom 280ms ease;
+}
+
+.so-what__takeaway.is-visible {
+  max-height: 60px;
+  margin-bottom: 12px;
+  opacity: 1;
+}
+
+.so-what__chart {
+  display: flex;
+  gap: 6px;
+}
+
+.so-what__y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 22px;
+  color: #6b6578;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.so-what__bars {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+}
+
+.so-what__bar-col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.so-what__bar {
+  width: 100%;
+  height: var(--bar-pct);
+  min-height: 6px;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(to top, var(--studio-accent), var(--studio-accent-two, var(--studio-accent)));
+  box-shadow: 0 0 14px rgb(var(--studio-accent-rgb) / 0.2);
+  transition: height 300ms ease;
+}
+
+.so-what__axis-label {
+  margin-top: 8px;
+  color: #6b6578;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.so-what__caption {
+  width: min(100%, 420px);
+  color: #a8a2b3;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Feedback loops scene ------------------------------------------------- */
+.concept-visual--feedback-loops {
+  gap: 18px;
+  align-items: center;
+}
+
+.feedback-scene__flow {
+  display: grid;
+  width: min(100%, 520px);
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback-scene__layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 14px;
+  padding: 12px 8px;
+  background: rgb(11 8 17 / 0.82);
+  text-align: center;
+  backdrop-filter: blur(10px);
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.feedback-scene__layer strong { color: white; font-size: 14px; }
+.feedback-scene__layer svg { color: var(--studio-accent); }
+
+.feedback-scene__layer.is-active {
+  border-color: var(--studio-accent);
+  box-shadow: 0 0 20px rgb(var(--studio-accent-rgb) / 0.18);
+}
+
+.feedback-scene__demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 280px);
+}
+
+.feedback-scene__save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 24px;
+  background: var(--studio-accent);
+  color: #0a0a0a;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 180ms ease, transform 120ms ease, opacity 180ms ease;
+}
+
+.feedback-scene__save-btn:hover:not(:disabled) { opacity: 0.88; }
+.feedback-scene__save-btn:active:not(:disabled) { transform: scale(0.97); }
+
+.feedback-scene__save-btn.is-saving {
+  background: rgb(255 255 255 / 0.12);
+  color: var(--studio-accent);
+  cursor: wait;
+  animation: feedback-pulse 1s ease-in-out infinite;
+}
+
+.feedback-scene__save-btn.is-saved {
+  background: var(--studio-safe, #34d399);
+  color: #0a0a0a;
+}
+
+.feedback-scene__save-btn:disabled { cursor: default; }
+
+@keyframes feedback-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Progressive disclosure scene ----------------------------------------- */
+.concept-visual--progressive-disclosure {
+  gap: 16px;
+  align-items: center;
+}
+
+.disclosure-scene__panel {
+  width: min(100%, 380px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 18px;
+  padding: 18px;
+  background: rgb(15 12 24 / 0.88);
+  backdrop-filter: blur(12px);
+}
+
+.disclosure-scene__primary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.disclosure-scene__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.disclosure-scene__input {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgb(255 255 255 / 0.04);
+}
+
+.disclosure-scene__expander {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 14px;
+  border: 1px dashed rgb(255 255 255 / 0.15);
+  border-radius: 10px;
+  padding: 8px;
+  background: transparent;
+  color: #a8a2b3;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.disclosure-scene__expander:hover { color: var(--studio-accent); border-color: var(--studio-accent); }
+
+.disclosure-scene__advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+  transition: max-height 320ms ease, opacity 260ms ease, margin-top 320ms ease;
+}
+
+.disclosure-scene__advanced.is-open {
+  max-height: 300px;
+  margin-top: 14px;
+  opacity: 1;
+}
+
+.disclosure-scene__caption {
+  width: min(100%, 380px);
+  color: #a8a2b3;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
 /* Easing director's lab -------------------------------------------------
    One object, one journey, and equal-time footprints make the speed curve
    visible. This borrows the Build Literacy Motion Studio's stage grammar

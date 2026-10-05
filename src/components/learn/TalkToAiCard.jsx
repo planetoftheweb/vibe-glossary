@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import {
   ArrowRight,
+  BarChart3,
   BrainCircuit,
   Check,
+  ChevronDown,
+  MousePointerClick,
   Sparkles,
 } from 'lucide-react';
 import { getBuildStudioHeadline } from '../../data/buildStudioCopy';
@@ -147,6 +150,9 @@ export default function TalkToAiCard({ topic, categoryColors, onCopy }) {
 function ConceptScene({ topic, lens }) {
   if (topic?.id === 'spacing-scale') return <SpacingScene lens={lens} />;
   if (topic?.id === 'typography-scale') return <TypographyScene lens={lens} />;
+  if (topic?.id === 'so-what-charts') return <SoWhatChartsScene />;
+  if (topic?.id === 'feedback-loops') return <FeedbackLoopsScene />;
+  if (topic?.id === 'progressive-disclosure') return <ProgressiveDisclosureScene />;
   if (topic?.clusterId === 'design-language') return <TokenScene topic={topic} lens={lens} />;
 
   const profile = CLUSTER_SCENES[topic?.clusterId] || {
@@ -265,6 +271,186 @@ function SystemScene({ topic, lens, profile }) {
           {lens === 'stress' ? 'Weak link exposed' : lens === 'apply' ? 'Ready for your project' : 'System mapped'}
         </div>
       </article>
+    </div>
+  );
+}
+
+function SoWhatChartsScene() {
+  const [showTakeaway, setShowTakeaway] = useState(true);
+  const bars = [
+    { label: 'Mon', value: 40 },
+    { label: 'Tue', value: 65 },
+    { label: 'Wed', value: 55 },
+    { label: 'Thu', value: 80 },
+    { label: 'Fri', value: 72 },
+  ];
+  const maxVal = Math.max(...bars.map((b) => b.value));
+  return (
+    <div className="concept-visual concept-visual--so-what-charts">
+      <div className="concept-visual__ghost" aria-hidden="true">SO WHAT</div>
+      <div className="so-what__toggle">
+        <button
+          type="button"
+          className={`so-what__toggle-btn min-h-[44px] ${showTakeaway ? 'is-active' : ''}`}
+          aria-pressed={showTakeaway}
+          onClick={() => setShowTakeaway(!showTakeaway)}
+        >
+          {showTakeaway ? 'Takeaway visible' : 'Show takeaway'}
+        </button>
+      </div>
+      <article className="so-what__card">
+        <div className="so-what__header">
+          <BarChart3 size={16} aria-hidden="true" />
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Tasks completed per day</span>
+        </div>
+        <div className={`so-what__takeaway ${showTakeaway ? 'is-visible' : ''}`} aria-live="polite">
+          Thursday had the most completions this week (80).
+        </div>
+        <div className="so-what__chart" role="img" aria-label="Bar chart showing tasks completed Monday through Friday">
+          <div className="so-what__y-axis">
+            <span>80</span>
+            <span>40</span>
+            <span>0</span>
+          </div>
+          <div className="so-what__bars">
+            {bars.map((bar) => (
+              <div key={bar.label} className="so-what__bar-col">
+                <div
+                  className="so-what__bar"
+                  style={{ '--bar-pct': `${(bar.value / maxVal) * 100}%` }}
+                  aria-label={`${bar.label}: ${bar.value}`}
+                />
+                <span className="text-xs text-zinc-400">{bar.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="so-what__axis-label">Tasks completed (count)</p>
+      </article>
+      <p className="so-what__caption">
+        {showTakeaway
+          ? 'The takeaway tells the reader what the chart means before they decode the bars.'
+          : 'Without the takeaway, the reader has to figure out why this chart exists.'}
+      </p>
+    </div>
+  );
+}
+
+function FeedbackLoopsScene() {
+  const [step, setStep] = useState('idle');
+  const handleClick = () => {
+    if (step !== 'idle') return;
+    setStep('saving');
+    setTimeout(() => {
+      setStep('saved');
+      setTimeout(() => setStep('idle'), 1800);
+    }, 1200);
+  };
+  return (
+    <div className="concept-visual concept-visual--feedback-loops">
+      <div className="concept-visual__ghost" aria-hidden="true">FEEDBACK</div>
+      <div className="feedback-scene__flow">
+        <div className={`feedback-scene__layer ${step !== 'idle' ? 'is-active' : ''}`}>
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">01</span>
+          <MousePointerClick size={20} aria-hidden="true" />
+          <strong>Click</strong>
+          <p className="text-sm text-zinc-400">The control responds</p>
+        </div>
+        <ArrowRight size={16} className="text-zinc-600 shrink-0" aria-hidden="true" />
+        <div className={`feedback-scene__layer ${step === 'saving' ? 'is-active' : ''}`}>
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">02</span>
+          <Sparkles size={20} aria-hidden="true" />
+          <strong>Confirm</strong>
+          <p className="text-sm text-zinc-400">The result is visible</p>
+        </div>
+        <ArrowRight size={16} className="text-zinc-600 shrink-0" aria-hidden="true" />
+        <div className={`feedback-scene__layer ${step === 'saved' ? 'is-active' : ''}`}>
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">03</span>
+          <Check size={20} aria-hidden="true" />
+          <strong>Done</strong>
+          <p className="text-sm text-zinc-400">Trust stays intact</p>
+        </div>
+      </div>
+      <div className="feedback-scene__demo">
+        <button
+          type="button"
+          className={`feedback-scene__save-btn min-h-[44px] ${step === 'saving' ? 'is-saving' : ''} ${step === 'saved' ? 'is-saved' : ''}`}
+          onClick={handleClick}
+          disabled={step !== 'idle'}
+          aria-live="polite"
+        >
+          {step === 'idle' && 'Save changes'}
+          {step === 'saving' && 'Saving\u2026'}
+          {step === 'saved' && (
+            <><Check size={16} aria-hidden="true" /> Saved</>
+          )}
+        </button>
+        <p className="text-sm text-zinc-400 mt-3 text-center">
+          {step === 'idle' && 'Press the button to see every feedback layer.'}
+          {step === 'saving' && 'The button tells you the action is in progress.'}
+          {step === 'saved' && 'The confirmation closes the loop. No guessing.'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ProgressiveDisclosureScene() {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="concept-visual concept-visual--progressive-disclosure">
+      <div className="concept-visual__ghost" aria-hidden="true">DISCLOSE</div>
+      <article className="disclosure-scene__panel">
+        <div className="disclosure-scene__primary">
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Always visible</span>
+          <div className="disclosure-scene__field">
+            <label className="text-sm font-semibold text-zinc-200">Search</label>
+            <div className="disclosure-scene__input" role="presentation">
+              <span className="text-sm text-zinc-500">Find a report...</span>
+            </div>
+          </div>
+          <div className="disclosure-scene__field">
+            <label className="text-sm font-semibold text-zinc-200">Date range</label>
+            <div className="disclosure-scene__input" role="presentation">
+              <span className="text-sm text-zinc-500">Last 7 days</span>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="disclosure-scene__expander min-h-[44px]"
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <ChevronDown size={16} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+          {expanded ? 'Hide advanced options' : 'Advanced options'}
+        </button>
+        <div className={`disclosure-scene__advanced ${expanded ? 'is-open' : ''}`} aria-hidden={!expanded}>
+          <div className="disclosure-scene__field">
+            <label className="text-sm font-semibold text-zinc-200">Columns</label>
+            <div className="disclosure-scene__input" role="presentation">
+              <span className="text-sm text-zinc-500">All columns</span>
+            </div>
+          </div>
+          <div className="disclosure-scene__field">
+            <label className="text-sm font-semibold text-zinc-200">Sort by</label>
+            <div className="disclosure-scene__input" role="presentation">
+              <span className="text-sm text-zinc-500">Date (newest first)</span>
+            </div>
+          </div>
+          <div className="disclosure-scene__field">
+            <label className="text-sm font-semibold text-zinc-200">Export format</label>
+            <div className="disclosure-scene__input" role="presentation">
+              <span className="text-sm text-zinc-500">CSV</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <p className="disclosure-scene__caption">
+        {expanded
+          ? 'Power users find the depth they need, one click away.'
+          : 'New users see a calm start. The next step is clear.'}
+      </p>
     </div>
   );
 }

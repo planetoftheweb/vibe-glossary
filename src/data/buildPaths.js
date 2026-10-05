@@ -54,7 +54,7 @@ export const BUILD_PATHS = [
     name: 'Design language',
     tagline: 'Tokens, scales, states, variants, contrast, brand: the words designers use',
     description:
-      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes and semantic roles, component states, variants and sizes, density, elevation, radius, motion, motion tokens, particle fields, scroll-linked motion, reduced motion, infinite scroll vs pages, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, brand constraints, plus the DESIGN.md contract, rule strengths, page grammar, empty states, loading stability, iconography, and microcopy. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
+      'Design systems vs component libraries, tokens, typography and spacing scales, color palettes and semantic roles, component states, variants and sizes, density, elevation, radius, motion, motion tokens, particle fields, scroll-linked motion, reduced motion, infinite scroll vs pages, fidelity, atomic design, breakpoints, WCAG contrast, readable type, the design contract, CTA hierarchy, brand constraints, plus the DESIGN.md contract, rule strengths, page grammar, empty states, loading stability, affordance, iconography, microcopy, chart takeaways, feedback loops, and progressive disclosure. The vocabulary that lets you ask an AI for "the secondary button at md size with WCAG AA contrast" instead of "make it look better".',
     quiz: [
       {
         q: 'A named value like "color.primary.500" or "space.4" that stands in for a hard-coded value is a...',

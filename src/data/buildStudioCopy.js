@@ -62,6 +62,9 @@ export const BUILD_STUDIO_HEADLINES = {
   affordance: 'Make every control look like the action it performs.',
   iconography: 'Make every icon speak the same visual language.',
   'microcopy-tone': 'Write buttons that name results and errors that name fixes.',
+  'so-what-charts': 'Say the takeaway before the chart earns the space.',
+  'feedback-loops': 'Make every action answer back so nothing feels silent.',
+  'progressive-disclosure': 'Show the next step and tuck the rest until it matters.',
 
   // Product and planning
   mvp: 'Build the smallest thing that can answer the biggest question.',

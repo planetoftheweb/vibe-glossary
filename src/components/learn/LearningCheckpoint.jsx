@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -51,11 +51,13 @@ export default function LearningCheckpoint({
   onRecordAttempt,
   onQuizComplete,
   onComplete,
+  onPhaseChange,
   onSkip,
   categoryColors = {},
   className = '',
 }) {
   const [phase, setPhase] = useState('review');
+  useEffect(() => { onPhaseChange?.(phase); }, [phase, onPhaseChange]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [wrongIds, setWrongIds] = useState(new Set());
   const [correctPicked, setCorrectPicked] = useState(false);

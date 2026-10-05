@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, X } from 'lucide-react';
 import LearningCheckpoint from './LearningCheckpoint';
@@ -12,6 +12,10 @@ function focusableElements(root) {
 
 export default function LearningCheckpointModal({ onSkip, ...checkpointProps }) {
   const dialogRef = useRef(null);
+  const [phase, setPhase] = useState('review');
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+  const handlePhaseChange = useCallback((next) => setPhase(next), []);
 
   useEffect(() => {
     const previouslyFocused = document.activeElement;
@@ -23,7 +27,13 @@ export default function LearningCheckpointModal({ onSkip, ...checkpointProps }) 
     });
 
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape' || event.key === 'ArrowRight') {
+      // ArrowRight on the review phase skips. During the quiz, the "Next
+      // question" button also carries a → icon, so treating ArrowRight as a
+      // skip there discarded any correctly-answered questions still buffered
+      // for the end-of-quiz commit. Keep Escape as the universal bail-out.
+      const isSkipKey = event.key === 'Escape' ||
+        (event.key === 'ArrowRight' && phaseRef.current === 'review');
+      if (isSkipKey) {
         event.preventDefault();
         event.stopPropagation();
         onSkip?.();
@@ -87,6 +97,7 @@ export default function LearningCheckpointModal({ onSkip, ...checkpointProps }) 
           <LearningCheckpoint
             {...checkpointProps}
             onSkip={onSkip}
+            onPhaseChange={handlePhaseChange}
             className="!mb-0 !border-white/10 !bg-white/[0.035] !shadow-none"
           />
           <p className="mt-3 flex items-center justify-center gap-2 text-center text-xs font-semibold text-zinc-500 sm:hidden">

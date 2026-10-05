@@ -219,13 +219,24 @@ export default function useExploreMode(categories = CATEGORIES, buildClusters = 
   // Tiers are the per-topic "did we pass / master / retain" verdict, derived
   // from the attempts log. We compute them once and let the score pill,
   // breakdown modal, and tier badges all read from the same source of truth.
-  const tiers = useMemo(() => buildTiers({
-    topicIds: [...allIds, ...buildIds],
-    visitedSet: visited,
-    copiedSet: copied,
-    attemptsByTopic: attempts,
-    retentionByTopic: retention,
-  }), [allIds, buildIds, visited, copied, attempts, retention]);
+  const tiers = useMemo(() => {
+    const next = buildTiers({
+      topicIds: [...allIds, ...buildIds],
+      visitedSet: visited,
+      copiedSet: copied,
+      attemptsByTopic: attempts,
+      retentionByTopic: retention,
+    });
+    // Mastery is sticky. `attempts` is capped at ATTEMPTS_PER_TOPIC_CAP, so a
+    // user who keeps drilling a topic can lose the two session+variant
+    // attempts that proved mastery. Treat anything already in the mastered
+    // set (auto-promoted below, restored from cloud, or imported) as mastered
+    // so the +10 pts don't silently decay.
+    for (const id of mastered) {
+      if (next[id]) next[id].mastered = true;
+    }
+    return next;
+  }, [allIds, buildIds, visited, copied, attempts, retention, mastered]);
 
   // Path bonuses are the existing badge sets. We split them by which universe
   // they belong to so the breakdown can report each correctly. A badge id

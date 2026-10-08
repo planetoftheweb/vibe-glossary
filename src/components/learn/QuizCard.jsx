@@ -113,6 +113,9 @@ export default function QuizCard({
   const [wrongIds, setWrongIds] = useState(new Set());
   const [showHint, setShowHint] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
+  // Frozen at the moment the correct answer is picked so the post-correct
+  // banner shows the same verdict that got logged, not a fresh recompute.
+  const [recorded, setRecorded] = useState(null);
   const startedAtRef = useRef(Date.now());
   const tickRef = useRef(null);
   const reportedRef = useRef(false);
@@ -122,6 +125,7 @@ export default function QuizCard({
     setWrongIds(new Set());
     setShowHint(false);
     setElapsedMs(0);
+    setRecorded(null);
     reportedRef.current = false;
     startedAtRef.current = Date.now();
   }, [correctId, variant.id]);
@@ -146,6 +150,7 @@ export default function QuizCard({
         now: Date.now(),
       });
       reportedRef.current = true;
+      setRecorded({ valid: integrity.valid, reasons: integrity.reasons, timeMs });
       onAttemptComplete?.({
         valid: integrity.valid,
         correct: true,
@@ -262,11 +267,8 @@ export default function QuizCard({
         )}
 
         {/* Post-correct integrity message */}
-        {picked?.correct && reportedRef.current && (
-          <PostCorrectBanner
-            timeMs={Date.now() - startedAtRef.current}
-            cooldownLastTs={cooldownLastTs}
-          />
+        {picked?.correct && recorded && (
+          <PostCorrectBanner recorded={recorded} />
         )}
       </div>
     </div>
@@ -274,20 +276,15 @@ export default function QuizCard({
 }
 
 /**
- * Tiny banner that explains what just happened to the learner's score. We
- * recompute integrity here from the same inputs so the message in the card
- * always agrees with what got logged. Pure read; no state.
+ * Tiny banner that explains what just happened to the learner's score. Reads
+ * the verdict frozen at pick time so the message never disagrees with the
+ * attempt that got logged.
  */
-function PostCorrectBanner({ timeMs, cooldownLastTs }) {
-  const integrity = evaluateAttempt({
-    timePerQuestionMs: [timeMs],
-    cooldownLastTs,
-    now: Date.now(),
-  });
-  const isGood = integrity.valid;
+function PostCorrectBanner({ recorded }) {
+  const isGood = recorded.valid;
   const message = isGood
     ? 'Counted! Come back tomorrow in a fresh tab and pass it again to master this topic.'
-    : explainReasons(integrity.reasons);
+    : explainReasons(recorded.reasons);
 
   return (
     <div

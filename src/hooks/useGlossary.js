@@ -11,7 +11,7 @@ export function useGlossary() {
   const [glossary, setGlossary] = useState(_cache || GLOSSARY_DATA);
 
   useEffect(() => {
-    if (_cache) return;
+    if (_cache || !db) return;
     getDocs(collection(db, 'components'))
       .then(snapshot => {
         if (snapshot.empty) return; // Firestore not seeded yet, keep local data

@@ -13,8 +13,15 @@ const firebaseConfig = {
   measurementId:     import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+// Production builds are gated by assertFirebaseEnv, but tests and previews may
+// load this module without env values. Every getX(app) call throws when config
+// is incomplete, so guard init and let hooks fall back to their local data.
+const isConfigured = Boolean(firebaseConfig.projectId && firebaseConfig.apiKey);
+
+export const app = isConfigured ? initializeApp(firebaseConfig) : null;
+export const analytics = isConfigured && firebaseConfig.measurementId
+  ? getAnalytics(app)
+  : null;
+export const db = isConfigured ? getFirestore(app) : null;
+export const auth = isConfigured ? getAuth(app) : null;
+export const googleProvider = isConfigured ? new GoogleAuthProvider() : null;

@@ -14,7 +14,10 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+// getAnalytics() and getAuth() throw when the Firebase config is empty
+// (tests, dev without .env), so skip them there — production always has it.
+const hasConfig = Boolean(firebaseConfig.projectId && firebaseConfig.apiKey);
+export const analytics = hasConfig ? getAnalytics(app) : null;
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const auth = hasConfig ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();

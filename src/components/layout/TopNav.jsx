@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, cloneElement } from 'react';
+import ProgressRing from '../ui/ProgressRing';
 import HoverTip from '../ui/HoverTip';
 import {
   Search, ChevronDown, ChevronRight, X, Home,
@@ -74,7 +75,11 @@ function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
 const LABEL_FROM = {
   lg: { label: 'hidden lg:inline-block', tooltipHide: 'lg:hidden' },
   xl: { label: 'hidden xl:inline-block', tooltipHide: 'xl:hidden' },
+  // #87: cluster / category names wait for 2xl so the topic title never collides.
+  '2xl': { label: 'hidden 2xl:inline-block', tooltipHide: '2xl:hidden' },
 };
+
+const HEADER_TITLE_MAX = 24;
 
 function NavPillTooltip({ text, align = 'left', hideFrom, hidden }) {
   if (!text || hidden) return null;
@@ -83,7 +88,7 @@ function NavPillTooltip({ text, align = 'left', hideFrom, hidden }) {
   return (
     <span
       role="tooltip"
-      className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} whitespace-nowrap max-w-[min(20rem,calc(100vw-2rem))] truncate px-3 py-2 rounded-lg text-sm font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
+      className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} w-max max-w-[min(20rem,calc(100vw-2rem))] whitespace-normal px-3 py-2 rounded-lg text-base font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
     >
       {text}
     </span>
@@ -103,9 +108,14 @@ function PillDropdown({
   // 5.5rem keeps short labels like Easing from collapsing. max-w wraps
   // multi-word titles at spaces so the left cluster cannot cover What's New / VibeScore.
   labelMaxClass = 'min-w-0 max-w-full',
+  // #87: 'clamp' drops a long topic title (over HEADER_TITLE_MAX characters)
+  // from the header, since the page H1 already shows it, and keeps the full
+  // title in the hover / focus tip. Short titles (Easing, Modal / Dialog) stay.
+  labelFit,
 }) {
   const wrapRef = useRef(null);
   const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
+  const dropLabel = labelFit === 'clamp' && typeof label === 'string' && label.length > HEADER_TITLE_MAX;
   // Tooltip text: use label if provided, otherwise fall back to ariaLabel.
   const tooltipText = label || ariaLabel;
 
@@ -128,14 +138,14 @@ function PillDropdown({
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
-        className={`group relative ${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : `w-full flex items-center gap-2 min-w-0 px-3 py-2.5 ${labelFrom === 'lg' ? 'lg:gap-2 lg:px-4' : ''} xl:gap-2.5 xl:px-5 xl:py-3`} rounded-lg text-base md:text-lg font-semibold transition-colors ${
+        className={`group relative min-h-[44px] ${iconOnly ? 'flex items-center gap-1 px-3 py-2.5' : `w-full flex items-center gap-2 min-w-0 px-3 py-2.5 ${labelFrom === 'lg' ? 'lg:gap-2 lg:px-4' : ''} xl:gap-2.5 xl:px-5 xl:py-3`} rounded-lg text-base md:text-lg font-semibold transition-colors ${
           isOpen
             ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
             : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
         }`}
       >
         {icon}
-        {!iconOnly && labelBp && (
+        {!iconOnly && labelBp && !dropLabel && (
           <span className={`${labelBp.label} ${labelMaxClass} whitespace-normal break-keep leading-tight text-left align-middle`}>
             {label}
           </span>
@@ -143,7 +153,7 @@ function PillDropdown({
         <NavPillTooltip
           text={tooltipText}
           align={align}
-          hideFrom={iconOnly ? undefined : labelFrom}
+          hideFrom={iconOnly || dropLabel ? undefined : labelFrom}
           hidden={isOpen || !tooltipText}
         />
         {!iconOnly && (
@@ -308,29 +318,10 @@ function MainMenu({
           <div className="animate-fade-in">
             {/* Progress header, dual ring: outer = mastered, inner = visited */}
             <div className="px-4 pb-3 flex items-center gap-3">
-              <div className="relative w-14 h-14 shrink-0">
-                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                  {/* Outer ring, mastered (emerald) */}
-                  <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                    className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
-                  <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                    className="text-indigo-500" strokeWidth="1.5"
-                    strokeDasharray={`${progress.masteredPercent * 1.0367} 200`}
-                    strokeLinecap="round"
-                  />
-                  {/* Inner ring, visited (category accent) */}
-                  <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
-                    className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
-                  <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
-                    className={activeCatColors.accent} strokeWidth="2.5"
-                    strokeDasharray={`${progress.percent * 0.7854} 200`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-zinc-700 dark:text-zinc-200">
-                  {progress.visited}
-                </span>
-              </div>
+              <span className="inline-flex items-center gap-2 shrink-0">
+                <ProgressRing percent={progress.percent} masteredPercent={progress.masteredPercent} size={32} accentClass={activeCatColors.accent} trackClass="text-zinc-200 dark:text-zinc-800" />
+                <span className="font-display text-2xl font-bold tabular-nums text-zinc-700 dark:text-zinc-200">{progress.visited}</span>
+              </span>
               <div className="min-w-0">
                 <p className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">
                   Your Progress
@@ -723,7 +714,7 @@ export default function TopNav({
             aria-label="VibeGlossary, welcome screen"
           >
             <img src="/logo.png" alt="" className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl object-cover" />
-            <span className="hidden xl:inline text-xl xl:text-2xl">VibeGlossary</span>
+            <span className="hidden min-[1800px]:inline text-2xl">VibeGlossary</span>
             <HoverTip text="Welcome screen" />
           </button>
 
@@ -764,7 +755,7 @@ export default function TopNav({
 
           {/* Category */}
           {siteSection === 'glossary' && (
-          <div className="hidden lg:block min-w-0">
+          <div className="hidden lg:block shrink-0">
             <PillDropdown
               icon={
                 <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
@@ -773,7 +764,7 @@ export default function TopNav({
                 </span>
               }
               label={activeCat?.name || 'Overlays'}
-              labelFrom="xl"
+              labelFrom="2xl"
               labelMaxClass="min-w-0 max-w-full"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
@@ -806,10 +797,11 @@ export default function TopNav({
 
           {/* Component */}
           {siteSection === 'glossary' && (
-          <div className="hidden lg:block min-w-0">
+          <div className="hidden lg:block shrink-0">
             <PillDropdown
               icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
               label={activeItemData?.name || 'Modal'}
+              labelFit="clamp"
               labelFrom="xl"
               isOpen={openDropdown === 'component'}
               onToggle={() => setOpenDropdown(openDropdown === 'component' ? null : 'component')}
@@ -843,7 +835,7 @@ export default function TopNav({
 
           {/* Build literacy: Cluster pill */}
           {siteSection === 'build' && (
-            <div className="hidden lg:block min-w-0">
+            <div className="hidden lg:block shrink-0">
               <PillDropdown
                 icon={
                   <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
@@ -852,7 +844,7 @@ export default function TopNav({
                   </span>
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
-                labelFrom="xl"
+                labelFrom="2xl"
                 labelMaxClass="min-w-0 max-w-full"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}
@@ -887,10 +879,11 @@ export default function TopNav({
 
           {/* Build literacy: Topic pill */}
           {siteSection === 'build' && (
-            <div className="hidden lg:block min-w-0">
+            <div className="hidden lg:block shrink-0">
               <PillDropdown
                 icon={<List size={20} className="text-zinc-500 dark:text-zinc-400" />}
                 label={activeBuildTopicData?.title || 'Pick a topic'}
+                labelFit="clamp"
                 labelFrom="xl"
                 isOpen={openDropdown === 'build-topic'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-topic' ? null : 'build-topic')}
@@ -1081,17 +1074,7 @@ export default function TopNav({
           {showLearningControls && <div className="hidden xl:block min-w-0">
             <PillDropdown
               icon={
-                <div className="relative w-7 h-7 shrink-0">
-                  <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="4" />
-                    <circle
-                      cx="18" cy="18" r="15" fill="none" stroke="currentColor"
-                      className={progressRingColor} strokeWidth="4"
-                      strokeDasharray={`${activeProgress.percent * 0.94} 200`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
+                <ProgressRing percent={activeProgress.percent} size={24} accentClass={progressRingColor} trackClass="text-zinc-200 dark:text-zinc-800" />
               }
               iconOnly
               label="Progress"
@@ -1103,25 +1086,10 @@ export default function TopNav({
               width={320}
             >
               <div className="px-4 pt-3 pb-2 flex items-center gap-3">
-                <div className="relative w-14 h-14 shrink-0">
-                  <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="1.5" />
-                    <circle cx="18" cy="18" r="16.5" fill="none" stroke="currentColor"
-                      className="text-indigo-500" strokeWidth="1.5"
-                      strokeDasharray={`${activeProgress.masteredPercent * 1.0367} 200`}
-                      strokeLinecap="round"
-                    />
-                    <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="2.5" />
-                    <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor"
-                      className={progressRingColor} strokeWidth="2.5"
-                      strokeDasharray={`${activeProgress.percent * 0.7854} 200`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-zinc-700 dark:text-zinc-200">
-                    {activeProgress.visited}
-                  </span>
-                </div>
+                <span className="inline-flex items-center gap-2 shrink-0">
+                  <ProgressRing percent={activeProgress.percent} masteredPercent={activeProgress.masteredPercent} size={32} accentClass={progressRingColor} trackClass="text-zinc-200 dark:text-zinc-800" />
+                  <span className="font-display text-2xl font-bold tabular-nums text-zinc-700 dark:text-zinc-200">{activeProgress.visited}</span>
+                </span>
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">
                     {isBuildSection ? 'Build literacy progress' : 'UI glossary progress'}
@@ -1176,16 +1144,7 @@ export default function TopNav({
             >
               <MenuIcon size={16} className="text-zinc-600 dark:text-zinc-300" />
               <HoverTip text="Menu" align="right" hidden={openDropdown === 'menu'} />
-              <div className="md:hidden relative w-7 h-7 shrink-0">
-                <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-700" strokeWidth="4" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor"
-                    className={progressRingColor} strokeWidth="4"
-                    strokeDasharray={`${activeProgress.percent * 0.94} 200`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </div>
+              <ProgressRing className="md:hidden" percent={activeProgress.percent} size={24} accentClass={progressRingColor} />
             </button>
 
             {openDropdown === 'menu' && (

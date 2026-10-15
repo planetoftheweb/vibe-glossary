@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -84,6 +84,15 @@ export default function WebFoundationLesson({
     setResetNonce(0);
   }, [topic?.id]);
 
+  // Keep the current step visible when the rail scrolls on narrow screens.
+  const progressRef = useRef(null);
+  useEffect(() => {
+    const rail = progressRef.current;
+    const current = rail?.querySelector('[aria-current="step"]');
+    if (!rail || !current || rail.scrollWidth <= rail.clientWidth) return;
+    rail.scrollLeft = current.offsetLeft - (rail.clientWidth - current.offsetWidth) / 2;
+  }, [topic?.id]);
+
   if (!topic || !lesson) return null;
 
   const restart = () => {
@@ -124,7 +133,7 @@ export default function WebFoundationLesson({
         </nav>
       </header>
 
-      <div className="wf-progress" aria-label={`Lesson ${topicIndex + 1} of ${cluster.topics.length}`}>
+      <div ref={progressRef} className="wf-progress" aria-label={`Lesson ${topicIndex + 1} of ${cluster.topics.length}`}>
         {cluster.topics.map((candidate, index) => (
           <button
             key={candidate.id}

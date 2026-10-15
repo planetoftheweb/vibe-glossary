@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
   ArrowRight,
   BarChart3,
@@ -284,45 +284,48 @@ function SoWhatChartsScene() {
     { label: 'Thu', value: 80 },
     { label: 'Fri', value: 72 },
   ];
-  const maxVal = Math.max(...bars.map((b) => b.value));
+  // One fixed linear scale for bars and ticks so heights match the stated values.
+  const chartMax = 80;
+  const ticks = [80, 40, 0];
+  const pct = (value) => `${(value / chartMax) * 100}%`;
   return (
     <div className="concept-visual concept-visual--so-what-charts">
-      <div className="concept-visual__ghost" aria-hidden="true">SO WHAT</div>
       <div className="so-what__toggle">
         <button
           type="button"
-          className={`so-what__toggle-btn min-h-[44px] ${showTakeaway ? 'is-active' : ''}`}
+          className={`so-what__toggle-btn ${showTakeaway ? 'is-active' : ''}`}
           aria-pressed={showTakeaway}
           onClick={() => setShowTakeaway(!showTakeaway)}
         >
-          {showTakeaway ? 'Takeaway visible' : 'Show takeaway'}
+          {showTakeaway ? 'Hide takeaway' : 'Show takeaway'}
         </button>
       </div>
       <article className="so-what__card">
         <div className="so-what__header">
           <BarChart3 size={16} aria-hidden="true" />
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Tasks completed per day</span>
+          <span className="scene-label">Tasks per day</span>
         </div>
         <div className={`so-what__takeaway ${showTakeaway ? 'is-visible' : ''}`} aria-live="polite">
           Thursday had the most completions this week (80).
         </div>
-        <div className="so-what__chart" role="img" aria-label="Bar chart showing tasks completed Monday through Friday">
-          <div className="so-what__y-axis">
-            <span>80</span>
-            <span>40</span>
-            <span>0</span>
+        <div className="so-what__chart" role="img" aria-label="Bar chart of tasks completed: Monday 40, Tuesday 65, Wednesday 55, Thursday 80, Friday 72">
+          <div className="so-what__y-axis" aria-hidden="true">
+            {ticks.map((t) => (
+              <span key={t} className="so-what__tick" style={{ '--tick-pct': pct(t) }}>{t}</span>
+            ))}
           </div>
           <div className="so-what__bars">
             {bars.map((bar) => (
-              <div key={bar.label} className="so-what__bar-col">
-                <div
-                  className="so-what__bar"
-                  style={{ '--bar-pct': `${(bar.value / maxVal) * 100}%` }}
-                  aria-label={`${bar.label}: ${bar.value}`}
-                />
-                <span className="text-xs text-zinc-400">{bar.label}</span>
-              </div>
+              <div
+                key={bar.label}
+                className="so-what__bar"
+                data-value={bar.value}
+                style={{ '--bar-pct': pct(bar.value) }}
+              />
             ))}
+          </div>
+          <div className="so-what__day-labels" aria-hidden="true">
+            {bars.map((bar) => <span key={bar.label}>{bar.label}</span>)}
           </div>
         </div>
         <p className="so-what__axis-label">Tasks completed (count)</p>
@@ -346,35 +349,30 @@ function FeedbackLoopsScene() {
       setTimeout(() => setStep('idle'), 1800);
     }, 1200);
   };
+  const layers = [
+    { n: '01', Icon: MousePointerClick, title: 'Click', copy: 'The control responds', on: step !== 'idle' },
+    { n: '02', Icon: Sparkles, title: 'Confirm', copy: 'The result is visible', on: step === 'saving' },
+    { n: '03', Icon: Check, title: 'Done', copy: 'Trust stays intact', on: step === 'saved' },
+  ];
   return (
     <div className="concept-visual concept-visual--feedback-loops">
-      <div className="concept-visual__ghost" aria-hidden="true">FEEDBACK</div>
       <div className="feedback-scene__flow">
-        <div className={`feedback-scene__layer ${step !== 'idle' ? 'is-active' : ''}`}>
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">01</span>
-          <MousePointerClick size={20} aria-hidden="true" />
-          <strong>Click</strong>
-          <p className="text-sm text-zinc-400">The control responds</p>
-        </div>
-        <ArrowRight size={16} className="text-zinc-600 shrink-0" aria-hidden="true" />
-        <div className={`feedback-scene__layer ${step === 'saving' ? 'is-active' : ''}`}>
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">02</span>
-          <Sparkles size={20} aria-hidden="true" />
-          <strong>Confirm</strong>
-          <p className="text-sm text-zinc-400">The result is visible</p>
-        </div>
-        <ArrowRight size={16} className="text-zinc-600 shrink-0" aria-hidden="true" />
-        <div className={`feedback-scene__layer ${step === 'saved' ? 'is-active' : ''}`}>
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">03</span>
-          <Check size={20} aria-hidden="true" />
-          <strong>Done</strong>
-          <p className="text-sm text-zinc-400">Trust stays intact</p>
-        </div>
+        {layers.map(({ n, Icon, title, copy, on }, i) => (
+          <Fragment key={n}>
+            {i > 0 && <ArrowRight size={16} className="feedback-scene__arrow" aria-hidden="true" />}
+            <div className={`feedback-scene__layer ${on ? 'is-active' : ''}`}>
+              <span className="scene-label">{n}</span>
+              <Icon size={20} aria-hidden="true" />
+              <strong>{title}</strong>
+              <p>{copy}</p>
+            </div>
+          </Fragment>
+        ))}
       </div>
       <div className="feedback-scene__demo">
         <button
           type="button"
-          className={`feedback-scene__save-btn min-h-[44px] ${step === 'saving' ? 'is-saving' : ''} ${step === 'saved' ? 'is-saved' : ''}`}
+          className={`feedback-scene__save-btn ${step === 'saving' ? 'is-saving' : ''} ${step === 'saved' ? 'is-saved' : ''}`}
           onClick={handleClick}
           disabled={step !== 'idle'}
           aria-live="polite"
@@ -385,7 +383,7 @@ function FeedbackLoopsScene() {
             <><Check size={16} aria-hidden="true" /> Saved</>
           )}
         </button>
-        <p className="text-sm text-zinc-400 mt-3 text-center">
+        <p className="feedback-scene__helper">
           {step === 'idle' && 'Press the button to see every feedback layer.'}
           {step === 'saving' && 'The button tells you the action is in progress.'}
           {step === 'saved' && 'The confirmation closes the loop. No guessing.'}
@@ -395,55 +393,54 @@ function FeedbackLoopsScene() {
   );
 }
 
+const DISCLOSURE_PRIMARY = [
+  { id: 'search', label: 'Search', placeholder: 'Find a report...' },
+  { id: 'range', label: 'Date range', value: 'Last 7 days' },
+];
+const DISCLOSURE_ADVANCED = [
+  { id: 'columns', label: 'Columns', value: 'All columns' },
+  { id: 'sort', label: 'Sort by', value: 'Date (newest first)' },
+  { id: 'format', label: 'Export format', value: 'CSV' },
+];
+
+function DisclosureField({ id, label, placeholder, value, hidden }) {
+  const inputId = `disclosure-${id}`;
+  return (
+    <div className="disclosure-scene__field">
+      <label htmlFor={inputId}>{label}</label>
+      <input
+        id={inputId}
+        type="text"
+        className="disclosure-scene__input"
+        placeholder={placeholder}
+        defaultValue={value}
+        tabIndex={hidden ? -1 : undefined}
+      />
+    </div>
+  );
+}
+
 function ProgressiveDisclosureScene() {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className="concept-visual concept-visual--progressive-disclosure">
-      <div className="concept-visual__ghost" aria-hidden="true">DISCLOSE</div>
       <article className="disclosure-scene__panel">
         <div className="disclosure-scene__primary">
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Always visible</span>
-          <div className="disclosure-scene__field">
-            <label className="text-sm font-semibold text-zinc-200">Search</label>
-            <div className="disclosure-scene__input" role="presentation">
-              <span className="text-sm text-zinc-500">Find a report...</span>
-            </div>
-          </div>
-          <div className="disclosure-scene__field">
-            <label className="text-sm font-semibold text-zinc-200">Date range</label>
-            <div className="disclosure-scene__input" role="presentation">
-              <span className="text-sm text-zinc-500">Last 7 days</span>
-            </div>
-          </div>
+          <span className="scene-label">Always visible</span>
+          {DISCLOSURE_PRIMARY.map((f) => <DisclosureField key={f.id} {...f} />)}
         </div>
         <button
           type="button"
-          className="disclosure-scene__expander min-h-[44px]"
+          className="disclosure-scene__expander"
           aria-expanded={expanded}
+          aria-controls="disclosure-advanced"
           onClick={() => setExpanded(!expanded)}
         >
           <ChevronDown size={16} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
           {expanded ? 'Hide advanced options' : 'Advanced options'}
         </button>
-        <div className={`disclosure-scene__advanced ${expanded ? 'is-open' : ''}`} aria-hidden={!expanded}>
-          <div className="disclosure-scene__field">
-            <label className="text-sm font-semibold text-zinc-200">Columns</label>
-            <div className="disclosure-scene__input" role="presentation">
-              <span className="text-sm text-zinc-500">All columns</span>
-            </div>
-          </div>
-          <div className="disclosure-scene__field">
-            <label className="text-sm font-semibold text-zinc-200">Sort by</label>
-            <div className="disclosure-scene__input" role="presentation">
-              <span className="text-sm text-zinc-500">Date (newest first)</span>
-            </div>
-          </div>
-          <div className="disclosure-scene__field">
-            <label className="text-sm font-semibold text-zinc-200">Export format</label>
-            <div className="disclosure-scene__input" role="presentation">
-              <span className="text-sm text-zinc-500">CSV</span>
-            </div>
-          </div>
+        <div id="disclosure-advanced" className={`disclosure-scene__advanced ${expanded ? 'is-open' : ''}`} aria-hidden={!expanded}>
+          {DISCLOSURE_ADVANCED.map((f) => <DisclosureField key={f.id} {...f} hidden={!expanded} />)}
         </div>
       </article>
       <p className="disclosure-scene__caption">

@@ -9,9 +9,11 @@ const ROWS = [
   { id: 5, name: 'Eve Patel', role: 'Designer', status: 'Active', revenue: '$11,300' },
 ];
 
+// #61: the Data Display lesson uses its own blue accent; other states stay zinc.
+// The status word carries the meaning, so color is never the only cue.
 const STATUS_COLORS = {
-  Active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  Away: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  Active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+  Away: 'bg-zinc-100 text-zinc-700 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-600',
   Offline: 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
 };
 

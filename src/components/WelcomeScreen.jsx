@@ -368,7 +368,7 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
         <div className="relative flex-1 flex flex-col items-center justify-center text-center px-6 py-24">
           <div className="flex items-center gap-3 mb-5">
             <img src="/logo.png" alt="VibeGlossary" className="w-12 h-12 rounded-xl shadow-lg object-cover" />
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white drop-shadow-2xl">
+            <h1 className="text-[2.5rem] leading-[1.1] md:text-6xl font-black tracking-tight text-white drop-shadow-2xl">
               VibeGlossary
             </h1>
           </div>
@@ -443,7 +443,7 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
         <section data-scene="literacy" className="vg-reveal" data-reveal>
           <div className="mb-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-3">
-              <GraduationCap size={12} />
+              <GraduationCap size={14} />
               Build Literacy
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-white mb-2">Talk about building, not just buttons</h2>

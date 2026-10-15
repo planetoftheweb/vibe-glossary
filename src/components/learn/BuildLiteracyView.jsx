@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import useTitleClearance from '../../hooks/useTitleClearance';
 import { FileText, Sparkles, GripVertical, BookOpen } from 'lucide-react';
 import {
   BUILD_LITERACY_CLUSTERS,
@@ -110,6 +111,8 @@ export default function BuildLiteracyView({
   // Mirror the UI Glossary's drag-to-resize behavior. The hook owns its own
   // container ref so the math is relative to this view, not the App shell.
   const { containerRef, onResizeStart } = usePanelResize(setPanelWidth || (() => {}));
+  const defPaneRef = useRef(null);
+  useTitleClearance(defPaneRef, [activeTopicId, infoOpen, mobileView]);
 
   if (cluster?.id === 'web-foundations' && topic) {
     return (
@@ -161,6 +164,7 @@ export default function BuildLiteracyView({
         {/* Left: topic info, hidden when docked on desktop */}
         {infoOpen && (
           <div
+            ref={defPaneRef}
             data-tour="definition-panel"
             className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}
           >

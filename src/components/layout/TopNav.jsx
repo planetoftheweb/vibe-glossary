@@ -75,6 +75,8 @@ function Popover({ children, isOpen, onClose, align = 'left', width = 260 }) {
 const LABEL_FROM = {
   lg: { label: 'hidden lg:inline-block', tooltipHide: 'lg:hidden' },
   xl: { label: 'hidden xl:inline-block', tooltipHide: 'xl:hidden' },
+  // #87: cluster / category names wait for 2xl so the topic title never collides.
+  '2xl': { label: 'hidden 2xl:inline-block', tooltipHide: '2xl:hidden' },
 };
 
 const HEADER_TITLE_MAX = 24;
@@ -712,7 +714,7 @@ export default function TopNav({
             aria-label="VibeGlossary, welcome screen"
           >
             <img src="/logo.png" alt="" className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl object-cover" />
-            <span className="hidden 2xl:inline text-2xl">VibeGlossary</span>
+            <span className="hidden min-[1800px]:inline text-2xl">VibeGlossary</span>
             <HoverTip text="Welcome screen" />
           </button>
 
@@ -762,7 +764,7 @@ export default function TopNav({
                 </span>
               }
               label={activeCat?.name || 'Overlays'}
-              labelFrom="xl"
+              labelFrom="2xl"
               labelMaxClass="min-w-0 max-w-full"
               isOpen={openDropdown === 'category'}
               onToggle={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
@@ -842,7 +844,7 @@ export default function TopNav({
                   </span>
                 }
                 label={activeBuildCluster?.title || 'Web foundations'}
-                  labelFrom="xl"
+                labelFrom="2xl"
                 labelMaxClass="min-w-0 max-w-full"
                 isOpen={openDropdown === 'build-cluster'}
                 onToggle={() => setOpenDropdown(openDropdown === 'build-cluster' ? null : 'build-cluster')}

@@ -1857,7 +1857,7 @@
   border: 1px solid rgb(255 255 255 / 0.12);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.04);
-  color: #d5d1e1;
+  color: #d4d4d8;
   font-size: 16px;
   font-weight: 650;
   letter-spacing: 0;
@@ -2117,7 +2117,7 @@
   border: 1px solid rgb(255 255 255 / 0.12);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.04);
-  color: #d5d1e1;
+  color: #d4d4d8;
   font-size: 16px;
   font-weight: 650;
   letter-spacing: 0;
@@ -2142,8 +2142,8 @@
   overflow: auto;
   border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 12px;
-  background: rgb(8 6 15 / 0.72);
-  color: #e7e3ed;
+  background: rgb(9 9 11 / 0.72);
+  color: #f4f4f5;
   font-family: inherit;
   font-size: 16px;
   font-weight: 500;
@@ -5098,4 +5098,22 @@
 .vg-learning-hud-hidden-tab {
   bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* #100: the concept-studio prompt tabs and prompt box follow light mode too. */
+[data-theme='light'] .concept-studio__prompt-tab {
+  border-color: #e4e4e7;
+  background: #ffffff;
+  color: #3f3f46;
+}
+[data-theme='light'] .concept-studio__prompt-tab:hover { color: #18181b; }
+[data-theme='light'] .concept-studio__prompt-tab[aria-pressed='true'] {
+  border-color: var(--studio-accent);
+  background: rgb(var(--studio-accent-rgb) / 0.08);
+  color: #18181b;
+}
+[data-theme='light'] .concept-studio__prompt {
+  border-color: #e4e4e7;
+  background: #fafafa;
+  color: #18181b;
 }

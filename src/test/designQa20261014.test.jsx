@@ -72,3 +72,15 @@ describe('2026-10-14 design QA', () => {
     });
   });
 });
+
+describe('#87 header topic title', () => {
+  const src = readFileSync(resolve(__dirname, '../components/layout/TopNav.jsx'), 'utf8');
+  it('drops long topic titles from the header and keeps them in the tip', () => {
+    expect(src).toMatch(/const HEADER_TITLE_MAX = 24;/);
+    expect(src).toMatch(/dropLabel = labelFit === 'clamp'/);
+    expect((src.match(/labelFit="clamp"/g) || []).length).toBe(2);
+  });
+  it('holds cluster and category names until 2xl so they never overprint the title', () => {
+    expect((src.match(/labelFrom="2xl"/g) || []).length).toBe(2);
+  });
+});

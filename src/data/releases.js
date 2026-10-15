@@ -26,6 +26,26 @@ export const RELEASE_ACTION_KINDS = [
 
 export const WHATS_NEW = [
   {
+    id: 'design-language-new-topics',
+    version: '0.13.0',
+    date: '2026-10-14',
+    tag: 'module',
+    title: 'Six new lessons',
+    blurb: 'First minute, Affordance, So what, Feedback loops, and Progressive disclosure join Design language, plus a stranger-path smoke test you can run in a private window.',
+    image: null,
+    action: { kind: 'build', id: 'so-what-charts' },
+  },
+  {
+    id: 'design-qa-oct-2026',
+    version: '0.13.0',
+    date: '2026-10-14',
+    tag: 'improvement',
+    title: 'Easier to tap, easier to read',
+    blurb: 'Bigger touch targets on phones, a steadier type scale, light mode that works on every new scene, and a header that never stacks labels on top of each other.',
+    image: null,
+    action: { kind: 'build', id: 'progressive-disclosure' },
+  },
+  {
     id: 'learning-hud-checkpoints',
     version: '0.12.0',
     date: '2026-08-31',

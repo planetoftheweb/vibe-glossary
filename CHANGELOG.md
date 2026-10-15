@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-14
+
+### Added
+- **Six new topics:** First minute, Affordance, So what (every chart says its takeaway), Feedback loops, and Progressive disclosure in Design language, plus Smoke test: private window, stranger path
+- Class proof is easier to find from the Score UI, and the top nav shows the Score pill and Class proof chip
+
+### Changed
+- Tap targets: the HTML lesson step rail, header pills, Learning HUD Progress, lesson Previous and Next, and Restart are all at least 44 by 44 pixels. The step rail scrolls sideways on phones
+- Type scale: lesson titles run 40 to 55px, studio headlines 31 to 39px, and Learning HUD and header controls and tips 16px. Definition copy uses 1.55 (lead) and 1.6 (body) line height
+- Progress rings now use Lucide circle artwork at the documented 24 and 32px sizes
+- Shared chrome stays zinc and indigo. The Table demo uses only its Data Display blue, and the studio text colors map to zinc
+- The header drops long topic titles (the page title already shows them) and holds cluster names until wide screens, so header labels never overlap
+- On phones the Learning HUD gives Previous and Next titles half the width each so whole words fit
+- Public descriptions now state the current catalog (111 components, 136 topics), and theme-color stays dark in both modes
+
+### Fixed
+- So what chart bars and axis ticks now match the stated values on one scale
+- Progressive disclosure fields are real inputs you can type into, with readable values
+- The new Design language scenes and the prompt tabs fully switch to light mode
+- Two-line lesson titles are no longer covered by the studio in stacked layouts
+- iPad and tablet layout for glossary and build views, the empty space under the phone Definition tab, and sideways scroll in the definition pane
+
 ## [0.12.0] - 2026-08-31
 
 ### Added
@@ -246,7 +268,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...v0.12.0
 [0.9.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...84cf753
 [0.8.1]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.0...v0.8.1

@@ -64,7 +64,7 @@ export default function BuildTopicView({
                     : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800'
                 }`}
               >
-                <GraduationCap size={13} />
+                <GraduationCap size={14} />
                 {learnMode
                   ? (checkpointReady ? 'Quiz ready' : `Learning ${learningProgress.count}/${learningProgress.total}`)
                   : 'Learning off'}
@@ -76,7 +76,7 @@ export default function BuildTopicView({
               className="ml-1"
             />
           </div>
-          <h1 className="vg-glossary-title text-[clamp(1.75rem,2.4vw+1rem,3rem)] font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white">
+          <h1 className="vg-glossary-title text-[clamp(2.5rem,1.6vw+2rem,3.4375rem)] font-[750] sm:font-[775] leading-[1.1] tracking-[-0.015em] text-zinc-900 dark:text-white">
             {topic.title}
           </h1>
         </div>

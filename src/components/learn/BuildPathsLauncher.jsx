@@ -31,7 +31,7 @@ export default function BuildPathsLauncher({ isOpen, onClose, onSelectPath, mast
         {/* Header */}
         <div className="shrink-0 flex items-center justify-between px-5 lg:px-7 py-4 lg:py-5 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-3 min-w-0">
-            <GraduationCap size={22} className={`${cc.accent} shrink-0`} />
+            <GraduationCap size={20} className={`${cc.accent} shrink-0`} />
             <div className="min-w-0">
               <h2 className="text-lg lg:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                 Build Literacy Paths

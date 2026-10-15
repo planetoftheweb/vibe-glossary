@@ -38,9 +38,9 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel, classB
         aria-label={ariaLabel || `VibeScore ${total}, level ${level?.current?.label || ''}`}
         className="group relative inline-flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
       >
-        <Sparkles size={16} className="text-amber-500 shrink-0" />
+        <Sparkles size={16} className="text-indigo-500 dark:text-indigo-400 shrink-0" />
         <span className="flex flex-col items-start leading-tight">
-          <span className="text-sm font-bold text-zinc-900 dark:text-white tabular-nums">
+          <span className="text-base font-bold text-zinc-900 dark:text-white tabular-nums">
             {total}
           </span>
           <span className="hidden xl:inline text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-semibold">
@@ -51,7 +51,7 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel, classB
         {delta != null && (
           <span
             aria-hidden
-            className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500 text-white shadow animate-fade-in"
+            className="pointer-events-none absolute -top-2 right-1 px-1.5 py-0.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow animate-fade-in"
           >
             +{delta}
           </span>
@@ -61,7 +61,7 @@ export default function VibeScorePill({ score, level, onClick, ariaLabel, classB
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onOpenProof(); }}
-          className="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors animate-fade-in"
+          className="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700/50 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors animate-fade-in"
           aria-label="Get class proof link"
         >
           <ShieldCheck size={14} aria-hidden="true" />

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import SharedProgressRing from '../ui/ProgressRing';
 import {
   BookOpenCheck,
   Check,
@@ -45,62 +46,15 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), Math.max(min, max));
 }
 
-function ProgressRing({ progress, accentClass, size = 32, strokeWidth = 3.5 }) {
-  const percent = Math.max(0, Math.min(100, progress?.percent || 0));
-  const masteredPercent = Math.max(0, Math.min(100, progress?.masteredPercent || 0));
-
+function HudProgressRing({ progress, accentClass, size = 24 }) {
   return (
-    <span className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }} aria-hidden="true">
-      <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 36 36">
-        <circle
-          cx="18"
-          cy="18"
-          r="16"
-          fill="none"
-          stroke="currentColor"
-          className="text-zinc-200 dark:text-zinc-800"
-          strokeWidth="1.5"
-        />
-        <circle
-          cx="18"
-          cy="18"
-          r="16"
-          fill="none"
-          stroke="currentColor"
-          className="text-indigo-500"
-          strokeWidth="1.5"
-          pathLength="100"
-          strokeDasharray={`${masteredPercent} 100`}
-          strokeLinecap="round"
-        />
-        <circle
-          cx="18"
-          cy="18"
-          r="12.25"
-          fill="none"
-          stroke="currentColor"
-          className="text-zinc-200 dark:text-zinc-800"
-          strokeWidth={strokeWidth}
-        />
-        <circle
-          cx="18"
-          cy="18"
-          r="12.25"
-          fill="none"
-          stroke="currentColor"
-          className={accentClass}
-          strokeWidth={strokeWidth}
-          pathLength="100"
-          strokeDasharray={`${percent} 100`}
-          strokeLinecap="round"
-        />
-      </svg>
-      {size >= 60 && (
-        <strong className="relative text-sm font-black tabular-nums text-zinc-900 dark:text-white">
-          {progress?.visited || 0}
-        </strong>
-      )}
-    </span>
+    <SharedProgressRing
+      percent={progress?.percent || 0}
+      masteredPercent={size >= 32 ? (progress?.masteredPercent || 0) : undefined}
+      size={size}
+      accentClass={accentClass}
+      trackClass="text-zinc-200 dark:text-zinc-800"
+    />
   );
 }
 
@@ -118,16 +72,19 @@ function SequenceButton({ direction, item, itemLabel, onClick }) {
       aria-keyshortcuts={previous ? 'ArrowLeft' : 'ArrowRight'}
       className={`group flex min-w-0 flex-1 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-indigo-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent sm:px-4 ${previous ? '' : 'text-right'}`}
     >
-      {previous && <Icon size={24} className="shrink-0 text-indigo-500 transition-transform group-hover:-translate-x-0.5" aria-hidden="true" />}
+      {previous && <Icon size={24} className="hidden shrink-0 text-indigo-500 transition-transform group-hover:-translate-x-0.5 sm:block" aria-hidden="true" />}
       <span className="min-w-0 flex-1">
-        <span className="block text-xs font-black uppercase tracking-[0.1em] text-zinc-500 dark:text-zinc-400">
+        <span className={`flex items-center gap-1 text-xs font-black uppercase tracking-[0.1em] text-zinc-500 dark:text-zinc-400 ${previous ? '' : 'justify-end'}`}>
+          {previous && <Icon size={14} className="text-indigo-500 sm:hidden" aria-hidden="true" />}
           {label}
+          {!previous && <Icon size={14} className="text-indigo-500 sm:hidden" aria-hidden="true" />}
         </span>
-        <span className="mt-0.5 block line-clamp-2 text-xs font-extrabold leading-tight text-zinc-900 dark:text-white sm:text-sm lg:text-base">
+        {/* #96: titles get half the HUD width on phones so whole words fit. */}
+        <span className="mt-0.5 block line-clamp-2 text-base font-extrabold leading-tight text-zinc-900 dark:text-white [overflow-wrap:normal] [word-break:normal] [hyphens:auto]">
           {item?.title || (previous ? 'Start of list' : 'End of list')}
         </span>
       </span>
-      {!previous && <Icon size={24} className="shrink-0 text-indigo-500 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />}
+      {!previous && <Icon size={24} className="hidden shrink-0 text-indigo-500 transition-transform group-hover:translate-x-0.5 sm:block" aria-hidden="true" />}
     </button>
   );
 }
@@ -167,7 +124,10 @@ function ProgressPopup({ progress, sections, visited, accentClass, sectionLabel,
   return (
     <PopupShell id="learning-hud-progress" title="Progress" popupAbove={popupAbove} onClose={onClose}>
       <div className="flex items-center gap-4 p-4">
-        <ProgressRing progress={progress} accentClass={accentClass} size={78} strokeWidth={2.7} />
+        <span className="inline-flex items-center gap-2">
+          <HudProgressRing progress={progress} accentClass={accentClass} size={32} />
+          <strong className="font-display text-2xl font-bold tabular-nums text-zinc-900 dark:text-white">{progress?.visited || 0}</strong>
+        </span>
         <div className="min-w-0 flex-1">
           <p className="text-lg font-extrabold text-zinc-950 dark:text-white">{sectionLabel}</p>
           <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
@@ -563,7 +523,7 @@ export default function FloatingLearningHud({
               <GripHorizontal size={16} aria-hidden="true" />
               <span className="hidden text-xs font-black uppercase tracking-[0.12em] sm:inline">Learning HUD</span>
             </button>
-            <span className="ml-auto hidden text-xs font-bold text-zinc-400 md:block">Drag to move</span>
+            <span className="ml-auto hidden text-base font-semibold text-zinc-400 md:block">Drag to move</span>
             <div className="relative ml-1 flex items-center">
               <button
                 type="button"
@@ -619,13 +579,13 @@ export default function FloatingLearningHud({
             </div>
           </div>
 
-          <nav aria-label={ariaLabel} className="grid min-h-[82px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch overflow-hidden rounded-b-2xl">
+          <nav aria-label={ariaLabel} className="grid min-h-[82px] grid-cols-2 items-stretch overflow-hidden rounded-b-2xl sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
             <SequenceButton direction="previous" item={previous} itemLabel={itemLabel} onClick={goPrevious} />
 
-            <div className="flex min-w-[124px] flex-col items-center justify-center gap-1.5 border-x border-zinc-200 px-2 py-2 dark:border-zinc-800 sm:min-w-[230px] sm:px-3">
-              <div className="flex items-center gap-1.5 text-xs font-black tabular-nums sm:text-sm">
+            <div className="order-first col-span-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 border-b border-zinc-200 px-2 py-2 dark:border-zinc-800 sm:order-none sm:col-span-1 sm:min-w-[230px] sm:flex-col sm:flex-nowrap sm:border-b-0 sm:border-x sm:px-3">
+              <div className="flex items-center gap-1.5 text-base font-black tabular-nums">
                 <span className={accentClass}>{currentPosition} of {total}</span>
-                <span className="ml-1 hidden items-center gap-1 text-xs font-semibold text-zinc-400 md:flex">
+                <span className="ml-1 hidden items-center gap-1 text-base font-semibold text-zinc-400 md:flex">
                   Use <kbd className="rounded border border-zinc-300 px-1 font-sans dark:border-zinc-700">←</kbd><kbd className="rounded border border-zinc-300 px-1 font-sans dark:border-zinc-700">→</kbd>
                 </span>
               </div>
@@ -636,10 +596,10 @@ export default function FloatingLearningHud({
                   onClick={() => setActivePopup(activePopup === 'progress' ? null : 'progress')}
                   aria-expanded={activePopup === 'progress'}
                   aria-controls="learning-hud-progress"
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2 text-xs font-extrabold transition-colors hover:border-indigo-400 hover:bg-indigo-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950/40 sm:px-3"
+                  className="inline-flex min-h-[44px] min-w-[44px] justify-center items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2 font-extrabold transition-colors hover:border-indigo-400 hover:bg-indigo-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950/40 sm:px-3 text-base"
                   aria-label={`${sectionLabel}: ${progress?.visited || 0} of ${progress?.total || 0}`}
                 >
-                  <ProgressRing progress={progress} accentClass={accentClass} size={24} />
+                  <HudProgressRing progress={progress} accentClass={accentClass} size={24} />
                   <span className="hidden sm:inline">Progress</span>
                 </button>
                 <button
@@ -647,7 +607,7 @@ export default function FloatingLearningHud({
                   onClick={() => setActivePopup(activePopup === 'score' ? null : 'score')}
                   aria-expanded={activePopup === 'score'}
                   aria-controls="learning-hud-score"
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-indigo-300/70 bg-indigo-50 px-2 text-xs font-extrabold text-indigo-800 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-200 dark:hover:bg-indigo-500/20 sm:px-3"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-indigo-300/70 bg-indigo-50 px-2 text-base font-extrabold text-indigo-800 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-200 dark:hover:bg-indigo-500/20 sm:px-3"
                   aria-label={`Score ${score?.total || 0}, level ${level?.current?.label || 'Lurker'}`}
                 >
                   <Sparkles size={16} className="text-indigo-500" aria-hidden="true" />

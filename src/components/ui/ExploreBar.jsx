@@ -1,3 +1,4 @@
+import ProgressRing from './ProgressRing';
 import { useState } from 'react';
 import HoverTip from './HoverTip';
 import { Calendar, Trophy, ChevronDown, ChevronUp, RotateCcw, Check, Copy, Eye } from 'lucide-react';
@@ -23,18 +24,7 @@ export default function ExploreBar({ explore, activeItem, onSelectItem, activeCa
         {/* Left: Progress */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10">
-              <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" strokeWidth="3" />
-                <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" className={activeCatColors.accent} strokeWidth="3"
-                  strokeDasharray={`${progress.percent * 0.94} 100`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-zinc-500 dark:text-zinc-400">
-                {progress.visited}
-              </span>
-            </div>
+            <ProgressRing percent={progress.percent} size={32} accentClass={activeCatColors.accent} trackClass="text-zinc-200 dark:text-zinc-800" />
             <div className="hidden sm:block">
               <p className="text-base font-semibold text-zinc-700 dark:text-zinc-300 leading-tight">
                 {progress.visited}/{progress.total} explored

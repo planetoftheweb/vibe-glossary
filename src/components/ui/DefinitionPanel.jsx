@@ -27,7 +27,7 @@ export default function DefinitionPanel({
 
   return (
     <div className="mb-4 lg:mb-5">
-      <p className="font-sans text-lg lg:text-xl font-normal leading-7 lg:leading-8 text-zinc-700 dark:text-zinc-200 break-words">
+      <p className="font-sans text-lg lg:text-xl font-normal leading-[1.55] text-zinc-700 dark:text-zinc-200 break-words">
         {summary}
       </p>
 
@@ -58,7 +58,7 @@ export default function DefinitionPanel({
           >
             <div className="overflow-hidden">
               <div
-                className={`rounded-xl border ${ring} bg-zinc-50/80 dark:bg-zinc-800/40 px-4 py-4 lg:px-5 lg:py-5 text-base leading-relaxed text-zinc-700 dark:text-zinc-300 space-y-3`}
+                className={`rounded-xl border ${ring} bg-zinc-50/80 dark:bg-zinc-800/40 px-4 py-4 lg:px-5 lg:py-5 text-base leading-[1.6] text-zinc-700 dark:text-zinc-300 space-y-3`}
               >
                 {String(details)
                   .split(/\n{2,}/)

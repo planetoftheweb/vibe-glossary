@@ -129,7 +129,7 @@ export default function LearningCheckpoint({
       className={`mb-6 rounded-2xl border ${cc.border || 'border-violet-500/30'} ${cc.bg || 'bg-violet-500/10'} p-5 shadow-sm lg:mb-10 lg:p-7 ${className}`.trim()}
     >
       <div className="mb-5 flex flex-wrap items-center gap-2.5">
-        <GraduationCap size={22} className={cc.accent || 'text-violet-500'} aria-hidden="true" />
+        <GraduationCap size={20} className={cc.accent || 'text-violet-500'} aria-hidden="true" />
         <h2 className={`text-base font-bold uppercase tracking-wider lg:text-xl ${cc.text || 'text-violet-500'}`}>
           Five-item checkpoint
         </h2>

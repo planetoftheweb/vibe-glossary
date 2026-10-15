@@ -18,6 +18,7 @@ import ProofView from './components/learn/ProofView';
 import TopicTierBadge from './components/learn/TopicTierBadge';
 import ProgressToast from './components/learn/ProgressToast';
 import FloatingLearningHud from './components/learn/FloatingLearningHud';
+import useTitleClearance from './hooks/useTitleClearance';
 import PatternStudioFrame from './components/demos/PatternStudioFrame';
 import useExploreMode from './hooks/useExploreMode';
 import useLearningCheckpoints from './hooks/useLearningCheckpoints';
@@ -67,6 +68,8 @@ export default function App() {
   const [siteSection, setSiteSection]     = useState(() => topicFromWindow()?.section || 'glossary');
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
+  const defPaneRef = useRef(null);
+  useTitleClearance(defPaneRef, [activeItem, infoOpen, mobileView, siteSection]);
   const [darkMode, setDarkMode]           = useState(() => {
     try {
       const saved = localStorage.getItem('vg-dark-mode');
@@ -121,8 +124,9 @@ export default function App() {
     if (darkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
     try { localStorage.setItem('vg-dark-mode', String(darkMode)); } catch {}
+    // DESIGN.md: theme-color stays #09090b in both modes (#90).
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', darkMode ? '#09090b' : '#ffffff');
+    if (meta) meta.setAttribute('content', '#09090b');
   }, [darkMode]);
 
   // Cmd+/ to toggle cheat sheet
@@ -793,7 +797,7 @@ export default function App() {
 
           {/* Info & Prompt Panel: phone tabs below md, stacked on tablet, side-by-side via CSS container query */}
           {infoOpen && (
-            <div data-tour="definition-panel" className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}>
+            <div ref={defPaneRef} data-tour="definition-panel" className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}>
               <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
 
                 {/* Definition Header */}
@@ -827,7 +831,7 @@ export default function App() {
                       </button>
                       <TopicTierBadge tier={explore.tiers?.[activeItem]} className="ml-1" />
                     </div>
-                    <h1 className="vg-glossary-title text-[clamp(1.75rem,2.4vw+1rem,3rem)] font-extrabold leading-[1.08] tracking-[-0.015em] text-zinc-900 dark:text-white">
+                    <h1 className="vg-glossary-title text-[clamp(2.5rem,1.6vw+2rem,3.4375rem)] font-[750] sm:font-[775] leading-[1.1] tracking-[-0.015em] text-zinc-900 dark:text-white">
                       {currentData.title}
                     </h1>
                   </div>

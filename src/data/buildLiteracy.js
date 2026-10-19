@@ -1269,6 +1269,27 @@ export const BUILD_LITERACY_CLUSTERS = [
         relatedGlossaryIds: ['table', 'modal', 'badge'],
       },
       {
+        id: 'rls',
+        title: 'Row Level Security (RLS): logged in is not locked down',
+        summary:
+          'Row Level Security (RLS) is a database rule that decides which rows each signed-in person can read or change. Logging in proves who someone is. RLS is what stops them from seeing everyone else\'s data.',
+        details:
+          'Login answers "who are you?". It does not answer "which rows can you see?". In a Supabase app (the database behind most Lovable builds), the browser talks straight to the database with a public key that ships inside your page code. If Row Level Security is off on a table, anyone holding that key, signed in or not, can ask for every row. Your screen might say "My submissions", but the network request quietly returns everyone\'s. A filter in your page code is a suggestion, not a lock.\n\nRLS moves the rule into the database itself. You turn it on one table at a time, and from that moment the table returns nothing until you write a policy that says who may see what. An owner-only policy is the usual starting point: a row is visible only when its owner column matches the signed-in user (in Supabase, auth.uid() = user_id). Write one policy each for reading, adding, changing, and deleting rows, so nobody can slip a row in under someone else\'s name either.\n\nThe proof is a second account. Your own account always sees your own work, so it cannot tell you whether the lock holds. Sign up a second test account, open a private window, sign in as that account, and load the page. You should see only that account\'s rows, or an empty state if it has none. If the first account\'s work shows up, RLS is off or a policy is too loose.\n\nTwo traps to know by name. The service role key (Supabase\'s admin key) skips RLS entirely, so it belongs on the server, never in browser code or a public repo. And RLS turned on with a policy that lets anyone read (using true) is the same as RLS off with extra steps. Supabase\'s Security Advisor flags tables with RLS off. Treat that warning as a blocker, not a suggestion.',
+        comparison:
+          'Authentication = who you are. Authorization = what you may do. RBAC (role-based access control) decides by role, like admin or viewer. RLS decides row by row, like "only rows you own". Hiding data in the UI is a curtain. RLS is a lock on the database. Firebase calls the same idea Security Rules.',
+        vibeTip:
+          'Every time your AI creates a table, add: "turn on RLS for this table and write owner-only policies for select, insert, update, and delete." Then test from a second account in a private window before you share the link.',
+        talkToAi: {
+          starter:
+            'Lock down the data in [app] so each user only sees their own rows. Before changing anything, ask me: 1) the database and auth we use (Supabase, Firebase, other), 2) every table that stores user data and which column holds the owner (user_id, owner_id, etc.), 3) anything that should be shared on purpose (public posts, a roster an instructor reads). Then turn on Row Level Security for each table, write owner-only policies for select, insert, update, and delete, confirm the service role key never appears in browser code, and give me a short test script: sign up a second account, open a private window, sign in as that account, and confirm I cannot see, edit, or delete the first account\'s rows.',
+          example:
+            'In my Lovable + Supabase class project, the submissions table has a user_id column. Turn on RLS for submissions and profiles. Policies: a student can select, insert, update, and delete only rows where auth.uid() = user_id. Nobody else can read them. Then walk me through the test: I make a second account, sign in from a private window, and the submissions list should be empty for that account until it adds its own.',
+        },
+        mnemonic:
+          'Login opens the door. RLS picks the rows.',
+        relatedGlossaryIds: ['table', 'empty'],
+      },
+      {
         id: '2fa',
         title: '2FA / MFA (two- or multi-factor auth)',
         summary:

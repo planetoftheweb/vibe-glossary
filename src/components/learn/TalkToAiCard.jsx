@@ -5,6 +5,8 @@ import {
   BrainCircuit,
   Check,
   ChevronDown,
+  Lock,
+  LockOpen,
   MousePointerClick,
   Sparkles,
 } from 'lucide-react';
@@ -153,6 +155,7 @@ function ConceptScene({ topic, lens }) {
   if (topic?.id === 'so-what-charts') return <SoWhatChartsScene />;
   if (topic?.id === 'feedback-loops') return <FeedbackLoopsScene />;
   if (topic?.id === 'progressive-disclosure') return <ProgressiveDisclosureScene />;
+  if (topic?.id === 'rls') return <RlsScene />;
   if (topic?.clusterId === 'design-language') return <TokenScene topic={topic} lens={lens} />;
 
   const profile = CLUSTER_SCENES[topic?.clusterId] || {
@@ -447,6 +450,74 @@ function ProgressiveDisclosureScene() {
         {expanded
           ? 'Power users find the depth they need, one click away.'
           : 'New users see a calm start. The next step is clear.'}
+      </p>
+    </div>
+  );
+}
+
+const RLS_ACCOUNTS = ['Ana', 'Ben'];
+const RLS_ROWS = [
+  { id: 1, owner: 'Ana', title: 'A3 wireframe' },
+  { id: 2, owner: 'Ben', title: 'A3 user flow' },
+  { id: 3, owner: 'Cam', title: 'A3 reflection' },
+  { id: 4, owner: 'Ana', title: 'A3 reflection' },
+];
+
+function RlsScene() {
+  const [rlsOn, setRlsOn] = useState(false);
+  const [viewer, setViewer] = useState('Ana');
+  const rows = rlsOn ? RLS_ROWS.filter((row) => row.owner === viewer) : RLS_ROWS;
+  const leaked = rows.filter((row) => row.owner !== viewer).length;
+  return (
+    <div className="concept-visual concept-visual--rls">
+      <p className="rls-scene__try">
+        <strong>Try this:</strong> switch accounts with RLS off. Then turn RLS on and switch again.
+      </p>
+      <div className="rls-scene__controls">
+        <button
+          type="button"
+          className={`rls-scene__btn ${rlsOn ? 'is-active' : ''}`}
+          aria-pressed={rlsOn}
+          onClick={() => setRlsOn(!rlsOn)}
+        >
+          {rlsOn ? <Lock size={16} aria-hidden="true" /> : <LockOpen size={16} aria-hidden="true" />}
+          {rlsOn ? 'RLS on' : 'RLS off'}
+        </button>
+        <div className="rls-scene__accounts" role="group" aria-label="Signed in as">
+          {RLS_ACCOUNTS.map((name) => (
+            <button
+              key={name}
+              type="button"
+              className={`rls-scene__btn ${viewer === name ? 'is-active' : ''}`}
+              aria-pressed={viewer === name}
+              onClick={() => setViewer(name)}
+            >
+              {`Signed in as ${name}`}
+            </button>
+          ))}
+        </div>
+      </div>
+      <article className="rls-scene__panel">
+        <div className="rls-scene__header">
+          <span className="scene-label">{`${viewer}'s submissions`}</span>
+          <span className="scene-label">{`${rows.length} rows returned`}</span>
+        </div>
+        <ul className="rls-scene__rows" aria-live="polite">
+          {rows.map((row) => {
+            const mine = row.owner === viewer;
+            return (
+              <li key={row.id} className={`rls-scene__row ${mine ? '' : 'is-leak'}`}>
+                <span className="rls-scene__title">{row.title}</span>
+                <span className="rls-scene__owner">{mine ? 'Yours' : `${row.owner}'s, not yours`}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </article>
+      <p className="rls-scene__caption">
+        {rlsOn
+          ? `RLS is on. The database only returns rows ${viewer} owns. Switch accounts to prove it.`
+          : `RLS is off. ${viewer} is signed in, but the database still handed over ${leaked} rows that belong to someone else.`}
       </p>
     </div>
   );

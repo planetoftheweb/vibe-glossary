@@ -137,6 +137,7 @@ export const BUILD_STUDIO_HEADLINES = {
   sso: 'Use one trusted sign-in across many tools.',
   'refresh-token': 'Renew access without asking the user to sign in again.',
   rbac: 'Turn a person’s role into the actions they may take.',
+  rls: 'Prove each account sees only its own rows.',
   '2fa': 'Require a second proof before opening the account.',
   'password-hashing': 'Store proof of a password without storing the password.',
   'csrf-cors': 'Separate a trusted caller from a tricked browser.',

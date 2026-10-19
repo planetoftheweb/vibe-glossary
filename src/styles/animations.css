@@ -2869,6 +2869,110 @@
 
 .disclosure-scene__advanced.is-open { max-height: 400px; margin-top: 16px; opacity: 1; }
 
+/* Row Level Security scene ---------------------------------------------
+   Same zinc scene tokens as the scenes above so light mode follows (#100).
+   Leaked rows use rose plus a text label, never color alone. */
+.concept-visual--rls {
+  --scene-surface: rgb(24 24 27 / 0.92);   /* zinc-900 */
+  --scene-border: #3f3f46;                 /* zinc-700 */
+  --scene-heading: #ffffff;
+  --scene-body: #f4f4f5;                   /* zinc-100 */
+  --scene-helper: #a1a1aa;                 /* zinc-400 */
+  --scene-leak-bg: rgb(76 5 25 / 0.5);
+  --scene-leak-border: #fb7185;            /* rose-400 */
+  --scene-leak-text: #fda4af;              /* rose-300 */
+  gap: 16px;
+  align-items: center;
+}
+
+[data-theme='light'] .concept-visual--rls {
+  --scene-surface: #ffffff;
+  --scene-border: #e4e4e7;                 /* zinc-200 */
+  --scene-heading: #18181b;
+  --scene-body: #18181b;                   /* zinc-900 */
+  --scene-helper: #52525b;                 /* zinc-600, 7.7:1 on white */
+  --scene-leak-bg: #fff1f2;                /* rose-50 */
+  --scene-leak-border: #f43f5e;            /* rose-500 */
+  --scene-leak-text: #be123c;              /* rose-700, 6.2:1 on rose-50 */
+}
+
+.rls-scene__try,
+.rls-scene__caption {
+  width: min(100%, 460px);
+  margin: 0;
+  color: var(--scene-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.rls-scene__controls,
+.rls-scene__accounts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rls-scene__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 1px solid var(--scene-border);
+  border-radius: 999px;
+  padding: 8px 20px;
+  background: var(--scene-surface);
+  color: var(--scene-body);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 180ms ease;
+}
+
+.rls-scene__btn:hover,
+.rls-scene__btn.is-active { border-color: var(--studio-accent); }
+.rls-scene__btn:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+.rls-scene__panel {
+  width: min(100%, 460px);
+  border: 1px solid var(--scene-border);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--scene-surface);
+}
+
+.rls-scene__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rls-scene__rows { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+.rls-scene__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  border: 1px solid var(--scene-border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.rls-scene__row.is-leak { border-color: var(--scene-leak-border); background: var(--scene-leak-bg); }
+.rls-scene__title { color: var(--scene-heading); font-size: 16px; font-weight: 600; }
+.rls-scene__owner { color: var(--scene-helper); font-size: 14px; font-weight: 600; }
+.rls-scene__row.is-leak .rls-scene__owner { color: var(--scene-leak-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rls-scene__btn { transition: none; }
+}
+
 /* Easing director's lab -------------------------------------------------
    One object, one journey, and equal-time footprints make the speed curve
    visible. This borrows the Build Literacy Motion Studio's stage grammar

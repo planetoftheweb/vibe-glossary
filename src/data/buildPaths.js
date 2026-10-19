@@ -258,7 +258,7 @@ export const BUILD_PATHS = [
     name: 'Authentication and authorization',
     tagline: 'Who you are, what you can do, and how to not leak it',
     description:
-      'Sessions vs JWT, OAuth, SSO, refresh tokens, RBAC. The vocabulary you need to tell an AI exactly how login should work AND why "just hide the button in the UI" is not enough.',
+      'Sessions vs JWT, OAuth, SSO, refresh tokens, RBAC, Row Level Security. The vocabulary you need to tell an AI exactly how login should work AND why "just hide the button in the UI" (or "they have to log in first") is not enough.',
     quiz: [
       {
         q: 'A signed token that proves "I am user X", carried by the client and verified server-side, is a...',

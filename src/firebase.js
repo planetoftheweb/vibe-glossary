@@ -13,8 +13,12 @@ const firebaseConfig = {
   measurementId:     import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// Analytics/Auth eagerly validate config and crash module load without it
+// (e.g. in tests). Build-time check in vite.config.js enforces real config in production.
+const hasConfig = Boolean(firebaseConfig.projectId && firebaseConfig.apiKey);
+
+export const app = hasConfig ? initializeApp(firebaseConfig) : null;
+export const analytics = hasConfig ? getAnalytics(app) : null;
+export const db = hasConfig ? getFirestore(app) : null;
+export const auth = hasConfig ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();

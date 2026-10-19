@@ -10,6 +10,7 @@ export function useCategories() {
 
   useEffect(() => {
     if (_cache) return;
+    if (!db) return; // Firebase not configured (tests), stay on local data
     getDocs(collection(db, 'categories'))
       .then(snapshot => {
         if (snapshot.empty) return;

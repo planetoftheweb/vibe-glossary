@@ -12,6 +12,7 @@ export function useGlossary() {
 
   useEffect(() => {
     if (_cache) return;
+    if (!db) return; // Firebase not configured (tests), stay on local data
     getDocs(collection(db, 'components'))
       .then(snapshot => {
         if (snapshot.empty) return; // Firestore not seeded yet, keep local data

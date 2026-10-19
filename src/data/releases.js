@@ -26,6 +26,16 @@ export const RELEASE_ACTION_KINDS = [
 
 export const WHATS_NEW = [
   {
+    id: 'auth-row-level-security',
+    version: '0.14.0',
+    date: '2026-10-19',
+    tag: 'module',
+    title: 'Logged in is not locked down',
+    blurb: 'A new Authentication lesson on Row Level Security (RLS): make each account see only its own rows, then prove it from a second account in a private window.',
+    image: null,
+    action: { kind: 'build', id: 'rls' },
+  },
+  {
     id: 'design-language-new-topics',
     version: '0.13.0',
     date: '2026-10-14',

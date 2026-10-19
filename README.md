@@ -1,6 +1,6 @@
 # VibeGlossary
 
-A friendly UI + Build Literacy glossary for vibe coders. Browse 111 live component demos and 130 plain-language Build Literacy topics, generate AI prompts, take five-item checkpoint quizzes, and track learning with the VibeScore system.
+A friendly UI + Build Literacy glossary for vibe coders. Browse 111 live component demos and 137 plain-language Build Literacy topics, generate AI prompts, take five-item checkpoint quizzes, and track learning with the VibeScore system.
 
 ## Features
 
@@ -13,7 +13,7 @@ A friendly UI + Build Literacy glossary for vibe coders. Browse 111 live compone
 - **Long-form details accordion** — a one-line summary with an expandable beginner-friendly explanation for every entry
 
 ### Build Literacy
-- **130 topics across 9 clusters**: Web Foundations, Engineering Practice, Auth & Security, Product Thinking, Design Language, Spec & Process, AI Literacy, Protocols & APIs, and Motion
+- **137 topics across 9 clusters**: Web Foundations, Engineering Practice, Auth & Security, Product Thinking, Design Language, Spec & Process, AI Literacy, Protocols & APIs, and Motion
 - **Two-part Talk-to-AI prompts** — a generic starter that asks the AI to interview you, plus a practical example you can adapt
 - **Unique teaching headline for every topic** so the studio opens with the idea the learner is about to prove
 - **Mnemonic for every topic** — the "if you remember nothing else" line

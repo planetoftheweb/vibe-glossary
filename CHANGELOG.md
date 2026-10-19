@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-19
+
+### Added
+- **New Authentication topic: Row Level Security (RLS): logged in is not locked down.** Explains why signing in does not stop people from reading everyone's rows, how owner-only policies work, and how to prove it from a second account in a private window
+- Interactive RLS scene: turn RLS off and on and switch between two accounts to see which rows the database returns
+
+### Changed
+- Public descriptions now state 137 Build Literacy topics, and the Authentication path mentions Row Level Security
+
 ## [0.13.0] - 2026-10-14
 
 ### Added
@@ -268,7 +277,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Deployed on Render
 
-[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...v0.12.0
 [0.9.0]: https://github.com/planetoftheweb/vibe-glossary/compare/v0.8.1...84cf753

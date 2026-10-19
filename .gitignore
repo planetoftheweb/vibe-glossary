@@ -28,6 +28,15 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
+.env*
+!.env.example
+
+# Service account / ADC key files (never commit)
+*service-account*.json
+*serviceAccount*.json
+firebase-adminsdk*.json
+*-adminsdk-*.json
+*-sa.json
 
 # Firebase
 .firebase/

@@ -3,30 +3,21 @@
  *
  * Prerequisites:
  *   1. Enable Firestore in the Firebase console (vibe-glossary project, Native mode).
- *   2. Download a service account key:
- *      Firebase console → Project Settings → Service accounts → Generate new private key
- *   3. Set the environment variable:
- *        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/serviceAccountKey.json
- *   4. Run:
+ *   2. Authenticate with Application Default Credentials:
+ *        gcloud auth application-default login
+ *   3. Run:
  *        node scripts/seedFirestore.js
  *
  * Safe to re-run — uses set() which overwrites existing documents.
  */
 
-import { initializeApp, cert } from 'firebase-admin/app';
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { createRequire } from 'module';
-import { readFileSync } from 'fs';
 
-// Load service account from env
-const credPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-if (!credPath) {
-  console.error('ERROR: Set GOOGLE_APPLICATION_CREDENTIALS to your service account JSON path.');
-  process.exit(1);
-}
-const serviceAccount = JSON.parse(readFileSync(credPath, 'utf8'));
-
-initializeApp({ credential: cert(serviceAccount) });
+initializeApp({
+  credential: applicationDefault(),
+  projectId: 'vibe-glossary',
+});
 const db = getFirestore();
 
 // Dynamically import data (ESM)

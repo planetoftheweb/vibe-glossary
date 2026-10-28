@@ -29,7 +29,7 @@ export function useKeepPanelOnScreen(ref, active) {
 }
 
 /** Clamp a hover / focus tip right before it can show (parent hover or focus). */
-export function useKeepTipOnScreen(ref, active = true) {
+export function useKeepTipOnScreen(ref, active = true, content) {
   useEffect(() => {
     if (!active) return undefined;
     const el = ref.current;
@@ -45,5 +45,5 @@ export function useKeepTipOnScreen(ref, active = true) {
       parent.removeEventListener('focusin', run);
       window.removeEventListener('resize', run);
     };
-  }, [ref, active]);
+  }, [ref, active, content]);
 }

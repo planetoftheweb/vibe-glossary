@@ -47,7 +47,7 @@ export default function TopicTierBadge({ tier, className = '' }) {
   return (
     <span
       tabIndex={0}
-      className={`group relative inline-flex items-center ${className}`}
+      className={`group relative inline-flex min-h-[44px] min-w-[44px] items-center ${className}`}
       aria-label={`${labelText}. ${meta.next}`}
     >
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${meta.classes}`}>

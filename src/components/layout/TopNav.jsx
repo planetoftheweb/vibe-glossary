@@ -804,7 +804,7 @@ export default function TopNav({
               className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] xl:min-w-0 px-2.5 xl:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'glossary'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
               <BookOpen size={20} className="shrink-0 xl:hidden" aria-hidden />
@@ -818,7 +818,7 @@ export default function TopNav({
               className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] xl:min-w-0 px-2.5 xl:px-3 py-2 rounded-lg text-base font-semibold transition-colors ${
                 siteSection === 'build'
                   ? 'bg-white dark:bg-zinc-800 shadow-sm text-zinc-900 dark:text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
               }`}
             >
               <BookText size={20} className="shrink-0 xl:hidden" aria-hidden />

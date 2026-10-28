@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import FloatingLearningHud, { LEARNING_HUD_STORAGE_KEY } from '../components/learn/FloatingLearningHud';
 
 const props = () => ({
@@ -57,5 +57,43 @@ describe('Learning HUD default on phones (#130)', () => {
     localStorage.setItem(LEARNING_HUD_STORAGE_KEY, JSON.stringify({ mode: 'expanded', dock: 'bottom', x: 24, y: 112 }));
     render(<FloatingLearningHud {...props()} />);
     expect(screen.getByLabelText('Learning HUD')).toHaveAttribute('data-mode', 'expanded');
+  });
+});
+
+describe('Learning HUD scroll clearance (#130)', () => {
+  const realRO = globalThis.ResizeObserver;
+  const realRect = Element.prototype.getBoundingClientRect;
+  let height = 0;
+  let notify = null;
+
+  beforeEach(() => {
+    localStorage.removeItem(LEARNING_HUD_STORAGE_KEY);
+    height = 140;
+    globalThis.ResizeObserver = class {
+      constructor(cb) { notify = cb; }
+      observe() {}
+      disconnect() { notify = null; }
+    };
+    Element.prototype.getBoundingClientRect = function rect() {
+      if (this.getAttribute?.('aria-label') === 'Learning HUD') return { width: 300, height, top: 0, left: 0, right: 300, bottom: height };
+      return realRect.call(this);
+    };
+  });
+  afterEach(() => {
+    globalThis.ResizeObserver = realRO;
+    Element.prototype.getBoundingClientRect = realRect;
+    document.documentElement.style.removeProperty('--vg-hud-clearance');
+  });
+
+  it('publishes the measured height plus the bottom offset, follows height changes, and clears on unmount', () => {
+    const { unmount } = render(<FloatingLearningHud {...props()} />);
+    const read = () => document.documentElement.style.getPropertyValue('--vg-hud-clearance');
+    expect(read()).toContain('140px');
+    expect(read()).toContain('4.75rem');
+    height = 56;
+    act(() => notify());
+    expect(read()).toContain('56px');
+    unmount();
+    expect(read()).toBe('');
   });
 });

@@ -42,12 +42,16 @@ import {
 import { decodeProof } from './lib/proof';
 import { levelFor } from './lib/scoring';
 import { goalProgress, reviewsCopy } from './lib/progressCoaching';
-import { topicFromWindow, syncTopicUrl } from './lib/topicUrl';
+import { topicFromWindow, syncTopicUrl, unknownTopicFromWindow } from './lib/topicUrl';
+import TopicNotFound from './components/layout/TopicNotFound';
 import HoverTip from './components/ui/HoverTip';
 
 export default function App() {
+  // #114: an address that names a topic we do not have (/glossary/nope) shows a
+  // not-found state with a way out, not the welcome screen or a silent Modal.
+  const [missingTopic, setMissingTopic] = useState(() => unknownTopicFromWindow());
   const [showWelcome, setShowWelcome] = useState(() => {
-    if (topicFromWindow()) return false;
+    if (topicFromWindow() || unknownTopicFromWindow()) return false;
     return !localStorage.getItem('vg-visited');
   });
   const [showCheatSheet, setShowCheatSheet] = useState(false);
@@ -57,15 +61,20 @@ export default function App() {
   const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
   const [showProof, setShowProof] = useState(false);
   const [proofSnapshot, setProofSnapshot] = useState(null);
-  const [activeItem, setActiveItem]       = useState(() => {
+  const [activeItem, setActiveItemState] = useState(() => {
     const boot = topicFromWindow();
     return boot?.section === 'glossary' ? boot.id : 'modal';
   });
-  const [activeBuildTopic, setActiveBuildTopic] = useState(() => {
+  const [activeBuildTopic, setActiveBuildTopicState] = useState(() => {
     const boot = topicFromWindow();
     return boot?.section === 'build' ? boot.id : (BUILD_TOPIC_IDS[0] || 'mvp');
   });
-  const [siteSection, setSiteSection]     = useState(() => topicFromWindow()?.section || 'glossary');
+  const [siteSection, setSiteSectionState] = useState(() => topicFromWindow()?.section || 'glossary');
+  // Any real choice of topic or section leaves the not-found state, even when
+  // it picks the topic that was already selected underneath.
+  const setActiveItem = useCallback((value) => { setMissingTopic(null); setActiveItemState(value); }, []);
+  const setActiveBuildTopic = useCallback((value) => { setMissingTopic(null); setActiveBuildTopicState(value); }, []);
+  const setSiteSection = useCallback((value) => { setMissingTopic(null); setSiteSectionState(value); }, []);
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
   const defPaneRef = useRef(null);
@@ -96,7 +105,7 @@ export default function App() {
   const toastSequenceRef = useRef(0);
   const lastLearningCueRef = useRef('');
   const learning = useLearningCheckpoints({
-    enabled: learnMode && !showWelcome,
+    enabled: learnMode && !showWelcome && !missingTopic,
     section: siteSection,
     activeGlossaryId: activeItem,
     activeBuildId: activeBuildTopic,
@@ -164,16 +173,23 @@ export default function App() {
   // the same topic (CLAUDE.md: a glossary you cannot link is not teachable).
   const urlReady = useRef(false);
   useEffect(() => {
-    if (showWelcome) return;
+    if (showWelcome || missingTopic) return;
     const id = siteSection === 'build' ? activeBuildTopic : activeItem;
     syncTopicUrl(siteSection, id, { replace: !urlReady.current });
     urlReady.current = true;
-  }, [showWelcome, siteSection, activeItem, activeBuildTopic]);
+  }, [showWelcome, missingTopic, siteSection, activeItem, activeBuildTopic]);
 
   useEffect(() => {
     function applyLocation() {
+      const unknown = unknownTopicFromWindow();
+      if (unknown) {
+        setMissingTopic(unknown);
+        setShowWelcome(false);
+        return;
+      }
       const next = topicFromWindow();
       if (!next) return;
+      setMissingTopic(null);
       if (next.section === 'build') {
         setSiteSection('build');
         setActiveBuildTopic(next.id);
@@ -194,18 +210,18 @@ export default function App() {
   // Reset options when switching components & track visit
   useEffect(() => {
     setActiveOptions(new Set());
-    if (!showWelcome) {
+    if (!showWelcome && !missingTopic) {
       explore.markVisited(activeItem);
     }
-  }, [activeItem, showWelcome]);
+  }, [activeItem, showWelcome, missingTopic]);
 
   // Build literacy: also count time-on-topic toward progress, mirroring how
   // glossary items get marked visited the moment you land on them.
   useEffect(() => {
-    if (!showWelcome && siteSection === 'build' && activeBuildTopic) {
+    if (!showWelcome && !missingTopic && siteSection === 'build' && activeBuildTopic) {
       explore.markVisited(activeBuildTopic);
     }
-  }, [activeBuildTopic, siteSection, showWelcome]);
+  }, [activeBuildTopic, siteSection, showWelcome, missingTopic]);
 
   const dismissGlobalToast = useCallback((id) => {
     setToasts((previous) => previous.filter((toast) => toast.id !== id));
@@ -330,6 +346,7 @@ export default function App() {
     const handleSequenceKey = (event) => {
       if (
         showWelcome ||
+        missingTopic ||
         sequenceNavigationBlocked ||
         event.defaultPrevented ||
         event.repeat ||
@@ -362,6 +379,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleSequenceKey);
   }, [
     showWelcome,
+    missingTopic,
     sequenceNavigationBlocked,
     siteSection,
     prevItem,
@@ -679,7 +697,7 @@ export default function App() {
         />
       )}
 
-      {!showWelcome && (
+      {!showWelcome && !missingTopic && (
         <FloatingLearningHud
           previous={hudPrevious}
           next={hudNext}
@@ -731,7 +749,13 @@ export default function App() {
 
       {/* Body */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        {siteSection === 'build' ? (
+        {missingTopic && !showWelcome ? (
+          <TopicNotFound
+            slug={missingTopic.id}
+            onBrowseGlossary={() => setShowGlossaryIndex(true)}
+            onBrowseBuild={() => setShowBuildIndex(true)}
+          />
+        ) : siteSection === 'build' ? (
           <BuildLiteracyView
             activeTopicId={activeBuildTopic}
             setActiveTopicId={setActiveBuildTopic}
@@ -867,7 +891,7 @@ export default function App() {
                 {/* Compare, below spec generator */}
                 {siblings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mb-6 lg:mb-8">
-                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mr-1">
                       Compare
                     </span>
                     {siblings.map(sib => (

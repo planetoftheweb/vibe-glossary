@@ -612,8 +612,9 @@
   max-width: 640px;
   margin: 9px 0 0;
   color: #d4d4d8;
-  font-size: 16px;
-  line-height: 1.5;
+  /* #126: studio introductions are 18 to 20px (DESIGN.md Teaching studios). */
+  font-size: clamp(18px, 1.2vw, 20px);
+  line-height: 1.55;
 }
 
 .motion-lab__hero-actions {
@@ -732,22 +733,46 @@
   line-height: 1.5;
 }
 
+/* #124: the input box is the hit area (44px tall); the visible track stays thin. */
 .motion-lab__control input[type='range'] {
   width: 100%;
-  height: 5px;
-  margin: 6px 0 12px;
-  border-radius: 999px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0 0 4px;
+  padding: 0;
   appearance: none;
-  background: linear-gradient(90deg, #a78bfa, #ec4899);
+  background: transparent;
   cursor: ew-resize;
 }
 
+.motion-lab__control input[type='range']::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+}
+
+.motion-lab__control input[type='range']::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+}
+
 .motion-lab__control input[type='range']::-webkit-slider-thumb {
-  width: 17px;
-  height: 17px;
-  border: 3px solid #17121f;
+  width: 32px;
+  height: 32px;
+  margin-top: -13.5px;
+  border: 4px solid #17121f;
   border-radius: 999px;
   appearance: none;
+  background: white;
+  box-shadow: 0 0 0 2px #a78bfa;
+}
+
+.motion-lab__control input[type='range']::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border: 4px solid #17121f;
+  border-radius: 999px;
   background: white;
   box-shadow: 0 0 0 2px #a78bfa;
 }
@@ -767,8 +792,9 @@
   border: 1px solid rgb(255 255 255 / 0.08);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.035);
-  color: #9f99ae;
-  font-size: 12px;
+  color: #b4aec4;
+  /* #123: option names and explanations are 16px (DESIGN.md Minimum readable sizes). */
+  font-size: 16px;
   font-weight: 800;
   transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
 }
@@ -793,8 +819,8 @@
 .motion-lab__preset-row button span {
   display: block;
   margin-top: 2px;
-  color: #706a7f;
-  font-size: 12px;
+  color: #a1a1aa;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -813,18 +839,31 @@
 }
 
 .motion-lab__choice-grid button strong {
-  font-size: 12px;
+  font-size: 16px;
 }
 
+/* #123: explanations wrap and the cards grow, never an ellipsis. */
 .motion-lab__choice-grid button small {
   display: block;
-  overflow: hidden;
   width: 100%;
-  color: #706a7f;
-  font-size: 12px;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: #a1a1aa;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The three studio controls follow the width of the studio, not the browser:
+   three columns need room for 16px text. The option rows inside each card
+   drop to one column when the card itself is narrow. */
+.motion-lab__workbench { container-type: inline-size; container-name: motion-workbench; }
+.motion-lab__control { container-type: inline-size; container-name: motion-control; }
+
+@container motion-control (max-width: 420px) {
+  .motion-lab__preset-row,
+  .motion-lab__choreo-row,
+  .motion-lab__choice-grid { grid-template-columns: 1fr; }
 }
 
 .motion-lab__curve {
@@ -918,7 +957,7 @@
   border-bottom: 1px solid rgb(255 255 255 / 0.075);
   padding: 0 16px;
   background: rgb(14 11 23 / 0.85);
-  color: #777082;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.11em;
@@ -1320,6 +1359,12 @@
   }
 }
 
+/* After the viewport rule above so the studio width wins: 16px option text
+   needs about 300px per card, so the controls stack when the studio is narrow. */
+@container motion-workbench (max-width: 1000px) {
+  .motion-lab__controls { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 760px) {
   .motion-lab__hero h2,
   .motion-lab__product-card h3 {
@@ -1602,7 +1647,7 @@
   height: 28px;
   border: 1px solid rgb(255 255 255 / 0.11);
   border-radius: 8px;
-  color: #777082;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 900;
   place-items: center;
@@ -1643,7 +1688,7 @@
   border-bottom: 1px solid rgb(255 255 255 / 0.075);
   padding: 0 16px;
   background: rgb(14 11 23 / 0.9);
-  color: #777082;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.1em;
@@ -2124,6 +2169,15 @@
   text-transform: none;
 }
 
+/* #117: `.vg-studio button { font: inherit }` is more specific than the tab
+   rule above and shrank the tabs to the 13px stage-toolbar size. */
+.vg-studio .concept-studio__prompt-tab {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .concept-studio__prompt-tab:hover {
   color: white;
   border-color: rgb(var(--studio-accent-rgb) / 0.5);
@@ -2485,7 +2539,7 @@
   background: rgb(255 255 255 / 0.04);
 }
 
-.token-scene__rail span { color: #787181; font-size: 12px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+.token-scene__rail span { color: #a1a1aa; font-size: 12px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
 .token-scene__rail strong { overflow: hidden; color: var(--studio-accent); font-family: theme('fontFamily.mono'); font-size: 14px; text-overflow: ellipsis; }
 .token-scene__arrow { color: var(--studio-safe); filter: drop-shadow(0 0 12px rgb(94 234 212 / 0.42)); }
 
@@ -3049,16 +3103,22 @@
 .easing-lab__curve-picker button {
   display: flex;
   min-width: 0;
+  /* Name over caption so "Ease-out" never breaks mid word beside "For entrances". */
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 0 12px;
+  justify-content: center;
+  gap: 1px;
+  padding: 4px 8px;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .easing-lab__curve-picker button small {
-  color: #71717a;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .easing-lab__curve-picker button:hover,
@@ -3165,7 +3225,7 @@
   right: -0.035em;
   bottom: -0.08em;
   color: rgb(255 255 255 / 0.035);
-  font-family: 'Hubot Sans', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: clamp(90px, 17cqi, 210px);
   font-weight: 800;
   letter-spacing: -0.07em;
@@ -3242,9 +3302,11 @@
 .easing-lab__curve-labels {
   display: flex;
   justify-content: space-between;
-  color: #71717a;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .easing-lab__travel {
@@ -3294,7 +3356,7 @@
   top: 34px;
   bottom: 34px;
   background: rgb(255 255 255 / 0.16);
-  color: #71717a;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -3394,7 +3456,7 @@
   z-index: 1;
   margin: 0;
   color: white;
-  font-family: 'Hubot Sans', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: clamp(23px, 3cqi, 38px);
   font-weight: 750;
   letter-spacing: -0.02em;
@@ -3721,7 +3783,7 @@
   right: -0.035em;
   bottom: -0.1em;
   color: rgb(255 255 255 / 0.035);
-  font-family: 'Hubot Sans', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: clamp(72px, 13cqi, 164px);
   font-weight: 800;
   letter-spacing: -0.07em;
@@ -3822,7 +3884,7 @@
 .particle-field__copy h3 {
   margin: 0;
   color: white;
-  font-family: 'Hubot Sans', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: clamp(38px, 6cqi, 70px);
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -4545,6 +4607,9 @@
   background: rgb(var(--studio-accent-rgb) / 0.12);
 }
 
+[data-theme='light'] .easing-lab__curve-picker button small,
+[data-theme='light'] .easing-lab__start-line,
+[data-theme='light'] .easing-lab__finish-line { color: #52525b; }
 [data-theme='light'] .easing-lab__curve-picker button[aria-pressed='true'] small { color: #3f6212; }
 
 [data-theme='light'] .easing-lab__stage {
@@ -4720,7 +4785,7 @@
 }
 
 .virtual-list-lab__masthead > div:first-child strong {
-  font-family: 'Hubot Sans', 'Poppins', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 750;
   letter-spacing: -0.025em;
@@ -4741,7 +4806,7 @@
 .virtual-list-lab__render-count > span { grid-column: 1 / -1; }
 .virtual-list-lab__render-count strong {
   color: white;
-  font-family: 'Hubot Sans', 'Poppins', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: 30px;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -4908,7 +4973,7 @@
 .virtual-list-lab__metrics > div { display: grid; gap: 5px; }
 .virtual-list-lab__metrics > div strong {
   color: white;
-  font-family: 'Hubot Sans', 'Poppins', sans-serif;
+  font-family: 'Hubot Sans Variable', 'Hubot Sans', 'Poppins', sans-serif;
   font-size: 38px;
   font-weight: 750;
   font-variant-numeric: tabular-nums;
@@ -5013,7 +5078,7 @@
   padding-bottom: var(--vg-hud-clearance);
 }
 
-/* Size container so side-by-side only turns on when BOTH width and height fit. */
+/* Size container so side-by-side turns on from the lg width (1024px) up. */
 .vg-split-host {
   container-type: size;
   container-name: vg-split;
@@ -5087,10 +5152,12 @@
   }
 }
 
-/* Extra-short landscape (iPad landscape body ~650px): favor the demo.
+/* Extra-short stacked tablet (768 to 1199px wide, body ~650px): favor the demo.
    Require tablet+ width so phone tab mode is not capped at 28% height
-   (that left a giant empty void under Definition while Live Preview stayed hidden). */
-@container vg-split (min-width: 768px) and (max-height: 700px) {
+   (that left a giant empty void under Definition while Live Preview stayed hidden).
+   DOM order is kept: the Try-this note stays before the live stage (DESIGN.md
+   Teaching studios), so this only trims heights. */
+@container vg-split (min-width: 768px) and (max-width: 1199.98px) and (max-height: 700px) {
   .vg-pane-def {
     max-height: max(28%, var(--vg-def-head, 0px));
   }
@@ -5102,40 +5169,14 @@
   .vg-pane-preview .pattern-studio__canvas {
     min-height: 200px;
   }
-
-  /* Put the live stage above the Try-this note and option chrome so
-     "Open Right Sheet" stays on screen in short stacked tablet layouts. */
-  .vg-pane-preview .pattern-studio.vg-studio {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .vg-pane-preview .pattern-studio .vg-studio__hero {
-    order: 0;
-  }
-
-  .vg-pane-preview .pattern-studio .vg-studio__workbench {
-    order: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .vg-pane-preview .pattern-studio .vg-studio__note {
-    order: 2;
-  }
-
-  .vg-pane-preview .pattern-studio .vg-studio__stage {
-    order: 1;
-  }
-
-  .vg-pane-preview .pattern-studio .vg-studio__controls {
-    order: 2;
-  }
 }
 
-/* Side-by-side only when the split host is wide AND tall enough.
-   1180x820 iPad landscape falls back to stacked; 1366x1024 goes side-by-side. */
-@container vg-split (min-width: 1200px) and (min-height: 700px) {
+/* #112 (Desi): side-by-side depends on container width only. DESIGN.md:183-184,
+   two panes on desktop, stacked below. 1200 and up is two columns, so a
+   1280x800 laptop gets definition left and preview right; 1024 to 1199 stays
+   stacked. A short viewport never switches the layout: each pane scrolls
+   inside itself instead. */
+@container vg-split (min-width: 1200px) {
   .vg-split {
     flex-direction: row;
   }
@@ -5175,6 +5216,14 @@
 
   .vg-pane-preview .pattern-studio__demo {
     padding-bottom: 0;
+  }
+}
+
+/* Short laptop (for example 1280x800): a smaller stage floor so the live
+   scene fits beside the definition without switching layout. */
+@container vg-split (min-width: 1200px) and (max-height: 699.98px) {
+  .vg-pane-preview .pattern-studio .vg-studio__stage {
+    min-height: 400px;
   }
 }
 

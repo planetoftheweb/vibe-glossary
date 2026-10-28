@@ -19,10 +19,18 @@ export default function useAuth() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => onAuthStateChanged(auth, (nextUser) => {
-    setUser(nextUser);
-    setAuthReady(true);
-  }), []);
+  useEffect(() => {
+    // Firebase not configured (src/firebase.js exports null): stay signed out
+    // instead of crashing the app on a null auth service.
+    if (!auth) {
+      setAuthReady(true);
+      return undefined;
+    }
+    return onAuthStateChanged(auth, (nextUser) => {
+      setUser(nextUser);
+      setAuthReady(true);
+    });
+  }, []);
 
   const run = useCallback(async (action) => {
     setBusy(true);

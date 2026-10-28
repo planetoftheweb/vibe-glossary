@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#09090b" />
+    <title>Page not found, VibeGlossary</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap"
+    />
+    <script>
+      // Dark is the default. Only a saved light choice turns it off.
+      (function () {
+        try {
+          if (localStorage.getItem('vg-dark-mode') === 'false') document.documentElement.className = 'light';
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html { background: #09090b; color-scheme: dark; }
+      html.light { background: #ffffff; color-scheme: light; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+        box-sizing: border-box;
+        background: #09090b;
+        color: #f4f4f5;
+        font-family: Poppins, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        text-align: center;
+      }
+      html.light body { background: #ffffff; color: #18181b; }
+      main { width: 100%; max-width: 36rem; }
+      .eyebrow { margin: 0 0 12px; color: #a1a1aa; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 700; line-height: 1.15; }
+      p.lead { margin: 16px 0 0; color: #d4d4d8; font-size: 18px; line-height: 1.55; }
+      .actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 22px;
+        border-radius: 12px;
+        border: 1px solid #4f46e5;
+        background: #4f46e5;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a.button:hover { background: #6366f1; border-color: #6366f1; }
+      a.button.secondary { background: transparent; border-color: #3f3f46; color: #e4e4e7; }
+      a.button.secondary:hover { background: #18181b; }
+      a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+      html.light p.lead { color: #3f3f46; }
+      html.light .eyebrow { color: #52525b; }
+      html.light a.button.secondary { border-color: #d4d4d8; color: #27272a; }
+      html.light a.button.secondary:hover { background: #f4f4f5; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Error 404</p>
+      <h1>We could not find that page</h1>
+      <p class="lead">The address may be old or mistyped. Browse the glossary to find the term you want.</p>
+      <div class="actions">
+        <a class="button" href="/glossary">Browse the glossary</a>
+        <a class="button secondary" href="/build">Build literacy topics</a>
+      </div>
+    </main>
+  </body>
+</html>

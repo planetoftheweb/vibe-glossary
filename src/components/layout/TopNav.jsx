@@ -416,6 +416,32 @@ function MenuItem({ icon, onClick, children }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SearchEmptyState - names the query and offers a reset that keeps search open (#109)
+// ─────────────────────────────────────────────────────────────────────────────
+function SearchEmptyState({ term, onClear }) {
+  return (
+    <div
+      role="status"
+      className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 p-4 text-center"
+    >
+      <p className="text-base text-zinc-700 dark:text-zinc-200 [overflow-wrap:anywhere]">
+        No matches for &quot;{term.trim()}&quot;
+      </p>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+        Try a shorter word, or clear the search to start again.
+      </p>
+      <button
+        type="button"
+        onClick={onClear}
+        className="mt-3 inline-flex items-center justify-center min-h-[44px] px-4 rounded-lg border border-zinc-300 dark:border-zinc-600 text-base font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+      >
+        Clear search
+      </button>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SearchResultsList - shared dropdown for unified glossary + build search
 // ─────────────────────────────────────────────────────────────────────────────
 function SearchResultsList({ results, onSelect, maxHeight = 'max-h-80' }) {
@@ -441,10 +467,10 @@ function SearchResultsList({ results, onSelect, maxHeight = 'max-h-80' }) {
 
   const renderHeader = (label, count) => (
     <div className="px-4 pt-2 pb-1 flex items-center justify-between">
-      <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+      <span className="text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
-      <span className="text-xs text-zinc-400 dark:text-zinc-500">{count}</span>
+      <span className="text-xs text-zinc-500 dark:text-zinc-400">{count}</span>
     </div>
   );
 
@@ -682,6 +708,28 @@ export default function TopNav({
     setSearchTerm('');
     setSearchOpen(false);
   };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setTimeout(() => searchInputRef.current?.focus(), 0);
+  };
+
+  // #111: an outside click closes search, the same as Esc. Anything inside a
+  // [data-search-root] (input, results, close button, Search triggers) stays.
+  useEffect(() => {
+    if (!searchOpen) return undefined;
+    const handleOutside = (e) => {
+      if (e.target instanceof Element && e.target.closest('[data-search-root]')) return;
+      setSearchOpen(false);
+      setSearchTerm('');
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside);
+    };
+  }, [searchOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -998,36 +1046,38 @@ export default function TopNav({
 
           {/* Desktop: inline expanding search */}
           {searchOpen ? (
-            <div className="hidden md:block relative w-72 lg:w-96">
+            <div data-search-root className="hidden md:block relative w-72 lg:w-96">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 ref={searchInputRef}
                 type="text"
                 placeholder="Search components and build topics..."
+                aria-label="Search components and build topics"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                className="w-full pl-10 pr-12 py-2.5 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                 autoFocus
               />
               <button
+                type="button"
                 onClick={() => { setSearchOpen(false); setSearchTerm(''); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 p-1"
+                className="group absolute right-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
                 aria-label="Close search"
               >
                 <X size={16} />
+                <HoverTip text="Close search" align="right" />
               </button>
               {searchResults.length > 0 && (
                 <SearchResultsList results={searchResults} onSelect={handleSearchSelect} />
               )}
-              {searchTerm && searchResults.length === 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 p-4 text-center text-base text-zinc-400">
-                  No matches found
-                </div>
+              {searchTerm.trim() && searchResults.length === 0 && (
+                <SearchEmptyState term={searchTerm} onClear={handleClearSearch} />
               )}
             </div>
           ) : (
             <button
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 50); }}
+              data-search-root
               data-tour="search"
               className="group relative hidden md:flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-2.5 py-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
               aria-label="Search (⌘K)"
@@ -1041,6 +1091,7 @@ export default function TopNav({
           {/* Mobile: icon-only search toggle */}
           <button
             onClick={() => { setSearchOpen(!searchOpen); setTimeout(() => searchInputRef.current?.focus(), 50); }}
+            data-search-root
             className="group relative md:hidden flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
             aria-label="Search"
           >
@@ -1202,31 +1253,33 @@ export default function TopNav({
 
       {/* Mobile search overlay, underneath the menu on small devices */}
       {searchOpen && (
-        <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
+        <div data-search-root className="relative z-30 md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3 animate-fade-in">
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               ref={searchInputRef}
               type="text"
               placeholder="Search components and build topics..."
+              aria-label="Search components and build topics"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+              className="w-full pl-10 pr-12 py-3 text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl outline-none focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
               autoFocus
             />
             <button
+              type="button"
               onClick={() => { setSearchOpen(false); setSearchTerm(''); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+              className="group absolute right-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+              aria-label="Close search"
             >
               <X size={16} />
+              <HoverTip text="Close search" align="right" />
             </button>
             {searchResults.length > 0 && (
               <SearchResultsList results={searchResults} onSelect={handleSearchSelect} maxHeight="max-h-64" />
             )}
-            {searchTerm && searchResults.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-50 p-4 text-center text-sm text-zinc-400">
-                No matches found
-              </div>
+            {searchTerm.trim() && searchResults.length === 0 && (
+              <SearchEmptyState term={searchTerm} onClear={handleClearSearch} />
             )}
           </div>
         </div>

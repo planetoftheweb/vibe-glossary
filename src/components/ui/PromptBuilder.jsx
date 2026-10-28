@@ -275,7 +275,7 @@ export default function PromptBuilder({ data, activeOptions, onOptionToggle, cat
                 {i === 0 && <span className={`${cc.accent || 'text-indigo-500'} select-none mr-2`}>$</span>}
                 {seg.value}
                 {i === splitMarkdown(promptText).length - 1 && (
-                  <span className={`inline-block w-2.5 h-5 ${cc.dot || 'bg-indigo-500'} ml-1 align-middle animate-pulse`}></span>
+                  <span className={`inline-block w-2.5 h-5 ${cc.dot || 'bg-indigo-500'} ml-1 align-middle motion-safe:animate-pulse`}></span>
                 )}
               </div>
             ) : (

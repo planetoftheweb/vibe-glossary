@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from 'rea
 import { BookOpen, PanelLeftClose, GripVertical, Eye, FileText, GraduationCap, MousePointerClick } from 'lucide-react';
 
 import TopNav        from './components/layout/TopNav';
+import ShellBackToTop from './components/layout/ShellBackToTop';
+import usePhoneTabScroll from './hooks/usePhoneTabScroll';
 import Footer        from './components/layout/Footer';
 import PromptBuilder from './components/ui/PromptBuilder';
 import DefinitionPanel from './components/ui/DefinitionPanel';
@@ -77,6 +79,8 @@ export default function App() {
   const setSiteSection = useCallback((value) => { setMissingTopic(null); setSiteSectionState(value); }, []);
   const [infoOpen, setInfoOpen]           = useState(true);
   const [mobileView, setMobileView]       = useState('info'); // 'info' or 'preview'
+  const shellRef = useRef(null);
+  const { tabsRef, scrollToTabs } = usePhoneTabScroll();
   const defPaneRef = useRef(null);
   useTitleClearance(defPaneRef, [activeItem, infoOpen, mobileView, siteSection]);
   const [darkMode, setDarkMode]           = useState(() => {
@@ -595,6 +599,7 @@ export default function App() {
 
   return (
     <div
+      ref={shellRef}
       data-theme={darkMode ? 'dark' : 'light'}
       className={`app-shell flex flex-col w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${darkMode ? 'dark' : ''}`}
     >
@@ -748,7 +753,7 @@ export default function App() {
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div className="vg-shell-flow flex-1 flex flex-col min-h-0 overflow-hidden">
         {missingTopic && !showWelcome ? (
           <TopicNotFound
             address={missingTopic.address || `/${missingTopic.section}/${missingTopic.id}`}
@@ -794,9 +799,9 @@ export default function App() {
         <div ref={containerRef} className="vg-split">
 
           {/* Phone-only view toggle. Tablets show both panes stacked. */}
-          <div className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
+          <div ref={tabsRef} className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
             <button
-              onClick={() => setMobileView('info')}
+              onClick={() => { setMobileView('info'); scrollToTabs(); }}
               className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
                 mobileView === 'info'
                   ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
@@ -807,7 +812,7 @@ export default function App() {
               Definition
             </button>
             <button
-              onClick={() => setMobileView('preview')}
+              onClick={() => { setMobileView('preview'); scrollToTabs(); }}
               className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
                 mobileView === 'preview'
                   ? `${activeCat.text} ${activeCat.bg} border-b-2 ${activeCat.border}`
@@ -822,7 +827,7 @@ export default function App() {
           {/* Info & Prompt Panel: phone tabs below md, stacked on tablet, side-by-side via CSS container query */}
           {infoOpen && (
             <div ref={defPaneRef} data-tour="definition-panel" className={`vg-pane-def vg-scroll-clearance ${mobileView === 'info' ? 'flex' : 'hidden'} md:flex bg-white dark:bg-zinc-950 overflow-y-auto overflow-x-hidden z-10 flex-col shrink-0 min-w-0 max-w-full w-full`}>
-              <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
+              <div className="p-5 lg:p-10 xl:p-12 flex flex-col shrink-0 min-h-full min-w-0 max-w-full">
 
                 {/* Definition Header */}
                 <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4 min-w-0">
@@ -842,7 +847,7 @@ export default function App() {
                         <span
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
                             learnMode
-                              ? 'bg-indigo-600 border-indigo-600 text-white group-hover:bg-indigo-500'
+                              ? 'bg-indigo-600 border-indigo-600 text-white group-hover:bg-indigo-700'
                               : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800'
                           }`}
                         >
@@ -991,6 +996,7 @@ export default function App() {
         )}
 
         {!showWelcome && <Footer />}
+        {!showWelcome && <ShellBackToTop shellRef={shellRef} />}
       </div>
     </div>
   );

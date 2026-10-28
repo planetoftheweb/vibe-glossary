@@ -53,7 +53,7 @@ export default function DropzoneDemo({ activeOptions }) {
         }}
         onDrop={handleDrop}
       >
-        <Upload size={48} className={`mb-4 ${isDrag ? 'text-indigo-600 animate-bounce' : 'text-zinc-400'}`} />
+        <Upload size={48} className={`mb-4 ${isDrag ? 'text-indigo-600 motion-safe:animate-bounce' : 'text-zinc-400'}`} />
         <span className="text-xl font-semibold text-zinc-700 dark:text-zinc-200">
           {isDrag ? 'Drop the files here' : 'Drag files here or click to browse'}
         </span>

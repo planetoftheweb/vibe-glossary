@@ -57,7 +57,7 @@ export default function RichTextDemo({ activeOptions }) {
               </ul>
             </div>
           )}
-          <div className="w-0.5 h-6 bg-zinc-900 dark:bg-white animate-pulse inline-block ml-0.5" />
+          <div className="w-0.5 h-6 bg-zinc-900 dark:bg-white motion-safe:animate-pulse inline-block ml-0.5" />
         </div>
         <div className="px-5 py-3 border-t border-zinc-100 dark:border-zinc-700 flex items-center justify-between text-xs text-zinc-400">
           <span>{isMarkdown ? 'Markdown' : 'WYSIWYG'} mode</span>

@@ -41,7 +41,7 @@ export default function BuildTopicView({
   const summary = topic.summary || topic.definition;
 
   return (
-    <div className="p-5 lg:p-10 xl:p-12 flex flex-col min-h-full min-w-0 max-w-full">
+    <div className="p-5 lg:p-10 xl:p-12 flex flex-col shrink-0 min-h-full min-w-0 max-w-full">
       {/* Header */}
       <div className="flex items-start justify-between mb-4 lg:mb-5 gap-4 min-w-0">
         <div className="min-w-0 flex-1">
@@ -60,7 +60,7 @@ export default function BuildTopicView({
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs lg:text-sm font-semibold border transition-colors ${
                   learnMode
-                    ? 'bg-indigo-600 border-indigo-600 text-white group-hover:bg-indigo-500'
+                    ? 'bg-indigo-600 border-indigo-600 text-white group-hover:bg-indigo-700'
                     : 'bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800'
                 }`}
               >
@@ -157,7 +157,7 @@ export default function BuildTopicView({
 
       {cluster?.topics?.length > 1 && (
         <div className="mb-6 lg:mb-8">
-          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">
+          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
             More in {cluster.title}
           </p>
           <ul className="m-0 p-0 list-none divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -182,7 +182,7 @@ export default function BuildTopicView({
       {/* Related UI components */}
       {topic.relatedGlossaryIds?.length > 0 && (
         <div className="mt-auto pt-6 lg:pt-8 border-t border-zinc-100 dark:border-zinc-800">
-          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-3">
+          <p className="text-xs lg:text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
             Related UI patterns
           </p>
           <div className="flex flex-wrap gap-2">

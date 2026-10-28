@@ -48,6 +48,38 @@ describe('Motion studio and the device reduced-motion setting (#132)', () => {
     render(<MotionLesson />);
     expect(screen.getByRole('button', { name: /Natural/ })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'Use Snap easing' })).toHaveAttribute('aria-pressed', 'true');
+    // The readouts say what is playing, not the saved picks.
+    const headings = [...document.querySelectorAll('.motion-lab__control-heading strong')].map((e) => e.textContent);
+    expect(headings).toContain('Off');
+    expect(headings).toContain('Still');
+    expect(headings).not.toContain('Snap');
+    expect(headings).not.toContain('Story');
+    expect(screen.getByText('FINAL STATE')).toBeInTheDocument();
+    expect(screen.queryByText('SNAP')).not.toBeInTheDocument();
+    expect(screen.getByText(/Your picks are saved. They play when full motion is on./)).toBeInTheDocument();
+    const stage = screen.getByTestId('motion-lab-stage');
+    expect(stage).toHaveAttribute('data-easing', 'none');
+    expect(stage).toHaveAttribute('data-choreography', 'none');
+    expect(stage).toHaveAttribute('data-picked-easing', 'snap');
+    expect(stage).toHaveAttribute('data-picked-choreography', 'story');
+  });
+
+  it('names the toggle without the tip text and links the tip with aria-describedby', () => {
+    mockOsPreference(true);
+    render(<MotionLesson />);
+    const toggle = screen.getByRole('button', { name: 'Reduced by your device' });
+    expect(toggle).toHaveAttribute('aria-describedby', 'motion-lab-os-tip');
+    expect(document.getElementById('motion-lab-os-tip')).toHaveTextContent('Your device has reduced motion turned on');
+  });
+
+  it('looks the same under the manual toggle: picks stay pressed and readouts say Off and Still', async () => {
+    mockOsPreference(false);
+    const user = userEvent.setup();
+    render(<MotionLesson />);
+    await user.click(screen.getByRole('button', { name: 'Try reduced motion' }));
+    expect(screen.getByRole('button', { name: /Natural/ })).toHaveAttribute('aria-pressed', 'true');
+    const headings = [...document.querySelectorAll('.motion-lab__control-heading strong')].map((e) => e.textContent);
+    expect(headings).toEqual(expect.arrayContaining(['Off', 'Still']));
   });
 
   it('keeps the manual toggle working with no device preference', async () => {

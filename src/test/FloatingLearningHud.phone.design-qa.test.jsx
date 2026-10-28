@@ -85,6 +85,23 @@ describe('Learning HUD scroll clearance (#130)', () => {
     document.documentElement.style.removeProperty('--vg-hud-clearance');
   });
 
+  it('sits above a footer of any height and only adds the HUD and a gap to the pane clearance', () => {
+    const footer = document.createElement('footer');
+    document.body.appendChild(footer);
+    const rectBefore = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function rect() {
+      if (this === footer) return { width: 320, height: 113, top: 587, left: 0, right: 320, bottom: 700 };
+      return rectBefore.call(this);
+    };
+    const { unmount } = render(<FloatingLearningHud {...props()} />);
+    const root = document.documentElement.style;
+    expect(root.getPropertyValue('--vg-hud-offset')).toContain('125px');
+    expect(root.getPropertyValue('--vg-hud-clearance')).toContain('140px + 12px');
+    unmount();
+    expect(root.getPropertyValue('--vg-hud-offset')).toBe('');
+    footer.remove();
+  });
+
   it('publishes the measured height plus the bottom offset, follows height changes, and clears on unmount', () => {
     const { unmount } = render(<FloatingLearningHud {...props()} />);
     const read = () => document.documentElement.style.getPropertyValue('--vg-hud-clearance');

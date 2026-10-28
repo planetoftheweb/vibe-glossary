@@ -1092,7 +1092,7 @@ function ComboboxPatternPreview({ o }) {
           )}
           {o('opt1') && loading && q && !loadError && (
             <div className="flex items-center gap-3 px-5 py-6 text-base text-zinc-500 dark:text-zinc-400">
-              <Loader2 className="h-5 w-5 shrink-0 animate-spin text-indigo-500" aria-hidden />
+              <Loader2 className="h-5 w-5 shrink-0 motion-safe:animate-spin text-indigo-500" aria-hidden />
               Searching…
             </div>
           )}
@@ -1224,7 +1224,7 @@ function TreeGridPatternPreview({ o }) {
                 <tr role="row">
                   <td colSpan={colCount} className={`${td} bg-indigo-50/50 py-3 pl-6 text-sm text-indigo-900 dark:bg-indigo-950/30 dark:text-indigo-200`}>
                     <span className="inline-flex items-center gap-2.5">
-                      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-indigo-600 dark:text-indigo-400" aria-hidden />
+                      <Loader2 className="h-4 w-4 shrink-0 motion-safe:animate-spin text-indigo-600 dark:text-indigo-400" aria-hidden />
                       Loading children…
                     </span>
                   </td>
@@ -1523,7 +1523,7 @@ function LinkCardPatternPreview({ o }) {
             fixed image ratio so the layout does not jump when metadata arrives.
           </p>
         </div>
-        <div className={`${cx.card} animate-pulse overflow-hidden p-0`}>
+        <div className={`${cx.card} motion-safe:animate-pulse overflow-hidden p-0`}>
           <div className="aspect-[1200/630] bg-zinc-200 dark:bg-zinc-700" />
           <div className="space-y-3 p-5 sm:p-6">
             <div className="h-5 w-3/4 rounded-lg bg-zinc-200 dark:bg-zinc-600" />
@@ -1680,7 +1680,7 @@ function QrCodePatternPreview({ o }) {
         ) : failed ? (
           <p className="text-center text-base font-medium text-rose-600 dark:text-rose-400">Could not generate QR code.</p>
         ) : (
-          <Loader2 className="h-10 w-10 animate-spin text-indigo-500" aria-label="Generating QR code" />
+          <Loader2 className="h-10 w-10 motion-safe:animate-spin text-indigo-500" aria-label="Generating QR code" />
         )}
       </div>
       {altAndUrl && (
@@ -1706,7 +1706,7 @@ const RENDER = {
   },
 
   spinner(o) {
-    const motionClass = o('opt3') ? '' : 'animate-spin';
+    const motionClass = o('opt3') ? '' : 'motion-safe:animate-spin';
     return (
       <div className={`${cx.card} p-10 flex flex-col items-center gap-4`} aria-busy="true">
         <Loader2 className={`w-10 h-10 text-indigo-500 ${motionClass}`} />
@@ -2409,7 +2409,7 @@ const RENDER = {
             {o('opt3') && (
               <a
                 href="#hover-card-demo"
-                className="mt-3 block text-sm font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-400"
+                className="mt-3 block text-sm font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
                 onClick={(e) => e.preventDefault()}
               >
                 Open profile
@@ -2517,7 +2517,7 @@ const RENDER = {
           <div className={cx.bar + ' h-3 w-4/5'} />
         </div>
         <div className="absolute inset-0 bg-white/70 dark:bg-zinc-950/70 flex items-center justify-center backdrop-blur-[2px]">
-          <Loader2 className={`w-10 h-10 text-indigo-500 animate-spin ${o('opt1') ? 'text-violet-500' : ''}`} />
+          <Loader2 className={`w-10 h-10 text-indigo-500 motion-safe:animate-spin ${o('opt1') ? 'text-violet-500' : ''}`} />
         </div>
       </div>
     );

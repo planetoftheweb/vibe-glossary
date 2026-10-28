@@ -16,6 +16,7 @@ import MotionLesson from './MotionLesson';
 import WebFoundationLesson from './WebFoundationLesson';
 import LearningCheckpointModal from './LearningCheckpointModal';
 import HoverTip from '../ui/HoverTip';
+import usePhoneTabScroll from '../../hooks/usePhoneTabScroll';
 
 /**
  * Build Literacy section: two-pane body that mirrors the UI Glossary.
@@ -112,12 +113,13 @@ export default function BuildLiteracyView({
   // container ref so the math is relative to this view, not the App shell.
   const { containerRef, onResizeStart } = usePanelResize(setPanelWidth || (() => {}));
   const defPaneRef = useRef(null);
+  const { tabsRef, scrollToTabs } = usePhoneTabScroll();
   useTitleClearance(defPaneRef, [activeTopicId, infoOpen, mobileView]);
 
   if (cluster?.id === 'web-foundations' && topic) {
     return (
       <>
-        <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-zinc-950">
+        <div className="vg-shell-flow flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-zinc-950">
           <WebFoundationLesson
             topic={topic}
             cluster={cluster}
@@ -131,11 +133,11 @@ export default function BuildLiteracyView({
 
   return (
     <>
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
+      <div className="vg-shell-flow flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
       {/* Phone-only view toggle. Tablets show both panes stacked. */}
-      <div className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
+      <div ref={tabsRef} className="vg-phone-tabs md:hidden flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
         <button
-          onClick={() => setMobileView('info')}
+          onClick={() => { setMobileView('info'); scrollToTabs(); }}
           className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
             mobileView === 'info'
               ? `${cc.text} ${cc.bg} border-b-2 ${cc.border}`
@@ -146,7 +148,7 @@ export default function BuildLiteracyView({
           Definition
         </button>
         <button
-          onClick={() => setMobileView('preview')}
+          onClick={() => { setMobileView('preview'); scrollToTabs(); }}
           className={`flex-1 flex items-center justify-center gap-2 min-h-[44px] py-3.5 text-base font-semibold transition-colors ${
             mobileView === 'preview'
               ? `${cc.text} ${cc.bg} border-b-2 ${cc.border}`

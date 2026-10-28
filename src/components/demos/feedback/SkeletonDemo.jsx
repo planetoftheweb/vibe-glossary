@@ -3,7 +3,7 @@ export default function SkeletonDemo({ activeOptions }) {
   const hasCircle = activeOptions.has('circle');
   const animClass = isShimmer
     ? 'animate-shimmer'
-    : 'animate-pulse bg-zinc-200 dark:bg-zinc-800';
+    : 'motion-safe:animate-pulse bg-zinc-200 dark:bg-zinc-800';
 
   return (
     <div className="flex items-center justify-center h-full w-full p-8">

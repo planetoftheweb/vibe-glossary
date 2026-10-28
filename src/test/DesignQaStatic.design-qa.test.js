@@ -48,4 +48,31 @@ describe('design QA static contracts', () => {
     expect(css).not.toMatch(/color:\s*#777082/);
     expect(css).not.toMatch(/\.token-scene__rail span\s*\{\s*color:\s*#787181/);
   });
+
+  it('#129: Easing and Particle lab buttons are 16px and wrap instead of shrinking', () => {
+    const particle = css.match(/\.particle-field__control-group button,\s*\.particle-field__transport button\s*\{([^}]*)\}/);
+    expect(particle[1]).toMatch(/font-size:\s*16px/);
+    expect(particle[1]).toMatch(/min-height:\s*44px/);
+    expect(css).toMatch(/\.particle-field__control-group > div\s*\{[^}]*flex-wrap:\s*wrap/);
+    expect(css).toMatch(/\.particle-field__transport\s*\{[^}]*flex-wrap:\s*wrap/);
+    expect(css).toMatch(/\.easing-lab__transport\s*\{[^}]*flex-wrap:\s*wrap/);
+    const easing = css.match(/\.easing-lab__transport button\s*\{[^}]*font-size:\s*(\d+)px/);
+    expect(easing[1]).toBe('16');
+  });
+
+  it('#131: Replay is the solid indigo primary and the lab has no teal', () => {
+    const replay = css.match(/\.motion-lab__replay\s*\{([^}]*)\}/);
+    expect(replay[1]).toMatch(/background:\s*#4f46e5/);
+    expect(replay[1]).toMatch(/border:\s*1px solid #6366f1/);
+    expect(replay[1]).toMatch(/box-shadow:\s*none/);
+    const lines = css.split('\n');
+    const start = lines.findIndex((l) => l.startsWith('.motion-lab {'));
+    const lab = lines.slice(start, start + 840).join('\n');
+    expect(lab).not.toMatch(/#5eead4|#99f6e4|#2dd4bf|rgb\(94 234 212|rgb\(20 184 166/i);
+  });
+
+  it('#112: short viewports never change the two-column decision', () => {
+    expect(css).toMatch(/@container vg-split \(min-width: 1200px\) \{/);
+    expect(css).not.toMatch(/@container vg-split \(min-width: 1200px\) and \(min-height/);
+  });
 });

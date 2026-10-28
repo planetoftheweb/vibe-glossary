@@ -30,16 +30,39 @@ const DEFAULT_HUD_STATE = Object.freeze({
   y: 112,
 });
 
-function readHudState() {
+// States chosen by the app, not by the learner. They are not saved, so a phone
+// default never becomes a stored preference for a later desktop visit.
+const AUTO_STATES = new WeakSet();
+
+function isPhoneWidth() {
   try {
-    const saved = JSON.parse(localStorage.getItem(LEARNING_HUD_STORAGE_KEY));
-    return {
-      ...DEFAULT_HUD_STATE,
-      ...(saved && typeof saved === 'object' ? saved : {}),
-    };
+    return typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia('(max-width: 767.98px)').matches;
   } catch {
-    return { ...DEFAULT_HUD_STATE };
+    return false;
   }
+}
+
+// #130: a first phone visit starts minimized so the HUD does not cover the
+// footer, menu rows, or the last Compare chips. Saved preferences always win.
+function readHudState() {
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(LEARNING_HUD_STORAGE_KEY));
+  } catch {
+    saved = null;
+  }
+  const hasSaved = Boolean(saved && typeof saved === 'object');
+  const state = {
+    ...DEFAULT_HUD_STATE,
+    ...(hasSaved ? saved : {}),
+  };
+  if (!hasSaved && isPhoneWidth()) {
+    state.mode = 'minimized';
+    AUTO_STATES.add(state);
+  }
+  return state;
 }
 
 function clamp(value, min, max) {
@@ -310,8 +333,33 @@ export default function FloatingLearningHud({
   const dragRef = useRef(null);
 
   useEffect(() => {
+    if (AUTO_STATES.has(hudState)) return;
     try { localStorage.setItem(LEARNING_HUD_STORAGE_KEY, JSON.stringify(hudState)); } catch {}
   }, [hudState]);
+
+  // #130: scroll clearance follows the HUD's real height (plus its bottom
+  // offset) so the end of every pane stays reachable, minimized or expanded.
+  useEffect(() => {
+    const root = document.documentElement;
+    const node = rootRef.current;
+    if (!node || hudState.dock !== 'bottom' || typeof ResizeObserver === 'undefined') {
+      root.style.removeProperty('--vg-hud-clearance');
+      return undefined;
+    }
+    const apply = () => {
+      const height = node.getBoundingClientRect().height;
+      if (height > 0) {
+        root.style.setProperty('--vg-hud-clearance', `calc(${Math.ceil(height)}px + 4.75rem + env(safe-area-inset-bottom, 0px))`);
+      }
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--vg-hud-clearance');
+    };
+  }, [hudState.dock, hudState.mode]);
 
   useEffect(() => {
     if (!activePopup) return undefined;
@@ -436,7 +484,7 @@ export default function FloatingLearningHud({
       <button
         type="button"
         onClick={() => setMode('minimized')}
-        className="vg-learning-hud-hidden-tab fixed right-0 z-[140] inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        className="vg-learning-hud-hidden-tab fixed right-0 z-40 inline-flex min-h-[48px] items-center gap-2 rounded-l-2xl border border-r-0 border-indigo-400/40 bg-zinc-950/95 px-3 text-sm font-extrabold text-white shadow-2xl backdrop-blur-xl transition-transform hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         aria-label="Show learning HUD"
       >
         <Maximize2 size={16} className="text-indigo-300" aria-hidden="true" />
@@ -457,7 +505,7 @@ export default function FloatingLearningHud({
       style={rootPosition}
       data-dock={hudState.dock}
       data-mode={hudState.mode}
-      className={`vg-learning-hud pointer-events-none fixed z-[140] ${positionClass}`}
+      className={`vg-learning-hud pointer-events-none fixed z-40 ${positionClass}`}
       aria-label="Learning HUD"
     >
       {hudState.mode === 'minimized' ? (

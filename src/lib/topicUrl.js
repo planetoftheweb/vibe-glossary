@@ -102,7 +102,9 @@ export function unknownTopicFromParsed(parsed) {
 
 export function unknownTopicFromWindow() {
   if (typeof window === 'undefined') return null;
-  return unknownTopicFromParsed(parseTopicLocation(window.location));
+  const unknown = unknownTopicFromParsed(parseTopicLocation(window.location));
+  if (!unknown) return null;
+  return { ...unknown, address: `${window.location.pathname || '/'}${window.location.search || ''}` };
 }
 
 export function topicHref(section, id) {

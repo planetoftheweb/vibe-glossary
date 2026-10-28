@@ -8,7 +8,7 @@ describe('Motion glossary beginner guidance', () => {
 
     expect(screen.getByText('Try this')).toBeInTheDocument();
     expect(screen.getByText('Turn on Slow study, then press Replay.')).toBeInTheDocument();
-    expect(screen.getByText(/Watch how each one starts and stops differently/)).toBeInTheDocument();
+    expect(screen.getByText(/spacing shows where it speeds up and slows down/)).toBeInTheDocument();
     expect(document.querySelector('.vg-studio__intro')).toBeNull();
   });
 

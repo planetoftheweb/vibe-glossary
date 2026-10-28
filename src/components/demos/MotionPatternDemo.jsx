@@ -1,38 +1,9 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Eye, EyeOff, Pause, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { GLOSSARY_DATA } from '../../data/glossary';
 import StudioShell from '../ui/StudioShell';
-
-function prefersReducedMotion() {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
-  try {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch {
-    return false;
-  }
-}
-
-function subscribeReducedMotion(onStoreChange) {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return () => {};
-  try {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const handler = () => onStoreChange();
-    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', handler);
-    else if (typeof mq.addListener === 'function') mq.addListener(handler);
-    return () => {
-      if (typeof mq.removeEventListener === 'function') mq.removeEventListener('change', handler);
-      else if (typeof mq.removeListener === 'function') mq.removeListener(handler);
-    };
-  } catch {
-    return () => {};
-  }
-}
-
-/** Live OS preference. Replay must not close over a stale first-paint value. */
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
-}
+import usePrefersReducedMotion, { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 function ChipButton({ onClick, pressed, children, label }) {
   return (
@@ -201,7 +172,7 @@ function EasingPreview({ reduced }) {
       <div className="easing-lab__stage">
         <div className="easing-lab__grid" aria-hidden="true" />
         <div className="easing-lab__wash" aria-hidden="true" />
-        <div className="easing-lab__ghost" aria-hidden="true">{selected.label.toUpperCase()}</div>
+        <div className="easing-lab__ghost" aria-hidden="true">{selected.role.toUpperCase()}</div>
 
         <div className="easing-lab__curve-panel">
           <div>
@@ -1065,8 +1036,8 @@ function SharedMorphPreview({ reduced }) {
 }
 
 const MOTION_GUIDANCE = {
-  particlefield: ['Choose V mark, switch to Immersive, then hide the field.', 'Watch the particles reshape without moving the headline. When the field disappears, the message still works. Atmosphere supports the page, it does not carry the meaning.'],
-  easing: ['Turn on Slow study, then press Replay.', 'Switch between Ease-out, Ease-in, and Linear. The footprints mark equal moments, so their spacing reveals where the object speeds up and slows down. Watch how each one starts and stops differently.'],
+  particlefield: ['Choose V mark, switch to Immersive, then hide the field.', 'Watch the particles reshape while the headline stays put. Hide the field and the message still works.'],
+  easing: ['Turn on Slow study, then press Replay.', 'Switch between Ease-out, Ease-in, and Linear. The footprints mark equal moments, so their spacing shows where it speeds up and slows down.'],
   parallax: ['Scroll the mini page slowly.', 'The far layer moves less than the near layer. That speed difference creates depth.'],
   stagger: ['Switch between All at once and 200ms stagger, then press Replay.', 'Watch whether your eye sees one pile or a clear first, second, and third item.'],
   scrollreveal: ['Scroll until each card crosses the guide line, then press Reset.', 'Each card appears when it enters the useful part of the viewport, not merely because time passed.'],

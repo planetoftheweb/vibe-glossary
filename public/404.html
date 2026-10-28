@@ -22,6 +22,12 @@
       })();
     </script>
     <style>
+      @font-face {
+        font-family: 'Hubot Sans Variable';
+        src: url('/fonts/hubot-sans-latin-wght-normal.woff2') format('woff2');
+        font-weight: 200 900;
+        font-display: swap;
+      }
       html { background: #09090b; color-scheme: dark; }
       html.light { background: #ffffff; color-scheme: light; }
       body {
@@ -29,53 +35,57 @@
         min-height: 100vh;
         min-height: 100dvh;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 32px 20px;
-        box-sizing: border-box;
+        flex-direction: column;
         background: #09090b;
         color: #f4f4f5;
         font-family: Poppins, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-        text-align: center;
       }
       html.light body { background: #ffffff; color: #18181b; }
-      main { width: 100%; max-width: 36rem; }
-      .eyebrow { margin: 0 0 12px; color: #a1a1aa; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-      h1 { margin: 0; font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 700; line-height: 1.15; }
+      header { display: flex; align-items: center; min-height: 64px; padding: 0 20px; border-bottom: 1px solid #27272a; }
+      html.light header { border-bottom-color: #e4e4e7; }
+      header a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; font-family: 'Hubot Sans Variable', 'Hubot Sans', Poppins, sans-serif; font-size: 20px; font-weight: 750; text-decoration: none; }
+      main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; max-width: 36rem; margin: 0 auto; padding: 32px 20px; text-align: center; }
+      h1 { margin: 0; font-family: 'Hubot Sans Variable', 'Hubot Sans', Poppins, sans-serif; font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 750; line-height: 1.1; letter-spacing: -0.008em; }
       p.lead { margin: 16px 0 0; color: #d4d4d8; font-size: 18px; line-height: 1.55; }
-      .actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+      p.lead code { color: #f4f4f5; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; overflow-wrap: anywhere; }
+      .actions { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
       a.button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         min-height: 44px;
-        padding: 0 22px;
+        padding: 0 24px;
         border-radius: 12px;
-        border: 1px solid #4f46e5;
         background: #4f46e5;
         color: #ffffff;
         font-size: 16px;
         font-weight: 600;
         text-decoration: none;
       }
-      a.button:hover { background: #6366f1; border-color: #6366f1; }
-      a.button.secondary { background: transparent; border-color: #3f3f46; color: #e4e4e7; }
-      a.button.secondary:hover { background: #18181b; }
+      a.button:hover { background: #6366f1; }
+      a.link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: #818cf8; font-size: 16px; font-weight: 600; text-decoration: none; }
+      a.link:hover { text-decoration: underline; }
       a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
       html.light p.lead { color: #3f3f46; }
-      html.light .eyebrow { color: #52525b; }
-      html.light a.button.secondary { border-color: #d4d4d8; color: #27272a; }
-      html.light a.button.secondary:hover { background: #f4f4f5; }
+      html.light p.lead code { color: #27272a; }
+      html.light a.link { color: #4f46e5; }
     </style>
+    <script>
+      // Name the address that was asked for, as text only.
+      document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById('asked');
+        if (el) el.textContent = location.pathname + location.search;
+      });
+    </script>
   </head>
   <body>
+    <header><a href="/">VibeGlossary</a></header>
     <main>
-      <p class="eyebrow">Error 404</p>
-      <h1>We could not find that page</h1>
-      <p class="lead">The address may be old or mistyped. Browse the glossary to find the term you want.</p>
+      <h1>We can&rsquo;t find that page</h1>
+      <p class="lead">There is nothing at <code id="asked">the address you asked for</code>, so the link may be old or mistyped.</p>
       <div class="actions">
         <a class="button" href="/glossary">Browse the glossary</a>
-        <a class="button secondary" href="/build">Build literacy topics</a>
+        <a class="link" href="/build">Browse build literacy</a>
       </div>
     </main>
   </body>

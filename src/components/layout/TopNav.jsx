@@ -112,6 +112,8 @@ function PillDropdown({
   // from the header, since the page H1 already shows it, and keeps the full
   // title in the hover / focus tip. Short titles (Easing, Modal / Dialog) stay.
   labelFit,
+  // #133: extra classes for the wrapper, so a pill can flex (flex-1 min-w-0).
+  className = '',
 }) {
   const wrapRef = useRef(null);
   const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
@@ -134,7 +136,7 @@ function PillDropdown({
   }, [isOpen, onClose]);
 
   return (
-    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-0 max-w-full'}`}>
+    <div ref={wrapRef} className={`relative ${iconOnly ? 'min-w-0' : 'min-w-0 max-w-full'} ${className}`.trim()}>
       <button
         onClick={onToggle}
         aria-label={ariaLabel || label}
@@ -1295,14 +1297,18 @@ export default function TopNav({
 
       {/* Mobile nav, icon-only cluster + topic dropdowns for Build literacy */}
       {siteSection === 'build' && (
-      <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
+      <div data-mobile-crumbs className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
         <PillDropdown
           iconOnly
           ariaLabel={`Cluster: ${activeBuildCluster?.title || 'Web foundations'}`}
+          className="max-sm:max-w-[48%]"
           icon={
-            <span className={`flex items-center gap-1.5 ${activeBuildColors.accent}`}>
-              <span className={`w-2 h-2 rounded-full ${activeBuildColors.dot}`} />
-              {BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={16} />}
+            <span className={`flex min-w-0 items-center gap-1.5 ${activeBuildColors.accent}`}>
+              <span className={`w-2 h-2 rounded-full max-sm:hidden ${activeBuildColors.dot}`} />
+              <span className="shrink-0">{BUILD_CLUSTER_ICONS[activeBuildCluster?.id] || <Compass size={16} />}</span>
+              <span className="min-w-0 text-left text-base font-semibold leading-tight line-clamp-2 sm:hidden [overflow-wrap:normal] [word-break:normal]">
+                {activeBuildCluster?.title || 'Web foundations'}
+              </span>
             </span>
           }
           isOpen={openDropdown === 'mob-build-cluster'}
@@ -1331,15 +1337,18 @@ export default function TopNav({
           })}
         </PillDropdown>
 
-        <span className="text-zinc-300 dark:text-zinc-700">/</span>
+        <span className="text-zinc-300 dark:text-zinc-700 max-sm:hidden">/</span>
 
         <PillDropdown
           iconOnly
           ariaLabel={`Topic: ${activeBuildTopicData?.title || 'Pick a topic'}`}
+          label={activeBuildTopicData?.title || 'Pick a topic'}
+          className="flex-1 min-w-0"
           icon={
-            <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
-              <List size={16} className="text-zinc-400" />
-              <span className="truncate max-w-[9rem]">{activeBuildTopicData?.title || 'Pick a topic'}</span>
+            <span className="flex min-w-0 flex-1 items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
+              <List size={16} className="shrink-0 text-zinc-400" />
+              {/* #133: wraps at word boundaries, 2 lines at most. The Tip carries the full name. */}
+              <span className="min-w-0 flex-1 text-left leading-tight line-clamp-2 [overflow-wrap:normal] [word-break:normal]">{activeBuildTopicData?.title || 'Pick a topic'}</span>
             </span>
           }
           isOpen={openDropdown === 'mob-build-topic'}
@@ -1371,14 +1380,18 @@ export default function TopNav({
 
       {/* Mobile nav, icon-only category + component dropdowns */}
       {siteSection === 'glossary' && (
-      <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
+      <div data-mobile-crumbs className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
         <PillDropdown
           iconOnly
           ariaLabel={`Category: ${activeCat?.name || 'Overlays'}`}
+          className="max-sm:max-w-[48%]"
           icon={
-            <span className={`flex items-center gap-1.5 ${catColors.accent}`}>
-              <span className={`w-2 h-2 rounded-full ${catColors.dot}`} />
-              {activeCat?.icon}
+            <span className={`flex min-w-0 items-center gap-1.5 ${catColors.accent}`}>
+              <span className={`w-2 h-2 rounded-full max-sm:hidden ${catColors.dot}`} />
+              <span className="shrink-0">{activeCat?.icon}</span>
+              <span className="min-w-0 text-left text-base font-semibold leading-tight line-clamp-2 sm:hidden [overflow-wrap:normal] [word-break:normal]">
+                {activeCat?.name || 'Overlays'}
+              </span>
             </span>
           }
           isOpen={openDropdown === 'mob-cat'}
@@ -1407,15 +1420,17 @@ export default function TopNav({
           })}
         </PillDropdown>
 
-        <span className="text-zinc-300 dark:text-zinc-700">/</span>
+        <span className="text-zinc-300 dark:text-zinc-700 max-sm:hidden">/</span>
 
         <PillDropdown
           iconOnly
           ariaLabel={`Component: ${activeItemData?.name || 'Modal'}`}
+          label={activeItemData?.name || 'Modal'}
+          className="flex-1 min-w-0"
           icon={
-            <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
-              <List size={16} className="text-zinc-400" />
-              <span className="truncate max-w-[9rem]">{activeItemData?.name || 'Modal'}</span>
+            <span className="flex min-w-0 flex-1 items-center gap-1.5 text-zinc-700 dark:text-zinc-200 font-semibold text-base">
+              <List size={16} className="shrink-0 text-zinc-400" />
+              <span className="min-w-0 flex-1 text-left leading-tight line-clamp-2 [overflow-wrap:normal] [word-break:normal]">{activeItemData?.name || 'Modal'}</span>
             </span>
           }
           isOpen={openDropdown === 'mob-comp'}

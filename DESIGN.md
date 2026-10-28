@@ -219,6 +219,13 @@ Repeated interactions are one component, reused. A second hand-built version of 
 - Teaching examples use one sentence and the direct next step. No stock illustration and no giant "add your first" button in a lesson.
 - Search and filter empties name what was searched and offer a reset.
 
+### Not-found pages
+
+- An unknown address gets a VibeGlossary page, never the host's default page. Use the same header, theme, zinc chrome, Hubot Sans heading, and Poppins body as the app. Both modes must work.
+- Say what happened and what to do next: one heading ("We can't find that page"), one sentence naming the address that was asked for, and one primary action back to the glossary (`bg-indigo-600 text-white`, 44px). A secondary link (`text-indigo-500 dark:text-indigo-400`) may open search.
+- An unknown term or topic inside a known section, such as `/glossary/<unknown>`, gets the same message in place. Do not show Welcome or swap in a different term.
+- Keep the real not-found status where the host allows it.
+
 ## Iconography
 
 Lucide React only (`lucide-react`). Sizes 14 / 16 / 20 / 24 / 32. No mixed sets.

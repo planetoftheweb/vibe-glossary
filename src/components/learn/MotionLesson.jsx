@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion';
+import HoverTip from '../ui/HoverTip';
 import {
   Accessibility,
   Check,
@@ -93,7 +95,13 @@ export default function MotionLesson() {
   const [duration, setDuration] = useState(280);
   const [easing, setEasing] = useState('snap');
   const [choreography, setChoreography] = useState('story');
-  const [reduced, setReduced] = useState(false);
+  // #132: the device setting and the in-page toggle both mean "reduced".
+  const [manualReduced, setManualReduced] = useState(false);
+  const osReduced = usePrefersReducedMotion();
+  const reduced = manualReduced || osReduced;
+  // Under the device setting the learner's picks stay visible as pressed (the
+  // picks are real, they just have no travel to show), so nothing is masked.
+  const picked = (isMatch) => isMatch && (osReduced || !reduced);
   const [run, setRun] = useState(1);
 
   const easingData = EASINGS[easing];
@@ -119,19 +127,19 @@ export default function MotionLesson() {
 
   function chooseDuration(value) {
     setDuration(value);
-    setReduced(false);
+    setManualReduced(false);
     setRun((current) => current + 1);
   }
 
   function chooseEasing(value) {
     setEasing(value);
-    setReduced(false);
+    setManualReduced(false);
     setRun((current) => current + 1);
   }
 
   function chooseChoreography(value) {
     setChoreography(value);
-    setReduced(false);
+    setManualReduced(false);
     setRun((current) => current + 1);
   }
 
@@ -157,15 +165,18 @@ export default function MotionLesson() {
         <div className="motion-lab__hero-actions">
           <button
             type="button"
-            className="motion-lab__reduce"
+            className="motion-lab__reduce group relative"
             aria-pressed={reduced}
+            aria-disabled={osReduced ? 'true' : undefined}
             onClick={() => {
-              setReduced((value) => !value);
+              if (osReduced) return;
+              setManualReduced((value) => !value);
               setRun((value) => value + 1);
             }}
           >
-            <Accessibility size={16} aria-hidden />
-            {reduced ? 'Motion reduced' : 'Try reduced motion'}
+            {reduced ? <Check size={16} strokeWidth={3} aria-hidden /> : <Accessibility size={16} aria-hidden />}
+            {osReduced ? 'Reduced by your device' : reduced ? 'Motion reduced' : 'Try reduced motion'}
+            {osReduced && <HoverTip text="Your device has reduced motion turned on" wrap />}
           </button>
           <button type="button" className="motion-lab__replay" onClick={replay}>
             <Play size={16} fill="currentColor" aria-hidden />
@@ -196,7 +207,7 @@ export default function MotionLesson() {
                 <button
                   key={value}
                   type="button"
-                  aria-pressed={!reduced && duration === value}
+                  aria-pressed={picked(duration === value)}
                   onClick={() => chooseDuration(value)}
                 >
                   {value === 180 ? 'Quick' : value === 280 ? 'Natural' : 'Dramatic'}
@@ -217,7 +228,7 @@ export default function MotionLesson() {
                 <button
                   key={id}
                   type="button"
-                  aria-pressed={!reduced && easing === id}
+                  aria-pressed={picked(easing === id)}
                   aria-label={`Use ${option.label} easing`}
                   onClick={() => chooseEasing(id)}
                 >
@@ -240,7 +251,7 @@ export default function MotionLesson() {
                 <button
                   key={id}
                   type="button"
-                  aria-pressed={!reduced && choreography === id}
+                  aria-pressed={picked(choreography === id)}
                   onClick={() => chooseChoreography(id)}
                 >
                   <span className={`motion-lab__cue-icon motion-lab__cue-icon--${id}`} aria-hidden>

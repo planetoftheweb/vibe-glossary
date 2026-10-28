@@ -751,9 +751,9 @@ export default function App() {
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {missingTopic && !showWelcome ? (
           <TopicNotFound
-            slug={missingTopic.id}
+            address={missingTopic.address || `/${missingTopic.section}/${missingTopic.id}`}
             onBrowseGlossary={() => setShowGlossaryIndex(true)}
-            onBrowseBuild={() => setShowBuildIndex(true)}
+            onOpenSearch={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }))}
           />
         ) : siteSection === 'build' ? (
           <BuildLiteracyView

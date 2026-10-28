@@ -1,3 +1,6 @@
+import { useRef } from 'react';
+import { useKeepTipOnScreen } from '../../hooks/useKeepOnScreen';
+
 /**
  * In-app hover/focus tip for icon chrome. Decorative only: the control
  * still needs aria-label. Never use a native title= for the same job.
@@ -7,9 +10,11 @@ export default function HoverTip({
   align = 'left',
   hideFrom,
   hidden = false,
-  wrap = false,
   id,
 }) {
+  const tipRef = useRef(null);
+  useKeepTipOnScreen(tipRef, !hidden && Boolean(text), text);
+
   if (!text || hidden) return null;
   const alignClass = align === 'right'
     ? 'right-0 left-auto'
@@ -19,9 +24,10 @@ export default function HoverTip({
   const hideClass = hideFrom === 'lg' ? 'lg:hidden' : hideFrom === 'xl' ? 'xl:hidden' : '';
   return (
     <span
+      ref={tipRef}
       id={id}
       role="tooltip"
-      className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} ${wrap ? 'w-max max-w-[min(18rem,calc(100vw-2rem))] whitespace-normal leading-snug' : 'whitespace-nowrap max-w-[min(20rem,calc(100vw-2rem))] truncate'} px-3 py-2 rounded-lg text-base font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
+      className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} w-max max-w-[min(18rem,calc(100vw-2rem))] whitespace-normal leading-snug px-3 py-2 rounded-lg text-base font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
     >
       {text}
     </span>

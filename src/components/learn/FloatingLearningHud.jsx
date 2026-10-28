@@ -550,7 +550,7 @@ export default function FloatingLearningHud({
             aria-label="Expand learning HUD"
           >
             <span className={accentClass}>{currentPosition}</span>
-            <span className="text-zinc-500">of</span>
+            <span className="text-zinc-400">of</span>
             <span>{total}</span>
           </button>
           <button

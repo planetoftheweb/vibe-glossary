@@ -11,10 +11,10 @@ export default function Footer() {
 
   return (
     <footer className="app-shell-footer shrink-0 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 px-4 lg:px-6 py-3 flex flex-wrap items-center justify-center lg:justify-between gap-x-6 gap-y-2 text-base text-zinc-600 dark:text-zinc-300">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
         <span className="font-semibold text-zinc-800 dark:text-zinc-100">VibeGlossary</span>
         <span className="font-mono text-zinc-500 dark:text-zinc-400">v{version}</span>
-        <span className="text-zinc-300 dark:text-zinc-700">·</span>
+        <span aria-hidden="true" className="max-sm:hidden text-zinc-300 dark:text-zinc-700">·</span>
         <span>
           <span className="font-semibold text-zinc-800 dark:text-zinc-100">{componentCount}</span> components
         </span>

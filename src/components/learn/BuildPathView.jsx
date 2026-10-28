@@ -220,7 +220,7 @@ export default function BuildPathView({ path, isOpen, onClose, onAwardBadge, onS
 }
 
 function colors_active(cc) {
-  return cc.active || 'bg-indigo-600 hover:bg-indigo-500';
+  return cc.active || 'bg-indigo-600 hover:bg-indigo-700';
 }
 
 function PathHeader({ path, colors, phase, stepIndex, totalSteps, quizIndex, totalQuiz, onClose }) {

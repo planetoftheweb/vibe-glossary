@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;family=Source+Code+Pro:wght@400&amp;display=swap"
     />
     <script>
       // Dark is the default. Only a saved light choice turns it off.
@@ -47,7 +47,7 @@
       main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; max-width: 36rem; margin: 0 auto; padding: 32px 20px; text-align: center; }
       h1 { margin: 0; font-family: 'Hubot Sans Variable', 'Hubot Sans', Poppins, sans-serif; font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 750; line-height: 1.1; letter-spacing: -0.008em; }
       p.lead { margin: 16px 0 0; color: #d4d4d8; font-size: 18px; line-height: 1.55; }
-      p.lead code { color: #f4f4f5; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; overflow-wrap: anywhere; }
+      p.lead code { color: #f4f4f5; font-family: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; overflow-wrap: anywhere; }
       .actions { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
       a.button {
         display: inline-flex;
@@ -62,13 +62,14 @@
         font-weight: 600;
         text-decoration: none;
       }
-      a.button:hover { background: #6366f1; }
-      a.link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: #818cf8; font-size: 16px; font-weight: 600; text-decoration: none; }
-      a.link:hover { text-decoration: underline; }
+      a.button:hover { background: #4338ca; }
+      a.link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: #818cf8; font-size: 16px; font-weight: 600; text-decoration: none; text-underline-offset: 2px; }
+      a.link:hover { color: #a5b4fc; text-decoration: underline; }
       a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
       html.light p.lead { color: #3f3f46; }
       html.light p.lead code { color: #27272a; }
       html.light a.link { color: #4f46e5; }
+      html.light a.link:hover { color: #4338ca; }
     </style>
     <script>
       // Name the address that was asked for, as text only.

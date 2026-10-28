@@ -59,7 +59,7 @@ export default function InfiniteScrollDemo({ activeOptions }) {
 
           {loading && (
             <div className="flex items-center justify-center py-5">
-              <Loader2 size={24} className="animate-spin text-zinc-400" />
+              <Loader2 size={24} className="motion-safe:animate-spin text-zinc-400" />
             </div>
           )}
 

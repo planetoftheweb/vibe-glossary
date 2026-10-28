@@ -337,27 +337,43 @@ export default function FloatingLearningHud({
     try { localStorage.setItem(LEARNING_HUD_STORAGE_KEY, JSON.stringify(hudState)); } catch {}
   }, [hudState]);
 
-  // #130: scroll clearance follows the HUD's real height (plus its bottom
-  // offset) so the end of every pane stays reachable, minimized or expanded.
+  // #130: the HUD sits above the footer, whatever height the footer wraps to, and
+  // scroll clearance follows the HUD's real height plus that offset so the end of
+  // every pane (last chip included) stays reachable, minimized or expanded.
   useEffect(() => {
     const root = document.documentElement;
+    const clear = () => {
+      root.style.removeProperty('--vg-hud-clearance');
+      root.style.removeProperty('--vg-hud-offset');
+      root.style.removeProperty('--vg-hud-height');
+    };
     const node = rootRef.current;
     if (!node || hudState.dock !== 'bottom' || typeof ResizeObserver === 'undefined') {
-      root.style.removeProperty('--vg-hud-clearance');
+      clear();
       return undefined;
     }
+    const footer = document.querySelector('footer');
     const apply = () => {
       const height = node.getBoundingClientRect().height;
+      const footerHeight = footer ? footer.getBoundingClientRect().height : 0;
+      const offset = footerHeight > 0 ? `${Math.ceil(footerHeight) + 12}px` : '4.75rem';
+      root.style.setProperty('--vg-hud-offset', `calc(${offset} + env(safe-area-inset-bottom, 0px))`);
       if (height > 0) {
-        root.style.setProperty('--vg-hud-clearance', `calc(${Math.ceil(height)}px + 4.75rem + env(safe-area-inset-bottom, 0px))`);
+        // Below sm the shell scrolls (#137): the footer and the back-to-top control clear the HUD by its height.
+        root.style.setProperty('--vg-hud-height', `${Math.ceil(height)}px`);
+        // The panes already end at the footer, so only the HUD and its gap overlap
+        // them. With no footer the panes reach the viewport edge, so add the full offset.
+        const gap = footerHeight > 0 ? '12px' : offset;
+        root.style.setProperty('--vg-hud-clearance', `calc(${Math.ceil(height)}px + ${gap} + env(safe-area-inset-bottom, 0px))`);
       }
     };
     apply();
     const observer = new ResizeObserver(apply);
     observer.observe(node);
+    if (footer) observer.observe(footer);
     return () => {
       observer.disconnect();
-      root.style.removeProperty('--vg-hud-clearance');
+      clear();
     };
   }, [hudState.dock, hudState.mode]);
 

@@ -180,7 +180,7 @@ export default function UserMenu({
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
                   <p className={`flex items-center gap-1.5 text-xs font-semibold mt-1 ${sync.tone}`}>
-                    <SyncIcon size={14} className={sync.spin ? 'animate-spin' : ''} />
+                    <SyncIcon size={14} className={sync.spin ? 'motion-safe:animate-spin' : ''} />
                     {sync.text}
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export default function UserMenu({
                   <button
                     type="submit"
                     disabled={busy}
-                    className="w-full px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-base font-semibold transition-colors disabled:opacity-50"
+                    className="w-full px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold transition-colors disabled:opacity-50"
                   >
                     {busy ? 'One sec…' : mode === 'register' ? 'Create account' : 'Sign in'}
                   </button>

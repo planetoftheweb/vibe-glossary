@@ -227,7 +227,7 @@ export default function PathView({ path, isOpen, onClose, onAwardBadge, onSelect
             </span>
             <button
               onClick={handleNextStep}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm lg:text-base font-semibold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-500'}`}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm lg:text-base font-semibold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-700'}`}
             >
               {stepIndex === totalSteps - 1 ? 'Take the quiz' : 'Next'} <ChevronRight size={16} />
             </button>
@@ -335,7 +335,7 @@ function IntroScreen({ path, colors, onStart, onJump }) {
 
       <button
         onClick={onStart}
-        className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-500'}`}
+        className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-700'}`}
       >
         Start path <ChevronRight size={20} />
       </button>
@@ -466,7 +466,7 @@ function QuizScreen({ question, picked, onPick, onNext, quizIndex, totalQuiz, co
           </p>
           <button
             onClick={onNext}
-            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-500'}`}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
             {quizIndex === totalQuiz - 1 ? 'See results' : 'Next question'} <ChevronRight size={16} />
           </button>
@@ -552,7 +552,7 @@ function ResultScreen({ path, colors, quizAnswers, totalQuiz, onRetry, onClose, 
         {!passed && (
           <button
             onClick={onRetry}
-            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-500'}`}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-base lg:text-lg font-bold text-white transition-colors ${colors.active || 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
             <RotateCcw size={16} /> Retry the quiz
           </button>

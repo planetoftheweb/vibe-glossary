@@ -554,11 +554,11 @@
 /* Motion Studio -----------------------------------------------------------
    A full teaching surface for duration, easing, and choreography. */
 .motion-lab {
-  --motion-lab-ink: #f8f7ff;
-  --motion-lab-muted: #aaa5bd;
-  --motion-lab-violet: #e879f9;
-  --motion-lab-pink: #f472b6;
-  --motion-lab-mint: #a5b4fc;
+  --motion-lab-ink: #fafafa;
+  --motion-lab-muted: #a1a1aa;
+  --motion-lab-accent: #e879f9;
+  --motion-lab-pink: #db2777;
+  --motion-lab-indigo: #a5b4fc;
   display: flex;
   width: 100%;
   max-width: 1180px;
@@ -592,7 +592,7 @@
   align-items: center;
   gap: 8px;
   margin: 0 0 6px;
-  color: var(--motion-lab-violet);
+  color: var(--motion-lab-accent);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.16em;
@@ -643,7 +643,7 @@
 .motion-lab__reduce {
   border: 1px solid rgb(255 255 255 / 0.12);
   background: rgb(255 255 255 / 0.05);
-  color: #d6d2e2;
+  color: #d4d4d8;
 }
 
 /* #131: a selected state uses the indigo selected pair (border-indigo-500,
@@ -664,8 +664,9 @@
   box-shadow: none;
 }
 
+/* indigo-700: white text on indigo-500 is only 4.47:1 (#138) */
 .motion-lab__replay:hover {
-  background: #6366f1;
+  background: #4338ca;
 }
 
 .motion-lab__workbench {
@@ -690,7 +691,7 @@
   padding: 15px;
   background:
     linear-gradient(145deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018)),
-    #121019;
+    #18181b;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
 
@@ -718,7 +719,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #d5d1e1;
+  color: #d4d4d8;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.09em;
@@ -726,7 +727,7 @@
 }
 
 .motion-lab__control-heading > span svg {
-  color: var(--motion-lab-violet);
+  color: var(--motion-lab-accent);
 }
 
 .motion-lab__control-heading strong {
@@ -770,7 +771,7 @@
   width: 32px;
   height: 32px;
   margin-top: -13.5px;
-  border: 4px solid #17121f;
+  border: 4px solid #18181b;
   border-radius: 999px;
   appearance: none;
   background: white;
@@ -780,7 +781,7 @@
 .motion-lab__control input[type='range']::-moz-range-thumb {
   width: 24px;
   height: 24px;
-  border: 4px solid #17121f;
+  border: 4px solid #18181b;
   border-radius: 999px;
   background: white;
   box-shadow: 0 0 0 2px #e879f9;
@@ -801,7 +802,7 @@
   border: 1px solid rgb(255 255 255 / 0.08);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.035);
-  color: #b4aec4;
+  color: #a1a1aa;
   /* #123: option names and explanations are 16px (DESIGN.md Minimum readable sizes). */
   font-size: 16px;
   font-weight: 800;
@@ -940,7 +941,7 @@
 .motion-lab__cue-icon--cascade i:nth-child(2) { opacity: 0.68; }
 .motion-lab__cue-icon--cascade i:nth-child(3) { opacity: 0.36; }
 .motion-lab__cue-icon--story i:nth-child(1) { background: #a5b4fc; }
-.motion-lab__cue-icon--story i:nth-child(3) { background: #f472b6; }
+.motion-lab__cue-icon--story i:nth-child(3) { background: #db2777; }
 
 .motion-lab__stage {
   position: relative;
@@ -950,7 +951,7 @@
   flex-direction: column;
   border: 1px solid rgb(232 121 249 / 0.25);
   border-radius: 22px;
-  background: #08060f;
+  background: #09090b;
   box-shadow:
     0 28px 80px rgb(0 0 0 / 0.42),
     inset 0 1px 0 rgb(255 255 255 / 0.05);
@@ -965,7 +966,7 @@
   justify-content: space-between;
   border-bottom: 1px solid rgb(255 255 255 / 0.075);
   padding: 0 16px;
-  background: rgb(14 11 23 / 0.85);
+  background: rgb(24 24 27 / 0.85);
   color: #a1a1aa;
   font-size: 12px;
   font-weight: 900;
@@ -1030,7 +1031,7 @@
 
 .motion-lab__orb::after { inset: 36%; }
 .motion-lab__orb--one { top: 22px; left: -76px; }
-.motion-lab__orb--two { right: -88px; bottom: -18px; border-color: rgb(244 114 182 / 0.13); }
+.motion-lab__orb--two { right: -88px; bottom: -18px; border-color: rgb(219 39 119 / 0.13); }
 
 .motion-lab__wash {
   position: absolute;
@@ -1076,7 +1077,7 @@
   padding: 22px;
   background:
     linear-gradient(145deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.025)),
-    rgb(20 15 33 / 0.93);
+    rgb(24 24 27 / 0.93);
   box-shadow:
     0 30px 70px rgb(0 0 0 / 0.54),
     inset 0 1px 0 rgb(255 255 255 / 0.16);
@@ -1107,7 +1108,7 @@
 }
 
 .motion-lab__product-top > span {
-  color: #8f899f;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.13em;
@@ -1118,10 +1119,10 @@
   width: 46px;
   height: 46px;
   border-radius: 15px;
-  background: linear-gradient(135deg, #c026d3, #ec4899);
+  background: linear-gradient(135deg, #d946ef, #db2777);
   color: white;
   place-items: center;
-  box-shadow: 0 10px 30px rgb(192 38 211 / 0.33);
+  box-shadow: 0 10px 30px rgb(217 70 239 / 0.33);
 }
 
 .motion-lab__product-card > p {
@@ -1147,13 +1148,13 @@
 
 .motion-lab__product-footer {
   margin-top: 24px;
-  color: #8f899f;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 800;
 }
 
 .motion-lab__product-footer span:last-child {
-  color: #c4b5fd;
+  color: #f0abfc;
 }
 
 .motion-lab__success {
@@ -1163,11 +1164,11 @@
   bottom: 42px;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgb(165 180 252 / 0.31);
+  border: 1px solid rgb(232 121 249 / 0.45);
   border-radius: 999px;
   padding: 7px 12px 7px 7px;
-  background: rgb(6 78 59 / 0.85);
-  color: #ccfbf1;
+  background: rgb(24 24 27 / 0.9);
+  color: #f4f4f5;
   font-size: 12px;
   font-weight: 900;
   box-shadow: 0 14px 35px rgb(0 0 0 / 0.36);
@@ -1179,8 +1180,8 @@
   width: 27px;
   height: 27px;
   border-radius: 999px;
-  background: #a5b4fc;
-  color: #064e3b;
+  background: linear-gradient(90deg, #d946ef, #db2777);
+  color: #fff;
   place-items: center;
 }
 
@@ -1189,7 +1190,7 @@
   z-index: 12;
   border-top: 1px solid rgb(255 255 255 / 0.075);
   padding: 10px 14px 12px;
-  background: #0d0a14;
+  background: #09090b;
 }
 
 .motion-lab__timeline-labels {
@@ -1197,7 +1198,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
-  color: #686274;
+  color: #a1a1aa;
   font-size: 12px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -1205,7 +1206,7 @@
   text-transform: uppercase;
 }
 
-.motion-lab__timeline-labels strong { color: #a29cac; }
+.motion-lab__timeline-labels strong { color: #a1a1aa; }
 
 .motion-lab__tracks {
   position: relative;
@@ -1218,7 +1219,7 @@
   grid-template-columns: 48px 1fr 42px;
   align-items: center;
   gap: 7px;
-  color: #777181;
+  color: #a1a1aa;
   font-size: 12px;
   font-style: normal;
   font-weight: 800;
@@ -1237,11 +1238,11 @@
   position: absolute;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #d946ef, #f472b6);
+  background: linear-gradient(90deg, #d946ef, #db2777);
   box-shadow: 0 0 12px rgb(232 121 249 / 0.45);
 }
 
-.motion-lab__track:nth-of-type(2) i { background: linear-gradient(90deg, #60a5fa, #e879f9); }
+.motion-lab__track:nth-of-type(2) i { background: linear-gradient(90deg, #818cf8, #e879f9); }
 .motion-lab__track:nth-of-type(3) i { background: linear-gradient(90deg, #818cf8, #a5b4fc); }
 .motion-lab__track em { font-style: normal; text-align: right; font-variant-numeric: tabular-nums; }
 
@@ -1281,7 +1282,7 @@
 }
 
 .motion-lab__note > span {
-  color: var(--motion-lab-violet);
+  color: var(--motion-lab-accent);
   font-size: 12px;
   font-weight: 950;
   letter-spacing: 0.14em;
@@ -1398,6 +1399,102 @@
   .motion-lab__product-card { width: 82%; padding: 18px; }
   .motion-lab__success { right: 4%; bottom: 28px; }
   .motion-lab__note { grid-template-columns: 1fr; gap: 5px; }
+}
+
+/* #136: the Motion studio follows the selected theme. The app keys light mode on
+   data-theme, like every other studio. The live stage stays a dark scene, since it
+   previews a product, so only the lesson surface (title, intro, controls, notes)
+   changes. Text uses zinc 900 / 700 / 600, accents use fuchsia 700 and indigo 700. */
+[data-theme='light'] .motion-lab {
+  --motion-lab-ink: #18181b;
+  --motion-lab-muted: #52525b;
+  --motion-lab-accent: #a21caf;
+  --motion-lab-indigo: #4338ca;
+}
+
+[data-theme='light'] .motion-lab__hero h2 { color: #18181b; }
+[data-theme='light'] .motion-lab__hero p:not(.motion-lab__eyebrow) { color: #3f3f46; }
+
+[data-theme='light'] .motion-lab__reduce {
+  border-color: #d4d4d8;
+  background: #ffffff;
+  color: #3f3f46;
+}
+
+[data-theme='light'] .motion-lab__reduce[aria-pressed='true'] {
+  border-color: #6366f1;
+  background: rgb(99 102 241 / 0.1);
+  color: #4338ca;
+}
+
+[data-theme='light'] .motion-lab button:focus-visible,
+[data-theme='light'] .motion-lab input:focus-visible { outline-color: #a21caf; }
+
+[data-theme='light'] .motion-lab__control {
+  border-color: #e4e4e7;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgb(24 24 27 / 0.05);
+}
+
+[data-theme='light'] .motion-lab__control::after { background: rgb(192 38 211 / 0.08); }
+[data-theme='light'] .motion-lab__control-heading > span { color: #3f3f46; }
+[data-theme='light'] .motion-lab__control-heading strong { color: #18181b; }
+[data-theme='light'] .motion-lab__control > p { color: #52525b; }
+
+[data-theme='light'] .motion-lab__control input[type='range']::-webkit-slider-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #c026d3, 0 1px 3px rgb(24 24 27 / 0.3); }
+[data-theme='light'] .motion-lab__control input[type='range']::-moz-range-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #c026d3, 0 1px 3px rgb(24 24 27 / 0.3); }
+
+[data-theme='light'] .motion-lab__preset-row button,
+[data-theme='light'] .motion-lab__choreo-row button,
+[data-theme='light'] .motion-lab__choice-grid button {
+  border-color: #d4d4d8;
+  background: #fafafa;
+  color: #3f3f46;
+}
+
+[data-theme='light'] .motion-lab__preset-row button:hover,
+[data-theme='light'] .motion-lab__choreo-row button:hover,
+[data-theme='light'] .motion-lab__choice-grid button:hover {
+  border-color: #c026d3;
+  color: #18181b;
+}
+
+[data-theme='light'] .motion-lab__preset-row button[aria-pressed='true'],
+[data-theme='light'] .motion-lab__choreo-row button[aria-pressed='true'],
+[data-theme='light'] .motion-lab__choice-grid button[aria-pressed='true'] {
+  border-color: #c026d3;
+  background: rgb(217 70 239 / 0.1);
+  color: #18181b;
+  box-shadow: none;
+}
+
+[data-theme='light'] .motion-lab__preset-row button span,
+[data-theme='light'] .motion-lab__choice-grid button small,
+[data-theme='light'] .motion-lab__picks-note { color: #52525b; }
+
+[data-theme='light'] .motion-lab__curve { border-bottom-color: #d4d4d8; }
+[data-theme='light'] .motion-lab__curve::before { border-top-color: #c026d3; }
+[data-theme='light'] .motion-lab__cue-icon i { background: #c026d3; }
+[data-theme='light'] .motion-lab__cue-icon--story i:nth-child(1) { background: #6366f1; }
+
+[data-theme='light'] .motion-lab__note {
+  border-color: #e4e4e7;
+  background: #ffffff;
+}
+
+[data-theme='light'] .motion-lab__note strong { color: #18181b; }
+[data-theme='light'] .motion-lab__note p { color: #52525b; }
+[data-theme='light'] .motion-lab__note--warning { border-color: #d97706; background: rgb(254 243 199 / 0.6); }
+[data-theme='light'] .motion-lab__note--warning > span { color: #92400e; }
+[data-theme='light'] .motion-lab__note--safe { border-color: #a5b4fc; }
+[data-theme='light'] .motion-lab__note--safe > span { color: #4338ca; }
+
+.motion-lab__picks-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 /* Shared teaching studio -------------------------------------------------
@@ -2879,7 +2976,7 @@
   transition: background 180ms ease, transform 120ms ease;
 }
 
-.feedback-scene__save-btn:hover:not(:disabled) { background: #6366f1; }
+.feedback-scene__save-btn:hover:not(:disabled) { background: #4338ca; }
 .feedback-scene__save-btn:active:not(:disabled) { transform: scale(0.97); }
 .feedback-scene__save-btn.is-saving { background: #3730a3; cursor: wait; }
 .feedback-scene__save-btn.is-saved { background: #047857; }   /* emerald-700, 5.5:1 with white */
@@ -3495,7 +3592,7 @@
   grid-template-columns: 42px minmax(0, 1fr) 56px;
   align-items: center;
   gap: 10px;
-  color: #71717a;
+  color: #a1a1aa;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   font-weight: 800;
@@ -5123,6 +5220,77 @@
 }
 
 
+/* #137: below sm the whole shell scrolls. Only the 80px top bar (the sticky header)
+   stays pinned; the breadcrumb row, the Definition / Preview tab strip, the pane
+   and the footer scroll together. From sm up nothing here applies and the pinned
+   split layout is unchanged. The selectors are doubled with `html` so they win over
+   the Tailwind utilities (overflow-hidden, min-h-0, flex-1) on the same elements. */
+@media (max-width: 639.98px) {
+  html .app-shell {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  html .app-shell > * {
+    flex-shrink: 0;
+  }
+
+  html .app-shell .vg-shell-flow {
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  /* Size containment needs a fixed height; width alone is enough for the
+     @container vg-split rules (they key on min-width). */
+  html .app-shell .vg-split-host {
+    container-type: inline-size;
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  html .app-shell .vg-split {
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  html .app-shell .vg-pane-def,
+  html .app-shell .vg-pane-preview,
+  html .app-shell .vg-pane-preview > .overflow-y-auto {
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  html .app-shell .vg-scroll-clearance {
+    padding-bottom: 1rem;
+  }
+
+  /* Tab strip lands under the pinned bar when a tab is picked. */
+  html .app-shell .vg-phone-tabs {
+    scroll-margin-top: calc(5rem + env(safe-area-inset-top, 0px) + 1px);
+  }
+
+  /* HUD sits at the bottom of the viewport; the footer scrolls clear of it. */
+  html .vg-learning-hud[data-dock='bottom'] {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  html .app-shell .app-shell-footer {
+    /* HUD height, its gap, and the 44px back-to-top control stacked above it. */
+    margin-bottom: calc(var(--vg-hud-height, 3.5rem) + 3.5rem + 44px + env(safe-area-inset-bottom, 0px));
+  }
+
+  html .vg-shell-back-to-top {
+    bottom: calc(var(--vg-hud-height, 3.5rem) + 1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* Phone tab mode: only one pane is visible. Let the active pane fill the
    split host and scroll so short content does not leave a dead black void
    under the definition, and HUD clearance stays inside the scroller. */
@@ -5251,9 +5419,17 @@
   -webkit-hyphens: auto;
 }
 
+/* #137: from lg up there is room for whole words, so no automatic hyphen breaks. */
+@media (min-width: 1024px) {
+  .vg-glossary-title {
+    hyphens: manual;
+    -webkit-hyphens: manual;
+  }
+}
+
 /* Fixed Learning HUD respects the home indicator / notch. */
 .vg-learning-hud[data-dock='bottom'] {
-  bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  bottom: var(--vg-hud-offset, calc(4.75rem + env(safe-area-inset-bottom, 0px)));
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
 }

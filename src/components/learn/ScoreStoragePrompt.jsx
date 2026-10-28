@@ -58,7 +58,7 @@ export default function ScoreStoragePrompt({ score = 0, onStore, onLater }) {
             ref={storeButtonRef}
             type="button"
             onClick={onStore}
-            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-500"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-700"
           >
             <CloudUpload size={16} aria-hidden="true" />
             Store my score

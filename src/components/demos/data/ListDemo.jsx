@@ -46,7 +46,7 @@ export default function ListDemo({ activeOptions }) {
                   <button type="button" aria-label={`${liked.has(item.id) ? 'Unlike' : 'Like'} post by ${item.author}`} onClick={() => toggleLike(item.id)} className={`flex items-center gap-1.5 text-sm transition-colors ${liked.has(item.id) ? 'text-rose-500' : 'text-zinc-400 hover:text-rose-500'}`}>
                     <Heart size={16} className={liked.has(item.id) ? 'fill-current' : ''} /> {item.likes + (liked.has(item.id) ? 1 : 0)}
                   </button>
-                  <button type="button" aria-label={`Read ${item.comments} comments on ${item.author}'s post`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
+                  <button type="button" aria-label={`Read ${item.comments} comments on ${item.author}'s post`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
                     <MessageCircle size={16} /> {item.comments}
                   </button>
                   <button type="button" aria-label={`Share post by ${item.author}`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-emerald-500 transition-colors">

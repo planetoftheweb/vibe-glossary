@@ -31,14 +31,14 @@ export default function TopicNotFound({ address, onBrowseGlossary, onOpenSearch 
           <button
             type="button"
             onClick={onBrowseGlossary}
-            className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-xl bg-indigo-600 text-white font-semibold text-base hover:bg-indigo-500 transition-colors"
+            className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-xl bg-indigo-600 text-white font-semibold text-base hover:bg-indigo-700 transition-colors"
           >
             Browse the glossary
           </button>
           <button
             type="button"
             onClick={onOpenSearch}
-            className="inline-flex items-center justify-center min-h-[44px] px-3 text-base font-semibold text-indigo-500 dark:text-indigo-400 hover:underline"
+            className="inline-flex items-center justify-center min-h-[44px] px-3 text-base font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 underline-offset-2 hover:underline"
           >
             Search for a term
           </button>

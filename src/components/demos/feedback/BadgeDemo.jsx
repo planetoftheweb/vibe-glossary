@@ -11,7 +11,7 @@ export default function BadgeDemo({ activeOptions }) {
         <span className={`absolute -top-2 -right-2 bg-red-500 rounded-full border-4 border-white dark:border-zinc-900 flex items-center justify-center text-sm text-white font-bold ${isDot ? 'w-6 h-6' : 'w-10 h-10'}`}>
           {!isDot && '3'}
           {isPing && (
-            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping"></span>
+            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 motion-safe:animate-ping"></span>
           )}
         </span>
       </div>

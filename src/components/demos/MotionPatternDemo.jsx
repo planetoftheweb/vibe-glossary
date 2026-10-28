@@ -554,7 +554,7 @@ function StaggerPreview({ reduced: reducedProp }) {
         <ChipButton onClick={() => setMode('stagger')} pressed={mode === 'stagger'} label="Play 200 millisecond stagger">
           200ms stagger
         </ChipButton>
-        <button type="button" onClick={replay} aria-label="Replay stagger" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-500">Replay</button>
+        <button type="button" onClick={replay} aria-label="Replay stagger" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700">Replay</button>
       </div>
       <p
         data-stagger-teach=""
@@ -852,7 +852,7 @@ function HoverPreview({ reduced }) {
   return (
     <button
       type="button"
-      className={`min-h-[44px] rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm ${reduced ? 'hover:bg-indigo-500' : 'transition duration-150 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5'}`}
+      className={`min-h-[44px] rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm ${reduced ? 'hover:bg-indigo-700' : 'transition duration-150 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5'}`}
     >
       Save draft
     </button>
@@ -893,7 +893,7 @@ function ConfettiPreview({ reduced }) {
   return (
     <div className="relative w-full max-w-lg space-y-3">
       <div className="flex flex-wrap items-center gap-1">
-        <button type="button" onClick={complete} aria-label="Complete order" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-500">Complete order</button>
+        <button type="button" onClick={complete} aria-label="Complete order" className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-700">Complete order</button>
         <button type="button" onClick={replay} aria-label="Replay confetti" className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">Replay</button>
       </div>
       <p className="text-base leading-relaxed text-zinc-600 dark:text-zinc-300">
@@ -966,7 +966,7 @@ function CountPreview({ reduced }) {
       <p className="text-5xl font-black tabular-nums text-zinc-900 dark:text-white" aria-label={`${n} learners`}>
         {n}
       </p>
-      <button type="button" className="min-h-[44px] rounded-xl bg-indigo-600 px-5 text-base font-semibold text-white hover:bg-indigo-500" onClick={() => setRun((value) => value + 1)}>
+      <button type="button" className="min-h-[44px] rounded-xl bg-indigo-600 px-5 text-base font-semibold text-white hover:bg-indigo-700" onClick={() => setRun((value) => value + 1)}>
         Replay count
       </button>
     </div>

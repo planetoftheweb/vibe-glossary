@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, cloneElement } from 'react';
 import ProgressRing from '../ui/ProgressRing';
 import HoverTip from '../ui/HoverTip';
+import { useKeepPanelOnScreen, useKeepTipOnScreen } from '../../hooks/useKeepOnScreen';
 import {
   Search, ChevronDown, ChevronRight, X, Home,
   Menu as MenuIcon, Trophy, GraduationCap,
@@ -82,16 +83,36 @@ const LABEL_FROM = {
 const HEADER_TITLE_MAX = 24;
 
 function NavPillTooltip({ text, align = 'left', hideFrom, hidden }) {
-  if (!text || hidden) return null;
+  const tipRef = useRef(null);
+  const show = !!text && !hidden;
+  // #137: keep the tip inside the viewport wherever its pill sits in the row.
+  useKeepTipOnScreen(tipRef, show);
+  if (!show) return null;
   const alignClass = align === 'right' ? 'right-0 left-auto' : 'left-1/2 -translate-x-1/2';
   const hideClass = hideFrom ? LABEL_FROM[hideFrom]?.tooltipHide : '';
   return (
     <span
+      ref={tipRef}
       role="tooltip"
       className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} w-max max-w-[min(20rem,calc(100vw-2rem))] whitespace-normal px-3 py-2 rounded-lg text-base font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
     >
       {text}
     </span>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phone breadcrumb row. Sits under the header with the same chrome and tint, and
+// above the panes so its dropdowns overlay the content.
+// ─────────────────────────────────────────────────────────────────────────────
+function MobileCrumbsShell({ gradient, children }) {
+  return (
+    <div className="relative z-[45] md:hidden shrink-0 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-[0.10] dark:opacity-[0.18]`} />
+      </div>
+      <div className="relative">{children}</div>
+    </div>
   );
 }
 
@@ -116,6 +137,8 @@ function PillDropdown({
   className = '',
 }) {
   const wrapRef = useRef(null);
+  const panelRef = useRef(null);
+  useKeepPanelOnScreen(panelRef, isOpen);
   const labelBp = iconOnly ? null : (LABEL_FROM[labelFrom] || LABEL_FROM.xl);
   const dropLabel = labelFit === 'clamp' && typeof label === 'string' && label.length > HEADER_TITLE_MAX;
   // Tooltip text: use label if provided, otherwise fall back to ariaLabel.
@@ -167,8 +190,11 @@ function PillDropdown({
       </button>
       {isOpen && (
         <div
+          ref={panelRef}
           className={`absolute top-full mt-2 ${align === 'right' ? 'right-0' : 'left-0'} bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 rounded-xl shadow-2xl z-50 py-1.5 animate-fade-in max-h-[75vh] overflow-y-auto`}
-          style={{ minWidth: width || 280 }}
+          // #137: a string width (a CSS length) is the real width, so long titles wrap
+          // instead of widening the panel past the screen. Every panel stays on screen.
+          style={{ width: typeof width === 'string' ? width : undefined, minWidth: width || 280, maxWidth: 'calc(100vw - 1.5rem)' }}
         >
           {children}
         </div>
@@ -751,7 +777,8 @@ export default function TopNav({
   }, [searchInputRef]);
 
   return (
-    <header className="app-shell-header relative bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50">
+    <>
+    <header className="app-shell-header relative max-sm:sticky max-sm:top-0 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shrink-0 z-50">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute inset-0 bg-gradient-to-r ${catColors.gradient} opacity-[0.10] dark:opacity-[0.18] transition-opacity duration-500`} />
       </div>
@@ -953,7 +980,7 @@ export default function TopNav({
                           : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                       }`}
                     >
-                      <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
+                      <span className="font-medium text-left flex-1 min-w-0 whitespace-normal leading-snug [overflow-wrap:normal]">{topic.title}</span>
                       {isMastered && (
                         <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />
                       )}
@@ -1295,9 +1322,15 @@ export default function TopNav({
         />
       )}
 
-      {/* Mobile nav, icon-only cluster + topic dropdowns for Build literacy */}
+    </header>
+
+      {/* Mobile nav, icon-only cluster + topic dropdowns for Build literacy.
+          #137: outside the header so that below sm only the 80px top bar stays pinned
+          and this row scrolls away with the content. From sm up the shell does not
+          scroll, so the row stays where it always was. */}
       {siteSection === 'build' && (
-      <div data-mobile-crumbs className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
+      <MobileCrumbsShell gradient={catColors.gradient}>
+      <div data-mobile-crumbs className="px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
         <PillDropdown
           iconOnly
           ariaLabel={`Cluster: ${activeBuildCluster?.title || 'Web foundations'}`}
@@ -1354,7 +1387,8 @@ export default function TopNav({
           isOpen={openDropdown === 'mob-build-topic'}
           onToggle={() => setOpenDropdown(openDropdown === 'mob-build-topic' ? null : 'mob-build-topic')}
           onClose={() => setOpenDropdown(null)}
-          width={260}
+          align="right"
+          width="min(20rem, calc(100vw - 1.5rem))"
         >
           {activeBuildCluster?.topics?.map(topic => {
             const isActive = topic.id === activeBuildTopic;
@@ -1369,18 +1403,20 @@ export default function TopNav({
                     : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                 }`}
               >
-                <span className="font-medium text-left flex-1 truncate">{topic.title}</span>
+                <span className="font-medium text-left flex-1 min-w-0 whitespace-normal leading-snug [overflow-wrap:normal]">{topic.title}</span>
                 {isMastered && <Check size={14} className="text-indigo-500 shrink-0" aria-label="Mastered" />}
               </button>
             );
           })}
         </PillDropdown>
       </div>
+      </MobileCrumbsShell>
       )}
 
       {/* Mobile nav, icon-only category + component dropdowns */}
       {siteSection === 'glossary' && (
-      <div data-mobile-crumbs className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
+      <MobileCrumbsShell gradient={catColors.gradient}>
+      <div data-mobile-crumbs className="px-3 py-2 flex items-center gap-2 max-sm:min-h-[80px]">
         <PillDropdown
           iconOnly
           ariaLabel={`Category: ${activeCat?.name || 'Overlays'}`}
@@ -1436,7 +1472,8 @@ export default function TopNav({
           isOpen={openDropdown === 'mob-comp'}
           onToggle={() => setOpenDropdown(openDropdown === 'mob-comp' ? null : 'mob-comp')}
           onClose={() => setOpenDropdown(null)}
-          width={240}
+          align="right"
+          width="min(20rem, calc(100vw - 1.5rem))"
         >
           {activeCat?.items.map(item => {
             const isActive = item.id === activeItem;
@@ -1450,13 +1487,14 @@ export default function TopNav({
                     : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
                 }`}
               >
-                <span className="font-medium">{item.name}</span>
+                <span className="font-medium min-w-0 text-left whitespace-normal leading-snug [overflow-wrap:normal]">{item.name}</span>
               </button>
             );
           })}
         </PillDropdown>
       </div>
+      </MobileCrumbsShell>
       )}
-    </header>
+    </>
   );
 }

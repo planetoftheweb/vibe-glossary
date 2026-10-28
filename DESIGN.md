@@ -52,8 +52,8 @@ Dark is the default (`darkMode` starts true). Both modes must work.
 
 | Role | Value | Tailwind | Use |
 |---|---|---|---|
-| Primary | indigo 600 | `bg-indigo-600 text-white hover:bg-indigo-500` | The one real action on a screen (copy prompt, confirm, signed-in chip) |
-| Primary text | indigo 500 / 400 | `text-indigo-500 dark:text-indigo-400` | Links, active chrome when no category is set |
+| Primary | indigo 600 | `bg-indigo-600 text-white hover:bg-indigo-700` | The one real action on a screen (copy prompt, confirm, signed-in chip). Never put indigo-500 behind white text (4.47:1). |
+| Primary text | indigo 600 / 400 | `text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 underline-offset-2 hover:underline`, 44px target | Links, active chrome when no category is set. Never hover to indigo 500. |
 | Danger | rose 500 | `text-rose-500` / `bg-rose-50` | Destructive rows only |
 | Toast | zinc 900 on white text | `bg-zinc-900 text-white` | Global toasts |
 
@@ -222,7 +222,8 @@ Repeated interactions are one component, reused. A second hand-built version of 
 ### Not-found pages
 
 - An unknown address gets a VibeGlossary page, never the host's default page. Use the same header, theme, zinc chrome, Hubot Sans heading, and Poppins body as the app. Both modes must work.
-- Say what happened and what to do next: one heading ("We can't find that page"), one sentence naming the address that was asked for, and one primary action back to the glossary (`bg-indigo-600 text-white`, 44px). A secondary link (`text-indigo-500 dark:text-indigo-400`) may open search.
+- Say what happened and what to do next: one heading ("We can't find that page"), one sentence naming the address that was asked for, and one primary action back to the glossary (`bg-indigo-600 text-white`, 44px). Add one secondary link (`text-indigo-600 dark:text-indigo-400`, 44px). Inside the app it opens search ("Search for a term"). The static host page cannot run search, so its secondary link goes to Build literacy ("Browse build literacy").
+- The static host page (`public/404.html`) cannot load the app header. It uses a simplified header: the VibeGlossary wordmark in Hubot Sans, linking home, on the same zinc chrome and theme.
 - An unknown term or topic inside a known section, such as `/glossary/<unknown>`, gets the same message in place. Do not show Welcome or swap in a different term.
 - Keep the real not-found status where the host allows it.
 
@@ -253,6 +254,8 @@ Lucide React only (`lucide-react`). Sizes 14 / 16 / 20 / 24 / 32. No mixed sets.
 - Desktop fills the window. Preview grows. Words stay a readable measure (about 50 to 75 letters on definition copy; cap with `max-w` in rem if `ch` runs long in the body font).
 - Stack below about 768 / `lg`. Do not keep two panes on a phone.
 - Titles and tags wrap. Do not clip to half a word.
+- Below `sm` (640px) the whole shell scrolls and only the 80px top bar stays pinned (about 14% of a 568px screen). The breadcrumb row, the Definition / Preview tab strip, the pane and the footer scroll together. Switching tabs scrolls back to the tab strip. Once the crumb has scrolled away, a 44px back control above the Learning HUD returns to it. From `sm` up the pinned split layout stays as it is.
+- Menus and tips stay inside the viewport: a topic menu is `min(20rem, calc(100vw - 1.5rem))` wide and is nudged back on screen when its pill sits mid row.
 - Desktop is a first-class surface. At 1024px and above, use reclaimed width for the lesson, comparison, or context instead of letterboxing the whole app into a narrow column.
 - Verify layouts at 320px, 768px, 1024px, and a wide desktop. Touch targets remain at least 44px and the page never scrolls horizontally.
 
@@ -271,3 +274,8 @@ Every layout, theme, or teaching-studio change gets a rendered browser pass befo
 ## Implementation note
 
 Do not reinvent. Tokens are the Tailwind zinc / indigo / category classes already in the repo. If you need a new color, ask. Category accents stay in `src/data/categories.jsx` and `src/data/buildLiteracy.js`.
+
+Decisions on record under "ask before a new color":
+
+- Motion studio warning note keeps its amber tint (`#fbbf24` on dark, `#92400e` on a light amber wash in light mode). Amber is the semantic warning color, not a ninth accent.
+- Motion studio live stage stays a dark scene in both themes because it previews a product. The title, intro, controls, and notes follow the theme through `[data-theme='light']`.

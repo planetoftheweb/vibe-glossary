@@ -6,7 +6,7 @@ export default function CardDemo({ activeOptions }) {
   return (
     <div className="flex items-center justify-center h-full w-full p-8">
       <div className={`w-full max-w-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl overflow-hidden transition-all duration-300 ${hasHover ? 'hover:-translate-y-2 hover:shadow-2xl' : 'shadow-lg'}`}>
-        {hasImage && <div className="h-56 bg-zinc-200 dark:bg-zinc-700 w-full animate-pulse"></div>}
+        {hasImage && <div className="h-56 bg-zinc-200 dark:bg-zinc-700 w-full motion-safe:animate-pulse"></div>}
         <div className="p-6 space-y-4">
           <div className="h-6 w-3/4 bg-zinc-200 dark:bg-zinc-600 rounded"></div>
           <div className="space-y-3">

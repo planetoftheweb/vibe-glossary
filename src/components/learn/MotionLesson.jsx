@@ -99,9 +99,9 @@ export default function MotionLesson() {
   const [manualReduced, setManualReduced] = useState(false);
   const osReduced = usePrefersReducedMotion();
   const reduced = manualReduced || osReduced;
-  // Under the device setting the learner's picks stay visible as pressed (the
-  // picks are real, they just have no travel to show), so nothing is masked.
-  const picked = (isMatch) => isMatch && (osReduced || !reduced);
+  // Picks are saved settings, so they stay pressed in both reduced modes (device
+  // and manual) and look the same. The readouts say what is actually playing.
+  const picked = (isMatch) => isMatch;
   const [run, setRun] = useState(1);
 
   const easingData = EASINGS[easing];
@@ -168,6 +168,8 @@ export default function MotionLesson() {
             className="motion-lab__reduce group relative"
             aria-pressed={reduced}
             aria-disabled={osReduced ? 'true' : undefined}
+            aria-label={osReduced ? 'Reduced by your device' : undefined}
+            aria-describedby={osReduced ? 'motion-lab-os-tip' : undefined}
             onClick={() => {
               if (osReduced) return;
               setManualReduced((value) => !value);
@@ -176,7 +178,7 @@ export default function MotionLesson() {
           >
             {reduced ? <Check size={16} strokeWidth={3} aria-hidden /> : <Accessibility size={16} aria-hidden />}
             {osReduced ? 'Reduced by your device' : reduced ? 'Motion reduced' : 'Try reduced motion'}
-            {osReduced && <HoverTip text="Your device has reduced motion turned on" wrap />}
+            {osReduced && <HoverTip id="motion-lab-os-tip" text="Your device has reduced motion turned on" wrap />}
           </button>
           <button type="button" className="motion-lab__replay" onClick={replay}>
             <Play size={16} fill="currentColor" aria-hidden />
@@ -187,6 +189,9 @@ export default function MotionLesson() {
 
       <div className="motion-lab__workbench">
         <div className="motion-lab__controls" aria-label="Motion controls">
+          {reduced && (
+            <p className="motion-lab__picks-note">Your picks are saved. They play when full motion is on.</p>
+          )}
           <div className="motion-lab__control motion-lab__control--tempo">
             <div className="motion-lab__control-heading">
               <span><Timer size={16} aria-hidden /> 01 · Duration</span>
@@ -220,7 +225,7 @@ export default function MotionLesson() {
           <div className="motion-lab__control">
             <div className="motion-lab__control-heading">
               <span><Waves size={16} aria-hidden /> 02 · Easing</span>
-              <strong>{easingData.label}</strong>
+              <strong>{reduced ? 'Off' : easingData.label}</strong>
             </div>
             <p>How does the object gather speed?</p>
             <div className="motion-lab__choice-grid">
@@ -243,7 +248,7 @@ export default function MotionLesson() {
           <div className="motion-lab__control">
             <div className="motion-lab__control-heading">
               <span><Layers3 size={16} aria-hidden /> 03 · Choreography</span>
-              <strong>{cue.short}</strong>
+              <strong>{reduced ? 'Still' : cue.short}</strong>
             </div>
             <p>What enters first, second, and last?</p>
             <div className="motion-lab__choreo-row">
@@ -268,8 +273,10 @@ export default function MotionLesson() {
           className="motion-lab__stage"
           data-testid="motion-lab-stage"
           data-reduced={reduced ? 'true' : 'false'}
-          data-easing={easing}
-          data-choreography={choreography}
+          data-easing={reduced ? 'none' : easing}
+          data-choreography={reduced ? 'none' : choreography}
+          data-picked-easing={easing}
+          data-picked-choreography={choreography}
           data-duration={reduced ? '0' : String(duration)}
           data-run={String(run)}
           style={stageStyle}
@@ -291,7 +298,7 @@ export default function MotionLesson() {
               {reduced ? 'NO TRAVEL' : `${duration} MS`}
             </div>
             <div className="motion-lab__ghost-label motion-lab__ghost-label--curve" aria-hidden>
-              {easingData.label.toUpperCase()}
+              {reduced ? 'FINAL STATE' : easingData.label.toUpperCase()}
             </div>
 
             <article className="motion-lab__product-card">

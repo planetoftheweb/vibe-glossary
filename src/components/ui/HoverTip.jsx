@@ -8,6 +8,7 @@ export default function HoverTip({
   hideFrom,
   hidden = false,
   wrap = false,
+  id,
 }) {
   if (!text || hidden) return null;
   const alignClass = align === 'right'
@@ -18,6 +19,7 @@ export default function HoverTip({
   const hideClass = hideFrom === 'lg' ? 'lg:hidden' : hideFrom === 'xl' ? 'xl:hidden' : '';
   return (
     <span
+      id={id}
       role="tooltip"
       className={`pointer-events-none absolute top-full mt-1.5 z-[60] ${alignClass} ${wrap ? 'w-max max-w-[min(18rem,calc(100vw-2rem))] whitespace-normal leading-snug' : 'whitespace-nowrap max-w-[min(20rem,calc(100vw-2rem))] truncate'} px-3 py-2 rounded-lg text-base font-semibold text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-700 ring-1 ring-black/5 dark:ring-white/10 shadow-2xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity ${hideClass}`}
     >

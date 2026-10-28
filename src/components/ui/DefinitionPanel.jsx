@@ -27,7 +27,7 @@ export default function DefinitionPanel({
 
   return (
     <div className="mb-4 lg:mb-5">
-      <p className="font-sans text-lg lg:text-xl font-normal leading-[1.55] text-zinc-700 dark:text-zinc-200 break-words">
+      <p className="font-sans text-lg lg:text-xl font-normal leading-[1.55] text-zinc-700 dark:text-zinc-200 break-words max-w-[46rem]">
         {summary}
       </p>
 

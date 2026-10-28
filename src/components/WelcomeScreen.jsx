@@ -366,9 +366,9 @@ export default function WelcomeScreen({ onEnter, onSelectCategory, onSelectBuild
         </div>
 
         <div className="relative flex-1 flex flex-col items-center justify-center text-center px-6 py-24">
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-5 max-w-full">
             <img src="/logo.png" alt="VibeGlossary" className="w-12 h-12 rounded-xl shadow-lg object-cover" />
-            <h1 className="text-[2.5rem] leading-[1.1] md:text-6xl font-black tracking-tight text-white drop-shadow-2xl">
+            <h1 className="min-w-0 text-[clamp(1.75rem,9vw,2.5rem)] leading-[1.1] md:text-6xl font-black tracking-tight text-white drop-shadow-2xl">
               VibeGlossary
             </h1>
           </div>

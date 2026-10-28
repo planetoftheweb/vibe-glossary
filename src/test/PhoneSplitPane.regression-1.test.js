@@ -12,7 +12,7 @@ describe('phone glossary split pane regression', () => {
     // The short-landscape tablet rule must require min-width so phone tab
     // mode is not capped while Live Preview stays display:none.
     expect(shellCss).toMatch(
-      /@container\s+vg-split\s*\(\s*min-width:\s*768px\s*\)\s*and\s*\(\s*max-height:\s*700px\s*\)/,
+      /@container\s+vg-split\s*\(\s*min-width:\s*768px\s*\)\s*and\s*\(\s*max-width:\s*1199\.98px\s*\)\s*and\s*\(\s*max-height:\s*700px\s*\)/,
     );
     expect(shellCss).not.toMatch(
       /@container\s+vg-split\s*\(\s*max-height:\s*700px\s*\)\s*\{/,
@@ -28,5 +28,13 @@ describe('phone glossary split pane regression', () => {
     expect(phoneRule[1]).toMatch(/\.vg-pane-preview/);
     expect(phoneRule[1]).toMatch(/flex:\s*1\s+1\s+auto/);
     expect(phoneRule[1]).toMatch(/max-height:\s*none/);
+  });
+
+  it('#112: side-by-side depends on width only, never on container height', () => {
+    expect(shellCss).toMatch(/@container\s+vg-split\s*\(\s*min-width:\s*1200px\s*\)\s*\{/);
+    expect(shellCss).not.toMatch(/min-height:\s*700px\s*\)/);
+    expect(shellCss).not.toMatch(/@container\s+vg-split\s*\(\s*min-width:\s*1200px\s*\)\s*and\s*\(\s*min-height/);
+    // DESIGN.md Teaching studios: the short-tablet shell keeps DOM order (no reorder).
+    expect(shellCss).not.toMatch(/\.vg-studio__workbench\s*\{\s*order:/);
   });
 });

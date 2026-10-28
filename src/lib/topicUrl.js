@@ -88,6 +88,25 @@ export function resolveTopicRef(parsed) {
   return null;
 }
 
+/**
+ * A location that clearly asks for a topic (a /glossary, /build or
+ * /components path, or a ?component= / ?topic= link) whose id does not exist.
+ * Bare #hash anchors are not treated as topic requests.
+ * @returns {{ section: 'glossary' | 'build', id: string } | null}
+ */
+export function unknownTopicFromParsed(parsed) {
+  if (!parsed || parsed.type !== 'topic' || !parsed.id || !parsed.section) return null;
+  if (resolveTopicRef(parsed)) return null;
+  return { section: parsed.section, id: parsed.id };
+}
+
+export function unknownTopicFromWindow() {
+  if (typeof window === 'undefined') return null;
+  const unknown = unknownTopicFromParsed(parseTopicLocation(window.location));
+  if (!unknown) return null;
+  return { ...unknown, address: `${window.location.pathname || '/'}${window.location.search || ''}` };
+}
+
 export function topicHref(section, id) {
   if (!id) return '/';
   const slug = encodeURIComponent(id);

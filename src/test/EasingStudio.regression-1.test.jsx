@@ -30,13 +30,17 @@ describe('Easing glossary studio', () => {
     expect(screen.getByRole('img', { name: 'Ease-out speed curve' })).toBeInTheDocument();
     expect(screen.getByText('Fast first. Soft at the finish.')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Ease-in: Leave' }));
+    await user.click(screen.getByRole('button', { name: 'Ease-in: For exits' }));
 
     const earlyEaseInPosition = parseFloat(document.querySelectorAll('[data-easing-trail]')[1].style.left);
     expect(lab).toHaveAttribute('data-selected-easing', 'ease-in');
     expect(earlyEaseInPosition).toBeLessThan(earlyEaseOutPosition);
     expect(screen.getByRole('img', { name: 'Ease-in speed curve' })).toBeInTheDocument();
     expect(screen.getByText('Quiet start. Fast departure.')).toBeInTheDocument();
+    // #120: the labels name when to use each curve. The demo still plays the same trip.
+    expect(screen.getByText(/Same trip, slow start, fast finish/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Ease-out: For entrances' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Linear: For loops' })).toBeInTheDocument();
   });
 
   it('offers a study speed and replay without changing the distance', async () => {
@@ -46,11 +50,13 @@ describe('Easing glossary studio', () => {
     const lab = document.querySelector('[data-easing-lab]');
     const firstRun = Number(lab.getAttribute('data-run'));
 
-    await user.click(screen.getByRole('button', { name: 'Toggle slow motion' }));
-    expect(lab).toHaveAttribute('data-duration', '1200');
+    // #121: the ½× control doubles 300ms to 600ms (not 1200ms).
+    await user.click(screen.getByRole('button', { name: 'Slow study' }));
+    expect(lab).toHaveAttribute('data-duration', '600');
     document.querySelectorAll('[data-easing]').forEach((control) => {
-      expect(control).toHaveAttribute('data-duration-ms', '1200');
+      expect(control).toHaveAttribute('data-duration-ms', '600');
     });
+    expect(screen.getByText(/You ran Ease-out at 600ms with Slow study on/)).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Replay easing compare' }));
     expect(Number(lab.getAttribute('data-run'))).toBeGreaterThan(firstRun);
@@ -61,7 +67,7 @@ describe('Easing glossary studio', () => {
     render(<MotionPatternDemo demoId="easing" />);
 
     expect(document.querySelector('[data-easing-lab]')).toHaveAttribute('data-duration', '0');
-    expect(screen.getByRole('button', { name: 'Toggle slow motion' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Slow study' })).toBeDisabled();
     expect(screen.getByText('The final state appears without travel.')).toBeInTheDocument();
   });
 });

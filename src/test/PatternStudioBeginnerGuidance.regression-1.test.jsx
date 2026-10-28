@@ -22,7 +22,7 @@ describe('beginner guidance in every pattern studio', () => {
 
     expect(screen.getByText('Try this')).toBeInTheDocument();
     expect(screen.getByText('Start with Blur.')).toBeInTheDocument();
-    expect(screen.getByText(/Select the \+ button next to Blur/)).toBeInTheDocument();
+    expect(screen.getByText(/Select \+ next to Blur/)).toBeInTheDocument();
     expect(screen.getAllByText(/page behind the pattern becomes softly blurred/i)).toHaveLength(2);
     expect(screen.getByText('Keyboard focus stays inside the open pattern until it closes.')).toBeInTheDocument();
   });

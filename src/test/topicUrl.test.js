@@ -82,3 +82,20 @@ describe('topicHref', () => {
     expect(topicHref('build', 'particle-field')).toBe('/build/particle-field');
   });
 });
+
+describe('unknown topic addresses (#114)', () => {
+  it('flags a path or query that names a topic we do not have', async () => {
+    const { unknownTopicFromParsed } = await import('../lib/topicUrl');
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ pathname: '/glossary/nope' })))).toEqual({ section: 'glossary', id: 'nope' });
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ pathname: '/build/nope' })))).toEqual({ section: 'build', id: 'nope' });
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ search: '?topic=nope' })))).toEqual({ section: 'build', id: 'nope' });
+  });
+
+  it('does not flag real topics, the home path, proof links, or bare hash anchors', async () => {
+    const { unknownTopicFromParsed } = await import('../lib/topicUrl');
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ pathname: '/glossary/modal' })))).toBeNull();
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ pathname: '/' })))).toBeNull();
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ hash: '#proof=abc' })))).toBeNull();
+    expect(unknownTopicFromParsed(parseTopicLocation(loc({ hash: '#main' })))).toBeNull();
+  });
+});

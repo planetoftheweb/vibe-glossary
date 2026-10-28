@@ -7,6 +7,21 @@
     <meta name="description" content="Browse 111 interactive UI components and 137 build-literacy topics, configure live demos, and generate AI prompts for vibe coding. Free and open source." />
     <meta name="theme-color" content="#09090b" />
 
+    <!-- Dark is the default. Paint it before the app script runs so a first visit never flashes white (#119).
+         Only a saved light choice (vg-dark-mode = false) skips it. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('vg-dark-mode') !== 'false') document.documentElement.classList.add('dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <style>
+      html.dark { background-color: #09090b; }
+    </style>
+
     <!-- VibeGlossary typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -141,7 +141,7 @@ export default function PatternStudioFrame({
   const noteBody = activeChoices.length
     ? `Now use the live example. Look for: ${activeChoices.map(optionDescription).join(' ')} Turn the choice off and repeat to compare.`
     : firstChoice
-      ? `Select the + button next to ${firstChoice.label}, then use the live example. Look for: ${optionDescription(firstChoice)} Turn it off and try again to compare.`
+      ? `Select + next to ${firstChoice.label}, then use the example. Look for: ${optionDescription(firstChoice)}`
       : 'Use the example once. Then change one setting and repeat so the difference is easy to spot.';
 
   return (

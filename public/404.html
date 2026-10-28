@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#09090b" />
+    <title>Page not found, VibeGlossary</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap"
+    />
+    <script>
+      // Dark is the default. Only a saved light choice turns it off.
+      (function () {
+        try {
+          if (localStorage.getItem('vg-dark-mode') === 'false') document.documentElement.className = 'light';
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      @font-face {
+        font-family: 'Hubot Sans Variable';
+        src: url('/fonts/hubot-sans-latin-wght-normal.woff2') format('woff2');
+        font-weight: 200 900;
+        font-display: swap;
+      }
+      html { background: #09090b; color-scheme: dark; }
+      html.light { background: #ffffff; color-scheme: light; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #09090b;
+        color: #f4f4f5;
+        font-family: Poppins, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      html.light body { background: #ffffff; color: #18181b; }
+      header { display: flex; align-items: center; min-height: 64px; padding: 0 20px; border-bottom: 1px solid #27272a; }
+      html.light header { border-bottom-color: #e4e4e7; }
+      header a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; font-family: 'Hubot Sans Variable', 'Hubot Sans', Poppins, sans-serif; font-size: 20px; font-weight: 750; text-decoration: none; }
+      main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; max-width: 36rem; margin: 0 auto; padding: 32px 20px; text-align: center; }
+      h1 { margin: 0; font-family: 'Hubot Sans Variable', 'Hubot Sans', Poppins, sans-serif; font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 750; line-height: 1.1; letter-spacing: -0.008em; }
+      p.lead { margin: 16px 0 0; color: #d4d4d8; font-size: 18px; line-height: 1.55; }
+      p.lead code { color: #f4f4f5; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; overflow-wrap: anywhere; }
+      .actions { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 24px;
+        border-radius: 12px;
+        background: #4f46e5;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a.button:hover { background: #6366f1; }
+      a.link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: #818cf8; font-size: 16px; font-weight: 600; text-decoration: none; }
+      a.link:hover { text-decoration: underline; }
+      a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+      html.light p.lead { color: #3f3f46; }
+      html.light p.lead code { color: #27272a; }
+      html.light a.link { color: #4f46e5; }
+    </style>
+    <script>
+      // Name the address that was asked for, as text only.
+      document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById('asked');
+        if (el) el.textContent = location.pathname + location.search;
+      });
+    </script>
+  </head>
+  <body>
+    <header><a href="/">VibeGlossary</a></header>
+    <main>
+      <h1>We can&rsquo;t find that page</h1>
+      <p class="lead">There is nothing at <code id="asked">the address you asked for</code>, so the link may be old or mistyped.</p>
+      <div class="actions">
+        <a class="button" href="/glossary">Browse the glossary</a>
+        <a class="link" href="/build">Browse build literacy</a>
+      </div>
+    </main>
+  </body>
+</html>

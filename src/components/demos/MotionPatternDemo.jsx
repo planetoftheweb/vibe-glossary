@@ -1,38 +1,9 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Eye, EyeOff, Pause, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { GLOSSARY_DATA } from '../../data/glossary';
 import StudioShell from '../ui/StudioShell';
-
-function prefersReducedMotion() {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
-  try {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch {
-    return false;
-  }
-}
-
-function subscribeReducedMotion(onStoreChange) {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return () => {};
-  try {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const handler = () => onStoreChange();
-    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', handler);
-    else if (typeof mq.addListener === 'function') mq.addListener(handler);
-    return () => {
-      if (typeof mq.removeEventListener === 'function') mq.removeEventListener('change', handler);
-      else if (typeof mq.removeListener === 'function') mq.removeListener(handler);
-    };
-  } catch {
-    return () => {};
-  }
-}
-
-/** Live OS preference. Replay must not close over a stale first-paint value. */
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
-}
+import usePrefersReducedMotion, { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 function ChipButton({ onClick, pressed, children, label }) {
   return (
@@ -98,21 +69,21 @@ export const CONFETTI_FADE_MS = 700;
 
 const EASING_TRAVELERS = [
   {
-    id: 'ease-out', label: 'Ease-out', role: 'Arrive', timing: 'ease-out',
+    id: 'ease-out', label: 'Ease-out', role: 'For entrances', timing: 'ease-out',
     headline: 'Fast first. Soft at the finish.',
     explanation: 'The equal-time footprints bunch up near the end. Use ease-out when something arrives and needs to settle.',
     path: 'M 12 104 C 42 28 112 20 178 18',
   },
   {
-    id: 'ease-in', label: 'Ease-in', role: 'Leave', timing: 'ease-in',
+    id: 'ease-in', label: 'Ease-in', role: 'For exits', timing: 'ease-in',
     headline: 'Quiet start. Fast departure.',
-    explanation: 'The footprints spread farther apart near the end. Use ease-in when something leaves the screen.',
+    explanation: 'Same trip, slow start, fast finish. The footprints spread out near the end. In a real app, use ease-in when something leaves the screen.',
     path: 'M 12 104 C 74 102 142 88 178 18',
   },
   {
-    id: 'linear', label: 'Linear', role: 'Repeat', timing: 'linear',
+    id: 'linear', label: 'Linear', role: 'For loops', timing: 'linear',
     headline: 'Every step is identical.',
-    explanation: 'Even spacing feels mechanical on interface objects. Save linear for progress, rotation, or an endless marquee.',
+    explanation: 'Same trip, even steps. That feels mechanical on interface objects. Save linear for progress bars, spinners, or an endless scrolling banner (marquee).',
     path: 'M 12 104 L 178 18',
   },
 ];
@@ -127,7 +98,8 @@ function EasingPreview({ reduced }) {
   const [easing, setEasing] = useState('ease-out');
   const [slow, setSlow] = useState(false);
   const [run, setRun] = useState(1);
-  const ms = reduced ? 0 : (slow ? 1200 : 300);
+  // #121: ½× speed doubles the 300ms run, so Slow study runs 600ms.
+  const ms = reduced ? 0 : (slow ? 600 : 300);
   const selected = EASING_TRAVELERS.find((option) => option.id === easing) || EASING_TRAVELERS[0];
   const trail = [0, 0.14, 0.28, 0.42, 0.56, 0.7, 0.84, 1].map((progress) => ({
     progress,
@@ -184,7 +156,7 @@ function EasingPreview({ reduced }) {
               setRun((value) => value + 1);
             }}
             aria-pressed={slow}
-            aria-label="Toggle slow motion"
+            aria-label="Slow study"
             disabled={reduced}
           >
             <span className="easing-lab__speed-mark" aria-hidden="true">½×</span>
@@ -260,8 +232,10 @@ function EasingPreview({ reduced }) {
         </div>
       </div>
 
-      <p className="easing-lab__memory">
-        Ease-out gets there fast then settles. Ease-in creeps then rushes. Linear almost never feels right.
+      <p className="easing-lab__memory" aria-live="polite">
+        {reduced
+          ? 'Reduced motion is on, so the final state appears without travel.'
+          : `You ran ${selected.label} at ${ms}ms${slow ? ' with Slow study on' : ''}. Pick another feel and press Replay to compare the footprints.`}
       </p>
     </div>
   );
@@ -1062,8 +1036,8 @@ function SharedMorphPreview({ reduced }) {
 }
 
 const MOTION_GUIDANCE = {
-  particlefield: ['Choose V mark, switch to Immersive, then hide the field.', 'Watch the particles reshape without moving the headline. When the field disappears, the message still works. Atmosphere supports the page, it does not carry the meaning.'],
-  easing: ['Choose Slow-mo, then press Replay.', 'Switch between Ease-out, Ease-in, and Linear. The footprints mark equal moments, so their spacing reveals where the object speeds up and slows down. Watch how each one starts and stops differently.'],
+  particlefield: ['Choose V mark, switch to Immersive, then hide the field.', 'Watch the particles reshape while the headline stays put. Hide the field and the message still works.'],
+  easing: ['Turn on Slow study, then press Replay.', 'Switch between Ease-out, Ease-in, and Linear. The footprints mark equal moments, so their spacing shows where it speeds up and slows down.'],
   parallax: ['Scroll the mini page slowly.', 'The far layer moves less than the near layer. That speed difference creates depth.'],
   stagger: ['Switch between All at once and 200ms stagger, then press Replay.', 'Watch whether your eye sees one pile or a clear first, second, and third item.'],
   scrollreveal: ['Scroll until each card crosses the guide line, then press Reset.', 'Each card appears when it enters the useful part of the viewport, not merely because time passed.'],

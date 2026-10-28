@@ -60,7 +60,9 @@ describe('#24 easing travelers teach real curves', () => {
       expect(el.style.transitionTimingFunction).toBe(el.getAttribute('data-timing'));
     });
     expect(screen.getByRole('button', { name: /Replay easing compare/i })).toBeInTheDocument();
-    expect(screen.getByText(/Ease-out gets there fast then settles/i)).toBeInTheDocument();
+    // #128: the studio note reports the run instead of repeating the definition.
+    expect(screen.getByText(/You ran Ease-out at 300ms/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Linear almost never feels right/i)).not.toBeInTheDocument();
   });
 
   it('uses 0ms duration when the OS asks for reduced motion', () => {

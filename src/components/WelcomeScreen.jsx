@@ -290,7 +290,7 @@ function CtaButtons({ onSelectCategory, onStartTour, onEnter, showOpen, footer }
       <button
         type="button"
         onClick={() => onSelectCategory(CATEGORY_CARDS[0].firstItem)}
-        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-base shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105 transition-all"
+        className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full bg-indigo-600 text-white font-bold text-base shadow-lg hover:bg-indigo-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       >
         <Sparkles size={16} />
         {browseLabel}
